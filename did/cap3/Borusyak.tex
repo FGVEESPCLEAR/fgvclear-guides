@@ -1,0 +1,380 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rm}\NormalTok{(}\AttributeTok{list=}\FunctionTok{ls}\NormalTok{())}
+\FunctionTok{library}\NormalTok{(dplyr)}
+
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{read.csv}\NormalTok{(}\StringTok{"base\_stagger\_did.csv"}\NormalTok{)}
+
+\FunctionTok{head}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   id_estado id_municipio     setor  ano renda escolaridade populacao         y
+## 1         1         1001 ServiC'os 2011  55.9          8.9    117002  9.804006
+## 2         1         1001 ServiC'os 2012  60.0          8.8    117510 11.145862
+## 3         1         1001 ServiC'os 2013  65.0          8.8    117754  5.578302
+## 4         1         1001 ServiC'os 2014  81.0          8.9    118655  4.967904
+## 5         1         1001 ServiC'os 2015  78.0          8.9    119788  4.748321
+## 6         1         1001 ServiC'os 2016  77.0          9.0    120792  5.564256
+##   d G Tt d_x_t
+## 1 0 0  0     0
+## 2 0 0  1     0
+## 3 0 0  1     0
+## 4 0 0  1     0
+## 5 0 0  1     0
+## 6 0 0  1     0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{d\_x\_t }\OtherTok{=} \FunctionTok{ifelse}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{ano }\SpecialCharTok{\textless{}=}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{G }\SpecialCharTok{|}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{G }\SpecialCharTok{==} \DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+\NormalTok{df0 }\OtherTok{=}\NormalTok{ df[df}\SpecialCharTok{$}\NormalTok{d\_x\_t }\SpecialCharTok{==} \DecValTok{0}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{reg0 }\OtherTok{=} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{as.factor}\NormalTok{(ano) }\SpecialCharTok{+} \FunctionTok{as.factor}\NormalTok{(G) }\SpecialCharTok{+}\NormalTok{ escolaridade }\SpecialCharTok{+}\NormalTok{ populacao, }
+          \AttributeTok{data =}\NormalTok{ df0)}
+
+\FunctionTok{library}\NormalTok{(stargazer)}
+\FunctionTok{stargazer}\NormalTok{(reg0, }\AttributeTok{title =} \StringTok{"Passo 1"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+## % Date and time: ter, dez 17, 2024 - 21:04:27
+## \begin{table}[!htbp] \centering 
+##   \caption{Passo 1} 
+##   \label{} 
+## \begin{tabular}{@{\extracolsep{5pt}}lc} 
+## \\[-1.8ex]\hline 
+## \hline \\[-1.8ex] 
+##  & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+## \cline{2-2} 
+## \\[-1.8ex] & y \\ 
+## \hline \\[-1.8ex] 
+##  as.factor(ano)2012 & $-$1.220$^{***}$ \\ 
+##   & (0.059) \\ 
+##   & \\ 
+##  as.factor(ano)2013 & $-$2.552$^{***}$ \\ 
+##   & (0.064) \\ 
+##   & \\ 
+##  as.factor(ano)2014 & $-$3.751$^{***}$ \\ 
+##   & (0.064) \\ 
+##   & \\ 
+##  as.factor(ano)2015 & $-$4.937$^{***}$ \\ 
+##   & (0.067) \\ 
+##   & \\ 
+##  as.factor(ano)2016 & $-$6.289$^{***}$ \\ 
+##   & (0.067) \\ 
+##   & \\ 
+##  as.factor(ano)2017 & $-$7.546$^{***}$ \\ 
+##   & (0.072) \\ 
+##   & \\ 
+##  as.factor(ano)2018 & $-$8.841$^{***}$ \\ 
+##   & (0.073) \\ 
+##   & \\ 
+##  as.factor(ano)2019 & $-$9.944$^{***}$ \\ 
+##   & (0.081) \\ 
+##   & \\ 
+##  as.factor(ano)2020 & $-$11.208$^{***}$ \\ 
+##   & (0.081) \\ 
+##   & \\ 
+##  as.factor(G)2012 & 6.372$^{***}$ \\ 
+##   & (0.076) \\ 
+##   & \\ 
+##  as.factor(G)2014 & 6.166$^{***}$ \\ 
+##   & (0.072) \\ 
+##   & \\ 
+##  as.factor(G)2016 & 6.102$^{***}$ \\ 
+##   & (0.051) \\ 
+##   & \\ 
+##  as.factor(G)2018 & 5.985$^{***}$ \\ 
+##   & (0.045) \\ 
+##   & \\ 
+##  escolaridade & $-$0.062$^{***}$ \\ 
+##   & (0.016) \\ 
+##   & \\ 
+##  populacao & $-$0.00000 \\ 
+##   & (0.00000) \\ 
+##   & \\ 
+##  Constant & 10.568$^{***}$ \\ 
+##   & (0.146) \\ 
+##   & \\ 
+## \hline \\[-1.8ex] 
+## Observations & 8,280 \\ 
+## R$^{2}$ & 0.933 \\ 
+## Adjusted R$^{2}$ & 0.932 \\ 
+## Residual Std. Error & 1.437 (df = 8264) \\ 
+## F Statistic & 7,615.220$^{***}$ (df = 15; 8264) \\ 
+## \hline 
+## \hline \\[-1.8ex] 
+## \textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+## \end{tabular} 
+## \end{table}
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Calculando y0 com o modelo anterior}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{y0\_hat }\OtherTok{=} \FunctionTok{predict}\NormalTok{(reg0, df)}
+
+\CommentTok{\# Calculando Tau via imputation}
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{tau }\OtherTok{=} \DecValTok{0}
+\NormalTok{df[df}\SpecialCharTok{$}\NormalTok{d\_x\_t}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, }\StringTok{\textquotesingle{}tau\textquotesingle{}}\NormalTok{] }\OtherTok{=}\NormalTok{ df[df}\SpecialCharTok{$}\NormalTok{d\_x\_t}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, }\StringTok{\textquotesingle{}y\textquotesingle{}}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ df[df}\SpecialCharTok{$}\NormalTok{d\_x\_t}\SpecialCharTok{==}\DecValTok{1}\NormalTok{, }\StringTok{\textquotesingle{}y0\_hat\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{v0 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(Z0, Z1, w)\{}
+  
+  \ControlFlowTok{if}\NormalTok{(}\FunctionTok{dim}\NormalTok{(Z0)[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{!=} \FunctionTok{dim}\NormalTok{(Z1)[}\DecValTok{2}\NormalTok{]) \{}
+    \FunctionTok{print}\NormalTok{(}\StringTok{\textquotesingle{}ERROR: Z0 e Z1 precisam ter o mesmo número de colunas.\textquotesingle{}}\NormalTok{)}
+    \FunctionTok{return}\NormalTok{(}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\NormalTok{  \}}
+
+  \FunctionTok{dim}\NormalTok{(Z0 }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(Z0) }\SpecialCharTok{\%*\%}\NormalTok{ Z0))}
+  
+\NormalTok{  v0 }\OtherTok{=} \SpecialCharTok{{-}}\NormalTok{ Z0 }\SpecialCharTok{\%*\%} \FunctionTok{solve}\NormalTok{(}\FunctionTok{t}\NormalTok{(Z0) }\SpecialCharTok{\%*\%}\NormalTok{ Z0) }\SpecialCharTok{\%*\%} \FunctionTok{t}\NormalTok{(Z1) }\SpecialCharTok{\%*\%} \FunctionTok{t}\NormalTok{(w)}
+  \FunctionTok{return}\NormalTok{(v0)}
+  
+\NormalTok{\}}
+
+\NormalTok{summarize\_tau }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df, id\_name, G\_name, D\_name, formula, }\AttributeTok{restrict =} \ConstantTok{FALSE}\NormalTok{)\{}
+  
+  \FunctionTok{library}\NormalTok{(dplyr)}
+\NormalTok{  names\_var }\OtherTok{=} \FunctionTok{names}\NormalTok{(df)}
+
+  \ControlFlowTok{for}\NormalTok{ (var }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}tau\textquotesingle{}}\NormalTok{, id\_name, G\_name, D\_name))\{}
+    \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\NormalTok{var }\SpecialCharTok{\%in\%}\NormalTok{ names\_var)\{}
+      \FunctionTok{print}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}ERRO: df precisa conter\textquotesingle{}}\NormalTok{, var))}
+      \FunctionTok{return}\NormalTok{(}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}
+\NormalTok{    \}}
+\NormalTok{  \}}
+  
+\NormalTok{  df}\SpecialCharTok{$}\NormalTok{G   }\OtherTok{=}\NormalTok{ df[,G\_name]}
+\NormalTok{  df}\SpecialCharTok{$}\NormalTok{id  }\OtherTok{=}\NormalTok{ df[,id\_name]}
+\NormalTok{  df}\SpecialCharTok{$}\NormalTok{D   }\OtherTok{=}\NormalTok{ df[,D\_name]}
+  
+\NormalTok{  df1 }\OtherTok{=}\NormalTok{ df[df}\SpecialCharTok{$}\NormalTok{D}\SpecialCharTok{==}\DecValTok{1}\NormalTok{,]}
+\NormalTok{  df0 }\OtherTok{=}\NormalTok{ df[df}\SpecialCharTok{$}\NormalTok{D}\SpecialCharTok{==}\DecValTok{0}\NormalTok{,]}
+  
+  \CommentTok{\# Calculando Tau}
+\NormalTok{  df1}\SpecialCharTok{$}\NormalTok{w }\OtherTok{=} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\FunctionTok{length}\NormalTok{(df1}\SpecialCharTok{$}\NormalTok{tau), }\FunctionTok{length}\NormalTok{(df1}\SpecialCharTok{$}\NormalTok{tau))}
+\NormalTok{  w }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(df1}\SpecialCharTok{$}\NormalTok{w, }\AttributeTok{nrow =} \DecValTok{1}\NormalTok{)}
+\NormalTok{  tau\_it }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(df1}\SpecialCharTok{$}\NormalTok{tau, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{)}
+  
+\NormalTok{  TAU }\OtherTok{=}\NormalTok{ w }\SpecialCharTok{\%*\%}\NormalTok{ tau\_it}
+  
+  \CommentTok{\#Calculando variância de Tau}
+  
+  \ControlFlowTok{if}\NormalTok{(restrict)\{}
+    \CommentTok{\#Calculating tau\_g}
+\NormalTok{    df\_sum }\OtherTok{\textless{}{-}}\NormalTok{ df1 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(id, G) }\SpecialCharTok{\%\textgreater{}\%} 
+                      \FunctionTok{summarise}\NormalTok{(}\AttributeTok{w =} \FunctionTok{sum}\NormalTok{(w),}
+                                \AttributeTok{wtau =} \FunctionTok{sum}\NormalTok{(w}\SpecialCharTok{*}\NormalTok{tau))}
+    
+\NormalTok{    df\_g }\OtherTok{\textless{}{-}}\NormalTok{ df\_sum }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(G) }\SpecialCharTok{\%\textgreater{}\%}
+                       \FunctionTok{summarise}\NormalTok{(}\AttributeTok{numerador =} \FunctionTok{sum}\NormalTok{(w}\SpecialCharTok{*}\NormalTok{wtau),}
+                                 \AttributeTok{denominador =} \FunctionTok{sum}\NormalTok{(w}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+    
+\NormalTok{    df\_g}\SpecialCharTok{$}\NormalTok{tau\_g }\OtherTok{=}\NormalTok{ df\_g}\SpecialCharTok{$}\NormalTok{numerador}\SpecialCharTok{/}\NormalTok{df\_g}\SpecialCharTok{$}\NormalTok{denominador}
+    
+\NormalTok{    df\_res }\OtherTok{=} \FunctionTok{merge}\NormalTok{(df, df\_g[,}\FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}G\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}tau\_g\textquotesingle{}}\NormalTok{)], }\AttributeTok{by =} \StringTok{\textquotesingle{}G\textquotesingle{}}\NormalTok{, }\AttributeTok{all.x =}\NormalTok{ T)}
+\NormalTok{    df\_res[}\FunctionTok{is.na}\NormalTok{(df\_res}\SpecialCharTok{$}\NormalTok{tau\_g), }\StringTok{\textquotesingle{}tau\_g\textquotesingle{}}\NormalTok{] }\OtherTok{=} \DecValTok{0}
+\NormalTok{    df\_res}\SpecialCharTok{$}\NormalTok{res }\OtherTok{=}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{y }\SpecialCharTok{{-}}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{y0\_hat }\SpecialCharTok{{-}}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{d\_x\_t }\SpecialCharTok{*}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{tau\_g}
+  
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    df\_g }\OtherTok{=} \ConstantTok{NULL}
+\NormalTok{    df\_res }\OtherTok{=}\NormalTok{ df}
+\NormalTok{    df\_res}\SpecialCharTok{$}\NormalTok{res }\OtherTok{=}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{y }\SpecialCharTok{{-}}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{y0\_hat }\SpecialCharTok{{-}}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{d\_x\_t }\SpecialCharTok{*}\NormalTok{ df\_res}\SpecialCharTok{$}\NormalTok{tau}
+    
+\NormalTok{  \}}
+  
+  \CommentTok{\#Calculando os pesos implícitos vit}
+\NormalTok{  Z }\OtherTok{=} \FunctionTok{model.matrix}\NormalTok{(formula, }\AttributeTok{data =}\NormalTok{ df)}
+\NormalTok{  Z0 }\OtherTok{=}\NormalTok{ Z[df}\SpecialCharTok{$}\NormalTok{D }\SpecialCharTok{==} \DecValTok{0}\NormalTok{,]}
+\NormalTok{  Z1 }\OtherTok{=}\NormalTok{ Z[df}\SpecialCharTok{$}\NormalTok{D }\SpecialCharTok{==} \DecValTok{1}\NormalTok{,]}
+  
+\NormalTok{  v }\OtherTok{=} \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, }\FunctionTok{dim}\NormalTok{(Z)[}\DecValTok{1}\NormalTok{])}
+  
+\NormalTok{  v[df}\SpecialCharTok{$}\NormalTok{D }\SpecialCharTok{==} \DecValTok{1}\NormalTok{] }\OtherTok{=}\NormalTok{ w}
+\NormalTok{  v[df}\SpecialCharTok{$}\NormalTok{D }\SpecialCharTok{==} \DecValTok{0}\NormalTok{] }\OtherTok{=} \FunctionTok{v0}\NormalTok{(Z0, Z1, w)}
+  
+\NormalTok{  df\_res}\SpecialCharTok{$}\NormalTok{v }\OtherTok{=}\NormalTok{ v}
+  
+  \CommentTok{\#Calculando a variância via eq 7 borusyak et al.}
+  
+  \CommentTok{\#Clusterizando no tempo}
+\NormalTok{  df\_clustered }\OtherTok{=}\NormalTok{ df\_res }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{group\_by}\NormalTok{(id, G) }\SpecialCharTok{\%\textgreater{}\%}
+                            \FunctionTok{summarise}\NormalTok{(}\AttributeTok{v\_e =} \FunctionTok{sum}\NormalTok{(v}\SpecialCharTok{*}\NormalTok{res))}
+  
+  
+\NormalTok{  var }\OtherTok{=} \FunctionTok{sum}\NormalTok{(df\_clustered}\SpecialCharTok{$}\NormalTok{v\_e}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{  dp }\OtherTok{=}\NormalTok{ var}\SpecialCharTok{\^{}}\NormalTok{(}\DecValTok{1}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}
+  
+\NormalTok{  t }\OtherTok{=} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{dim}\NormalTok{(df\_clustered)[}\DecValTok{1}\NormalTok{]) }\SpecialCharTok{*}\NormalTok{ TAU}\SpecialCharTok{/}\NormalTok{dp}
+\NormalTok{  p\_value }\OtherTok{=} \FunctionTok{pnorm}\NormalTok{(}\FunctionTok{abs}\NormalTok{(t), }\AttributeTok{lower.tail =}\NormalTok{ F)}
+  
+  \FunctionTok{return}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{TAU=}\NormalTok{TAU, }\AttributeTok{Sigma2 =}\NormalTok{ var, }\AttributeTok{Sigma =}\NormalTok{ dp, }\AttributeTok{t =}\NormalTok{ t, }\AttributeTok{p\_value=}\NormalTok{p\_value, }\AttributeTok{df =} \FunctionTok{list}\NormalTok{(}\AttributeTok{df\_input =}\NormalTok{ df, }\AttributeTok{df\_res =}\NormalTok{ df\_res, }\AttributeTok{df\_clustered =}\NormalTok{ df\_clustered))))}
+  
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RES }\OtherTok{=} \FunctionTok{summarize\_tau}\NormalTok{(df, }
+                     \AttributeTok{id\_name =} \StringTok{\textquotesingle{}id\_municipio\textquotesingle{}}\NormalTok{, }
+                     \AttributeTok{G\_name =} \StringTok{\textquotesingle{}G\textquotesingle{}}\NormalTok{, }
+                     \AttributeTok{D\_name =} \StringTok{"d\_x\_t"}\NormalTok{, }
+                     \AttributeTok{formula =}\NormalTok{ y }\SpecialCharTok{\textasciitilde{}} \FunctionTok{as.factor}\NormalTok{(ano) }\SpecialCharTok{+} \FunctionTok{as.factor}\NormalTok{(G) }\SpecialCharTok{+}\NormalTok{ escolaridade }\SpecialCharTok{+}\NormalTok{ populacao,}
+                     \AttributeTok{restrict =} \ConstantTok{TRUE}\NormalTok{)}
+
+\FunctionTok{library}\NormalTok{(stringr)}
+\NormalTok{TAU }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\FunctionTok{round}\NormalTok{(RES}\SpecialCharTok{$}\NormalTok{TAU, }\DecValTok{4}\NormalTok{), }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+\NormalTok{VAR }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\FunctionTok{round}\NormalTok{(RES}\SpecialCharTok{$}\NormalTok{Sigma2, }\DecValTok{4}\NormalTok{), }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+\NormalTok{t   }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\FunctionTok{round}\NormalTok{(RES}\SpecialCharTok{$}\NormalTok{t, }\DecValTok{2}\NormalTok{), }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+\NormalTok{P\_v }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\FunctionTok{round}\NormalTok{(RES}\SpecialCharTok{$}\NormalTok{p\_value, }\DecValTok{4}\NormalTok{), }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{N1 }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\StringTok{\textquotesingle{}TAU\textquotesingle{}}\NormalTok{, }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+\NormalTok{N2 }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\StringTok{\textquotesingle{}VAR\textquotesingle{}}\NormalTok{, }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+\NormalTok{N3 }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\StringTok{\textquotesingle{}t\textquotesingle{}}\NormalTok{, }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+\NormalTok{N4 }\OtherTok{=} \FunctionTok{str\_pad}\NormalTok{(}\StringTok{\textquotesingle{}P{-}Valor\textquotesingle{}}\NormalTok{, }\DecValTok{8}\NormalTok{, }\AttributeTok{side =} \StringTok{\textquotesingle{}both\textquotesingle{}}\NormalTok{)}
+
+\FunctionTok{cat}\NormalTok{( N1, }\StringTok{"|"}\NormalTok{, N2, }\StringTok{\textquotesingle{}|\textquotesingle{}}\NormalTok{, N3, }\StringTok{"|"}\NormalTok{, N4,  }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   TAU    |   VAR    |    t     | P-Valor
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(TAU, }\StringTok{"|"}\NormalTok{, VAR, }\StringTok{\textquotesingle{}|\textquotesingle{}}\NormalTok{, t, }\StringTok{"|"}\NormalTok{, P\_v,  }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -0.7899  |  0.0154  | -220.24  |    0
+\end{verbatim}
+
+\end{document}

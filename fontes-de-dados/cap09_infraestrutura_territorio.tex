@@ -1,0 +1,436 @@
+% ============================================================
+%  cap09_infraestrutura_territorio.tex  [REVISADO]
+%  Capítulo 9: Infraestrutura, Território e Meio Ambiente
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Infraestrutura, Território e Meio Ambiente}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes de dados sobre infraestrutura, território e meio ambiente disponíveis para o Brasil. Cobrimos o SNIS (saneamento), as pesquisas de capacidade municipal do IBGE (Munic e Estadic), os dados das agências reguladoras (ANEEL, ANATEL, ANS), as malhas territoriais e setores censitários do IBGE, as fontes de dados ambientais como PRODES, DETER e MapBiomas, e --- com destaque especial --- as bases municipais sobre habitação e mercado imobiliário, incluindo ITBI, cadastro imobiliário, IPTU, Planta Genérica de Valores e registros de licenciamento urbanístico. Para cada fonte, detalhamos estrutura, cobertura, acesso e aplicações em avaliação de políticas públicas.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: por que infraestrutura e território importam
+         para avaliação}
+% ────────────────────────────────────────────────────────────
+
+Infraestrutura e território são dimensões transversais em praticamente toda avaliação de política pública. A cobertura de saneamento básico afeta diretamente a saúde da população; o acesso à energia elétrica condiciona o aprendizado escolar e a produtividade econômica; a conectividade de telecomunicações determina o acesso a serviços digitais de governo; a distância entre populações e serviços públicos é um determinante crítico do uso efetivo desses serviços.
+
+Do ponto de vista metodológico, dados de infraestrutura e território cumprem dois papéis distintos na avaliação:
+
+\begin{itemize}
+  \item \textbf{Como variáveis de resultado}: quando a política avaliada tem por objetivo expandir a cobertura de um serviço de infraestrutura (saneamento, energia, internet, habitação);
+  \item \textbf{Como variáveis de controle ou de contexto}: quando a infraestrutura disponível é um determinante dos resultados de outras políticas (saúde, educação, renda) e precisa ser controlada para isolar o efeito da intervenção de interesse.
+\end{itemize}
+
+Além disso, dados georreferenciados --- malhas territoriais, setores censitários, coordenadas de estabelecimentos --- abrem uma dimensão analítica específica: a \textbf{análise espacial}, que permite identificar padrões territoriais de cobertura e exclusão, calcular distâncias entre populações e serviços, e explorar variações geográficas como fonte de identificação causal.
+
+Uma observação importante antes de prosseguir: várias das fontes discutidas neste capítulo só revelam plenamente seu potencial quando integradas a malhas territoriais, setores censitários, bairros, distritos, CEPs ou outros identificadores geográficos. Essa integração espacial é especialmente decisiva em habitação, mercado imobiliário, infraestrutura urbana, saúde, crime e educação. A seção~\ref{sec:malhas} sobre malhas territoriais do IBGE deve ser lida em conjunto com as demais seções do capítulo.
+
+% ────────────────────────────────────────────────────────────
+\section{SNIS --- Sistema Nacional de Informações sobre Saneamento}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SNIS --- Sistema Nacional de Informações sobre Saneamento}
+  {Ministério das Cidades / Secretaria Nacional de Saneamento}
+  {https://www.snis.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (desde 1995 para água e esgoto; desde 2002 para resíduos sólidos; desde 2015 para drenagem)}
+  {Município e prestador de serviço}
+
+\subsection{O que é e por que importa}
+
+O Sistema Nacional de Informações sobre Saneamento (SNIS) é a principal fonte de dados sobre os serviços de saneamento básico no Brasil --- abastecimento de água, esgotamento sanitário, manejo de resíduos sólidos urbanos e drenagem e manejo de águas pluviais. Operado pelo Ministério das Cidades, o SNIS coleta anualmente informações declaradas pelos prestadores de serviços de saneamento sobre cobertura, qualidade, tarifas e finanças.
+
+\subsection{Estrutura e principais variáveis}
+
+\subsubsection{Água e Esgoto}
+
+\begin{itemize}
+  \item \textbf{Cobertura}: população atendida com abastecimento de água e com coleta de esgoto; índice de atendimento urbano e total;
+  \item \textbf{Qualidade}: índice de conformidade das amostras de água;
+  \item \textbf{Operação}: volume de água produzido, consumido e faturado; índice de perdas na distribuição;
+  \item \textbf{Finanças}: receita operacional, despesas totais, resultado operacional por prestador;
+  \item \textbf{Investimentos}: valor investido em expansão e reposição da rede.
+\end{itemize}
+
+\subsubsection{Resíduos Sólidos}
+
+\begin{itemize}
+  \item Cobertura da coleta domiciliar urbana;
+  \item Tipo de destinação final (aterro sanitário, aterro controlado, lixão);
+  \item Existência de coleta seletiva e de triagem;
+  \item Quantidade de resíduos coletados e destinados.
+\end{itemize}
+
+\subsection{Limitações e cuidados}
+
+A principal limitação do SNIS é a \textbf{cobertura heterogênea entre municípios}: a adesão ao sistema é voluntária para os prestadores, e municípios pequenos têm taxas de resposta mais baixas e qualidade de preenchimento mais variável. Além disso, os dados são \textbf{autodeclarados pelos prestadores}, o que pode gerar superestimação dos indicadores de cobertura.
+
+\begin{boxdica}{Dica --- Combinando SNIS com Censo Demográfico}
+O SNIS reporta cobertura a partir das declarações dos prestadores; o Censo Demográfico reporta cobertura a partir de perguntas feitas diretamente aos moradores. As duas fontes frequentemente divergem. Para análises robustas, compare as duas fontes e documente as divergências encontradas.
+\end{boxdica}
+
+\subsection{Acesso aos dados}
+
+\begin{itemize}
+  \item \textbf{Portal SNIS}: consultas online com tabelas e gráficos por município em \url{www.snis.gov.br};
+  \item \textbf{Série Histórica}: planilhas Excel com todos os indicadores por município desde o início da série;
+  \item \textbf{API}: o SNIS disponibiliza uma API REST para acesso programático.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item Avaliação de programas de universalização do saneamento;
+  \item Impacto do saneamento sobre mortalidade infantil e diarreias;
+  \item Análise de eficiência dos prestadores;
+  \item Avaliação do Marco Legal do Saneamento (Lei n.º 14.026/2020).
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Munic e Estadic --- Pesquisas de Capacidade Institucional
+         do IBGE}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Munic --- Pesquisa de Informações Básicas Municipais}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/educacao/10586-pesquisa-de-informacoes-basicas-municipais.html}
+  {Brasil e municípios}
+  {Irregular (edições principais: 1999--2020)}
+  {Município}
+
+\subsection{O que é e por que importa}
+
+A Pesquisa de Informações Básicas Municipais (Munic) é um censo de todos os municípios brasileiros, realizado pelo IBGE com periodicidade irregular desde 1999. O questionário é respondido pelos próprios gestores municipais e cobre a estrutura institucional, a capacidade administrativa e a oferta de serviços públicos nos municípios.
+
+Para a avaliação de políticas públicas, a Munic ocupa um lugar especial: é uma das poucas fontes com informações sistemáticas sobre \textbf{capacidade estatal local} --- dimensão raramente disponível em outras fontes e frequentemente relevante para entender por que políticas funcionam melhor em alguns municípios do que em outros. Sua importância vai além das análises de infraestrutura: a Munic é uma referência para qualquer avaliação que envolva a implementação de políticas pelo nível municipal.
+
+\subsection{Principais temas cobertos}
+
+\begin{itemize}
+  \item \textbf{Estrutura administrativa}: existência de secretarias por área (saúde, educação, assistência social, meio ambiente, habitação), número de servidores, plano plurianual;
+  \item \textbf{Legislação e planejamento}: plano diretor, lei de uso e ocupação do solo, código de obras, planos setoriais municipais;
+  \item \textbf{Serviços públicos}: equipamentos culturais, esportivos, de saúde e assistência social mantidos pelo município;
+  \item \textbf{Tecnologia da informação}: uso de sistemas de informação, presença digital, acesso à internet nas secretarias;
+  \item \textbf{Meio ambiente}: conselho municipal de meio ambiente, legislação ambiental, coleta seletiva;
+  \item \textbf{Participação social}: conselhos municipais por área e regularidade das reuniões;
+  \item \textbf{Habitação e urbanismo}: existência de secretaria de habitação, de plano local de habitação de interesse social (PLHIS), de legislação de regularização fundiária, de sistemas de informação habitacional.
+\end{itemize}
+
+A \textbf{Estadic} (Pesquisa de Informações Básicas Estaduais), disponível em \url{www.ibge.gov.br/estatisticas/sociais/saude/16770-pesquisa-de-informacoes-basicas-estaduais.html}, é o equivalente da Munic para os estados e o Distrito Federal.
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Variável de capacidade institucional}: existência de secretaria específica, de plano setorial ou de conselho municipal como variável de controle em avaliações de políticas descentralizadas;
+  \item \textbf{Análise de heterogeneidade de impacto}: verificar se políticas funcionam melhor em municípios com maior capacidade institucional;
+  \item \textbf{Avaliação de políticas de fortalecimento institucional}: monitoramento da evolução da capacidade municipal ao longo do tempo;
+  \item \textbf{Avaliação de políticas habitacionais e urbanísticas}: verificar se municípios com planos diretores, PLHIS ou legislação de regularização fundiária têm resultados distintos em políticas de habitação.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Dados de Agências Reguladoras}
+% ────────────────────────────────────────────────────────────
+
+\subsection{ANEEL --- Agência Nacional de Energia Elétrica}
+
+\ficharapida
+  {Dados da ANEEL}
+  {Agência Nacional de Energia Elétrica (ANEEL)}
+  {https://dadosabertos.aneel.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Variável por indicador (mensal a anual)}
+  {Unidade consumidora, município e distribuidora}
+
+A ANEEL disponibiliza dados sobre cobertura, qualidade e tarifas do setor elétrico, com relevância direta para avaliação de políticas de acesso à energia. Os principais indicadores incluem número de unidades consumidoras por classe e município, indicadores de continuidade (DEC e FEC) por distribuidora, tarifas por classe de consumo e dados do Programa Luz para Todos.
+
+\subsection{ANATEL --- Agência Nacional de Telecomunicações}
+
+\ficharapida
+  {Dados da ANATEL}
+  {Agência Nacional de Telecomunicações (ANATEL)}
+  {https://dados.anatel.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Trimestral a anual}
+  {Município e prestadora}
+
+A ANATEL disponibiliza dados sobre cobertura de sinal móvel (2G, 3G, 4G, 5G) e banda larga fixa por município, incluindo mapa georreferenciado de cobertura. Para avaliações de políticas de inclusão digital e governo digital, os dados da ANATEL são variáveis de contexto fundamentais.
+
+\subsection{ANS --- Agência Nacional de Saúde Suplementar}
+
+\ficharapida
+  {Dados da ANS}
+  {Agência Nacional de Saúde Suplementar (ANS)}
+  {https://dadosabertos.ans.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Trimestral}
+  {Beneficiário de plano de saúde e operadora}
+
+A ANS disponibiliza dados sobre beneficiários de planos de saúde por município, faixa etária e sexo, operadoras ativas por modalidade e indicadores de qualidade assistencial (Idss). Para avaliações de políticas de saúde que afetam tanto o SUS quanto a saúde suplementar, os dados da ANS são indispensáveis para capturar o universo completo do setor.
+
+% ────────────────────────────────────────────────────────────
+\section{Malhas Territoriais e Dados Georreferenciados do IBGE}
+\label{sec:malhas}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Malhas Territoriais e Setores Censitários}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais.html}
+  {Brasil (todos os níveis territoriais)}
+  {Atualização periódica (versões anuais das malhas municipais)}
+  {Setor censitário, município, UF, região}
+
+\subsection{O que são e por que importam}
+
+As malhas territoriais do IBGE são os arquivos cartográficos que definem os limites geográficos das unidades territoriais brasileiras em diferentes níveis de desagregação: países, grandes regiões, unidades da federação, mesorregiões, microrregiões, municípios, distritos, subdistritos e \textbf{setores censitários} --- a menor unidade territorial do sistema estatístico brasileiro.
+
+Para a avaliação de políticas públicas, as malhas territoriais cumprem funções essenciais:
+
+\begin{itemize}
+  \item \textbf{Visualização cartográfica}: produção de mapas de cobertura, distribuição de beneficiários e indicadores de resultado por território;
+  \item \textbf{Análise espacial}: cálculo de distâncias entre pontos (domicílios e equipamentos públicos), identificação de áreas de influência, análise de autocorrelação espacial e spillovers entre territórios;
+  \item \textbf{Linkagem territorial}: combinação de bases de dados que usam diferentes identificadores geográficos. Muitas bases relevantes para avaliação --- como cadastros imobiliários municipais com endereços, registros de ITBI com CEP, ou dados de licenciamento urbanístico --- não compartilham identificadores administrativos comuns com bases como o Censo Demográfico ou o Censo Escolar. A integração geoespacial, por meio de operações de intersecção ou join espacial, frequentemente é o único caminho para combiná-las.
+\end{itemize}
+
+\subsection{Setores censitários}
+
+Os setores censitários são a unidade territorial mais granular do sistema de informações geográficas do IBGE. Cada setor agrupa aproximadamente 200 a 300 domicílios em áreas urbanas e é a unidade de coleta do Censo Demográfico.
+
+Os setores censitários têm dois usos principais em avaliação:
+
+\begin{enumerate}
+  \item \textbf{Análise inframunicipal}: para políticas implementadas em nível de bairro ou comunidade, os dados do Censo Demográfico agregados por setor permitem análises com desagregação muito maior do que o nível municipal;
+  \item \textbf{Estratégia de identificação geográfica}: em avaliações de impacto, a descontinuidade nos limites de setores ou municípios pode ser explorada como fonte de variação exógena (regressão descontínua geográfica).
+\end{enumerate}
+
+\subsection{Principais arquivos disponíveis}
+
+\begin{itemize}
+  \item \textbf{Malhas municipais}: polígonos dos 5.570 municípios brasileiros, com atualização anual. Disponíveis em formato Shapefile, GeoJSON e GPKG;
+  \item \textbf{Malha de setores censitários}: polígonos de todos os setores censitários do Censo 2022, com código identificador linkável aos microdados do Censo;
+  \item \textbf{Grade estatística}: malha regular de células de 1 km² com dados populacionais agregados, útil para análises que não seguem limites administrativos;
+  \item \textbf{Localidades}: pontos georreferenciados de sedes municipais, distritos e aglomerados rurais;
+  \item \textbf{CNEFE} (Cadastro Nacional de Endereços para Fins Estatísticos): cadastro georreferenciado de todos os endereços do Brasil identificados durante a coleta censitária, valioso para análises de acessibilidade e proximidade a serviços públicos.
+\end{itemize}
+
+\begin{boxdica}{Dica --- Pacotes para análise espacial}
+\begin{itemize}
+  \item \textbf{R}: os pacotes \texttt{sf} (leitura e manipulação de dados espaciais), \texttt{geobr} (download de malhas do IBGE diretamente no R) e \texttt{spdep} (análise de autocorrelação espacial) formam o conjunto mais utilizado para análise espacial em políticas públicas;
+  \item \textbf{Python}: as bibliotecas \texttt{geopandas} e \texttt{shapely} oferecem funcionalidades equivalentes; \texttt{pygeobr} facilita o download das malhas do IBGE;
+  \item \textbf{QGIS}: software de SIG gratuito e de código aberto, sem necessidade de programação, indicado para visualizações cartográficas e análises espaciais mais simples.
+\end{itemize}
+\end{boxdica}
+
+% ────────────────────────────────────────────────────────────
+\section{Habitação e Mercado Imobiliário: bases municipais}
+\label{sec:habitacao}
+% ────────────────────────────────────────────────────────────
+
+As avaliações de políticas habitacionais, de regulação urbana e de mercado imobiliário dependem de fontes que raramente estão disponíveis em bases nacionais padronizadas. A informação mais granular e relevante sobre transações imobiliárias, valores de imóveis e características urbanísticas está dispersa em sistemas municipais --- administrados pelas prefeituras no exercício de suas competências tributárias e de planejamento urbano. Esta seção apresenta as principais fontes disponíveis nesse ecossistema, seus usos e suas limitações.
+
+\subsection{Bases de ITBI --- Imposto sobre Transmissão de Bens Imóveis}
+
+O ITBI é um tributo de competência municipal (art. 156, II da Constituição Federal) incidente sobre a transmissão onerosa de bens imóveis entre vivos --- compras e vendas, dações em pagamento, permutas. Cada transação imobiliária gera um registro administrativo no sistema tributário da prefeitura, e esses registros constituem uma das fontes mais ricas para análises de mercado imobiliário disponíveis no Brasil.
+
+A depender do município, os microdados de ITBI podem conter:
+
+\begin{itemize}
+  \item Data da transação;
+  \item Valor declarado pelo comprador (base de cálculo do imposto);
+  \item Valor venal do imóvel (valor atribuído pela prefeitura para fins fiscais);
+  \item Tipo de imóvel (residencial, comercial, terreno, galpão);
+  \item Área do imóvel (construída e/ou de terreno, quando disponível);
+  \item Localização: endereço completo, CEP, bairro --- permitindo georreferenciamento para análise espacial;
+  \item Tipo de financiamento (à vista, financiamento bancário, FGTS), em municípios com dados mais detalhados.
+\end{itemize}
+
+Essas bases são \textbf{centrais em avaliações urbanas} porque permitem acompanhar transações imobiliárias com granularidade muito superior à das pesquisas nacionais. Para avaliações de impacto de projetos de infraestrutura urbana (como extensões de metrô, obras de saneamento, parques lineares) sobre os preços dos imóveis, de políticas de regularização fundiária sobre o mercado formal, ou de programas habitacionais sobre a dinâmica do entorno, as bases de ITBI são frequentemente insubstituíveis.
+
+\textbf{Acesso}: os microdados de ITBI não estão disponíveis em nenhum repositório nacional centralizado. O acesso deve ser obtido diretamente junto às prefeituras --- via portais de dados abertos municipais (quando existentes) ou por pedido LAI. Municípios como São Paulo, Belo Horizonte e Porto Alegre disponibilizam dados de ITBI em seus portais de dados abertos com graus variados de detalhe.
+
+\begin{boxatencao}{Atenção --- Valor declarado vs. valor de mercado}
+O valor declarado para fins de ITBI é frequentemente \textit{diferente} do preço efetivo de mercado da transação. Em muitos casos, compradores e vendedores têm incentivos para declarar valores menores do que o preço efetivo pago, reduzindo a base de cálculo do imposto. Em municípios onde a alíquota incide sobre o maior entre o valor declarado e o valor venal, esse comportamento é atenuado --- mas não eliminado. Análises que usam o valor declarado de ITBI como proxy de preço de mercado devem discutir esse potencial viés explicitamente.
+\end{boxatencao}
+
+\subsection{Cadastro Imobiliário Municipal e IPTU}
+
+O cadastro imobiliário municipal é o registro de todos os imóveis situados no território do município, mantido pela prefeitura para fins de administração tributária --- especialmente do IPTU (Imposto Predial e Territorial Urbano). É uma fonte com potencial analítico enorme para avaliações de habitação e uso do solo.
+
+As principais informações que um cadastro imobiliário bem estruturado pode conter incluem:
+
+\begin{itemize}
+  \item \textbf{Identificação do imóvel}: número de inscrição cadastral, endereço, coordenadas geográficas;
+  \item \textbf{Características físicas}: área de terreno, área construída, número de pavimentos, tipo de uso (residencial/comercial/misto/industrial), padrão construtivo;
+  \item \textbf{Situação jurídica}: proprietário ou possuidor, tipo de domínio (pleno, enfiteuse, aforamento), existência de registro em cartório;
+  \item \textbf{Informações tributárias}: valor venal do terreno e da edificação calculado segundo a Planta Genérica de Valores (PGV); alíquota aplicada; histórico de pagamento do IPTU.
+\end{itemize}
+
+A \textbf{Planta Genérica de Valores (PGV)} é o instrumento municipal que define os valores unitários de terrenos e edificações por logradouro ou zona, usados para calcular o valor venal dos imóveis. Para avaliações que precisam de um índice de valor imobiliário com cobertura ampla (não apenas imóveis transacionados, como no ITBI), a PGV pode ser uma alternativa útil, embora reflita valores administrativos e não necessariamente de mercado.
+
+\subsection{Registros de Licenciamento Urbanístico}
+
+As prefeituras mantêm registros administrativos de todas as solicitações e aprovações de obras e intervenções no território: alvarás de construção, reformas, demolições, aprovação de projetos e emissão de Habite-se (documento que atesta que a obra foi concluída conforme o projeto aprovado).
+
+Esses registros são relevantes para avaliações que precisam rastrear a dinâmica de produção do espaço urbano:
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de regularização fundiária}: verificar se a regularização de assentamentos informais induz investimentos em melhorias habitacionais (proxied pelo número de alvarás de reforma na área regularizada);
+  \item \textbf{Análise de adensamento e verticalização}: acompanhar a aprovação de projetos de múltiplos pavimentos em áreas sujeitas a mudanças de zoneamento;
+  \item \textbf{Avaliação de programas de habitação de interesse social}: monitorar a emissão de Habite-se em unidades do MCMV para verificar a efetiva entrega das unidades.
+\end{itemize}
+
+\subsection{Bases de Zoneamento e Uso do Solo}
+
+Municípios com sistemas de informação mais estruturados disponibilizam, em formatos georreferenciados, suas legislações de zoneamento --- definindo as zonas de uso permitido (residencial, comercial, industrial, misto), os índices urbanísticos (coeficiente de aproveitamento, taxa de ocupação, recuo mínimo) e as áreas de proteção ambiental e de especial interesse social (AEIS).
+
+Para avaliações de políticas de regulação urbana --- como mudanças de zoneamento, criação de AEIS ou adoção de instrumentos do Estatuto da Cidade como IPTU progressivo e operações urbanas consorciadas ---, as bases de zoneamento georreferenciadas são insumos essenciais.
+
+\subsection{Alerta: heterogeneidade e comparabilidade entre municípios}
+
+As bases municipais sobre mercado imobiliário e urbanismo são extraordinariamente valiosas, mas apresentam graus de heterogeneidade que não têm equivalente em fontes nacionais padronizadas. Antes de realizar comparações entre municípios ou análises longitudinais dentro de um mesmo município, o pesquisador deve investigar:
+
+\begin{itemize}
+  \item \textbf{Layout e estrutura}: cada município usa seu próprio sistema de gestão tributária, com campos, nomenclaturas e formatos distintos. A mesma variável (área construída, tipo de uso) pode ter definições e unidades diferentes entre sistemas;
+  \item \textbf{Cobertura}: o cadastro imobiliário municipal pode estar desatualizado ou ter cobertura parcial --- especialmente em áreas de ocupação informal ou em municípios com menor capacidade administrativa;
+  \item \textbf{Mudanças de regra tributária}: alterações na PGV, nas alíquotas do IPTU ou nos critérios de avaliação imobiliária ao longo do tempo introduzem quebras de série que precisam ser identificadas antes de análises longitudinais;
+  \item \textbf{Mudanças de sistema}: migrações de sistema informatizado (comuns em prefeituras de médio porte) podem gerar inconsistências entre períodos;
+  \item \textbf{Padronização de endereços}: endereços coletados em sistemas administrativos municipais frequentemente precisam de tratamento para georreferenciamento --- abreviações, erros de digitação, logradouros sem CEP ou com CEP desatualizado são comuns.
+\end{itemize}
+
+Em comparações entre municípios, a harmonização dessas dimensões é um trabalho metodológico substantivo que deve ser documentado com o mesmo rigor que o próprio modelo de avaliação.
+
+% ────────────────────────────────────────────────────────────
+\section{Dados Ambientais: PRODES, DETER e MapBiomas}
+% ────────────────────────────────────────────────────────────
+
+\subsection{PRODES --- Monitoramento do Desmatamento}
+
+\ficharapida
+  {PRODES --- Projeto de Monitoramento do Desmatamento na Amazônia Legal por Satélite}
+  {Instituto Nacional de Pesquisas Espaciais (INPE)}
+  {https://data.inpe.br/biomasbr/prodes-monitoramento-anual-da-supressao-de-vegetacao-nativa/}
+  {Amazônia Legal (dados mais recentes para outros biomas)}
+  {Anual (desde 1988)}
+  {Polígono de desmatamento (georreferenciado)}
+
+O PRODES é o sistema oficial de monitoramento do desmatamento na Amazônia Legal, operado pelo INPE desde 1988. Utiliza imagens de satélite para identificar e quantificar as áreas de floresta desmatadas a cada ano. Os dados são disponibilizados em formato georreferenciado (Shapefile e GeoTIFF) e incluem polígonos de desmatamento por ano com área calculada, taxa anual de desmatamento por município e estado, e dados históricos desde 1988 para análises de longo prazo.
+
+Para avaliações de políticas ambientais --- como o PPCDAm, a criação de unidades de conservação ou a implementação do CAR ---, o PRODES é a referência nacional e internacionalmente reconhecida.
+
+\subsection{DETER --- Sistema de Detecção do Desmatamento em Tempo Real}
+
+\ficharapida
+  {DETER --- Monitoramento Diário da Supressão e Degradação de Vegetação Nativa}
+  {Instituto Nacional de Pesquisas Espaciais (INPE)}
+  {https://data.inpe.br/biomasbr/deter-monitoramento-diario-da-supressao-e-degradacao-de-vegetacao-nativa/}
+  {Amazônia Legal e Cerrado}
+  {Contínuo (alertas em dias a semanas)}
+  {Alerta georreferenciado}
+
+O DETER complementa o PRODES com detecção mais frequente de alertas de desmatamento e degradação florestal. É a fonte utilizada pelo Ibama para acionar operações de fiscalização em tempo real. Tem aplicações em avaliações de fiscalização ambiental e de compliance de políticas de proteção florestal.
+
+\subsection{MapBiomas}
+
+\ficharapida
+  {MapBiomas --- Mapeamento Anual de Uso e Cobertura da Terra no Brasil}
+  {Iniciativa MapBiomas}
+  {https://mapbiomas.org}
+  {Brasil (todos os biomas)}
+  {Anual (desde 1985)}
+  {Pixel de 30m (georreferenciado)}
+
+O MapBiomas é uma iniciativa colaborativa entre universidades, ONGs e empresas de tecnologia que produz mapas anuais de uso e cobertura do solo para todo o território brasileiro, desde 1985. Diferentemente do PRODES --- focado no desmatamento ---, o MapBiomas classifica cada pixel do território em categorias de uso do solo (floresta, pastagem, agricultura, área urbana, água, etc.).
+
+Para avaliações de políticas de uso do solo, de agricultura e de meio ambiente, o MapBiomas oferece uma perspectiva de longo prazo sobre as mudanças no território que nenhuma outra fonte disponibiliza com essa cobertura e granularidade. A série desde 1985 permite analisar trajetórias de conversão do uso do solo em resposta a políticas ambientais, agrícolas e de infraestrutura.
+
+% ────────────────────────────────────────────────────────────
+\section{Cadastro Ambiental Rural (CAR)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Cadastro Ambiental Rural (CAR)}
+  {Serviço Florestal Brasileiro (SFB) / Ministério do Meio Ambiente}
+  {https://www.gov.br/gestao/pt-br/assuntos/cadastro-ambiental-rural-car-1}
+  {Brasil}
+  {Contínuo (desde 2013; obrigatoriedade a partir de 2016)}
+  {Imóvel rural}
+
+O CAR é o registro eletrônico obrigatório para todos os imóveis rurais brasileiros, criado pelo Código Florestal de 2012. Cada imóvel registrado tem seus limites georreferenciados e a identificação das áreas de preservação permanente (APP), reserva legal e uso consolidado.
+
+Para avaliações de políticas ambientais e agrícolas, o CAR é a principal fonte de dados sobre a situação fundiária e ambiental dos imóveis rurais, sendo especialmente relevante para avaliação da adesão ao Código Florestal, análise de políticas de regularização ambiental rural (PRA) e crédito rural condicionado à regularidade ambiental.
+
+% ────────────────────────────────────────────────────────────
+\section{Outras fontes de infraestrutura e território}
+% ────────────────────────────────────────────────────────────
+
+\subsection{DNIT --- Malha Rodoviária}
+
+O Departamento Nacional de Infraestrutura de Transportes (DNIT) disponibiliza a malha rodoviária federal georreferenciada, com classificação das rodovias por tipo de pista, superfície e condição. Para avaliações de políticas de transporte e de acesso a serviços em áreas remotas, a malha rodoviária é uma variável de contexto relevante.
+
+\subsection{CNT --- Pesquisa Rodoviária}
+
+A Confederação Nacional do Transporte (CNT) realiza anualmente a Pesquisa Rodoviária, que avalia as condições de pavimentação, sinalização e geometria de rodovias federais e estaduais. Os dados são disponibilizados com georreferenciamento e permitem análises de qualidade da infraestrutura de transportes ao longo do tempo.
+
+\subsection{CNEFE --- Cadastro Nacional de Endereços para Fins Estatísticos}
+
+O CNEFE, produzido pelo IBGE a partir dos dados do Censo Demográfico, é um cadastro georreferenciado de todos os endereços do Brasil identificados durante a coleta censitária. É uma fonte valiosa para análises de acessibilidade e proximidade a serviços públicos, especialmente quando combinada com dados georreferenciados de estabelecimentos de saúde (CNES), escolas (Censo Escolar) e equipamentos do SUAS.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou as principais fontes de dados sobre infraestrutura, território e meio ambiente disponíveis para o Brasil. A Tabela~\ref{tab:sintese_cap9} resume suas características essenciais.
+
+\begin{table}[H]
+\centering
+\caption{Síntese das fontes de dados de infraestrutura, território e meio ambiente}
+\label{tab:sintese_cap9}
+\small
+\begin{tabularx}{\textwidth}{@{} p{2.8cm} p{3.2cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} &
+\textbf{Principal uso em avaliação} \\
+\midrule
+SNIS         & Saneamento básico           & Municipal (adesão voluntária) & Cobertura de água/esgoto, qualidade \\
+Munic/Estadic & Capacidade institucional   & Municipal/estadual & Variável de controle institucional, habitação \\
+ANEEL        & Energia elétrica            & Municipal          & Cobertura, qualidade, tarifas \\
+ANATEL       & Telecomunicações            & Municipal          & Cobertura de internet e telefonia \\
+ANS          & Saúde suplementar           & Municipal          & Beneficiários de planos de saúde \\
+Malhas IBGE  & Limites territoriais        & Todos os níveis    & Análise espacial, visualização, linkagem \\
+ITBI         & Transações imobiliárias     & Municipal          & Mercado imobiliário, políticas urbanas \\
+Cadastro/IPTU & Imóveis e valores venais   & Municipal          & Habitação, regulação urbana, PGV \\
+Licenciamento & Aprovação de obras          & Municipal          & Produção habitacional, adensamento \\
+PRODES/INPE  & Desmatamento                & Amazônia/Brasil    & Políticas ambientais \\
+DETER/INPE   & Alertas de desmatamento     & Amazônia/Cerrado   & Fiscalização ambiental \\
+MapBiomas    & Uso e cobertura do solo     & Brasil (desde 1985) & Mudanças no uso do solo \\
+CAR          & Imóveis rurais              & Brasil             & Código Florestal, crédito rural \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+Os pontos centrais do capítulo são:
+
+\begin{itemize}
+  \item O \textbf{SNIS} é a referência para dados de saneamento básico, mas sua cobertura é heterogênea entre municípios e os dados são autodeclarados pelos prestadores;
+
+  \item A \textbf{Munic} e a \textbf{Estadic} oferecem informações sobre capacidade institucional municipal e estadual que são raramente disponíveis em outras fontes e muito úteis como variáveis de controle em avaliações de políticas descentralizadas --- incluindo políticas habitacionais e urbanísticas;
+
+  \item As \textbf{bases municipais de ITBI, cadastro imobiliário e IPTU} são fontes centrais para avaliações de habitação e mercado imobiliário, com granularidade muito superior às pesquisas nacionais --- mas apresentam heterogeneidade substancial em layout, cobertura e qualidade entre municípios, o que exige harmonização cuidadosa antes de comparações;
+
+  \item Os \textbf{registros de licenciamento urbanístico} e as \textbf{bases de zoneamento} permitem rastrear a dinâmica da produção do espaço urbano em resposta a políticas de habitação e regulação;
+
+  \item As \textbf{malhas territoriais e setores censitários} do IBGE são a base para qualquer análise espacial e, frequentemente, o único caminho para linkar fontes que não compartilham identificadores administrativos comuns;
+
+  \item O \textbf{PRODES/INPE}, o \textbf{DETER} e o \textbf{MapBiomas} são as referências para dados ambientais, com séries históricas longas e cobertura nacional ou de biomas específicos;
+
+  \item A \textbf{integração espacial} das fontes --- via malhas territoriais, setores censitários, CEPs ou coordenadas --- é especialmente importante em habitação, mercado imobiliário, infraestrutura urbana, saúde, crime e educação, e deve ser tratada como parte central do desenho metodológico, não como passo técnico secundário.
+\end{itemize}
+
+O próximo capítulo aborda as fontes de dados sobre finanças públicas, com foco no FINBRA/Siconfi, nos portais de transparência e nos dados do TSE.

@@ -1,0 +1,165 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage{amssymb,amsmath,amsfonts,eurosym,geometry,ulem,graphicx,caption, xcolor,setspace,sectsty,comment,footmisc,caption,natbib,pdflscape,array,hyperref, fancyhdr, csquotes, tikz, enumitem, dsfont, amsthm, makecell, multicol,multirow, booktabs,xcolor,subcaption}
+
+\usepackage{etex,etoolbox}
+\usepackage{thmtools}
+\usepackage[many]{tcolorbox}
+\usepackage{apxproof}
+\usepackage{listings}
+
+\usepackage{tabularray}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{codehigh}
+\usepackage[normalem]{ulem}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+
+
+\usetikzlibrary{decorations.pathreplacing,positioning, arrows.meta}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=purple,
+    filecolor=magenta,      
+    urlcolor=purple,
+    citecolor=purple,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\normalem
+
+
+
+\onehalfspacing
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Hipótese}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheoremrep{claim}{\sc \large Claim}[section]
+
+
+\newtheorem{hyp}{Hypothesis}
+\newtheorem{subhyp}{Hypothesis}[hyp]
+\renewcommand{\thesubhyp}{\thehyp\alph{subhyp}}
+
+\newtheorem{thm}{Hypothesis}[subsection]
+\renewcommand{\thethm}{\Alph{subsection}.\arabic{thm}}
+
+
+\newtheorem{inner}{\innerheader}
+\newcommand{\innerheader}{}
+\newenvironment{hypothesis}[1]
+ {\renewcommand\innerheader{#1}\begin{inner}}
+ {\end{inner}}
+
+ \renewcommand{\refname}{\sc References}
+
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\newcommand{\ImageWidth}{11cm}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
+
+\geometry{left=1.0in,right=1.0in,top=1.0in,bottom=1.0in}
+
+\title{\sc Guia de Pareamento}
+\author{}
+\date{}
+
+\renewcommand*\contentsname{\sc Sumário}
+
+\numberwithin{equation}{section}
+\numberwithin{table}{section}
+\numberwithin{figure}{section}
+
+\newtcolorbox{boxH}{
+    colback = sub, 
+    colframe = main, 
+    boxrule = 0pt, 
+    leftrule = 0pt, % left rule weight
+    breakable
+}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.1,0.2,0.5}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    language = R,
+    commentstyle=\color{codegray},
+    keywordstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=false,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {â}{{\^a}}1 {ó}{{\'o}}1 {ç}{{\c{c}}}1 {õ}{{\~o}}1 {à}{{\`a}}1
+}
+
+\lstset{style=mystyle}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\pagebreak \newpage
+
+\doublespacing
+
+
+\section{\sc Introdução} \label{introducao}
+
+
+\input{Sections/1 - Introdução}
+
+\section{\sc Causalidade}\label{poder}
+
+\input{Sections/2 - Experimentos}
+
+\section{\sc Pareamento}\label{late}
+
+\input{Sections/3 - Aproximado}
+
+\section{\sc Pareamento com uma variável}\label{cluster}
+
+\input{Sections/4 - Outros}
+
+\section{\sc Pareamento com múltiplas variáveis}\label{strat}
+
+\input{Sections/5 - RCT}
+
+%\section{\sc Pareamento em Outros Métodos}\label{multihip}
+
+%\input{Sections/6 - Policymakers}
+
+\section{\sc Conclusão}
+
+\input{Sections/8 - Conclusão}
+
+\setlength\bibsep{0pt}
+\bibliographystyle{mystyle} 
+\bibliography{ref.bib}
+
+
+\end{document}
+

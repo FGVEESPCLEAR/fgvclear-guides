@@ -1,0 +1,322 @@
+% ============================================================
+%  anexo_b_glossario.tex
+%  Anexo B: Glossário de Termos Técnicos
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter*{Anexo B — Glossário de Termos Técnicos}
+\addcontentsline{toc}{chapter}{Anexo B — Glossário de Termos Técnicos}
+\markboth{Anexo B}{Anexo B}
+% ════════════════════════════════════════════════════════════
+
+Este glossário reúne os principais termos técnicos utilizados ao longo do guia, com definições concisas orientadas ao uso prático em avaliação de políticas públicas. Os termos estão organizados em ordem alfabética.
+
+\medskip
+
+\newcommand{\termo}[2]{%
+  \noindent\textbf{#1}\par
+  \noindent #2
+  \medskip
+}
+
+% ── A ────────────────────────────────────────────────────────
+
+\termo{Alucinação (IA)}{
+Fenômeno pelo qual modelos de inteligência artificial geram informações factualmente incorretas com aparente confiança. Especialmente problemático em contextos que exigem precisão factual, como valores numéricos, datas e referências metodológicas. Ver Capítulo~12.
+}
+
+\termo{Amostra complexa}{
+Desenho amostral que combina estratificação, conglomeração e probabilidades desiguais de seleção. Pesquisas domiciliares como a PNAD Contínua usam amostras complexas, o que exige procedimentos estatísticos específicos (declaração do desenho amostral, uso de pesos) para produzir estimativas válidas.
+}
+
+\termo{Amostragem probabilística}{
+Método de seleção de amostras em que cada unidade da população tem uma probabilidade conhecida e não nula de ser selecionada. Permite a inferência estatística para a população a partir da amostra.
+}
+
+\termo{Anonimização}{
+Processo pelo qual dados pessoais perdem a possibilidade de identificação direta ou indireta de uma pessoa natural. Dados anonimizados de forma irreversível estão fora do escopo da LGPD. Distinto de pseudonimização.
+}
+
+\termo{API (\textit{Application Programming Interface})}{
+Interface que permite a comunicação padronizada entre sistemas de computador. APIs governamentais permitem acesso programático a dados públicos sem necessidade de download manual. Ver Capítulo~12.
+}
+
+\termo{Avaliação de impacto}{
+Tipo de avaliação que busca estimar o efeito causal de uma política ou programa sobre um indicador de resultado, isolando esse efeito de outros fatores que poderiam explicar mudanças observadas. Requer a construção de um contrafactual.
+}
+
+% ── B ────────────────────────────────────────────────────────
+
+\termo{Base de dados longitudinal}{
+Base de dados em que as mesmas unidades (indivíduos, domicílios, escolas) são observadas em múltiplos pontos no tempo. Permite análises de trajetória e controle de características não observadas fixas no tempo.
+}
+
+\termo{Benchmarking}{
+Processo de comparação do desempenho de uma unidade (país, estado, município, escola) com outras unidades de referência, para identificar brechas de desempenho e aprender com boas práticas.
+}
+
+% ── C ────────────────────────────────────────────────────────
+
+\termo{CID-10 (Classificação Internacional de Doenças, 10ª Revisão)}{
+Sistema de classificação de doenças e causas de morte da Organização Mundial da Saúde, adotado pelo Brasil a partir de 1996. Usado no SIM e no SINAN para codificação padronizada de causas de óbito e agravos notificados.
+}
+
+\termo{Cifra oculta (\textit{dark figure of crime})}{
+Diferença entre o crime que efetivamente ocorre e o crime que é registrado nos sistemas oficiais. Estimativas sugerem que apenas uma fração dos crimes é reportada à polícia no Brasil. Ver Capítulo~8.
+}
+
+\termo{CNAE (Classificação Nacional de Atividades Econômicas)}{
+Sistema de classificação de atividades econômicas adotado pelo IBGE e utilizado em registros administrativos como CAGED e RAIS para identificar o setor de atividade de estabelecimentos e trabalhadores.
+}
+
+\termo{Contrafactual}{
+Situação hipotética que representa o que teria acontecido com os beneficiários de uma política caso ela não tivesse existido. Central para a avaliação de impacto causal.
+}
+
+\termo{Cobertura (de uma fonte de dados)}{
+Proporção da população ou fenômeno de interesse que é efetivamente registrada por uma fonte. Fontes com baixa cobertura produzem viés de seleção se as unidades não cobertas têm características sistemáticas diferentes das cobertas.
+}
+
+\termo{Convênio de dados}{
+Acordo formal entre uma instituição de pesquisa e um órgão governamental que regula o acesso a dados restritos. Geralmente requer proposta de pesquisa, termo de sigilo e aprovação institucional. Ver Capítulo~13.
+}
+
+% ── D ────────────────────────────────────────────────────────
+
+\termo{DALY (Disability-Adjusted Life Year)}{
+Medida de carga de doença que combina anos de vida perdidos por morte prematura e anos vividos com incapacidade. Usada pela OMS e pelo Banco Mundial para comparações de saúde entre países.
+}
+
+\termo{Dados administrativos}{
+Dados produzidos como subproduto da operação rotineira de serviços e programas públicos, não para fins de pesquisa. Exemplos: CAGED, RAIS, Censo Escolar, SIM. Cobrem apenas o que passa pelo sistema formal.
+}
+
+\termo{Dados primários}{
+Dados coletados diretamente pelo pesquisador ou avaliador para os fins específicos de uma pesquisa. Oferecem maior personalização, mas têm custo e tempo de coleta maiores.
+}
+
+\termo{Dados secundários}{
+Dados coletados por outros agentes, para outros fins, e disponibilizados para uso. Incluem pesquisas do IBGE, registros administrativos e bases internacionais.
+}
+
+\termo{Dados sintéticos}{
+Dados artificialmente gerados com características estatísticas similares às de dados reais. Usados para testes de código e treinamento de modelos, mas devem ser declarados explicitamente em análises de políticas públicas.
+}
+
+\termo{Deflacionamento}{
+Processo de converter valores monetários nominais (em preços correntes) em valores reais (em preços constantes de um ano-base), usando um índice de preços como o IPCA. Necessário para comparações de gasto ao longo do tempo.
+}
+
+\termo{Desagregação}{
+Capacidade de uma fonte de apresentar dados separados por subgrupos (sexo, raça/cor, faixa etária, território). Fundamental para análises de equidade e heterogeneidade de impacto.
+}
+
+\termo{Diferenças em diferenças (DID)}{
+Método de avaliação de impacto que compara a mudança no indicador de resultado entre o grupo tratado e o grupo de controle, antes e depois da implementação da política. Ver o \textit{Guia de Avaliação de Impacto} da Série Avaliação na Prática.
+}
+
+\termo{Domínio (de uma pesquisa amostral)}{
+Subgrupo da população para o qual a amostra foi planejada para produzir estimativas com precisão adequada. Estimativas para domínios não planejados têm erros padrão maiores e podem ser não confiáveis.
+}
+
+% ── E ────────────────────────────────────────────────────────
+
+\termo{Efeito \textit{flypaper}}{
+Fenômeno pelo qual transferências intergovernamentais (como o FPM) têm um efeito multiplicador sobre o gasto público local maior do que um aumento equivalente na renda privada dos moradores --- como se o dinheiro ``grudasse'' onde cai.
+}
+
+\termo{Erro de amostragem}{
+Diferença entre a estimativa obtida a partir de uma amostra e o verdadeiro valor populacional. Pode ser quantificado por intervalos de confiança quando o desenho amostral é probabilístico.
+}
+
+\termo{Erro de medição}{
+Diferença entre o valor registrado em uma fonte de dados e o verdadeiro valor do fenômeno de interesse. Pode ser aleatório (ruído) ou sistemático (viés).
+}
+
+\termo{Experimento natural}{
+Situação em que variações exógenas nas condições de tratamento ocorrem de forma não intencional, mas que o pesquisador pode explorar como se fosse um experimento controlado para estimar efeitos causais.
+}
+
+% ── G ────────────────────────────────────────────────────────
+
+\termo{Georreferenciamento}{
+Processo de associar informações a coordenadas geográficas (latitude e longitude). Permite a produção de mapas e a realização de análises espaciais.
+}
+
+\termo{Gini (índice de)}{
+Medida de desigualdade que varia de 0 (igualdade perfeita) a 1 (desigualdade máxima). Amplamente utilizado para medir desigualdade de renda. No Brasil, é calculado principalmente a partir dos microdados da PNAD Contínua e da POF.
+}
+
+% ── I ────────────────────────────────────────────────────────
+
+\termo{Identificador administrativo}{
+Código único que identifica uma unidade (pessoa, estabelecimento, município) em um ou mais sistemas administrativos. Exemplos: CPF (pessoa física), CNPJ (pessoa jurídica), código IBGE (município), CNES (estabelecimento de saúde).
+}
+
+\termo{Instrumento (variável instrumental)}{
+Variável usada em estimação por variáveis instrumentais (IV) que afeta o indicador de resultado apenas por meio da variável de tratamento e é exógena ao processo estudado. Ver o \textit{Guia de Avaliação de Impacto} da Série.
+}
+
+% ── L ────────────────────────────────────────────────────────
+
+\termo{LAI (Lei de Acesso à Informação)}{
+Lei n.º 12.527/2011, que garante a qualquer cidadão o direito de solicitar informações a órgãos e entidades públicas. Principal mecanismo para acesso a dados governamentais não disponibilizados publicamente. Ver Capítulo~13.
+}
+
+\termo{LGPD (Lei Geral de Proteção de Dados)}{
+Lei n.º 13.709/2018, que estabelece regras para o tratamento de dados pessoais no Brasil. Aplica-se a avaliações de políticas públicas que envolvem dados identificáveis de pessoas. Ver Capítulo~13.
+}
+
+\termo{Linha de base}{
+Conjunto de dados que caracteriza o estado de um indicador antes da implementação de uma política. Fundamental para comparações antes-depois e para a construção de grupos de comparação em avaliações de impacto.
+}
+
+\termo{Linkagem de bases}{
+Processo de combinar informações de duas ou mais bases de dados usando um identificador comum (como CPF, CNPJ ou código IBGE). Permite construir perfis multidimensionais de unidades de análise. Ver Capítulo~13.
+}
+
+\termo{LLM (\textit{Large Language Model})}{
+Modelo de inteligência artificial treinado em grandes volumes de texto, capaz de gerar, resumir e estruturar linguagem natural. Exemplos: GPT-4, Claude. Ver Capítulo~12.
+}
+
+% ── M ────────────────────────────────────────────────────────
+
+\termo{Microdados}{
+Arquivos de dados em que cada linha corresponde a uma unidade de análise individual (pessoa, domicílio, escola, estabelecimento), antes de qualquer agregação. Permitem análises customizadas que não são possíveis com tabelas pré-agregadas.
+}
+
+% ── N ────────────────────────────────────────────────────────
+
+\termo{Não-resposta diferencial}{
+Situação em que certos grupos de unidades respondem menos a uma pesquisa do que outros de forma sistemática, o que pode introduzir viés nas estimativas mesmo em amostras probabilísticas.
+}
+
+\termo{NIS (Número de Identificação Social)}{
+Identificador único de cada pessoa cadastrada no CadÚnico. Usado para linkagem entre o CadÚnico e os registros de programas sociais como o Bolsa Família e o BPC.
+}
+
+% ── P ────────────────────────────────────────────────────────
+
+\termo{Painel de dados}{
+Base de dados que combina as dimensões de corte transversal (múltiplas unidades) e série temporal (múltiplos períodos), observando as mesmas unidades ao longo do tempo.
+}
+
+\termo{Pareamento por escore de propensão (\textit{propensity score matching})}{
+Método de avaliação de impacto que constrói um grupo de controle a partir de unidades não tratadas com probabilidade de tratamento similar à das unidades tratadas, com base em características observáveis. Ver o \textit{Guia de Matching} da Série.
+}
+
+\termo{Periodicidade}{
+Frequência com que uma fonte de dados é coletada e/ou publicada. Pode ser contínua, mensal, trimestral, anual, quinquenal, decenal ou irregular.
+}
+
+\termo{Peso amostral}{
+Fator de expansão que indica quantas unidades da população cada unidade amostrada representa. Deve ser usado em todas as análises com pesquisas amostrais complexas para produzir estimativas representativas da população.
+}
+
+\termo{PLN (Processamento de Linguagem Natural)}{
+Área da inteligência artificial voltada para a análise e geração de linguagem humana por computadores. Aplicações incluem classificação de texto, extração de entidades e análise de sentimento. Ver Capítulo~12.
+}
+
+\termo{Poder estatístico}{
+Probabilidade de que um teste estatístico detecte um efeito real quando ele existe. Depende do tamanho da amostra, da magnitude do efeito e do nível de significância adotado. Ver o \textit{Guia de Poder Estatístico} da Série.
+}
+
+\termo{PPC (Paridade do Poder de Compra)}{
+Taxa de câmbio ajustada pelo nível de preços de cada país, que permite comparações de renda e bem-estar entre países de forma mais precisa do que taxas de câmbio de mercado.
+}
+
+\termo{Pré-registro}{
+Prática de registrar publicamente, antes da coleta ou análise dos dados, o desenho de pesquisa, as hipóteses e os métodos de análise planejados. Aumenta a credibilidade dos resultados ao prevenir o ajuste retroativo das hipóteses (\textit{HARKing}).
+}
+
+\termo{Pseudonimização}{
+Substituição de identificadores diretos (como CPF) por códigos que não permitem identificação direta, mas que podem ser revertidos com acesso a uma tabela de correspondência. Dados pseudonimizados ainda são dados pessoais sob a LGPD.
+}
+
+% ── Q ────────────────────────────────────────────────────────
+
+\termo{Quebra metodológica}{
+Alteração no método de coleta, definição de variáveis ou universo de cobertura de uma fonte de dados que compromete a comparabilidade da série histórica antes e depois da mudança. Exemplos: transição da PNAD para PNAD Contínua; Novo CAGED em 2020.
+}
+
+% ── R ────────────────────────────────────────────────────────
+
+\termo{Regressão descontínua (RDD)}{
+Método de avaliação de impacto que explora descontinuidades em regras de elegibilidade (como limiares de renda ou de idade) para estimar efeitos causais, comparando unidades imediatamente acima e abaixo do limiar. Ver o \textit{Guia de Avaliação de Impacto} da Série.
+}
+
+\termo{Representatividade}{
+Propriedade de uma amostra de refletir as características da população de interesse. Uma amostra representativa permite inferências válidas sobre a população a partir dos dados amostrados.
+}
+
+\termo{Reprodutibilidade}{
+Capacidade de um estudo ser replicado por outro pesquisador com os mesmos dados e métodos, obtendo os mesmos resultados. Depende da documentação do processo de coleta, limpeza e análise. Ver Capítulo~13.
+}
+
+\termo{Registro administrativo}{
+Dado produzido como subproduto da operação rotineira de serviços públicos, não para fins de pesquisa. Cobre apenas o que passa pelo sistema formal; pode ter qualidade de preenchimento variável.
+}
+
+% ── S ────────────────────────────────────────────────────────
+
+\termo{\textit{Scraping} (web scraping)}{
+Técnica de extração automatizada de informações de páginas web. Usada quando dados de interesse estão disponíveis em formato HTML mas não há API ou download estruturado. Ver Capítulo~12.
+}
+
+\termo{Setor censitário}{
+Menor unidade territorial do sistema estatístico brasileiro, usada como unidade de coleta do Censo Demográfico. Agrupa aproximadamente 200 a 300 domicílios em áreas urbanas.
+}
+
+\termo{SIG (Sistema de Informações Geográficas)}{
+Sistema para captura, armazenamento, análise e visualização de dados georreferenciados. Softwares como QGIS e bibliotecas como \texttt{sf} (R) e \texttt{geopandas} (Python) são amplamente usados em análises espaciais de políticas públicas.
+}
+
+\termo{Subregistro}{
+Fenômeno pelo qual eventos reais (nascimentos, óbitos, crimes, doenças) não são registrados nos sistemas administrativos competentes. Pode introduzir viés nas análises se o subregistro for diferencial entre grupos ou regiões.
+}
+
+\termo{Subnotificação}{
+Caso específico de subregistro em que agravos de saúde de notificação compulsória não são comunicados às autoridades sanitárias. Prevalente no SINAN, especialmente para doenças com maior estigma ou em períodos de alta demanda dos serviços.
+}
+
+% ── T ────────────────────────────────────────────────────────
+
+\termo{Taxa de linkagem}{
+Proporção de registros de uma base que foram vinculados com sucesso a registros de outra base em um processo de linkagem. Taxas baixas podem introduzir viés se os registros não linkados têm características sistemáticas diferentes.
+}
+
+\termo{Triangulação}{
+Uso de múltiplas fontes de dados ou métodos para verificar a consistência de um resultado. Quando diferentes fontes convergem para o mesmo resultado, a credibilidade da evidência aumenta.
+}
+
+\termo{TRI (Teoria de Resposta ao Item)}{
+Modelo psicométrico usado para calcular proficiências em avaliações educacionais (como SAEB e ENEM) a partir das respostas a itens individuais. Permite comparações de desempenho entre diferentes edições de uma avaliação, mesmo com diferentes conjuntos de itens.
+}
+
+% ── U ────────────────────────────────────────────────────────
+
+\termo{Unidade de análise}{
+Entidade sobre a qual os dados são organizados e as análises são conduzidas --- indivíduo, domicílio, escola, município, estabelecimento. A unidade de análise da fonte deve ser compatível com a pergunta avaliativa.
+}
+
+% ── V ────────────────────────────────────────────────────────
+
+\termo{Validade externa}{
+Grau em que os resultados de uma avaliação podem ser generalizados para além da população, do período e do contexto específicos em que foram obtidos.
+}
+
+\termo{Validade interna}{
+Grau em que uma avaliação estima corretamente o efeito causal da política sobre os beneficiários estudados, sem confundimento por outros fatores.
+}
+
+\termo{Variável de controle}{
+Variável incluída em um modelo estatístico para controlar por diferenças entre grupos que poderiam confundir a estimativa do efeito de interesse.
+}
+
+\termo{Viés de seleção}{
+Situação em que os grupos comparados em uma avaliação diferem sistematicamente em características que afetam o indicador de resultado, além da exposição à política avaliada. Principal ameaça à validade interna das avaliações.
+}
+
+\termo{Viés de cobertura}{
+Tipo de viés de seleção em que determinados grupos populacionais são sistematicamente sub-representados ou ausentes em uma fonte de dados. Exemplo: trabalhadores informais estão ausentes da RAIS e do CAGED.
+}

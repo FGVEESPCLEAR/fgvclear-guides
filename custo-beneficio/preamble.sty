@@ -1,0 +1,78 @@
+\ProvidesPackage{preamble}
+
+% \usepackage{fullpage}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{ulem}
+\usepackage{cancel}
+\usepackage[citecolor=blue]{hyperref}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{fancyvrb}
+\usepackage{MnSymbol,wasysym}
+\usepackage[T1]{fontenc}
+\usepackage[numbered,framed]{matlab-prettifier}
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+
+\newcommand{\solution}{\subsection*{Solution}}
+%\newcommand{\solution}[1]{\subsection*{#1's solution}}
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\userID}
+\chead{\textbf{\Large \hwnumber}}
+\rhead{\course}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+\usepackage{xparse}
+
+%\usepackage[x11names]{xcolor}
+
+% \newcommand{\colorstring}[3]{% 
+%   \str_set:Nn \l_tmpa_str {#3}% store the string to a string variable
+%   % Now loop through the string variable and get each 'letter' 
+%   \int_step_inline:nnnn {1} {1} {\str_count:N \l_tmpa_str } {%
+%     \int_if_odd:nTF{##1}{% Is the number odd → use the first colour
+%       \textcolor{#1}{\str_item:Nn \l_tmpa_str {##1}}
+%     }{% No, use the 2nd colour
+%       \textcolor{#2}{\str_item:Nn \l_tmpa_str {##1}}
+%     }%
+%   }%
+% }
+% \ExplSyntaxOff
+
+
+% Colors:
+\definecolor{sepia}{rgb}{0.44, 0.26, 0.08}
+\definecolor{yaleblue}{rgb}{0.06, 0.3, 0.57}
+\definecolor{armygreen}{rgb}{0.29, 0.33, 0.13}
+\definecolor{awesome}{rgb}{1.0, 0.13, 0.32}
+\definecolor{harvardcrimson}{rgb}{0.79, 0.0, 0.09}
+\definecolor{oxfordblue}{rgb}{0.0, 0.13, 0.28}
+\definecolor{electricindigo}{rgb}{0.44, 0.0, 1.0}
+\definecolor{gold(metallic)}{rgb}{0.83, 0.69, 0.22}
+\definecolor{cambridgeblue}{rgb}{0.64, 0.76, 0.68}
+\definecolor{cornellred}{rgb}{0.7, 0.11, 0.11}
+\definecolor{mitred}{rgb}{0.66, 0.11, 0.5}
+\definecolor{dukeblue}{rgb}{0.0, 0.0, 0.61}
+\definecolor{royalblue(traditional)}{rgb}{0.0, 0.14, 0.4}
+\definecolor{sacramentostategreen}{rgb}{0.0, 0.34, 0.25}
+\definecolor{dartmouthgreen}{rgb}{0.05, 0.5, 0.06}
+\definecolor{ufogreen}{rgb}{0.24, 0.82, 0.44}
+\definecolor{uclablue}{rgb}{0.33, 0.41, 0.58}
+\definecolor{unitednationsblue}{rgb}{0.36, 0.57, 0.9}
+\definecolor{usccardinal}{rgb}{0.6, 0.0, 0.0}
+\definecolor{schoolbusyellow}{rgb}{1.0, 0.85, 0.0}
+\usepackage{mathtools}

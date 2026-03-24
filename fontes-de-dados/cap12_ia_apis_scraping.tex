@@ -1,0 +1,304 @@
+% ============================================================
+%  cap12_ia_apis_scraping.tex
+%  Capítulo 12: Dados com Apoio de Tecnologia
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Dados com Apoio de Tecnologia: APIs, \textit{Web Scraping} e Inteligência Artificial}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta uma categoria crescente e ainda pouco sistematizada de fontes de dados: aquelas obtidas ou estruturadas com apoio de tecnologias digitais --- interfaces de programação (APIs), coleta automatizada de páginas web (\textit{web scraping}) e ferramentas de inteligência artificial (IA). Para cada abordagem, discutimos o que é, quando usar, como usar com rigor metodológico e quais são os riscos e limitações. O capítulo termina com orientações práticas para incorporar essas ferramentas de forma responsável na prática avaliativa.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: por que tecnologia digital importa para dados de políticas públicas}
+% ────────────────────────────────────────────────────────────
+
+Por décadas, o acesso a dados para avaliação de políticas públicas dependia de um conjunto relativamente estável de fontes institucionais: pesquisas do IBGE, registros administrativos de ministérios, censos do Inep. A obtenção de dados era um processo manual e frequentemente lento --- download de arquivos, preenchimento de formulários, espera por convênios.
+
+Esse panorama mudou substancialmente na última década. Três desenvolvimentos tecnológicos transformaram o ecossistema de dados disponíveis para avaliadores:
+
+\begin{enumerate}
+  \item \textbf{Abertura de APIs governamentais}: portais como \url{dados.gov.br}, as APIs do IBGE e do Banco Central democratizaram o acesso a dados que antes exigiam processos manuais demorados, tornando possível a coleta automatizada e atualizada de dezenas de indicadores;
+
+  \item \textbf{Maturação do \textit{web scraping}}: a consolidação de ferramentas de raspagem de dados permitiu extrair informações de portais governamentais, diários oficiais, sistemas de licitação e outras fontes que disponibilizam dados em formato web mas não oferecem download estruturado;
+
+  \item \textbf{Inteligência artificial}: o avanço dos modelos de linguagem de grande escala (LLMs) e de outras ferramentas de IA abriu possibilidades novas de organizar e estruturar grandes volumes de texto não estruturado --- atas de reuniões, processos administrativos, relatórios de auditoria --- transformando-os em dados analisáveis.
+\end{enumerate}
+
+Essas ferramentas não substituem as fontes tradicionais. Elas as complementam, preenchem lacunas e, em alguns casos, criam possibilidades analíticas genuinamente novas. Mas exigem competências técnicas específicas e cuidados metodológicos que este capítulo busca sistematizar.
+
+% ────────────────────────────────────────────────────────────
+\section{APIs governamentais abertas}
+% ────────────────────────────────────────────────────────────
+
+\subsection{O que é uma API e por que importa}
+
+Uma API (\textit{Application Programming Interface}) é uma interface que permite que programas de computador se comuniquem entre si de forma padronizada. No contexto de dados públicos, uma API governamental permite que o pesquisador solicite dados diretamente de um sistema governamental por meio de código --- sem necessidade de navegar manualmente em portais, clicar em botões de download ou aguardar o envio de arquivos por e-mail.
+
+As vantagens práticas são significativas:
+
+\begin{itemize}
+  \item \textbf{Automação}: uma vez escrito o código de coleta, ele pode ser executado repetidamente para atualizar os dados sem intervenção manual;
+  \item \textbf{Atualidade}: APIs costumam fornecer dados mais recentes do que os arquivos disponíveis para download, pois refletem o estado atual do banco de dados do provedor;
+  \item \textbf{Eficiência}: é possível solicitar apenas os dados necessários (por município, período ou indicador), evitando o download de arquivos grandes para extrair poucas informações;
+  \item \textbf{Reprodutibilidade}: o código de coleta é documentável e reproduzível, o que facilita a verificação e a replicação da análise.
+\end{itemize}
+
+\subsection{Principais APIs governamentais abertas no Brasil}
+
+\subsubsection{API do IBGE (SIDRA e outras)}
+
+O IBGE disponibiliza diversas APIs para acesso programático a seus dados:
+
+\begin{itemize}
+  \item \textbf{SIDRA API}: acesso aos dados do Sistema IBGE de Recuperação Automática, que reúne tabelas de todas as pesquisas do IBGE (Censo, PNAD, POF, Censo Agropecuário, entre outras). A API SIDRA permite solicitar tabelas específicas com parâmetros de período, nível geográfico e variável;
+
+  \item \textbf{API de Malhas}: acesso às malhas territoriais do IBGE em formato GeoJSON, com parâmetros de nível territorial e ano de referência;
+
+  \item \textbf{API de Localidades}: acesso à lista de municípios, estados e regiões com seus códigos e metadados.
+\end{itemize}
+
+Em R, o pacote \texttt{sidrar} encapsula a API SIDRA em funções de alto nível, e o pacote \texttt{geobr} faz o mesmo para as malhas territoriais. Em Python, as bibliotecas \texttt{sidrapy} e \texttt{pygeobr} oferecem funcionalidades equivalentes.
+
+\subsubsection{API do Banco Central (SGS)}
+
+O Banco Central disponibiliza o Sistema Gerenciador de Séries Temporais (SGS) via API REST, com acesso a mais de 20.000 séries macroeconômicas --- IPCA, taxa Selic, câmbio, crédito, índices de atividade econômica, entre outras.
+
+\begin{itemize}
+  \item \textbf{Endpoint}: \nolinkurl{api.bcb.gov.br/dados/serie/bcdata.sgs.{codigo}/dados}
+  \item Em R, o pacote \texttt{rbcb} facilita o acesso; em Python, a biblioteca \texttt{python-bcb} oferece funcionalidade equivalente.
+\end{itemize}
+
+\subsubsection{Portal de Dados Abertos do Governo Federal}
+
+O portal \url{dados.gov.br} é o catálogo central de dados abertos do governo federal brasileiro, reunindo datasets de mais de 200 órgãos. Não é uma API unificada, mas um catálogo de fontes --- cada dataset tem seu próprio formato e método de acesso (CSV para download direto, APIs específicas de cada órgão, etc.).
+
+Para o avaliador, o \url{dados.gov.br} é o ponto de partida para descobrir quais dados estão disponíveis em formato aberto. A qualidade e a atualidade dos datasets variam enormemente entre órgãos.
+
+\subsubsection{API do Portal da Transparência (CGU)}
+
+A Controladoria-Geral da União disponibiliza uma API REST para acesso programático aos dados do Portal da Transparência:
+
+\begin{itemize}
+  \item Despesas por órgão, programa e natureza;
+  \item Transferências a estados e municípios;
+  \item Contratos e licitações;
+  \item Beneficiários de programas sociais (Bolsa Família, BPC).
+\end{itemize}
+
+A documentação está disponível em \url{api.portaldatransparencia.gov.br}. O acesso requer cadastro gratuito para obtenção de chave de API (\textit{token}).
+
+\subsubsection{API do DATASUS}
+
+O DATASUS não disponibiliza uma API REST padrão para seus sistemas (SIM, SINASC, SIH, etc.), mas o portal TabNet (\url{tabnet.datasus.gov.br}) permite consultas estruturadas com parâmetros de período, local e variável. Para acesso programático, o pacote \texttt{microdatasus} em R e a plataforma \textit{Base dos Dados} são as principais alternativas.
+
+\begin{boxdica}{Dica --- Base dos Dados: dados integrados}
+A plataforma \textit{Base dos Dados} (\url{basedosdados.org}) é um projeto brasileiro de infraestrutura de dados que disponibiliza dezenas de bases públicas --- PNAD Contínua, Censo Escolar, RAIS, CAGED, SIM, SINASC, FINBRA e muitas outras --- já tratadas, compatibilizadas e disponíveis em BigQuery (Google Cloud). O acesso é gratuito para uso não comercial, com pacotes em R (\texttt{basedosdados}) e Python que permitem consultas SQL diretamente do código analítico. Para o avaliador que trabalha com múltiplas bases, a \textit{Base dos Dados} reduz substancialmente o tempo de preparação dos dados.
+\end{boxdica}
+
+\subsection{Boas práticas no uso de APIs}
+
+\begin{itemize}
+  \item \textbf{Documente a data de coleta}: dados de APIs são dinâmicos e podem mudar. Sempre registre a data em que os dados foram coletados e, quando possível, salve uma cópia local dos dados brutos obtidos;
+  \item \textbf{Respeite os limites de requisição}: APIs governamentais geralmente impõem limites no número de requisições por minuto ou por hora (\textit{rate limits}). Implemente pausas entre requisições para evitar bloqueios;
+  \item \textbf{Trate erros}: conexões de rede falham, servidores ficam indisponíveis, respostas chegam malformadas. Implemente tratamento de erros no código de coleta para lidar com essas situações;
+  \item \textbf{Verifique a consistência}: compare uma amostra dos dados obtidos via API com os dados disponíveis no portal de origem para verificar se não há discrepâncias.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{\textit{Web Scraping} para dados não estruturados}
+% ────────────────────────────────────────────────────────────
+
+\subsection{O que é e quando usar}
+
+\textit{Web scraping} é a extração automatizada de informações de páginas web. Enquanto APIs fornecem dados em formato estruturado (JSON, XML, CSV), o \textit{web scraping} extrai informações de páginas HTML --- que foram projetadas para leitura humana, não para processamento por máquinas.
+
+O uso de \textit{web scraping} em pesquisa sobre políticas públicas é justificado quando:
+
+\begin{itemize}
+  \item Os dados de interesse estão disponíveis em portais web mas não há API ou download estruturado;
+  \item Os dados são publicados em formato de tabela HTML ou em documentos PDF embarcados em páginas web;
+  \item A coleta manual seria inviável pelo volume de páginas ou pela frequência necessária de atualização.
+\end{itemize}
+
+Exemplos de fontes relevantes para avaliação de políticas públicas que frequentemente requerem \textit{scraping}:
+
+\begin{itemize}
+  \item \textbf{Diários oficiais municipais e estaduais}: publicações de atos administrativos, contratos, nomeações e exonerações que não estão disponíveis em formato estruturado;
+  \item \textbf{Portais de licitações e contratos}: sistemas como o Comprasnet e portais estaduais de compras públicas;
+  \item \textbf{Portais de transparência municipal}: muitos municípios publicam execução orçamentária em formato HTML sem opção de download;
+  \item \textbf{Atas de câmaras municipais e conselhos}: documentos textuais com informações sobre deliberações e votações.
+\end{itemize}
+
+\subsection{Ferramentas principais}
+
+\begin{itemize}
+  \item \textbf{Python}: as bibliotecas \texttt{BeautifulSoup} e \texttt{Scrapy} são as mais utilizadas para extração de HTML; \texttt{Selenium} e \texttt{Playwright} permitem automatizar navegadores para lidar com páginas que carregam conteúdo dinamicamente via JavaScript;
+  \item \textbf{R}: o pacote \texttt{rvest} oferece funcionalidades de \textit{scraping} integradas ao ecossistema do \texttt{tidyverse};
+  \item \textbf{Extração de PDF}: para documentos em PDF, as bibliotecas \texttt{pdfplumber} (Python) e \texttt{pdftools} (R) extraem texto e tabelas com qualidade variável dependendo do tipo de PDF (nativo vs.\ escaneado).
+\end{itemize}
+
+\subsection{Limites éticos, legais e metodológicos}
+
+O uso de \textit{web scraping} levanta questões que o pesquisador deve considerar antes de iniciar a coleta:
+
+\begin{itemize}
+  \item \textbf{Termos de uso}: alguns sites proíbem explicitamente o \textit{scraping} em seus termos de uso. Para dados governamentais brasileiros, a Lei de Acesso à Informação (LAI) garante o direito ao acesso, mas não o direito à coleta automatizada --- verifique se o órgão tem políticas específicas;
+
+  \item \textbf{Robustez da coleta}: páginas web mudam frequentemente. Uma mudança no HTML do portal pode quebrar o código de \textit{scraping} sem aviso. Scripts de coleta precisam de manutenção regular e verificação periódica de consistência;
+
+  \item \textbf{Qualidade dos dados extraídos}: a extração automatizada de HTML e PDF é imperfeita. Tabelas com células mescladas, PDFs escaneados e layouts complexos produzem erros de extração que precisam ser identificados e corrigidos na etapa de limpeza;
+
+  \item \textbf{Carga nos servidores}: coletar dados em alta velocidade pode sobrecarregar servidores de órgãos públicos com capacidade limitada. Implemente pausas entre requisições (\textit{rate limiting}) e evite coletar os mesmos dados repetidamente.
+\end{itemize}
+
+\begin{boxexemplo}{Exemplo --- \textit{Scraping} de diários oficiais}
+Pesquisadores interessados em avaliar a qualidade da gestão pública municipal coletaram, via \textit{web scraping}, todas as publicações dos diários oficiais de 200 municípios ao longo de quatro anos. O objetivo era construir um indicador de transparência baseado na regularidade e na completude das publicações obrigatórias (contratos, licitações, prestações de contas). O código em Python usou \texttt{Scrapy} para navegar pelos portais de cada município e \texttt{pdfplumber} para extrair texto dos documentos publicados. O resultado foi um painel longitudinal de indicadores de transparência que permitiu avaliar se políticas de apoio à gestão municipal melhoraram a regularidade das publicações nos municípios beneficiados.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{Inteligência Artificial como ferramenta de apoio à pesquisa}
+% ────────────────────────────────────────────────────────────
+
+\subsection{O novo papel da IA na pesquisa em políticas públicas}
+
+O avanço dos modelos de linguagem de grande escala (LLMs --- \textit{Large Language Models}) como o GPT-4, o Claude e outros abriu possibilidades novas para pesquisadores de políticas públicas. Diferentemente das ferramentas discutidas anteriormente --- que organizam dados já existentes de forma mais eficiente ---, os LLMs têm capacidade de \textit{processar, resumir e estruturar} grandes volumes de texto não estruturado, transformando fontes que antes eram de difícil análise quantitativa em dados analisáveis.
+
+É importante, no entanto, ser preciso sobre o que a IA faz de melhor e onde seus riscos são mais sérios. Esta seção busca oferecer uma visão equilibrada --- nem excessivamente entusiasmada, nem excessivamente cética.
+
+\subsection{Usos bem estabelecidos e de baixo risco}
+
+\subsubsection{Busca e descoberta de fontes}
+
+LLMs podem ser utilizados como ferramentas de busca avançada para identificar fontes de dados relevantes, entender a estrutura de bases desconhecidas e localizar documentação metodológica. Para um avaliador que está mapeando o ecossistema de dados disponíveis para uma nova área temática, uma conversa com um LLM pode acelerar substancialmente o processo de descoberta.
+
+O risco aqui é a \textbf{desatualização}: LLMs têm uma data de corte de treinamento e podem não conhecer bases de dados lançadas recentemente. Sempre verifique as informações obtidas diretamente nas fontes primárias.
+
+\subsubsection{Apoio à limpeza e estruturação de dados}
+
+LLMs --- e modelos de linguagem mais especializados --- podem ser usados para:
+
+\begin{itemize}
+  \item \textbf{Classificação de texto}: categorizar documentos, respostas abertas de surveys ou registros administrativos em categorias predefinidas. Por exemplo, classificar descrições de objetos de contratos públicos por setor de atividade, ou categorizar motivos de desligamento em dados de recursos humanos;
+  \item \textbf{Extração de entidades}: identificar e extrair informações específicas de textos --- nomes de municípios, valores monetários, datas, nomes de programas --- em documentos não estruturados como atas e relatórios;
+  \item \textbf{Padronização}: normalizar variações ortográficas de nomes de municípios, categorias e outras variáveis de texto que impedem o \textit{merge} entre bases.
+\end{itemize}
+
+Esses usos são mais robustos do que a geração de informações novas, porque o modelo está operando sobre textos fornecidos pelo pesquisador --- não gerando conteúdo a partir de seu treinamento.
+
+\subsubsection{Revisão de literatura e síntese de evidências}
+
+Ferramentas especializadas em revisão de literatura --- como \textit{Elicit} (\url{elicit.org}), \textit{Consensus} (\url{consensus.app}) e \textit{Semantic Scholar} --- usam modelos de IA para ajudar pesquisadores a:
+
+\begin{itemize}
+  \item Identificar estudos relevantes em uma área temática a partir de uma pergunta de pesquisa em linguagem natural;
+  \item Extrair automaticamente informações estruturadas de artigos (tamanho da amostra, métodos, resultados principais);
+  \item Mapear o estado da evidência sobre uma intervenção específica.
+\end{itemize}
+
+Essas ferramentas são úteis como ponto de partida para revisões sistemáticas, mas não substituem a leitura cuidadosa dos artigos identificados nem a avaliação crítica da qualidade metodológica dos estudos.
+
+\subsection{Usos de maior risco: geração de dados e informações}
+
+\subsubsection{Geração de dados sintéticos}
+
+LLMs podem ser usados para gerar dados sintéticos --- dados artificiais com características estatísticas similares às de dados reais --- para fins de teste de código, treinamento de modelos de \textit{machine learning} ou preenchimento de lacunas em bases incompletas. No entanto, o uso de dados sintéticos em avaliações de políticas públicas exige cautela extrema:
+
+\begin{itemize}
+  \item Dados sintéticos gerados por LLMs podem reproduzir vieses presentes nos dados de treinamento do modelo;
+  \item A semelhança estatística com os dados reais não garante que os dados sintéticos capturem as relações causais relevantes para a análise;
+  \item Em análises para tomada de decisão de políticas públicas, o uso de dados sintéticos deve ser sempre claramente declarado e justificado.
+\end{itemize}
+
+\subsubsection{Respostas factuais sobre dados e políticas}
+
+LLMs cometem erros factuais --- fenômeno conhecido como \textbf{alucinação} --- com frequência não trivial, especialmente em domínios especializados. Valores de indicadores, datas de implementação de políticas, nomes de programas e detalhes metodológicos de pesquisas são tipos de informação que LLMs podem apresentar com aparente confiança mas incorretamente.
+
+\begin{boxatencao}{Atenção --- IA para organizar, não para certificar}
+O uso de LLMs na pesquisa em políticas públicas deve seguir um princípio simples: \textbf{use IA para organizar, nunca para certificar}. Um LLM pode ajudá-lo a encontrar uma fonte, a entender a estrutura de uma base de dados ou a classificar um conjunto de textos --- mas qualquer informação factual gerada por um LLM deve ser verificada na fonte primária antes de ser usada em uma análise. Isso vale especialmente para valores numéricos, datas, nomes de programas e detalhes metodológicos. A responsabilidade pela qualidade dos dados usados em uma avaliação é sempre do pesquisador, não da ferramenta.
+\end{boxatencao}
+
+\subsection{Processamento de linguagem natural em fontes textuais}
+
+Além dos LLMs de propósito geral, há uma classe de aplicações de Processamento de Linguagem Natural (PLN) especificamente desenvolvidas para análise de textos de políticas públicas. Essas aplicações podem transformar fontes textuais não estruturadas em dados analisáveis:
+
+\begin{itemize}
+  \item \textbf{Análise de sentimento em avaliações de programas}: classificar automaticamente respostas abertas de pesquisas de satisfação como positivas, negativas ou neutras;
+  \item \textbf{Análise temática de documentos}: identificar os temas dominantes em grandes coleções de documentos --- relatórios de auditoria, atas de conselhos, processos de licenciamento;
+  \item \textbf{Reconhecimento de entidades em processos administrativos}: extrair informações estruturadas (partes, valores, datas, objetos) de processos jurídicos e administrativos;
+  \item \textbf{Análise de legislação}: identificar mudanças em políticas a partir de coleções de textos legais ao longo do tempo.
+\end{itemize}
+
+Para essas aplicações mais sofisticadas, modelos de linguagem especializados em português --- como o BERTimbau, treinado especificamente em textos em português brasileiro --- costumam superar modelos gerais em termos de precisão.
+
+% ────────────────────────────────────────────────────────────
+\section{Combinando APIs, \textit{scraping} e IA: um fluxo de trabalho integrado}
+% ────────────────────────────────────────────────────────────
+
+As três abordagens discutidas neste capítulo não são alternativas entre si --- são complementares e, usadas em conjunto, podem produzir fontes de dados que nenhuma delas criaria sozinha. Um fluxo de trabalho típico para coleta de dados de políticas públicas com apoio tecnológico pode ter a seguinte estrutura:
+
+\begin{enumerate}
+  \item \textbf{Descoberta}: usar LLMs e buscas avançadas para mapear quais fontes existem, quais têm API, quais requerem \textit{scraping} e quais exigem acesso manual;
+
+  \item \textbf{Coleta via API}: para fontes com APIs abertas (IBGE, Banco Central, Portal da Transparência), escrever código de coleta automatizada com tratamento de erros e documentação da data de coleta;
+
+  \item \textbf{Coleta via \textit{scraping}}: para fontes sem API, desenvolver scripts de raspagem com verificação periódica de consistência;
+
+  \item \textbf{Extração de texto}: para documentos em PDF e HTML, usar ferramentas de extração com validação manual de uma amostra;
+
+  \item \textbf{Estruturação com IA}: para textos não estruturados, usar modelos de PLN ou LLMs para classificação, extração de entidades e padronização --- sempre com validação manual de uma amostra dos resultados;
+
+  \item \textbf{Integração e limpeza}: combinar as fontes coletadas, resolver inconsistências e documentar o processo de forma reproduzível;
+
+  \item \textbf{Validação}: comparar indicadores derivados das fontes coletadas com indicadores independentes para verificar a coerência dos dados.
+\end{enumerate}
+
+% ────────────────────────────────────────────────────────────
+\section{Considerações éticas e de reprodutibilidade}
+% ────────────────────────────────────────────────────────────
+
+O uso de tecnologias digitais na coleta e estruturação de dados para políticas públicas levanta questões éticas e de reprodutibilidade que merecem atenção explícita:
+
+\subsection{Transparência sobre o processo de coleta}
+
+Análises que usam dados coletados via API, \textit{scraping} ou processados por IA devem documentar claramente:
+
+\begin{itemize}
+  \item Quais fontes foram acessadas, por qual método e em que data;
+  \item Quais transformações foram aplicadas (especialmente quando IA foi usada para classificação ou extração);
+  \item Como a qualidade dos dados foi verificada.
+\end{itemize}
+
+\subsection{Reprodutibilidade}
+
+O código de coleta e processamento deve ser disponibilizado junto com os resultados da análise, para que outros pesquisadores possam verificar e replicar o processo. Repositórios como GitHub são o padrão para compartilhamento de código; o Open Science Framework (OSF) permite registrar o plano de análise antes da coleta dos dados.
+
+\subsection{Privacidade e LGPD}
+
+A Lei Geral de Proteção de Dados (LGPD) impõe restrições ao tratamento de dados pessoais, mesmo quando esses dados são coletados de fontes públicas. Dados raspados de portais governamentais que contenham informações identificáveis de pessoas físicas --- como nomes em contratos ou beneficiários de programas --- devem ser tratados com os cuidados exigidos pela LGPD.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou as principais abordagens tecnológicas para coleta e estruturação de dados para avaliação de políticas públicas. Os pontos centrais são:
+
+\begin{itemize}
+  \item \textbf{APIs governamentais} democratizaram o acesso a dados públicos no Brasil: o IBGE, o Banco Central, o Portal da Transparência e a \textit{Base dos Dados} oferecem acesso programático a dezenas de bases relevantes para avaliação;
+
+  \item \textbf{\textit{Web scraping}} é a ferramenta adequada para fontes que disponibilizam dados em formato web sem API estruturada --- diários oficiais, portais de licitação, sistemas de transparência municipal. Exige cuidados com robustez do código, qualidade da extração e questões éticas e legais;
+
+  \item \textbf{Inteligência artificial} tem usos bem estabelecidos em classificação de texto, extração de entidades e síntese de literatura, mas apresenta riscos sérios quando usada para gerar informações factuais ou dados novos. O princípio fundamental é usar IA para organizar, nunca para certificar;
+
+  \item \textbf{Validação e documentação} são obrigatórias em qualquer processo de coleta tecnológica: sempre valide uma amostra dos dados coletados e documente o processo de forma reproduzível;
+
+  \item Essas ferramentas não substituem as fontes tradicionais discutidas nos capítulos anteriores --- elas as complementam, preenchem lacunas e criam possibilidades analíticas novas quando usadas com rigor metodológico.
+\end{itemize}
+
+\medskip
+
+Todas essas ferramentas e fontes --- tradicionais e emergentes, nacionais e internacionais --- convergem para um momento concreto: o de escolher um dado específico, obtê-lo, combiná-lo com outras bases e usá-lo para responder uma pergunta avaliativa real. O capítulo final reúne os fios condutores do guia em um roteiro prático para esse processo --- da pergunta à fonte, do acesso à documentação, da linkagem à conformidade com a LGPD.

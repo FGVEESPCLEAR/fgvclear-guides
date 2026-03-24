@@ -1,0 +1,432 @@
+% ============================================================
+%  cap13_como_escolher_acessar.tex  [REVISADO]
+%  Capítulo 13: Como Escolher, Acessar e Documentar
+%               Fontes de Dados
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Como Escolher, Acessar e Documentar Fontes de Dados}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo final reúne os fios condutores do guia em um conjunto de orientações práticas para o trabalho cotidiano com fontes de dados. Discutimos como selecionar a fonte certa para cada pergunta avaliativa, como navegar os diferentes mecanismos de acesso --- desde dados abertos até pedidos via Lei de Acesso à Informação e convênios institucionais ---, como documentar o uso de fontes para garantir reprodutibilidade, como combinar bases por meio de linkagem e quais são as obrigações e cuidados decorrentes da Lei Geral de Proteção de Dados (LGPD). O capítulo inclui também orientações específicas para o uso de bases obtidas por LAI ou convênio e uma síntese da distinção entre bases amostrais, censitárias e administrativas.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Da pergunta à fonte: um processo em cinco etapas}
+% ────────────────────────────────────────────────────────────
+
+Ao longo deste guia, apresentamos dezenas de fontes de dados organizadas por tema. O risco de um catálogo tão extenso é que o avaliador se perca na abundância de opções e perca de vista o que realmente importa: a pergunta avaliativa. Este capítulo propõe uma sequência de cinco etapas para ir da pergunta à fonte de forma sistemática.
+
+\subsection{Etapa 1 --- Defina a pergunta com precisão}
+
+Antes de buscar qualquer dado, a pergunta avaliativa precisa ser formulada com precisão suficiente para orientar a busca. Uma pergunta vaga como ``qual é o impacto do programa X?'' não é operacionalizável. Uma pergunta precisa como ``o programa X reduziu a taxa de abandono escolar entre alunos do 6º ao 9º ano do ensino fundamental em municípios do Nordeste entre 2018 e 2022?'' define imediatamente:
+
+\begin{itemize}
+  \item \textbf{O indicador de resultado}: taxa de abandono escolar;
+  \item \textbf{A população}: alunos do 6º ao 9º ano;
+  \item \textbf{O recorte geográfico}: municípios do Nordeste;
+  \item \textbf{O período}: 2018 a 2022.
+\end{itemize}
+
+Cada um desses elementos é um critério de seleção de fonte.
+
+\subsection{Etapa 2 --- Identifique a unidade e o recorte}
+
+Com a pergunta precisada, defina a unidade de análise necessária (aluno, escola, município, família) e o recorte geográfico e temporal. Esses dois elementos são os filtros mais eficientes para eliminar fontes inadequadas:
+
+\begin{itemize}
+  \item Se a unidade é o aluno individual, pesquisas amostrais sem identificadores individuais são insuficientes; é preciso microdados do Censo Escolar ou equivalente;
+  \item Se o recorte geográfico é municipal, fontes representativas apenas para UF ou Brasil não servem;
+  \item Se o período é 2020, o Censo Demográfico 2010 pode estar muito defasado para a linha de base.
+\end{itemize}
+
+\subsection{Etapa 3 --- Mapeie as fontes candidatas}
+
+Com os critérios de unidade, recorte e período definidos, percorra mentalmente (ou neste guia) as categorias de fontes potencialmente relevantes:
+
+\begin{enumerate}
+  \item Há algum registro administrativo que cobre exatamente essa população?
+  \item Há alguma pesquisa amostral com representatividade para o recorte necessário?
+  \item Há dados de avaliação de desempenho relevantes?
+  \item Há dados fiscais ou de infraestrutura que precisam ser controlados?
+  \item É necessário dado georreferenciado?
+\end{enumerate}
+
+\subsection{Etapa 4 --- Aplique o checklist de adequação}
+
+Para cada fonte candidata, aplique o checklist apresentado no Capítulo~1:
+
+\begin{enumerate}
+  \item A cobertura geográfica é compatível com o recorte?
+  \item A periodicidade permite capturar o período relevante (antes e depois)?
+  \item A unidade de análise é a mesma da pergunta?
+  \item É possível desagregar pelos grupos populacionais de interesse?
+  \item A amostra (se for pesquisa amostral) é representativa para os domínios necessários?
+  \item Os microdados estão acessíveis, ou há restrições a contornar?
+  \item A documentação permite verificar o que cada variável mede de fato?
+  \item Há quebras metodológicas relevantes na série histórica?
+\end{enumerate}
+
+\subsection{Etapa 5 --- Triangule quando necessário}
+
+Raramente uma única fonte responde completamente a uma pergunta avaliativa. A etapa final é identificar quais dimensões precisam de triangulação:
+
+\begin{itemize}
+  \item \textbf{Resultado principal}: qual fonte tem o indicador de resultado mais próximo do que a pergunta avaliativa define?
+  \item \textbf{Variáveis de controle}: quais fontes fornecem as características dos grupos de tratamento e controle que precisam ser controladas?
+  \item \textbf{Denominadores}: quais fontes fornecem os denominadores populacionais para calcular taxas e proporções?
+  \item \textbf{Dados de implementação}: quais fontes permitem verificar se a política foi implementada conforme planejado?
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Bases amostrais, censitárias e administrativas:
+         uma distinção fundamental}
+% ────────────────────────────────────────────────────────────
+
+Antes de detalhar os mecanismos de acesso, vale fixar uma distinção conceitual que percorre todo o guia e que, quando ignorada, produz usos ingênuos das fontes disponíveis.
+
+\textbf{Bases amostrais} (como PNAD Contínua, PNS e POF) são excelentes para inferência populacional quando o desenho amostral é respeitado. Elas não devem ser usadas para estimativas em domínios para os quais não foram planejadas --- em particular, a PNAD Contínua \textbf{não deve ser tratada como base de inferência municipal}. Recortes muito finos exigem cautela, eventualmente agregação temporal de múltiplos trimestres, e sempre transparência quanto à precisão estatística das estimativas. O uso correto exige não apenas a aplicação dos pesos amostrais, mas também a declaração do desenho amostral complexo --- estratos e unidades primárias de amostragem (PSUs) --- tanto para estimativas pontuais quanto para a inferência. Ignorar essa estrutura produz erros padrão sistematicamente subestimados.
+
+\textbf{Bases censitárias} (como Censo Demográfico, Censo Escolar e RAIS) cobrem, em princípio, todo o universo de interesse, o que elimina o erro de amostragem e permite desagregações finas. A limitação é a periodicidade: censos são decenais ou anuais, e o dado pode estar desatualizado para fenômenos de rápida mudança.
+
+\textbf{Bases administrativas} (como SIM, SINASC, CAGED, CadÚnico e registros policiais estaduais) podem ter granularidade temporal e espacial extraordinária, chegando ao nível de evento individual em tempo quase real. Mas refletem as regras institucionais de registro --- cobrem apenas o que passa pelo sistema formal, dependem da qualidade do preenchimento por operadores heterogêneos e estão sujeitas a mudanças de critério ao longo do tempo. Não representam necessariamente o universo completo do fenômeno de interesse.
+
+\begin{boxdestaque}{Três perguntas para não confundir o tipo de base}
+\begin{enumerate}
+  \item \textbf{Para quem a estimativa é válida?} Bases amostrais têm domínios de representatividade definidos; bases censitárias e administrativas têm coberturas definidas pelo universo de registro.
+  \item \textbf{O que fica de fora?} Toda base tem lacunas --- seja por desenho amostral, por subregistro ou por exclusão do sistema formal.
+  \item \textbf{O que gera o dado?} Em bases amostrais, é um questionário aplicado a uma amostra; em bases censitárias, é um levantamento universal; em bases administrativas, é um processo institucional de rotina.
+\end{enumerate}
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Mecanismos de acesso a dados}
+% ────────────────────────────────────────────────────────────
+
+Uma vez identificadas as fontes adequadas, o próximo passo é obtê-las. Os dados públicos brasileiros estão disponíveis por quatro mecanismos principais, com diferentes implicações de prazo, custo e procedimento.
+
+\subsection{Dados abertos: download direto e APIs}
+
+A maior parte das fontes apresentadas neste guia tem algum nível de dados abertos --- microdados em CSV, APIs REST ou tabulações agregadas em portais de consulta. Para essas fontes, o acesso é imediato, gratuito e sem necessidade de cadastro ou autorização.
+
+\begin{table}[H]
+\centering
+\caption{Principais repositórios de dados abertos para avaliação de políticas públicas}
+\label{tab:repositorios}
+\begin{tabularx}{\textwidth}{@{} p{4cm} X @{}}
+\toprule
+\textbf{Repositório} & \textbf{O que contém} \\
+\midrule
+\url{basedosdados.org}       & Dezenas de bases tratadas (PNAD-C, Censo Escolar, RAIS, SIM, FINBRA, etc.) em BigQuery \\
+\url{dados.gov.br}           & Catálogo de dados abertos federais (qualidade variável) \\
+\url{sidra.ibge.gov.br}      & Tabelas de todas as pesquisas do IBGE \\
+\url{datasus.saude.gov.br}   & Sistemas de saúde (SIM, SINASC, SIH, SIA, SINAN, CNES) \\
+\url{gov.br/inep/microdados} & Microdados de todas as pesquisas do Inep \\
+\url{siconfi.tesouro.gov.br} & Finanças municipais e estaduais (FINBRA/Siconfi) \\
+\url{portaldatransparencia.gov.br} & Execução orçamentária federal, programas sociais, contratos \\
+\url{ipeadata.gov.br}        & Séries históricas macroeconômicas e sociais \\
+\url{cecad.cidadania.gov.br} & Dados agregados do CadÚnico e Bolsa Família por município \\
+\url{dadosabertos.tse.jus.br} & Dados eleitorais e de financiamento de campanha \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+\subsection{Acesso mediante cadastro}
+
+Algumas fontes requerem cadastro gratuito antes de liberar o acesso aos microdados. O processo é geralmente simples, mas implica aceitar termos de uso que estabelecem restrições sobre como os dados podem ser utilizados e divulgados.
+
+Exemplos de fontes com acesso mediante cadastro:
+\begin{itemize}
+  \item \textbf{RAIS anonimizada} (MTE): cadastro no portal do Ministério do Trabalho;
+  \item \textbf{API do Portal da Transparência} (CGU): cadastro para obtenção de \textit{token};
+  \item \textbf{Microdados do PISA para o Brasil} (Inep): cadastro no portal do Inep.
+\end{itemize}
+
+\subsection{Lei de Acesso à Informação (LAI)}
+
+A Lei de Acesso à Informação (Lei n.º 12.527/2011) garante a qualquer cidadão o direito de solicitar informações a órgãos públicos. Para o avaliador, a LAI é um mecanismo fundamental para obter dados que não estão disponíveis publicamente mas existem nos sistemas administrativos dos órgãos governamentais.
+
+\subsubsection{Antes de formular um pedido: pesquise o que já existe}
+
+Antes de formular um novo pedido LAI, vale sempre verificar se o dado de interesse já foi disponibilizado em resposta a pedidos anteriores. Essa pesquisa prévia pode poupar tempo considerável e revelar precedentes úteis sobre como determinado órgão trata solicitações similares.
+
+No âmbito federal, a ferramenta oficial \textbf{Busca de Pedidos e Respostas} (\url{www.gov.br/acessoainformacao/pt-br/assuntos/busca-de-pedidos-e-respostas}) permite consultar o histórico de pedidos e respostas de todos os órgãos do Poder Executivo federal. A plataforma \textbf{BuscaLAI} (\url{buscalai.cgu.gov.br}), mantida pela CGU, oferece uma interface de busca mais avançada para o mesmo acervo, facilitando a localização de respostas por tema, órgão e período. Essas consultas ajudam a identificar formatos de dados já fornecidos, entender os limites do que cada órgão costuma divulgar e calibrar a redação do pedido com base em experiências anteriores.
+
+\subsubsection{Como fazer um pedido LAI eficaz}
+
+\begin{itemize}
+  \item \textbf{Seja específico}: pedidos vagos têm maior chance de serem negados ou respondidos de forma insatisfatória. Especifique exatamente quais variáveis, para qual período, em qual nível de desagregação e em qual formato;
+
+  \item \textbf{Solicite formato adequado}: especifique que os dados devem ser entregues em formato aberto e legível por máquina (CSV, Excel), não em PDF impresso ou digitalizado;
+
+  \item \textbf{Use o Fala.BR}: o canal oficial para pedidos LAI ao governo federal é atualmente o \textbf{Fala.BR --- Módulo Acesso à Informação} (\url{falabr.cgu.gov.br}), que substituiu e integrou o antigo e-SIC. Estados e municípios têm canais próprios, que devem ser consultados nos respectivos portais de transparência;
+
+  \item \textbf{Conheça os prazos}: o órgão tem 20 dias corridos para responder, prorrogáveis por mais 10 dias mediante justificativa. Em caso de negativa ou resposta insatisfatória, o solicitante pode interpor recurso;
+
+  \item \textbf{Documente tudo}: guarde os protocolos dos pedidos, as respostas recebidas e os recursos interpostos.
+\end{itemize}
+
+\subsubsection{Fluxo recursal no âmbito federal}
+
+No caso do Poder Executivo Federal, o fluxo recursal administrativo tem três instâncias, e é importante conhecê-lo antes de desistir diante de uma negativa:
+
+\begin{enumerate}
+  \item \textbf{Recurso à autoridade hierárquica superior} do órgão que negou o acesso (1ª instância recursal);
+  \item \textbf{Recurso à CGU} (Controladoria-Geral da União), que analisa a conformidade da negativa com a LAI (2ª instância recursal);
+  \item \textbf{Recurso à CMRI} (Comissão Mista de Reavaliação de Informações), instância recursal final no âmbito administrativo federal, competente para revisar decisões da CGU em casos de negativa de acesso (\url{www.gov.br/casacivil/pt-br/assuntos/colegiados/comissao-mista-de-reavaliacao-de-informacoes-cmri}).
+\end{enumerate}
+
+Decisões da CGU e da CMRI sobre a aplicação da LAI estão disponíveis em \url{www.gov.br/acessoainformacao/pt-br/decisoes-da-cgu-e-da-cmri-sobre-a-aplicacao-da-lai} e constituem precedentes relevantes para antecipar o resultado de pedidos futuros sobre temas similares.
+
+\begin{boxexemplo}{Exemplo prático --- Usando a LAI para obter dados de um programa municipal}
+Uma pesquisadora queria avaliar o impacto de um programa municipal de distribuição de cestas básicas durante a pandemia. O município não disponibilizava a lista de beneficiários publicamente. Por meio de pedido LAI, solicitou: ``Lista de beneficiários do Programa X no período de abril de 2020 a dezembro de 2021, contendo: NIS ou CPF (anonimizado), bairro de residência, número de cestas recebidas por mês e composição familiar (número de membros). Formato: planilha CSV.'' O município respondeu em 18 dias com os dados solicitados, que foram então linkados com dados do CadÚnico (obtidos via convênio com o MDS) para construir o grupo de controle da avaliação.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+\subsection{Convênios e termos de cooperação técnica}
+
+Algumas fontes com alto valor analítico têm acesso restrito que requer a formalização de convênio ou termo de cooperação técnica entre a instituição do pesquisador e o órgão detentor dos dados. Os principais exemplos são:
+
+\begin{itemize}
+  \item \textbf{RAIS identificada (com CPF)}: convênio com o Ministério do Trabalho e Emprego;
+  \item \textbf{Microdados do CadÚnico e Bolsa Família}: convênio com o MDS;
+  \item \textbf{SCR (Sistema de Informações de Crédito)}: convênio com o Banco Central;
+  \item \textbf{SUIBE (dados do BPC)}: convênio com o INSS.
+\end{itemize}
+
+Convênios têm prazos de negociação que variam de dois a seis meses em média, exigem aprovação institucional, termos de sigilo assinados por todos os membros da equipe e, em alguns casos, análise por comitê de ética.
+
+\begin{boxdica}{Dica --- Como acelerar a formalização de convênios}
+\begin{itemize}
+  \item Verifique se sua instituição já tem convênio vigente com o órgão de interesse --- a renovação é mais rápida do que a formalização inicial;
+  \item Inicie o processo de convênio antes de finalizar o desenho da avaliação, para evitar que restrições de acesso forcem mudanças metodológicas tardias;
+  \item Mantenha contato com a área técnica do órgão (não apenas a área jurídica) para esclarecer dúvidas sobre o escopo dos dados que podem ser compartilhados.
+\end{itemize}
+\end{boxdica}
+
+% ────────────────────────────────────────────────────────────
+\section{Boas práticas para bases obtidas por LAI ou convênio}
+% ────────────────────────────────────────────────────────────
+
+Bases administrativas obtidas por LAI, convênio ou cooperação técnica têm características distintas das fontes que chegam com documentação padronizada e estrutura conhecida. Quando você recebe um arquivo de uma prefeitura, de uma secretaria estadual ou de um ministério via pedido LAI, é comum que não venha acompanhado de dicionário de variáveis, notas metodológicas ou registro histórico de mudanças de sistema. Nesse contexto, a documentação precisa ser construída ativamente pelo pesquisador.
+
+Para cada base obtida por esses mecanismos, registre sistematicamente:
+
+\begin{itemize}
+  \item \textbf{Universo coberto}: quem está incluído e quem está excluído? A base cobre apenas beneficiários ativos, ou também históricos? Cobre todos os municípios do estado, ou apenas os que aderiram ao sistema?
+
+  \item \textbf{Unidade de observação}: cada linha representa um indivíduo, uma transação, um evento, uma família? Pode haver múltiplas linhas por pessoa (painel), ou cada pessoa aparece uma única vez?
+
+  \item \textbf{Periodicidade e data de referência}: os dados são um corte transversal, uma série mensal, um registro de eventos? Qual é a data de referência do arquivo recebido?
+
+  \item \textbf{Regras institucionais de geração do dado}: como o dado é produzido na prática --- por quem, em qual sistema, com qual grau de verificação? Há incentivos institucionais que possam distorcer o preenchimento?
+
+  \item \textbf{Mudanças de sistema ao longo do tempo}: houve troca de software, reformulação de formulários ou mudança de nomenclatura de variáveis ao longo do período analisado? Essas mudanças introduzem quebras de série que precisam ser identificadas e tratadas;
+
+  \item \textbf{Critérios de anonimização}: o órgão aplicou alguma anonimização antes de entregar os dados? Quais variáveis foram suprimidas ou mascaradas? Isso afeta as possibilidades de linkagem;
+
+  \item \textbf{Restrições de uso impostas pelo termo}: quais análises são permitidas pelos termos do convênio ou da LAI? Há restrições sobre publicação, compartilhamento ou formas de divulgação dos resultados?
+\end{itemize}
+
+Essa documentação é especialmente importante quando a base será usada em análises longitudinais ou combinada com outras fontes. Sem ela, é difícil detectar anomalias nos dados e praticamente impossível para outros pesquisadores reproduzir ou verificar a análise.
+
+% ────────────────────────────────────────────────────────────
+\section{Linkagem de bases de dados}
+% ────────────────────────────────────────────────────────────
+
+A linkagem entre bases de dados --- a combinação de informações de fontes distintas usando um identificador comum --- é uma das técnicas mais poderosas da avaliação moderna de políticas públicas. Ela permite construir perfis multidimensionais de indivíduos, famílias ou estabelecimentos que nenhuma fonte isolada poderia fornecer.
+
+\subsection{Identificadores disponíveis no Brasil}
+
+O Brasil tem um conjunto relativamente rico de identificadores administrativos que podem ser usados para linkagem:
+
+\begin{itemize}
+  \item \textbf{CPF}: identificador universal de pessoas físicas. Presente na RAIS, no CadÚnico, no Censo Escolar e em muitos outros sistemas. É o identificador mais poderoso para linkagem, mas seu acesso é geralmente restrito;
+
+  \item \textbf{NIS}: identificador do CadÚnico, presente nos dados de beneficiários do Bolsa Família, BPC e outros programas sociais;
+
+  \item \textbf{CNPJ}: identificador de estabelecimentos e empresas. Presente na RAIS (base de estabelecimentos), CAGED, CNES e dados de contratos públicos;
+
+  \item \textbf{Código INEP de escola}: identificador único de cada escola no sistema do Inep, presente no Censo Escolar, no SAEB e no IDEB;
+
+  \item \textbf{Código IBGE de município}: código de 7 dígitos presente em praticamente todas as bases deste guia, base do identificador geográfico para linkagem municipal;
+
+  \item \textbf{CNES}: código único de cada estabelecimento de saúde, presente no SIH, SIA, SINAN e CNES;
+
+  \item \textbf{Identificadores geográficos}: CEP, código de setor censitário, coordenadas geográficas --- fundamentais para linkagem espacial entre bases que não compartilham identificadores administrativos comuns. A integração com malhas territoriais do IBGE (setores censitários, bairros, distritos) frequentemente é o único caminho para combinar fontes como cadastros imobiliários municipais com dados do Censo Demográfico ou com registros de saúde e educação.
+\end{itemize}
+
+\subsection{Boas práticas de linkagem}
+
+\begin{itemize}
+  \item \textbf{Documente a taxa de linkagem}: calcule e reporte a proporção de registros linkados com sucesso. Uma taxa baixa pode indicar viés de seleção;
+
+  \item \textbf{Verifique a consistência}: compare a distribuição de variáveis-chave na base linkada com as distribuições nas bases originais;
+
+  \item \textbf{Trate erros de medição nos identificadores}: CPFs inválidos, CNPJs com dígitos trocados e códigos de município desatualizados são causas comuns de falha na linkagem;
+
+  \item \textbf{Linkagem probabilística}: quando identificadores exatos não estão disponíveis, técnicas probabilísticas combinam registros com base na similaridade de múltiplas variáveis (nome, data de nascimento, endereço), introduzindo incerteza adicional que deve ser reportada.
+\end{itemize}
+
+\begin{boxatencao}{Atenção --- Linkagem com CPF requer autorização específica}
+A linkagem de dados pessoais de diferentes fontes cria um novo conjunto de dados com maior poder de identificação dos indivíduos --- o que exige, nos termos da LGPD, base legal específica. Linkagens com CPF devem ser realizadas apenas sob os termos dos convênios firmados, que geralmente restringem o escopo das análises permitidas.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Documentação para reprodutibilidade}
+% ────────────────────────────────────────────────────────────
+
+Uma avaliação que não pode ser reproduzida tem valor científico e de credibilidade substancialmente reduzido. A reprodutibilidade não é apenas uma exigência acadêmica; é uma condição para que os resultados sejam escrutinados, verificados e utilizados com confiança por gestores e formuladores de políticas.
+
+\subsection{O que documentar}
+
+Para cada fonte de dados utilizada, a documentação mínima deve incluir:
+
+\begin{itemize}
+  \item Identificação da fonte: nome completo, órgão produtor, versão ou edição, URL de acesso;
+  \item Data de acesso ou download;
+  \item Variáveis utilizadas, com nomes originais e transformações aplicadas;
+  \item Filtros aplicados (período, território, população);
+  \item Procedimentos de limpeza: valores ausentes, inconsistências, outliers;
+  \item Linkagens realizadas: bases combinadas, identificador usado, taxa de linkagem.
+\end{itemize}
+
+\subsection{Como documentar: ferramentas e práticas}
+
+\begin{itemize}
+  \item \textbf{Código comentado}: todo código de coleta, limpeza e análise deve conter comentários explicando as decisões tomadas em cada etapa;
+  \item \textbf{\textit{README} do projeto}: arquivo descrevendo a estrutura do projeto, as fontes utilizadas e as instruções para reproduzir a análise;
+  \item \textbf{Controle de versão}: use Git/GitHub para registrar todas as alterações no código e nos dados;
+  \item \textbf{Dicionário de variáveis}: para bases construídas ou transformadas pelo pesquisador, mantenha um dicionário com a definição e as fontes de cada variável;
+  \item \textbf{Pré-registro}: para avaliações prospectivas, o pré-registro no Open Science Framework (OSF) ou no AEA RCT Registry aumenta substancialmente a credibilidade dos resultados.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{LGPD e proteção de dados em avaliações de políticas públicas}
+% ────────────────────────────────────────────────────────────
+
+A Lei Geral de Proteção de Dados (Lei n.º 13.709/2018) estabelece regras para o tratamento de dados pessoais no Brasil, com impactos diretos sobre a forma como avaliadores coletam, armazenam e usam dados que contêm informações sobre pessoas identificáveis.
+
+\subsection{Conceitos fundamentais}
+
+\begin{itemize}
+  \item \textbf{Dado pessoal}: qualquer informação relacionada a uma pessoa natural identificada ou identificável;
+  \item \textbf{Dado sensível}: categoria especial que inclui origem racial ou étnica, convicção religiosa, opinião política, dados de saúde ou vida sexual, dados genéticos ou biométricos;
+  \item \textbf{Anonimização}: processo pelo qual um dado perde a possibilidade de identificação. Dados anonimizados de forma irreversível estão fora do escopo da LGPD;
+  \item \textbf{Pseudonimização}: substituição de identificadores diretos por códigos reversíveis. Dados pseudonimizados ainda são dados pessoais sob a LGPD.
+\end{itemize}
+
+\subsection{Bases legais para tratamento de dados em pesquisa}
+
+Para avaliações de políticas públicas, as bases legais mais relevantes são:
+
+\begin{itemize}
+  \item \textbf{Execução de políticas públicas} (art. 7º, III): aplicável ao tratamento pelo poder público para execução de suas políticas;
+  \item \textbf{Pesquisa} (art. 7º, IV): aplicável ao tratamento por órgão de pesquisa, garantida, quando possível, a anonimização;
+  \item \textbf{Interesse legítimo} (art. 7º, IX): aplicável quando necessário para atender interesses legítimos do controlador, exceto quando prevalecem interesses fundamentais do titular.
+\end{itemize}
+
+\subsection{Práticas recomendadas para conformidade com a LGPD}
+
+\begin{itemize}
+  \item \textbf{Minimize os dados coletados}: colete apenas os dados estritamente necessários para a pergunta avaliativa;
+  \item \textbf{Anonimize o mais cedo possível}: aplique anonimização ou pseudonimização assim que possível no fluxo de trabalho;
+  \item \textbf{Controle o acesso}: dados pessoais devem ser acessíveis apenas aos membros da equipe que precisam deles;
+  \item \textbf{Estabeleça prazo de retenção}: defina por quanto tempo os dados serão mantidos e garanta o descarte seguro após esse prazo;
+  \item \textbf{Documente o tratamento}: mantenha um registro das atividades de tratamento, incluindo finalidade, base legal, tipos de dados e prazos.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Checklist final: boas práticas no uso de fontes de dados}
+% ────────────────────────────────────────────────────────────
+
+\begin{boxdestaque}{Checklist de boas práticas no uso de fontes de dados para avaliação}
+
+\textbf{Seleção da fonte}
+\begin{itemize}
+  \item[$\square$] A fonte foi selecionada a partir da pergunta avaliativa, não da familiaridade do analista com ela
+  \item[$\square$] A cobertura geográfica, periodicidade e unidade de análise são compatíveis com a pergunta
+  \item[$\square$] A documentação metodológica foi consultada para verificar o que cada variável mede de fato
+  \item[$\square$] Possíveis quebras metodológicas na série histórica foram identificadas e consideradas
+  \item[$\square$] O tipo de base (amostral, censitária, administrativa) foi considerado para o uso pretendido
+\end{itemize}
+
+\textbf{Acesso e coleta}
+\begin{itemize}
+  \item[$\square$] O mecanismo de acesso (download, API, LAI, convênio) foi identificado e os prazos planejados
+  \item[$\square$] Para pedidos LAI, pedidos e respostas anteriores sobre o tema foram consultados
+  \item[$\square$] A data de coleta foi registrada
+  \item[$\square$] Uma cópia dos dados brutos foi salva em local seguro, separada das versões processadas
+\end{itemize}
+
+\textbf{Bases obtidas por LAI ou convênio}
+\begin{itemize}
+  \item[$\square$] O universo coberto foi documentado (quem está incluído e quem está excluído)
+  \item[$\square$] As regras institucionais de geração do dado foram investigadas
+  \item[$\square$] Mudanças de sistema ao longo do período analisado foram identificadas
+  \item[$\square$] Os critérios de anonimização aplicados pelo órgão foram registrados
+  \item[$\square$] As restrições de uso impostas pelo termo foram verificadas
+\end{itemize}
+
+\textbf{Limpeza e preparação}
+\begin{itemize}
+  \item[$\square$] Os valores ausentes foram identificados e tratados de forma documentada
+  \item[$\square$] Inconsistências foram verificadas (valores implausíveis, distribuições inesperadas)
+  \item[$\square$] Se foi realizada linkagem, a taxa de linkagem foi calculada e reportada
+\end{itemize}
+
+\textbf{Análise}
+\begin{itemize}
+  \item[$\square$] Para pesquisas amostrais, os pesos amostrais \textbf{e} o desenho de amostragem complexo (estratos e PSUs) foram corretamente especificados
+  \item[$\square$] A representatividade da fonte para o recorte utilizado foi verificada (em especial, inferências municipais com PNAD Contínua foram evitadas)
+  \item[$\square$] As limitações da fonte foram consideradas na interpretação dos resultados
+  \item[$\square$] Os resultados foram triangulados com fontes independentes quando possível
+\end{itemize}
+
+\textbf{Documentação e reprodutibilidade}
+\begin{itemize}
+  \item[$\square$] Toda a cadeia de tratamento dos dados está documentada em código comentado
+  \item[$\square$] As fontes utilizadas estão identificadas com URL, data de acesso e versão
+  \item[$\square$] O código está versionado e disponível para verificação
+\end{itemize}
+
+\textbf{Proteção de dados}
+\begin{itemize}
+  \item[$\square$] Os dados pessoais foram tratados com a base legal adequada (LGPD)
+  \item[$\square$] A anonimização ou pseudonimização foi aplicada o mais cedo possível
+  \item[$\square$] O acesso aos dados pessoais foi restrito aos membros da equipe que precisam deles
+\end{itemize}
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo e do guia}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo reuniu as orientações práticas para o trabalho com fontes de dados em avaliações de políticas públicas. Os pontos centrais são:
+
+\begin{itemize}
+  \item A seleção de fontes deve \textbf{partir da pergunta}, não da disponibilidade ou da familiaridade com determinadas bases. As cinco etapas propostas estruturam esse processo de forma sistemática;
+
+  \item A distinção entre \textbf{bases amostrais, censitárias e administrativas} é fundamental: cada tipo tem lógica de cobertura, limitações e usos adequados distintos. Em particular, pesquisas amostrais exigem respeito ao desenho amostral complexo e têm domínios de representatividade que não devem ser ultrapassados;
+
+  \item Os mecanismos de acesso --- download aberto, cadastro, LAI e convênio --- têm implicações diferentes de prazo, custo e procedimento. Para pedidos LAI, a pesquisa prévia de pedidos anteriores e o conhecimento do fluxo recursal completo (incluindo CGU e CMRI) são ferramentas importantes;
+
+  \item Bases obtidas por LAI ou convênio exigem \textbf{documentação ativa} pelo pesquisador: universo coberto, regras de geração do dado, mudanças de sistema e restrições de uso precisam ser registrados sistematicamente;
+
+  \item A \textbf{linkagem de bases}, especialmente com identificadores geográficos quando os administrativos não estão disponíveis, abre possibilidades analíticas que nenhuma fonte isolada oferece;
+
+  \item A \textbf{documentação para reprodutibilidade} e a conformidade com a \textbf{LGPD} são condições para que os resultados da avaliação sejam verificáveis e utilizáveis com responsabilidade.
+\end{itemize}
+
+\medskip
+
+Este capítulo encerra o corpo principal do guia. Os Anexos A e B, a seguir, oferecem ferramentas de referência rápida: uma tabela-catálogo consolidada de todas as fontes apresentadas e um glossário dos principais termos técnicos utilizados ao longo do texto.
+
+\medskip
+
+\begin{boxdestaque}{Uma última observação}
+Dados são poderosos, mas não falam por si mesmos. A qualidade de uma avaliação de políticas públicas depende menos da quantidade de fontes consultadas do que da clareza da pergunta, do rigor com que as fontes foram selecionadas e das limitações que foram honestamente declaradas. Este guia é um mapa do território de dados disponíveis para o Brasil --- mas o julgamento analítico de quem avalia continua sendo insubstituível.
+\end{boxdestaque}

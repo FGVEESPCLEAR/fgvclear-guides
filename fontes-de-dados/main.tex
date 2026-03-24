@@ -1,0 +1,171 @@
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+% ============================================================
+%  main.tex — Guia de Fontes de Dados
+%  Série Avaliação na Prática — FGV CLEAR
+% ============================================================
+
+\documentclass[12pt, a4paper, openany]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{tgpagella}          % Palatino clone (pdflatex)
+
+\usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm, headheight=15pt]{geometry}
+
+% ── Cores FGV CLEAR ──
+\usepackage{xcolor}
+\definecolor{clearblue}{RGB}{27, 58, 92}
+\definecolor{clearlightblue}{RGB}{44, 95, 138}
+\definecolor{clearsalmon}{RGB}{207, 90, 54}
+\definecolor{clearlightsalmon}{RGB}{250, 228, 218}
+\definecolor{clearlightbluelight}{RGB}{215, 232, 248}
+\definecolor{cleargreen}{RGB}{45, 120, 65}
+\definecolor{clearlightgreen}{RGB}{218, 240, 222}
+\definecolor{clearred}{RGB}{170, 30, 30}
+\definecolor{clearlightred}{RGB}{248, 218, 215}
+\definecolor{cleargray}{RGB}{90, 90, 90}
+
+% ── Títulos ──
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{clearblue}}
+  {\normalsize\color{clearlightblue}\chaptertitlename~\thechapter}
+  {8pt}{\Huge\color{clearblue}}
+\titlespacing*{\chapter}{0pt}{-10pt}{24pt}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{clearlightblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{clearlightblue}}{\thesubsubsection}{1em}{}
+
+% ── Cabeçalho / rodapé ──
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\itshape\color{cleargray}Guia CLEAR $|$ Fontes de Dados}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ── Tabelas ──
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{array}
+
+% ── Listas ──
+\usepackage{enumitem}
+\usepackage{amssymb}
+\setlist[itemize]{leftmargin=*, topsep=4pt, itemsep=2pt}
+\setlist[enumerate]{leftmargin=*, topsep=4pt, itemsep=2pt}
+
+% ── Links ──
+\usepackage{hyperref}
+\usepackage{url}
+\hypersetup{
+  colorlinks=true, linkcolor=clearblue, urlcolor=clearlightblue, citecolor=clearblue,
+  pdftitle={Guia de Fontes de Dados para Avaliação de Políticas Públicas},
+  pdfauthor={FGV CLEAR}
+}
+
+% ── Código R ──
+\usepackage{listings}
+\lstset{
+  language=R, basicstyle=\small\ttfamily,
+  keywordstyle=\color{clearblue}\bfseries,
+  commentstyle=\color{cleargray}\itshape,
+  stringstyle=\color{cleargreen},
+  backgroundcolor=\color{gray!8},
+  frame=single, rulecolor=\color{gray!40},
+  breaklines=true, showstringspaces=false,
+  numbers=left, numberstyle=\tiny\color{gray}, numbersep=5pt, xleftmargin=12pt
+}
+
+% ── Caixas tcolorbox ──
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+\newtcolorbox{boxdestaque}[1]{enhanced,breakable,colback=clearlightsalmon,colframe=clearsalmon,
+  coltitle=white,fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=clearsalmon,colframe=clearsalmon,sharp corners,rounded corners=northeast},
+  title={#1},sharp corners,rounded corners=southeast}
+
+\newtcolorbox{boxatencao}[1]{enhanced,breakable,colback=clearlightred,colframe=clearred,
+  coltitle=white,fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=clearred,colframe=clearred,sharp corners,rounded corners=northeast},
+  title={#1},sharp corners,rounded corners=southeast}
+
+\newtcolorbox{boxdica}[1]{enhanced,breakable,colback=clearlightbluelight,colframe=clearblue,
+  coltitle=white,fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=clearblue,colframe=clearblue,sharp corners,rounded corners=northeast},
+  title={#1},sharp corners,rounded corners=southeast}
+
+\newtcolorbox{boxexemplo}[1]{enhanced,breakable,colback=clearlightgreen,colframe=cleargreen,
+  coltitle=white,fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm,xshift=6mm},
+  boxed title style={colback=cleargreen,colframe=cleargreen,sharp corners,rounded corners=northeast},
+  title={#1},sharp corners,rounded corners=southeast}
+
+% ── Ficha rápida ──
+\newcommand{\ficharapida}[6]{%
+  \begin{tcolorbox}[enhanced,breakable,colback=clearlightbluelight!60,colframe=clearblue,
+    coltitle=white,fonttitle=\bfseries,title={Ficha rápida: #1},
+    attach boxed title to top left={yshift=-2mm,xshift=6mm},
+    boxed title style={colback=clearblue,colframe=clearblue,sharp corners,rounded corners=northeast},
+    sharp corners,rounded corners=southeast]
+  \small
+  \begin{tabular}{@{}p{3.2cm}p{\dimexpr\linewidth-3.5cm}@{}}
+    \textbf{Produtor:}      & #2 \\[3pt]
+    \textbf{Acesso:}        & \small\url{#3} \\[3pt]
+    \textbf{Cobertura:}     & #4 \\[3pt]
+    \textbf{Periodicidade:} & #5 \\[3pt]
+    \textbf{Unidade:}       & #6 \\
+  \end{tabular}
+  \end{tcolorbox}%
+}
+
+\newcommand{\fonte}[1]{\vspace{3pt}\par\small\textit{Fonte: #1}}
+
+% ── Bibliografia ──
+\usepackage[round, authoryear]{natbib}
+\bibliographystyle{plainnat}
+
+% ============================================================
+\begin{document}
+
+\frontmatter
+\include{cap00_capa}
+\include{cap00_apresentacao}
+\tableofcontents
+
+\mainmatter
+\include{cap01_introducao}
+\include{cap02_tipologia}
+\include{cap03_pesquisas_amostrais}
+\include{cap04_mercado_trabalho}
+\include{cap05_saude}
+\include{cap06_educacao}
+\include{cap07_assistencia_social}
+\include{cap08_seguranca}
+\include{cap09_infraestrutura_territorio}
+\include{cap10_financas_publicas}
+\include{cap11_fontes_internacionais}
+\include{cap12_ia_apis_scraping}
+\include{cap13_como_escolher_acessar}
+
+\backmatter
+\appendix
+\include{anexo_a_tabela_catalogo}
+\include{anexo_b_glossario}
+
+\bibliography{referencias}
+
+\end{document}

@@ -1,0 +1,207 @@
+% ============================================================
+%  cap02_tipologia.tex
+%  Capítulo 2: Tipologia das fontes de dados
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Tipologia das Fontes de Dados}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Antes de mergulhar nos catálogos temáticos, este capítulo organiza o ecossistema de fontes de dados disponíveis para avaliação de políticas públicas no Brasil. Apresentamos uma tipologia em sete categorias — pesquisas amostrais, censos, registros administrativos, sistemas de informação setoriais, dados fiscais, dados territoriais e fontes internacionais — e discutimos as características, vantagens e limitações de cada tipo. O objetivo é oferecer uma bússola conceitual que oriente a leitura dos capítulos seguintes.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Por que tipologizar?}
+% ────────────────────────────────────────────────────────────
+
+O universo de fontes de dados disponíveis para quem trabalha com políticas públicas no Brasil é vasto e heterogêneo. Há pesquisas domiciliares representativas para todo o país, registros administrativos produzidos rotineiramente pela gestão pública, sistemas de informação setoriais com décadas de histórico, bases fiscais municipais e estaduais, dados georreferenciados e um conjunto crescente de fontes internacionais comparadas. A cada ano, novas bases são disponibilizadas, APIs são abertas e ferramentas digitais ampliam o acesso a dados antes restritos.
+
+Navegar nesse ecossistema sem uma estrutura conceitual é ineficiente e arriscado. A tipologia apresentada neste capítulo tem três funções práticas: primeiro, ajuda o avaliador a saber \textit{onde procurar} quando tem uma pergunta em mente; segundo, permite antecipar as características e limitações de uma fonte antes mesmo de consultá-la; terceiro, facilita a escolha de combinações complementares de dados para triangulação metodológica.
+
+A tipologia não é exaustiva nem mutuamente exclusiva — algumas fontes se encaixam em mais de uma categoria. Ela é, antes de tudo, uma ferramenta de orientação.
+
+% ────────────────────────────────────────────────────────────
+\section{Pesquisas amostrais domiciliares}
+% ────────────────────────────────────────────────────────────
+
+As pesquisas amostrais domiciliares são levantamentos periódicos conduzidos junto a amostras probabilísticas de domicílios e seus moradores. No Brasil, o IBGE é o principal produtor dessas pesquisas, embora ministérios e institutos de pesquisa também conduzam levantamentos específicos.
+
+\textbf{O que as caracteriza.} Essas pesquisas são projetadas para produzir estimativas representativas de uma população-alvo — em geral, a população residente em domicílios particulares permanentes do Brasil ou de recortes geográficos específicos. A representatividade é garantida pelo desenho amostral probabilístico, que atribui a cada domicílio uma probabilidade conhecida de seleção. Os resultados devem ser interpretados com os pesos amostrais fornecidos pelo produtor.
+
+\textbf{Vantagens.} Por cobrirem amostras grandes e demograficamente diversas, essas pesquisas permitem estimar indicadores para múltiplos grupos populacionais e regiões. Têm questionários padronizados e documentação metodológica detalhada, o que facilita comparações ao longo do tempo. Muitas disponibilizam microdados públicos — arquivos com informações individuais anonimizadas — que permitem análises customizadas.
+
+\textbf{Limitações.} O tamanho da amostra impõe limites à desagregação: estimativas para municípios pequenos, grupos étnico-raciais específicos ou subgrupos populacionais raramente têm precisão estatística adequada. Além disso, a periodicidade — trimestral, anual ou quinquenal — impede o acompanhamento de fenômenos de curto prazo. Há também o risco de não-resposta diferencial, que pode introduzir vieses se certos grupos de domicílios recusarem participar mais do que outros.
+
+\textbf{Principais exemplos no Brasil.} PNAD Contínua, Pesquisa de Orçamentos Familiares (POF), Pesquisa Nacional de Saúde (PNS), Pesquisa Mensal de Emprego (descontinuada em 2016).
+
+\begin{boxdica}{Dica — Sempre use os pesos amostrais}
+Toda pesquisa amostral domiciliar do IBGE fornece uma variável de peso amostral (\texttt{V1028} na PNAD Contínua, por exemplo). Ignorar esses pesos ao calcular médias, proporções ou totais produz estimativas incorretas. Softwares como R (\texttt{survey}), Stata (\texttt{svyset}) e Python (\texttt{statsmodels}) têm rotinas específicas para análise de dados complexos com pesos.
+\end{boxdica}
+
+% ────────────────────────────────────────────────────────────
+\section{Censos}
+% ────────────────────────────────────────────────────────────
+
+Censos são levantamentos que buscam cobrir \textit{toda} a população ou universo de interesse — não uma amostra, mas o conjunto completo de unidades. No Brasil, os principais censos relevantes para avaliação de políticas públicas são o Censo Demográfico (IBGE), o Censo Escolar (Inep) e o Censo Agropecuário (IBGE).
+
+\textbf{O que os caracteriza.} Por visarem cobertura universal, os censos permitem desagregações impossíveis em pesquisas amostrais: estimativas para municípios pequenos, bairros, zonas rurais específicas ou grupos populacionais minoritários. O Censo Escolar, por exemplo, registra individualmente cada aluno, cada professor e cada escola do Brasil, permitindo análises extremamente granulares.
+
+\textbf{Vantagens.} A cobertura praticamente total elimina erros de amostragem. Para análises territoriais finas — como identificar onde concentrar uma intervenção — censos são frequentemente insubstituíveis. Permitem também a construção de painéis longitudinais quando os identificadores individuais estão disponíveis (como no Censo Escolar, onde cada aluno tem um código único).
+
+\textbf{Limitações.} A principal limitação dos censos demográficos é a periodicidade longa: o Censo Demográfico é decenal, o que significa que pode haver uma defasagem de até dez anos entre a coleta e o momento da avaliação. Mesmo o Censo Escolar, anual, tem uma defasagem de alguns meses entre o período de referência (geralmente maio) e a publicação dos microdados. Além disso, censos estão sujeitos a subregistro: domicílios em áreas de difícil acesso, populações em situação de rua e comunidades isoladas tendem a ser sub-representados.
+
+\textbf{Principais exemplos no Brasil.} Censo Demográfico (decenal), Censo Escolar (anual), Censo da Educação Superior (anual), Censo Agropecuário (periodicidade irregular).
+
+% ────────────────────────────────────────────────────────────
+\section{Registros administrativos}
+% ────────────────────────────────────────────────────────────
+
+Registros administrativos são dados produzidos como subproduto da operação rotineira de serviços e programas públicos. Não foram coletados com fins analíticos, mas contêm informações valiosas sobre a população atendida, os serviços prestados e os recursos utilizados.
+
+\textbf{O que os caracteriza.} Ao contrário das pesquisas, os registros administrativos não têm um questionário padronizado aplicado a uma amostra — eles registram transações, eventos ou cadastros à medida que ocorrem. Um nascimento registrado no SINASC, uma admissão no CAGED, uma matrícula no Censo Escolar: cada um desses é um registro administrativo.
+
+\textbf{Vantagens.} Frequência e cobertura são as principais. O CAGED, por exemplo, é publicado mensalmente e cobre todos os movimentos de emprego formal no país. O Censo Escolar captura cada matrícula individualmente. Essa granularidade e frequência permitem análises que seriam impossíveis com pesquisas amostrais. Além disso, registros administrativos costumam ter baixo custo de acesso — em geral estão disponíveis gratuitamente em portais do governo.
+
+\textbf{Limitações.} A limitação estrutural dos registros administrativos é que eles cobrem apenas o que passa pelo sistema formal. Trabalhadores informais não estão no CAGED. Partos domiciliares não registrados não estão no SINASC. Crianças fora da escola não constam no Censo Escolar. Essa é uma forma de viés de cobertura que pode ser especialmente problemática em avaliações de políticas voltadas a populações vulneráveis, que tendem a ter menor presença nos sistemas formais.
+
+Outra limitação importante é a variabilidade na qualidade de preenchimento: como os dados são inseridos por diferentes operadores em milhares de municípios, erros de digitação, campos em branco e inconsistências são frequentes e precisam ser tratados antes da análise.
+
+\textbf{Principais exemplos no Brasil.} CAGED, RAIS, Cadastro Único, Censo Escolar, SINASC, SIM, SIH/SIA, SINAN.
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxatencao}{Atenção — Viés nos registros administrativos}
+A qualidade de um registro administrativo depende dos incentivos institucionais de quem o preenche. Secretarias municipais de saúde podem sub-registrar óbitos por causas sensíveis politicamente. Escolas podem registrar alunos ausentes como presentes para evitar penalidades. Esse viés de notificação é estrutural e deve ser considerado na interpretação dos dados. Sempre que possível, compare a fonte administrativa com fontes independentes para checar consistência.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Sistemas de informação setoriais}
+% ────────────────────────────────────────────────────────────
+
+Sistemas de informação setoriais são plataformas institucionais que integram múltiplos registros administrativos de uma área de política pública específica. Diferem dos registros administrativos isolados por terem uma arquitetura de gestão da informação mais estruturada e por produzirem estatísticas consolidadas regularmente.
+
+\textbf{O que os caracteriza.} No Brasil, os principais setores de política pública têm sistemas próprios: o DATASUS na saúde, o Inep na educação, o MDS na assistência social. Esses sistemas agregam dados de produção de serviços, infraestrutura, recursos humanos e resultados em plataformas de consulta pública.
+
+\textbf{Vantagens.} Oferecem acesso centralizado a múltiplas dimensões de um setor. O DATASUS, por exemplo, reúne em um só portal sistemas de mortalidade, nascimentos, internações, ambulatório, vigilância epidemiológica e cadastro de estabelecimentos. Isso facilita a construção de análises multidimensionais sem necessidade de acessar fontes dispersas.
+
+\textbf{Limitações.} A integração nem sempre é plena: sistemas diferentes dentro de um mesmo setor frequentemente não compartilham identificadores comuns, dificultando a linkagem entre bases. Além disso, a qualidade dos dados varia significativamente entre municípios e estados, refletindo diferenças na capacidade administrativa local.
+
+\textbf{Principais exemplos no Brasil.} DATASUS (saúde), Inep/sistemas educacionais, SUAS/MDS (assistência social), SNIS (saneamento).
+
+% ────────────────────────────────────────────────────────────
+\section{Dados fiscais e orçamentários}
+% ────────────────────────────────────────────────────────────
+
+Dados fiscais registram receitas, despesas, transferências e execução orçamentária de entes públicos. São fundamentais para análises de eficiência, custo-efetividade e alocação de recursos em políticas públicas.
+
+\textbf{O que os caracteriza.} No Brasil, esses dados são produzidos pela obrigação constitucional de transparência fiscal. Municípios, estados e o governo federal devem publicar suas contas em portais de transparência e reportar dados ao Tesouro Nacional. O FINBRA (Finanças do Brasil) consolida os dados municipais; o SIOPE e o SIOPS fazem o mesmo para gastos em educação e saúde, respectivamente.
+
+\textbf{Vantagens.} Permitem verificar quanto cada ente gasta em cada função de governo, comparar alocações entre municípios e calcular métricas de eficiência como custo por beneficiário ou gasto por aluno. São essenciais em análises de custo-benefício e custo-efetividade.
+
+\textbf{Limitações.} A classificação orçamentária nem sempre reflete com precisão o que foi efetivamente gasto em cada atividade. Um município pode classificar despesas de gestão sob a função educação, inflando artificialmente o gasto per capita. Além disso, a qualidade do preenchimento varia muito entre municípios, e dados de municípios pequenos ou com baixa capacidade administrativa tendem a ter mais inconsistências.
+
+\textbf{Principais exemplos no Brasil.} FINBRA/Siconfi, SIOPE, SIOPS, Portais de Transparência (federal, estaduais e municipais), dados do TSE sobre financiamento eleitoral.
+
+% ────────────────────────────────────────────────────────────
+\section{Dados georreferenciados e territoriais}
+% ────────────────────────────────────────────────────────────
+
+Dados georreferenciados associam informações a coordenadas espaciais, permitindo análises que levam em conta a dimensão territorial das políticas públicas.
+
+\textbf{O que os caracteriza.} Incluem malhas territoriais (limites de municípios, estados, setores censitários), dados populacionais por setor censitário, mapas de cobertura de serviços públicos, imagens de satélite e índices territoriais. No Brasil, o IBGE é o principal produtor de dados georreferenciados para uso em políticas públicas.
+
+\textbf{Vantagens.} Permitem identificar padrões espaciais de cobertura e exclusão, mapear onde os problemas se concentram, calcular distâncias entre populações e serviços e construir análises de spillover entre territórios vizinhos. Em avaliações de impacto, a dimensão geográfica pode ser usada como fonte de variação exógena (como em regressões descontínuas geográficas).
+
+\textbf{Limitações.} A análise espacial exige competências técnicas específicas (SIG, R espacial, Python com GeoPandas) que nem todas as equipes de avaliação dominam. Além disso, a granularidade dos dados pode não coincidir com a unidade de implementação da política — dados disponíveis por município podem ser insuficientes para avaliar uma política implementada em nível de bairro.
+
+\textbf{Principais exemplos no Brasil.} Malhas territoriais do IBGE, setores censitários, PRODES/INPE (desmatamento), dados georreferenciados do Cadastro Ambiental Rural (CAR).
+
+% ────────────────────────────────────────────────────────────
+\section{Fontes internacionais e comparadas}
+% ────────────────────────────────────────────────────────────
+
+Fontes internacionais produzem dados comparáveis entre países, permitindo contextualizar indicadores brasileiros em perspectiva global ou regional.
+
+\textbf{O que as caracteriza.} São produzidas por organismos multilaterais (Banco Mundial, ONU, OCDE, OIT, OMS) ou institutos de pesquisa internacionais. Em geral, harmonizam dados de diferentes países para permitir comparações, o que implica algum grau de padronização que pode não capturar especificidades nacionais com total fidelidade.
+
+\textbf{Vantagens.} Permitem situar o desempenho do Brasil em perspectiva comparada, identificar países com trajetórias similares e aprender com experiências internacionais. Também são úteis quando dados nacionais estão indisponíveis ou têm qualidade insuficiente para determinados indicadores.
+
+\textbf{Limitações.} A harmonização metodológica necessária para comparações internacionais frequentemente implica perdas de detalhe. Além disso, os dados costumam ter maior defasagem do que as fontes nacionais originais, pois dependem de processos de coleta e padronização mais longos.
+
+\textbf{Principais exemplos.} World Development Indicators (Banco Mundial), bases da OCDE (saúde, educação, bem-estar), PISA (Inep/OCDE), bases da CEPAL, OIT ILOSTAT, OMS Global Health Observatory.
+
+% ────────────────────────────────────────────────────────────
+\section{Dados produzidos com apoio de tecnologia: APIs,
+         \textit{web scraping} e inteligência artificial}
+% ────────────────────────────────────────────────────────────
+
+Uma categoria crescente e ainda pouco sistematizada é a de dados obtidos ou estruturados com apoio de tecnologias digitais — interfaces de programação (APIs), coleta automatizada de páginas web (\textit{web scraping}) e ferramentas de inteligência artificial.
+
+\textbf{O que os caracteriza.} Não são fontes no sentido tradicional — um órgão produtor com um questionário e uma metodologia documentada — mas formas de acessar ou produzir dados a partir de informações já existentes em formato digital. Portais de transparência, diários oficiais, sistemas de informação governamental e redes sociais são exemplos de fontes de dados não estruturados que podem ser acessados por essas vias.
+
+\textbf{Vantagens.} Permitem obter dados em tempo real ou com alta frequência, acessar informações que não estão disponíveis em formato tabulado e automatizar coletas que seriam inviáveis manualmente. APIs governamentais abertas — como as do IBGE, do Banco Central e do Portal de Dados Abertos — democratizaram o acesso a dados que antes exigiam download manual de dezenas de arquivos.
+
+\textbf{Limitações.} Exigem competências técnicas de programação. Dados obtidos por \textit{scraping} podem ter qualidade variável e estão sujeitos a mudanças na estrutura dos sites-fonte. O uso de IA para estruturar ou sintetizar dados introduce riscos de erros não detectados (``alucinações'') que exigem verificação cuidadosa.
+
+\textbf{Principais exemplos.} API do IBGE (Sidra), API do Banco Central (SGS), Portal de Dados Abertos do Governo Federal (\url{dados.gov.br}), diários oficiais municipais e estaduais.
+
+O Capítulo~12 trata essa categoria com maior profundidade.
+
+% ────────────────────────────────────────────────────────────
+\section{A fronteira entre primário e secundário revisitada}
+% ────────────────────────────────────────────────────────────
+
+Vale retomar, à luz dessa tipologia, uma distinção que parece simples mas tem nuances importantes. O Censo Escolar, por exemplo, é um registro administrativo produzido pelo Inep para fins de gestão e alocação de recursos — mas é amplamente utilizado como dado de pesquisa. A RAIS foi criada como instrumento de gestão do mercado de trabalho formal, mas tornou-se uma das bases mais usadas em pesquisas econômicas no Brasil. Esses dados são ``primários'' para o Inep e o Ministério do Trabalho, mas ``secundários'' para o avaliador externo que os usa.
+
+O que importa, do ponto de vista do avaliador, não é a classificação abstrata, mas o conhecimento das condições de produção de cada fonte: quem coletou, para que fim, com que método e com que incentivos. Essa consciência é o que permite usar dados administrativos com o rigor que uma avaliação de qualidade exige.
+
+\begin{table}[H]
+\centering
+\caption{Síntese da tipologia de fontes de dados}
+\label{tab:tipologia}
+\small
+\begin{tabularx}{\textwidth}{@{} p{3.2cm} X p{2.8cm} p{3cm} @{}}
+\toprule
+\textbf{Tipo} & \textbf{Características principais} & \textbf{Periodicidade típica} & \textbf{Exemplos} \\
+\midrule
+Pesquisas amostrais & Representativas, microdados públicos, pesos amostrais & Trimestral a quinquenal & PNAD-C, POF, PNS \\
+\addlinespace
+Censos & Cobertura universal, alta desagregação & Anual a decenal & Censo Demográfico, Censo Escolar \\
+\addlinespace
+Registros administrativos & Alta frequência, cobertura do sistema formal & Mensal a anual & CAGED, RAIS, CadÚnico \\
+\addlinespace
+Sistemas setoriais & Integração temática, consulta pública & Contínua a anual & DATASUS, Inep, SNIS \\
+\addlinespace
+Dados fiscais & Receitas e despesas por ente federativo & Anual & FINBRA, SIOPE, Transparência \\
+\addlinespace
+Dados territoriais & Coordenadas espaciais, malhas, satélite & Variável & IBGE/Setores, PRODES \\
+\addlinespace
+Fontes internacionais & Comparabilidade entre países & Anual & WDI, OCDE, PISA \\
+\addlinespace
+APIs e tecnologia & Automação, tempo real, não estruturados & Contínua & IBGE API, dados.gov.br \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo organizou o ecossistema de fontes de dados em oito tipos, cada um com características, vantagens e limitações próprias. Os pontos centrais são:
+
+\begin{itemize}
+  \item Pesquisas amostrais oferecem representatividade estatística, mas têm limites de desagregação; censos oferecem cobertura universal, mas periodicidade longa.
+  \item Registros administrativos têm alta frequência e granularidade, mas cobrem apenas o que passa pelo sistema formal e dependem da qualidade do preenchimento.
+  \item Sistemas setoriais integram múltiplas dimensões de uma área de política, mas a qualidade varia entre municípios.
+  \item Dados fiscais são essenciais para análises de eficiência, mas a classificação orçamentária pode não refletir com fidelidade os gastos reais por atividade.
+  \item Dados georreferenciados abrem dimensões analíticas importantes, mas exigem competências técnicas específicas.
+  \item Fontes internacionais permitem contextualização comparada, mas implicam perdas de detalhe pela necessidade de harmonização.
+  \item APIs e tecnologias digitais ampliam o acesso a dados, mas exigem cuidado metodológico adicional.
+\end{itemize}
+
+Os próximos capítulos percorrem esse território fonte por fonte, começando pelas categorias mais consolidadas e avançando para as mais especializadas. A leitura pode ser feita em ordem ou por saltos temáticos --- a tipologia apresentada aqui serve de bússola em qualquer direção.
+
+\medskip
+
+O primeiro grande território a explorar é o das pesquisas amostrais e censos demográficos: as fontes que, desde o IBGE, nos dizem quem os brasileiros são, como vivem e em que condições --- o ponto de partida insubstituível de qualquer diagnóstico nacional.

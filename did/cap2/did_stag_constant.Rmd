@@ -1,0 +1,36 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+rm(list=ls())
+library(dplyr)
+
+
+df <- read.csv("base_stagger_did_const.csv")
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#TWFE regresssão
+reg_TWFE = lm(y ~ as.factor(G) + as.factor(ano) + d_x_t + escolaridade + populacao, data = df)
+
+library("lmtest")
+library("sandwich")
+# t test Robusto
+cov1 <- sandwich::vcovHC(reg_TWFE, type = "HC0")
+sd_robust = sqrt(diag(cov1))
+
+# Gere a tabela usando stargazer
+library(stargazer)
+stargazer(reg_TWFE, type = "latex", se = list(sd_robust),
+title = "OLS com Erros Padrao Robustos")
+
+```
+
+
+

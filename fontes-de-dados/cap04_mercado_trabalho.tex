@@ -1,0 +1,320 @@
+% ============================================================
+%  cap04_mercado_trabalho.tex
+%  Capítulo 4: Mercado de Trabalho e Renda
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Mercado de Trabalho e Renda}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes de dados administrativos sobre mercado de trabalho e renda no Brasil. Cobrimos o CAGED, a RAIS, o eSocial, o Cadastro Único e o Novo CAGED, detalhando para cada fonte seu histórico, estrutura, variáveis disponíveis, forma de acesso e aplicações típicas em avaliação de políticas públicas. O capítulo também discute a relação entre essas fontes e como combiná-las de forma estratégica.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: o ecossistema de dados do mercado de trabalho}
+% ────────────────────────────────────────────────────────────
+
+O mercado de trabalho brasileiro é monitorado por um conjunto relativamente rico de fontes administrativas, produzidas principalmente pelo Ministério do Trabalho e Emprego (MTE) e pelo Ministério do Desenvolvimento e Assistência Social (MDS). Cada fonte cobre uma dimensão específica: o CAGED registra o \textit{fluxo} de admissões e demissões no setor formal; a RAIS registra o \textit{estoque} de vínculos formais ao final de cada ano; o Cadastro Único cobre as famílias de baixa renda, incluindo trabalhadores informais e desocupados que estão fora do alcance do CAGED e da RAIS.
+
+Entender a relação entre essas fontes — o que cada uma cobre, o que exclui e como se complementam — é fundamental para qualquer avaliação de políticas de emprego, renda e proteção social.
+
+\begin{figure}[H]
+\centering
+\begin{boxdestaque}{O ecossistema de dados do mercado de trabalho formal}
+\begin{center}
+\begin{tabular}{@{} p{4cm} p{3.5cm} p{5.5cm} @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que mede} & \textbf{O que exclui} \\
+\midrule
+CAGED & Fluxo de admissões e demissões & Estatutários, militares, informais \\
+RAIS  & Estoque de vínculos formais & Estatutários (parcial), militares, informais \\
+eSocial & Obrigações trabalhistas e previdenciárias & Informais, autônomos sem registro \\
+Cadastro Único & Famílias de baixa renda & Famílias acima do limite de renda \\
+PNAD Contínua & Mercado de trabalho total & Não há: cobre formais e informais \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{boxdestaque}
+\end{figure}
+
+% ────────────────────────────────────────────────────────────
+\section{CAGED — Cadastro Geral de Empregados e Desempregados}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {CAGED}
+  {Ministério do Trabalho e Emprego (MTE)}
+  {https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/estatisticas-trabalho/caged}
+  {Brasil, Grandes Regiões, Unidades da Federação e municípios}
+  {Mensal (1992--2019); Novo CAGED a partir de janeiro de 2020}
+  {Vínculo empregatício (admissão ou demissão)}
+
+\subsection{O que é e por que importa}
+
+O Cadastro Geral de Empregados e Desempregados (CAGED) é o principal registro administrativo de \textbf{fluxo} do mercado de trabalho formal brasileiro. Instituído pela Lei n.º 4.923/1965 e operacionalizado pelo Ministério do Trabalho e Emprego, o CAGED obriga todos os estabelecimentos que contratam ou dispensam trabalhadores regidos pela Consolidação das Leis do Trabalho (CLT) a comunicar esses movimentos mensalmente ao governo.
+
+O resultado é uma base com cobertura praticamente universal do emprego com carteira assinada no setor privado, atualizada mensalmente e desagregável por município, setor de atividade econômica, ocupação, sexo, faixa etária e escolaridade. Nenhuma outra fonte brasileira oferece essa combinação de frequência, cobertura e desagregação para o emprego formal.
+
+\subsection{Histórico e o Novo CAGED}
+
+O CAGED em sua forma original foi operado entre 1992 e dezembro de 2019. A partir de janeiro de 2020, foi substituído pelo \textbf{Novo CAGED}, que passou a ser alimentado pelos dados do eSocial e do e-Empregador — sistemas de declaração eletrônica unificada de obrigações trabalhistas. Essa transição trouxe mudanças substanciais:
+
+\begin{itemize}
+  \item \textbf{Universo de declarantes ampliado}: o Novo CAGED incorporou categorias de trabalhadores antes não cobertas, como trabalhadores avulsos e alguns vínculos de servidores públicos celetistas;
+  \item \textbf{Metodologia de competência vs. caixa}: o CAGED antigo registrava movimentos pela data de declaração; o Novo CAGED registra pela data de competência (quando o evento ocorreu de fato), o que melhora a precisão mas pode gerar revisões retroativas;
+  \item \textbf{Quebra de série}: a mudança introduziu uma \textbf{descontinuidade metodológica} que impede a comparação direta de dados do Novo CAGED com séries históricas do CAGED antigo sem ajustes.
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxatencao}{Atenção — Quebra de série: CAGED e Novo CAGED}
+A transição para o Novo CAGED em janeiro de 2020 não é apenas uma atualização tecnológica — é uma mudança metodológica que altera o universo coberto, o conceito de competência e a forma de registro. Análises que precisem de séries históricas longas (anteriores a 2020) devem tratar os dois períodos separadamente ou utilizar fatores de ajuste. O próprio MTE publicou notas técnicas sobre a transição que devem ser consultadas antes de qualquer comparação temporal.
+\end{boxatencao}
+
+\subsection{Principais variáveis disponíveis}
+
+O CAGED (e o Novo CAGED) disponibiliza, para cada movimentação registrada:
+
+\begin{itemize}
+  \item Tipo de movimentação (admissão ou desligamento);
+  \item Motivo do desligamento (demissão sem justa causa, com justa causa, pedido de demissão, aposentadoria, etc.);
+  \item Salário de admissão ou demissão;
+  \item Sexo, faixa etária e grau de instrução do trabalhador;
+  \item Município e UF do estabelecimento;
+  \item Setor de atividade econômica (CNAE);
+  \item Ocupação (CBO — Classificação Brasileira de Ocupações);
+  \item Porte do estabelecimento.
+\end{itemize}
+
+\subsection{Acesso aos dados}
+
+Os dados agregados do CAGED são publicados mensalmente pelo MTE e disponibilizados no portal do governo federal. Os microdados — com informações por vínculo individual — são disponibilizados com defasagem de alguns meses e podem ser acessados no portal do MTE ou via plataforma \textit{Base dos Dados} (\url{basedosdados.org}), que oferece os dados já tratados e compatibilizados em BigQuery.
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de geração de emprego}: monitoramento do saldo líquido de empregos formais criados ou destruídos em resposta a uma intervenção;
+  \item \textbf{Análise setorial e regional}: identificação de quais setores e regiões responderam a políticas de incentivo fiscal ou crédito;
+  \item \textbf{Avaliação de programas de qualificação profissional}: comparação de admissões antes e depois de programas de treinamento, controlando por setor e ocupação;
+  \item \textbf{Estudos de impacto de choques econômicos}: o CAGED é amplamente usado para avaliar o impacto de crises, choques setoriais e mudanças regulatórias sobre o emprego formal.
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxexemplo}{Exemplo — Polo industrial e emprego formal}
+Um estado implementou um programa de atração de investimentos industriais que resultou na instalação de um polo automotivo em um município de médio porte. Para avaliar o impacto sobre o emprego formal local, pesquisadores utilizaram os microdados do CAGED para construir uma série mensal de admissões e desligamentos no município tratado e em municípios de controle com características similares (usando pareamento por escore de propensão). O CAGED permitiu não apenas medir o saldo líquido de empregos, mas também verificar se os postos criados eram de melhor qualidade (maior salário, maior escolaridade exigida) do que os que existiam anteriormente.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{RAIS — Relação Anual de Informações Sociais}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {RAIS}
+  {Ministério do Trabalho e Emprego (MTE)}
+  {https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/estatisticas-trabalho/rais}
+  {Brasil, Grandes Regiões, Unidades da Federação e municípios}
+  {Anual (desde 1975)}
+  {Vínculo empregatício (base de vínculos) e estabelecimento (base de estabelecimentos)}
+
+\subsection{O que é e por que importa}
+
+Enquanto o CAGED registra o \textit{fluxo} de entradas e saídas do emprego formal, a Relação Anual de Informações Sociais (RAIS) registra o \textit{estoque}: todos os vínculos empregatícios ativos em cada estabelecimento ao longo do ano. Instituída pelo Decreto n.º 76.900/1975, a RAIS é uma declaração anual obrigatória para todos os estabelecimentos — públicos e privados — que possuam ou tenham possuído empregados com vínculo formal durante o ano-base.
+
+A RAIS é amplamente considerada a \textbf{fonte mais completa para análise do mercado de trabalho formal brasileiro} em perspectiva anual. Sua cobertura é maior do que a do CAGED porque inclui, além dos trabalhadores celetistas, os \textbf{servidores públicos estatutários} — categoria excluída do CAGED — e informações sobre estabelecimentos que não tiveram movimentação durante o ano (declaração negativa).
+
+\subsection{Duas bases complementares}
+
+A RAIS é disponibilizada em duas bases distintas, com unidades de análise diferentes:
+
+\begin{itemize}
+  \item \textbf{Base de vínculos}: cada linha é um vínculo empregatício. Contém informações individuais sobre o trabalhador (identificado pelo CPF, mas anonimizado nos microdados públicos) e sobre o vínculo (salário, ocupação, tempo de emprego, motivo de desligamento, etc.);
+  \item \textbf{Base de estabelecimentos}: cada linha é um estabelecimento (identificado pelo CNPJ). Contém informações sobre localização geográfica, setor de atividade, porte, número de empregados e composição da força de trabalho por escolaridade, sexo e faixa etária.
+\end{itemize}
+
+As duas bases podem ser linkadas pelo CNPJ do estabelecimento, permitindo análises que combinam características dos trabalhadores e das firmas.
+
+\subsection{Principais variáveis da base de vínculos}
+
+\begin{itemize}
+  \item Identificador do trabalhador (CPF anonimizado);
+  \item Município e UF do estabelecimento;
+  \item Setor de atividade (CNAE) e ocupação (CBO);
+  \item Remuneração média e em dezembro;
+  \item Grau de instrução, sexo, faixa etária, raça/cor e nacionalidade;
+  \item Tempo de emprego no vínculo;
+  \item Mês e ano de admissão e, se houver, de desligamento e motivo;
+  \item Tipo de vínculo (CLT, estatutário, temporário, etc.);
+  \item Indicador de portador de deficiência.
+\end{itemize}
+
+\subsection{Acesso: dados públicos vs. dados restritos}
+
+O acesso à RAIS tem dois níveis:
+
+\begin{itemize}
+  \item \textbf{Dados agregados e tabulações}: disponíveis gratuitamente no portal do MTE, sem necessidade de cadastro;
+  \item \textbf{Microdados anonimizados}: disponíveis para pesquisadores mediante cadastro no portal do MTE. Os microdados públicos têm o CPF substituído por um identificador anonimizado, o que impede linkagem com outras bases por CPF, mas permite análises individuais;
+  \item \textbf{Microdados com CPF}: disponíveis apenas mediante convênio formal com o MTE, para pesquisadores vinculados a instituições acadêmicas ou governamentais. Com o CPF, é possível linkar a RAIS com outras bases (como o CadÚnico, o SINASC ou dados de programas específicos), o que abre possibilidades analíticas muito mais ricas.
+\end{itemize}
+
+\begin{boxdica}{Dica — RAIS identificada via convênio}
+Para pesquisadores que precisam da RAIS com CPF para linkagem de bases, o processo de convênio com o MTE exige uma proposta de pesquisa, termo de sigilo e aprovação por comitê. O prazo costuma ser de dois a quatro meses. A plataforma \textit{Base dos Dados} oferece a RAIS anonimizada já tratada em BigQuery, o que facilita muito o acesso para análises que não exigem identificação individual.
+\end{boxdica}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Análises salariais e de desigualdade}: a RAIS é a principal fonte para estudos de diferencial salarial por sexo, raça, escolaridade e setor;
+  \item \textbf{Avaliação de políticas de qualificação profissional}: linkagem entre participantes de programas de treinamento (identificados pelo CPF) e seus vínculos na RAIS antes e depois do programa;
+  \item \textbf{Estudos de mobilidade ocupacional e setorial}: trajetórias de trabalhadores ao longo do tempo, usando o painel implícito construído pelo CPF;
+  \item \textbf{Análise do setor público}: por incluir estatutários, a RAIS é a única fonte administrativa que permite comparar remuneração e características do emprego público e privado;
+  \item \textbf{Estudos de firmas}: a base de estabelecimentos permite análises sobre produtividade, crescimento e mortalidade de empresas.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{eSocial}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {eSocial}
+  {Governo Federal (MTE, Receita Federal, Previdência Social)}
+  {https://www.gov.br/esocial}
+  {Brasil}
+  {Contínuo (implementação gradual a partir de 2018)}
+  {Evento trabalhista (admissão, folha, férias, desligamento, acidente, etc.)}
+
+\subsection{O que é}
+
+O eSocial é um sistema de escrituração digital unificada das obrigações fiscais, previdenciárias e trabalhistas do empregador. Não é uma pesquisa nem um registro administrativo no sentido tradicional — é uma plataforma de declaração eletrônica que integra informações que antes eram prestadas em sistemas separados (CAGED, RAIS, GFIP, SEFIP, entre outros).
+
+A implementação foi gradual: grandes empresas começaram a declarar em 2018; médias e pequenas empresas em 2019 e 2020; empregadores domésticos e pessoas físicas a partir de 2020.
+
+\subsection{Relevância para pesquisa e avaliação}
+
+O eSocial ainda está em fase de consolidação como fonte de dados para pesquisa. Seu principal impacto já visível é ter alimentado o Novo CAGED a partir de 2020. No médio prazo, espera-se que o eSocial permita:
+
+\begin{itemize}
+  \item \textbf{Acompanhamento em tempo quase real} de vínculos trabalhistas, incluindo eventos como acidentes de trabalho e afastamentos;
+  \item \textbf{Cobertura ampliada} de categorias antes sub-representadas nos registros administrativos, como trabalhadores domésticos formalizados;
+  \item \textbf{Integração com dados previdenciários}, permitindo análises que conectam trajetórias de emprego com benefícios recebidos.
+\end{itemize}
+
+Por ora, o acesso aos microdados do eSocial para fins de pesquisa ainda é restrito e os protocolos de acesso estão em desenvolvimento. Pesquisadores interessados devem acompanhar as publicações do MTE e da Receita Federal sobre abertura dos dados.
+
+% ────────────────────────────────────────────────────────────
+\section{Cadastro Único para Programas Sociais (CadÚnico)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Cadastro Único (CadÚnico)}
+  {Ministério do Desenvolvimento e Assistência Social (MDS)}
+  {https://www.gov.br/mds/pt-br/acoes-e-programas/cadastro-unico}
+  {Brasil, Unidades da Federação e municípios}
+  {Contínuo (cadastramento e atualização permanentes; desde 2001)}
+  {Família e pessoa}
+
+\subsection{O que é e por que importa}
+
+O Cadastro Único para Programas Sociais (CadÚnico) é o principal instrumento de identificação e caracterização socioeconômica das famílias de baixa renda no Brasil. Criado em 2001 e reformulado em 2011 para unificar informações antes dispersas entre diferentes programas, o CadÚnico serve como porta de entrada para a maioria dos programas sociais federais — Bolsa Família/Auxílio Brasil/Bolsa Família (novo), Tarifa Social de Energia Elétrica, Minha Casa Minha Vida (faixa 1), entre outros.
+
+\textbf{Famílias elegíveis} para cadastramento são aquelas com renda per capita de até meio salário mínimo ou renda familiar total de até três salários mínimos. O cadastramento é voluntário e realizado pelos municípios, que são responsáveis pela inserção e atualização dos dados.
+
+Para a avaliação de políticas públicas, o CadÚnico é especialmente valioso porque cobre exatamente a população que tende a ser o público-alvo de políticas sociais — e que, por isso mesmo, está sub-representada em pesquisas amostrais (que podem não ter amostras suficientemente grandes nos estratos de menor renda) e ausente nos registros do mercado formal (CAGED e RAIS).
+
+\subsection{Estrutura e principais variáveis}
+
+O CadÚnico é organizado em duas unidades de análise vinculadas:
+
+\begin{itemize}
+  \item \textbf{Família}: composição familiar, endereço, características do domicílio (tipo de construção, acesso a água, esgoto, energia), renda familiar per capita;
+  \item \textbf{Pessoa}: para cada membro da família — nome, CPF, NIS (Número de Identificação Social), data de nascimento, sexo, raça/cor, escolaridade, situação no mercado de trabalho, renda individual de todas as fontes.
+\end{itemize}
+
+O NIS é o identificador único de cada pessoa no CadÚnico e pode ser usado para linkar o cadastro com bases de benefícios (Bolsa Família, BPC) e, mediante convênio, com outras bases administrativas.
+
+\subsection{Atualização e qualidade dos dados}
+
+As famílias devem atualizar seus dados a cada dois anos ou sempre que houver alteração relevante nas condições socioeconômicas (mudança de endereço, nascimento, morte, alteração de renda). Na prática, a qualidade e a regularidade da atualização variam muito entre municípios, o que introduz um grau de defasagem e inconsistência que o analista deve considerar.
+
+O MDS publica mensalmente estatísticas agregadas do CadÚnico por município, UF e Brasil, incluindo número de famílias cadastradas, perfil de renda, cobertura de programas sociais e características domiciliares. Os microdados do CadÚnico têm acesso restrito e são disponibilizados mediante convênio com o MDS para pesquisadores e gestores públicos.
+
+\begin{boxatencao}{Atenção — CadÚnico não é censo da pobreza}
+O CadÚnico cobre apenas as famílias que se cadastraram voluntariamente. Famílias elegíveis que nunca buscaram os programas sociais — por desconhecimento, estigma, barreiras de acesso ou outros motivos — não constam na base. Estimativas sobre a cobertura sugerem que uma parcela significativa das famílias que seriam elegíveis não está cadastrada, especialmente em áreas rurais remotas e entre populações nômades ou em situação de rua. Portanto, o CadÚnico não deve ser interpretado como uma listagem completa da população em situação de pobreza.
+\end{boxatencao}
+
+\subsection{Acesso aos dados}
+
+\begin{itemize}
+  \item \textbf{Dados agregados públicos}: disponíveis no portal CECAD (\url{cecad.cidadania.gov.br}) e no VISDATA (\url{aplicacoes.mds.gov.br/sagi/vis/data3}), com tabelas e mapas por município;
+  \item \textbf{Microdados anonimizados}: disponíveis para pesquisadores mediante convênio com o MDS. O processo exige proposta de pesquisa, termo de confidencialidade e aprovação institucional;
+  \item \textbf{Linkagem com Bolsa Família}: o MDS disponibiliza dados de beneficiários do Bolsa Família (atual e histórico) no Portal da Transparência, com NIS como identificador.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de programas de transferência de renda}: o CadÚnico é a base de elegibilidade do Bolsa Família, tornando-o essencial para identificar o grupo de tratamento em qualquer avaliação desse programa;
+  \item \textbf{Focalização de políticas sociais}: análise de cobertura — quantas famílias elegíveis estão sendo atendidas e quem está sendo excluído;
+  \item \textbf{Caracterização multidimensional da pobreza}: a riqueza de variáveis sobre domicílio, educação e trabalho permite análises de pobreza multidimensional;
+  \item \textbf{Linkagem com registros de saúde e educação}: mediante convênio, o CadÚnico pode ser linkado com o SINASC, o SIM ou o Censo Escolar pelo CPF ou NIS, permitindo avaliar como condições socioeconômicas se associam a resultados de saúde e educação.
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxexemplo}{Exemplo — Linkagem CadÚnico + Censo Escolar: Bolsa Família}
+Uma das avaliações mais citadas do Programa Bolsa Família utilizou a linkagem entre o CadÚnico (que identifica as famílias beneficiárias pelo NIS) e o Censo Escolar (que registra a frequência de cada aluno pelo CPF). Ao combinar as duas bases, os pesquisadores puderam comparar a frequência escolar de crianças de famílias beneficiárias com a de crianças de famílias elegíveis mas não beneficiárias, controlando por características socioeconômicas observáveis do CadÚnico. Essa linkagem tornou possível uma avaliação robusta sem necessidade de coleta primária de dados.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{Combinando as fontes: uma matriz de decisão}
+% ────────────────────────────────────────────────────────────
+
+As fontes apresentadas neste capítulo cobrem dimensões distintas e complementares do mercado de trabalho e da renda. A escolha entre elas — ou a combinação estratégica — depende da pergunta avaliativa e do público de interesse.
+
+\begin{table}[H]
+\centering
+\caption{Matriz de decisão: fontes de dados para mercado de trabalho e renda}
+\label{tab:matriz_trabalho}
+\small
+\begin{tabularx}{\textwidth}{@{} p{4.5cm} X @{}}
+\toprule
+\textbf{Pergunta avaliativa} & \textbf{Fonte(s) recomendada(s)} \\
+\midrule
+Quantos empregos formais foram criados no setor X após a política? & CAGED / Novo CAGED \\
+\addlinespace
+Quais são as características dos trabalhadores formais em determinado setor ou região? & RAIS (base de vínculos) \\
+\addlinespace
+Como as firmas responderam à política (tamanho, setor, localização)? & RAIS (base de estabelecimentos) \\
+\addlinespace
+Qual é o perfil socioeconômico do público-alvo de uma política social? & Cadastro Único \\
+\addlinespace
+A política aumentou a taxa de formalização entre trabalhadores de baixa renda? & CadÚnico + CAGED/RAIS (linkagem por CPF) \\
+\addlinespace
+Como evoluiu o rendimento médio dos trabalhadores ao longo do tempo? & PNAD Contínua (séries longas) \\
+\addlinespace
+Quais trabalhadores transitaram do desemprego para o emprego após o programa? & CAGED (admissões) + CadÚnico (perfil pré-programa) \\
+\addlinespace
+Quanto representa o emprego público no total do mercado formal? & RAIS (inclui estatutários) \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou as principais fontes administrativas de dados sobre mercado de trabalho e renda no Brasil. Os pontos centrais são:
+
+\begin{itemize}
+  \item O \textbf{CAGED} registra o fluxo mensal de admissões e demissões no emprego formal celetista; o \textbf{Novo CAGED} (a partir de 2020) ampliou a cobertura mas introduziu uma quebra de série que impede comparação direta com o período anterior sem ajustes;
+  \item A \textbf{RAIS} registra o estoque anual de vínculos formais, incluindo estatutários, e é a principal fonte para análises de diferencial salarial, mobilidade ocupacional e características de firmas; o acesso com CPF, via convênio, abre possibilidades de linkagem com outras bases;
+  \item O \textbf{eSocial} unifica obrigações trabalhistas e deve se tornar progressivamente uma fonte central de dados administrativos, mas seu uso para pesquisa ainda está em consolidação;
+  \item O \textbf{Cadastro Único} é a principal fonte de dados sobre famílias de baixa renda e trabalhadores informais, cobrindo exatamente o público que o CAGED e a RAIS não alcançam; sua limitação é que cobre apenas quem se cadastrou voluntariamente;
+  \item A \textbf{combinação estratégica} dessas fontes — especialmente via linkagem por CPF ou NIS — permite análises muito mais ricas do que qualquer fonte isolada.
+\end{itemize}
+
+O mercado de trabalho registra quem tem emprego formal — mas não registra o que acontece quando esse trabalhador adoece, se acidenta ou deixa de ter acesso ao sistema de saúde. A dimensão sanitária da vida das pessoas é ao mesmo tempo causa e consequência das condições de trabalho e renda. O próximo capítulo abre esse universo, apresentando os sistemas do DATASUS e a Pesquisa Nacional de Saúde — fontes que cobrem nascimentos, mortes, internações e a experiência de saúde de toda a população brasileira, formal ou informal.

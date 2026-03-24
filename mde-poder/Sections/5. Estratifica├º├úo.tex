@@ -1,0 +1,94 @@
+Muitas vezes, a aleatorização é realizada em blocos, um método amplamente utilizado para garantir maior controle sobre o balanceamento das covariadas pré-tratamento entre os grupos de tratamento e controle. Essa abordagem, também conhecida como estratificação, é especialmente útil quando desejamos assegurar que certos fatores importantes sejam equilibrados antes da aplicação do tratamento, como idade, gênero ou características socioeconômicas. Além de promover um balanceamento mais preciso, a aleatorização em blocos tende a reduzir a variância do estimador de interesse, o que resulta em ganhos significativos de eficiência na análise. Essa característica torna os desenhos estratificados particularmente atrativos em contextos onde a precisão das estimativas é crucial, maximizando o poder estatístico do experimento sem aumentar o tamanho da amostra.
+
+No nosso exemplo empírico, imagine que estamos interessados em garantir balanceamento para algumas variáveis demográficas que temos disponíveis no período pré-tratamento, como gênero, raça e faixa de renda. Podemos criar grupos de alunos com essas características em comum e, dentro de cada grupo, $g$, aleatorizamos quem receberá uma vaga numa escola com ensino técnico. Podemos estimar o efeito do tratamento para cada um desses grupos como 
+
+\begin{equation}
+    \hat{\beta}_g = \Bar{Y}_{1,g} - \Bar{Y}_{0,g}
+\end{equation}
+
+\noindent em que $\Bar{Y}_{d,g}$ e a média dos alunos com status de tratamento $d \in \{0,1\}$ dentro do bloco $g$. A variância do nosso estimador para cada grupo $g$ é dada por
+
+\begin{equation}\label{varg}
+    \mathrm{Var}(\hat{\beta}_g) = \frac{\sigma^2_{1,g}}{N_{1,g}} + \frac{\sigma^2_{0,g}}{N_{0,g}}
+\end{equation}
+
+\noindent em que $\sigma^2_{d,g} = \mathrm{Var}(Y_{i,g}(d))$ e $N_{d,g}$ é o número de alunos com status de tratamento $d \in \{0,1\}$ no grupo $g$. Podemos estimar o efeito do tratamento para todos os grupos simplesmente fazendo a média de todos os estimadores por grupo e ponderando pela proporção de alunos em cada grupo, $\frac{N_g}{N}$,
+
+\begin{equation}
+    \hat{\beta} = \sum_{g=1}^G \hat{\beta}_g \frac{N_g}{N}
+\end{equation}
+
+Com isso, a variância do nosso estimador do efeito médio de tratamento é dada por
+
+\begin{equation}\label{vartotal}
+    \mathrm{Var}(\hat{\beta}) = \sum_{g=1}^G \mathrm{Var}(\hat{\beta}_g) \left(\frac{N_g}{N}\right)^2
+\end{equation}
+
+Utilizando a variância do estimador para cada grupo, dada pela equação \ref{varg}, podemos calcular o MDE para cada bloco $g$,
+
+\begin{equation}\label{mde3}
+    MDE_g = (t_{\frac{\alpha}{2}} + t_{1-\kappa})\sqrt{\frac{\sigma^2_{1,g}}{N_{1,g}} + \frac{\sigma^2_{0,g}}{N_{0,g}}}
+\end{equation}
+
+Para calcularmos o MDE do efeito de tratamento para todos os grupos, basta calcularmos a média dos MDE's de cada grupo, ponderando pela proporção de alunos em cada grupo,
+
+\begin{equation}\label{mdeblock}
+    MDE = \sum_{g=1}^G MDE_g \frac{N_g}{N}
+\end{equation}
+
+A fórmula dada pela equação \ref{mdeblock} é equivalente a derivarmos o MDE a partir da variância do estimador do efeito de tratamento para todos os grupos, dado pela equação \ref{vartotal}.
+
+Um caso extremo da aleatorização em blocos é a \textbf{aleatorização por pares}\footnote{Matched-pairs randomization.}, isto é, os alunos são pareados de acordo com suas características em comum e, dentro de cada par, um aluno é aleatorizado para receber o tratamento, enquanto o outro é alocado para o grupo de controle. O procedimento para calcular o MDE nesse caso seria igual ao para a aleatorização em blocos. Porém, não conseguimos estimar a variância do estimador para cada um dos pares, dada pela equação \ref{varg}, já que temos apenas um aluno tratado e um aluno não tratado em cada um dos pares. Isso fará com que o teste $t$ seja conservador, isto é, a probabilidade de rejeitarmos a hipótese nula é menor do que o $\alpha$ especificado. \cite{bai2022} deriva inferência exata para este caso, propondo ajustes no teste. Em caso de aleatorização por pares, iremos focar em calcular o MDE por meio de simulações, como veremos na próxima seção.
+
+Podemos derivar o MDE para casos de \textbf{efeitos heterogêneos} e \textbf{múltiplos tratamentos} da mesma forma que derivamos para o caso de aleatorização estratificada. No caso de efeitos heterogêneos, podemos separar nossa amostra entre os grupos dos quais gostaríamos de medir a heterogeneidade do tratamento e, para calcularmos o MDE do efeito total, basta fazer uma média ponderada dos MDE's de cada grupo. Por exemplo, se estamos interessados na heterogeneidade do efeito de estar matriculado numa escola de ensino técnico entre os diferentes níveis de renda dos alunos, basta calcularmos os MDE's separadamente para cada um desses níveis de renda. No caso de múltiplos tratamentos, calculamos o MDE separadamente para cada um desses grupos de tratamento. No nosso exemplo empírico, se tivermos dois tipos diferentes de escola de ensino técnico sendo ofertadas, podemos calcular o MDE para cada uma delas. 
+
+\subsection{\sc Praticando: Simulações}
+
+Nesta seção, iremos calcular o MDE para o caso de experimento estratificados apenas através de simulações. Ao aleatorizarmos de forma estratificada, entendemos que as variâncias dos erros vão ser diferentes dentro de cada bloco. Portanto, utilizar a fórmula analítica seria útil para calcularmos o MDE em termos de desvio padrão para um bloco específico, mas não para o agregado.\footnote{Note que, para calcularmos o MDE pela fórmula analítica em para um grupo específico, basta repetirmos o procedimento da Seção \ref{rct_fa} com os valores adequados para o grupo em questão.}
+
+Começamos o código pela limpeza do ambiente e, em seguida, carregamos os pacotes necessários. Novamente iremos utilizar o pacote \texttt{lfe}, agora para rodarmos regressões de efeito fixo. Ainda, escolhemos uma \textit{seed} aleatória e, por fim, carregamos a base de dados \texttt{base\_rct\_block.csv}.
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+# Limpar o ambiente 
+rm(list=ls())
+
+# Carregando pacotes necessários
+
+library(tidyverse)
+library(randomizr)
+library(lfe)
+
+# Fazendo com que as simulações se tornem reproduzíveis
+set.seed(42)
+
+# Base de dados
+base_rct_block <- read.csv("Base/base_rct_block.csv")
+\end{lstlisting}
+\end{boxH}
+
+Para a simulação, iremos utilizar a função \texttt{block\_ra} do pacote \texttt{randomizr} para aleatorizarmos em blocos. Na base em questão, temos diversas escolas localizadas em diferentes municípios. Iremos estratificar a nível de municípios, aleatorizando 50\% das escolas de cada município para receberem o programa de ensino técnico. Como estamos estratificando a nível de município, devemos fazer uma regressão com efeito fixo de município. Novamente, clusterizamos o erro padrão a nível de escola, já que este também é um Clustered RCT. Por fim, armazenamos os erros padrões estimados de cada uma das 100 iterações e calculamos o MDE a partir da média dos erros padrões estimados.  
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+# Criando vetor com 100 entradas para armazenar os erros padrões
+se_block <- c(rep(NA, 100))
+
+# Simulando 100 vezes o erro padrão
+for (i in 1:100) {
+  
+  # aleatorizando por blocos (municípios)
+  df <- base_rct_block %>%
+    mutate(D = block_ra(blocks=id_mun, prob=0.5))
+  
+  
+  reg_block <- felm(y~D|id_mun|0|id_escola,data=df) #regressão com efeito fixo de mun
+  se_block[i] <- reg_block$se[1] # armazenando erro padrão
+  
+}
+
+# Calculando MDE
+MDE_block = 2.8*mean(se_block)
+print(MDE_block)
+\end{lstlisting}
+\end{boxH}

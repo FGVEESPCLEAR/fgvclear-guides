@@ -1,0 +1,139 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+rm(list=ls())
+library(dplyr)
+
+df <- read.csv("base_stagger_did.csv")
+
+head(df)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#TWFE regresssão
+reg_TWFE = lm(y ~-1+ as.factor(G) + as.factor(ano) + d_x_t : as.factor(G):as.factor(ano) + escolaridade + populacao, data = df)
+
+library("lmtest")
+library("sandwich")
+# t test Robusto
+cov1 <- sandwich::vcovHC(reg_TWFE, type = "HC0")
+sd_robust = sqrt(diag(cov1))
+
+# Gere a tabela usando stargazer
+library(stargazer)
+stargazer(reg_TWFE, se = list(sd_robust),
+title = "OLS com Erros Padrao Robustos")
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+library(stringr)
+
+#Selecionando todos os ATT(g,t) [todos os parâmetros que contem no nome d_x_t]
+nomes_betas = names(reg_TWFE$coefficients)
+nomes_atts = nomes_betas[str_detect(nomes_betas, pattern = 'd_x_t')]
+
+#selecionando somente os ATTs e excluindo os nulos (excluindo as interações com G=0)
+ATT_gt = reg_TWFE$coefficients[nomes_atts]
+ATT_gt = ATT_gt[!is.na(ATT_gt)]
+
+#REnomeando para ATT(g,t) para facilitar o uso:
+
+  # Extrair os números do grupo e ano usando expressões regulares
+  grupo <- sub(".*\\(G\\)(\\d{4}).*", "\\1", names(ATT_gt))
+  ano <- sub(".*\\(ano\\)(\\d{4}).*", "\\1", names(ATT_gt))
+names(ATT_gt) <- paste("ATT(", grupo, ",", ano, ")", sep = "")
+
+#printando ATT(g,t)
+round(ATT_gt, 3)
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#delta metodo para media ponderada
+delta_metodo = function(w, ATT_gt, VAR){
+  W = matrix(w, ncol=1)
+  Coef = t(W[17:40])%*%ATT_gt
+  Grad = W #linear function
+  VAR = t(Grad)%*%VAR%*%Grad
+  dp = VAR^(1/2)
+  t_value = (Coef)/dp
+  p_value = 2*(1 - pnorm(abs(t_value)))
+  
+  res = c(Coef,dp,t_value, p_value)
+  names(res) = c('Coef', 'dp', 't', 'P-Valor')
+  return(res)
+}
+
+# Simple mean
+delta_metodo(w=c(rep(0,16),rep(1,24)/24), ATT_gt, cov1)
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# Time effect
+ATT_Time = matrix(NA, nrow = length(2012:2020), ncol = 4)
+rownames(ATT_Time) = 2012:2020
+colnames(ATT_Time) = c('Coef', 'sd', 't', 'P-Valor')
+for(tt in 2012:2020){
+  
+  #Selecionando o ano pelo nome de cada att
+  time_att = str_sub(names(ATT_gt), start = 10, end = 13)
+  #1 se ATT for p periodos apos a intervençao, 0 caso contrário.
+  weights = ifelse(time_att %in% as.character(tt), 1, 0)
+  #dividindo pelo número de ATTs daquele grupo
+  weights = weights/sum(weights)
+  
+  #Calculando o teste de hipotese via metodo delta e salvando em uma matrix
+  ATT_Time[as.character(tt),] = delta_metodo(w=c(rep(0,16),weights), ATT_gt, cov1)
+  
+}
+
+stargazer(ATT_Time, title = "Time Effect")
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#Mudando ATT names para 'dynamic'
+ATT_names = names(ATT_gt)
+g = str_sub(ATT_names,  start= 5, end =  8)
+tt = str_sub(ATT_names,  start= 10, end =  13)
+#calculando quantidade de periodos apos a intervençao
+d = as.numeric(tt)-as.numeric(g)
+names(ATT_gt) = d
+
+# Dynamic effect
+ATT_dynamic = matrix(NA, nrow = max(d)+1, ncol = 4)
+rownames(ATT_dynamic) = unique(d)
+colnames(ATT_dynamic) = c('Coef', 'sd', 't', 'P-Valor')
+for(p in unique(d)){
+  
+  dynamic_att = names(ATT_gt)
+  #1 se ATT for p periodos apos a intervençao, 0 caso contrário.
+  weights = ifelse(dynamic_att %in% as.character(p), 1, 0)
+  #dividindo pelo número de ATTs daquele grupo
+  weights = weights/sum(weights)
+  
+  #Calculando o teste de hipotese via metodo delta e salvando em uma matrix
+  ATT_dynamic[as.character(p),] = delta_metodo(w=c(rep(0,16),weights), ATT_gt, cov1)
+  
+}
+
+stargazer(ATT_dynamic, title = "Dynamic effect")
+
+```
+
+
+

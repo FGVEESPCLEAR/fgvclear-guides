@@ -1,0 +1,350 @@
+% ============================================================
+%  cap10_financas_publicas.tex  [REVISADO]
+%  Capítulo 10: Finanças Públicas
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Finanças Públicas}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes de dados sobre finanças públicas disponíveis para o Brasil. Cobrimos o FINBRA/Siconfi e seus instrumentos de reporte (RREO, RGF, balanços), os portais de transparência federal e subnacionais, o SIOPE, o SIOPS, os dados do TSE sobre financiamento eleitoral e os dados do Banco Central. Dedicamos atenção especial às finanças públicas subnacionais --- receitas tributárias municipais, capacidade fiscal e estrutura de gasto local ---, dimensão central em avaliações de políticas descentralizadas. O capítulo discute também os principais desafios de comparabilidade e qualidade dos dados fiscais brasileiros.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: por que dados fiscais importam para avaliação}
+% ────────────────────────────────────────────────────────────
+
+Dados de finanças públicas são fundamentais para a avaliação de políticas públicas por pelo menos três razões. Primeira, o \textbf{gasto público é frequentemente a política}: em muitos casos, o que se avalia não é uma intervenção específica com regras de elegibilidade bem definidas, mas o impacto de diferentes níveis ou composições do gasto público sobre resultados de interesse. Segunda, dados fiscais permitem calcular \textbf{custos de políticas}, insumo indispensável para análises de custo-efetividade e custo-benefício. Terceira, a \textbf{capacidade fiscal} dos entes federativos é um determinante importante da qualidade e da cobertura dos serviços públicos --- e, portanto, uma variável de contexto relevante em avaliações de políticas descentralizadas.
+
+O Brasil tem um sistema de transparência fiscal relativamente bem desenvolvido para os padrões internacionais, com obrigações de publicação de dados fiscais para todos os entes federativos desde a Lei de Responsabilidade Fiscal (Lei Complementar n.º 101/2000) e a Lei de Transparência (Lei Complementar n.º 131/2009). Na prática, no entanto, a qualidade e a completude dos dados variam consideravelmente entre municípios, estados e o governo federal.
+
+\begin{table}[H]
+\centering
+\caption{Principais fontes de dados de finanças públicas}
+\label{tab:ecossistema_fiscal}
+\small
+\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Desde} &
+\textbf{Principal uso em avaliação} \\
+\midrule
+FINBRA/Siconfi   & Receitas e despesas municipais e estaduais & 1986 & Gasto municipal e estadual por função \\
+RREO             & Execução orçamentária bimestral  & 2000 & Acompanhamento infraanual do gasto \\
+RGF              & Limites e alertas fiscais (LRF)  & 2000 & Capacidade fiscal, endividamento \\
+Portal Transparência & Execução orçamentária federal & 2004 & Gasto federal por programa \\
+SIOPE            & Gasto em educação               & 1999 & Financiamento, custo-aluno \\
+SIOPS            & Gasto em saúde                  & 2000 & Gasto per capita em saúde \\
+TSE              & Financiamento eleitoral         & 2002 & Recursos de campanha, doadores \\
+BCB/SGS          & Séries macroeconômicas          & Variável & Deflacionamento, contexto macro \\
+BCB/Estban       & Crédito por município           & Mensal & Acesso ao crédito, políticas de crédito \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+% ────────────────────────────────────────────────────────────
+\section{FINBRA e Siconfi --- Finanças dos Municípios e Estados}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {FINBRA / Siconfi}
+  {Secretaria do Tesouro Nacional (STN)}
+  {https://siconfi.tesouro.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (FINBRA desde 1986; Siconfi desde 2013)}
+  {Ente federativo (município ou estado)}
+
+\subsection{O que é e evolução histórica}
+
+O FINBRA (Finanças do Brasil) foi, por décadas, a principal base de dados sobre receitas e despesas dos municípios brasileiros, produzida pela Secretaria do Tesouro Nacional (STN). Em 2013, o FINBRA foi integrado ao \textbf{Siconfi} (Sistema de Informações Contábeis e Fiscais do Setor Público Brasileiro), plataforma unificada que passou a consolidar as declarações fiscais de municípios, estados e União em um único sistema.
+
+O Siconfi opera por meio de declarações anuais obrigatórias que todos os entes federativos devem prestar à STN. Além das declarações anuais, os entes devem publicar periodicamente dois instrumentos de acompanhamento infraanual que são fontes complementares ao FINBRA/Siconfi:
+
+\begin{itemize}
+  \item \textbf{RREO --- Relatório Resumido da Execução Orçamentária}: publicado bimestralmente por municípios, estados e União. Contém dados de execução de receitas e despesas no bimestre e no acumulado do exercício, discriminados por fonte e por função. É a fonte mais atualizada para acompanhar o ritmo de execução do gasto público ao longo do ano, antes da consolidação anual no Siconfi;
+
+  \item \textbf{RGF --- Relatório de Gestão Fiscal}: publicado quadrimestralmente. Contém os indicadores de cumprimento dos limites estabelecidos pela Lei de Responsabilidade Fiscal --- despesa com pessoal (em relação à receita corrente líquida), dívida consolidada líquida, garantias concedidas e operações de crédito. O RGF é a fonte para análises de capacidade fiscal, endividamento e risco fiscal dos entes subnacionais.
+\end{itemize}
+
+Ambos os instrumentos estão disponíveis no portal Siconfi e nos portais de transparência de cada ente.
+
+\subsection{Estrutura das despesas: classificações orçamentárias}
+
+Para o uso analítico dos dados do Siconfi/FINBRA, é fundamental entender as classificações orçamentárias brasileiras. As despesas públicas são classificadas de três formas complementares:
+
+\begin{itemize}
+  \item \textbf{Por função}: classifica o gasto pela área de atuação governamental --- Saúde (função 10), Educação (função 12), Assistência Social (função 08), Segurança Pública (função 06), Habitação (função 16), Infraestrutura Urbana (função 15), etc. É a classificação mais usada em análises comparativas;
+
+  \item \textbf{Por natureza}: classifica o gasto pelo tipo de despesa --- Pessoal e Encargos Sociais (grupo 1), Juros e Encargos da Dívida (grupo 2), Outras Despesas Correntes (grupo 3), Investimentos (grupo 4), Inversões Financeiras (grupo 5), Amortização da Dívida (grupo 6). Permite analisar a composição do gasto (corrente vs. capital);
+
+  \item \textbf{Por programa}: classifica o gasto pelo programa de governo ao qual está associado. A comparabilidade entre municípios é menor porque cada um define seus próprios programas.
+\end{itemize}
+
+\begin{boxatencao}{Atenção --- Classificação por função não é equivalente a gasto efetivo em cada política}
+A classificação orçamentária por função é uma aproximação do gasto em cada área de política, não uma medida precisa. Um município pode classificar despesas administrativas gerais sob a função Educação, inflando artificialmente o gasto educacional. Antes de usar dados de gasto por função como variável de resultado ou de controle, verifique se a classificação é consistente entre os entes comparados e ao longo do tempo.
+\end{boxatencao}
+
+\subsection{Receitas: composição e estrutura}
+
+Os dados de receitas do Siconfi permitem analisar a composição da arrecadação municipal e estadual:
+
+\begin{itemize}
+  \item \textbf{Receitas próprias}: tributos de competência do ente. Para municípios, as principais são:
+  \begin{itemize}
+    \item \textbf{IPTU} (Imposto Predial e Territorial Urbano): imposto sobre a propriedade imobiliária urbana, de periodicidade anual. A arrecadação agregada de IPTU por município está disponível no Siconfi e é um indicador de capacidade tributária local e de dinâmica do mercado imobiliário. Municípios com maior base imobiliária formal tendem a ter maior arrecadação de IPTU per capita;
+    \item \textbf{ISS} (Imposto Sobre Serviços): principal fonte de receita própria municipal em cidades com setor de serviços desenvolvido;
+    \item \textbf{ITBI} (Imposto sobre Transmissão de Bens Imóveis): incide sobre transações imobiliárias. A arrecadação agregada de ITBI é um indicador da intensidade do mercado imobiliário local --- municípios com maior número de transações imobiliárias arrecadam mais ITBI. Séries históricas de arrecadação de ITBI por município (disponíveis no Siconfi) podem ser usadas como proxy da atividade do mercado imobiliário quando os microdados de transações não estão disponíveis;
+  \end{itemize}
+  \item \textbf{Transferências constitucionais}: FPM, cota-parte do ICMS, royalties e outras;
+  \item \textbf{Transferências voluntárias}: convênios e contratos de repasse da União;
+  \item \textbf{Operações de crédito}: empréstimos e financiamentos.
+\end{itemize}
+
+\subsection{Capacidade fiscal e autonomia tributária}
+
+A \textbf{capacidade fiscal} de um município --- sua capacidade de gerar receitas próprias independentemente de transferências --- é uma variável importante em avaliações de políticas descentralizadas. Municípios com maior autonomia tributária têm maior margem para adaptar o gasto às preferências locais e menor vulnerabilidade a cortes nas transferências federais.
+
+O Siconfi permite calcular indicadores de capacidade fiscal, como:
+
+\begin{itemize}
+  \item \textbf{Receita própria per capita}: receitas tributárias (IPTU + ISS + ITBI + taxas) divididas pela população estimada;
+  \item \textbf{Grau de dependência de transferências}: proporção da receita total proveniente de transferências constitucionais e voluntárias;
+  \item \textbf{Esforço fiscal}: arrecadação própria realizada em relação ao potencial fiscal estimado (requer modelagem adicional).
+\end{itemize}
+
+Para análises de capacidade fiscal que exijam maior granularidade do que o Siconfi oferece, o \textbf{Ipeadata} (\url{ipeadata.gov.br}) disponibiliza séries históricas de indicadores fiscais municipais e estaduais derivados do FINBRA, com algumas variáveis já deflacionadas e normalizadas por população.
+
+\subsection{Acesso aos dados}
+
+\begin{itemize}
+  \item \textbf{Portal Siconfi}: consultas online e download por ente, exercício e classificação orçamentária em \url{siconfi.tesouro.gov.br};
+  \item \textbf{FINBRA histórico}: séries 1986--2012 disponíveis para download na STN em formato Excel;
+  \item \textbf{Base dos Dados}: a plataforma \textit{Base dos Dados} (\url{basedosdados.org}) disponibiliza o FINBRA e o Siconfi compatibilizados em BigQuery, com tabelas anuais por município desde 1986;
+  \item \textbf{Ipeadata}: séries históricas de indicadores fiscais municipais e estaduais com normalização e deflacionamento parcial.
+\end{itemize}
+
+\begin{boxdica}{Dica --- Deflacionando séries históricas de gasto}
+Comparações de gasto público ao longo do tempo requerem deflacionamento para valores reais. O deflator mais utilizado para séries de gasto público no Brasil é o \textbf{IPCA} (Índice de Preços ao Consumidor Amplo), disponível no IBGE e no Banco Central (API SGS). Para gastos de investimento em infraestrutura, o \textbf{INCC} (Índice Nacional de Custo da Construção) pode ser mais adequado. Sempre especifique o deflator utilizado e o ano-base nas análises.
+\end{boxdica}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Análise do impacto de transferências fiscais}: avaliação de como variações no FPM ou em outras transferências afetam o gasto público municipal e indicadores de bem-estar;
+  \item \textbf{Avaliação de políticas de descentralização}: análise de como a autonomia fiscal afeta a qualidade dos serviços públicos locais;
+  \item \textbf{Custo-efetividade de políticas setoriais}: divisão do gasto por função pelo número de beneficiários ou unidades de serviço entregues;
+  \item \textbf{Análise de ciclo político-orçamentário}: variação do gasto público municipal em anos eleitorais versus não eleitorais;
+  \item \textbf{Efeito flypaper}: análise de se transferências intergovernamentais têm efeito multiplicador sobre o gasto local maior do que um aumento equivalente na renda dos moradores;
+  \item \textbf{Análise de capacidade fiscal e dependência de transferências}: identificação de municípios mais vulneráveis a cortes nas transferências federais e análise de seus efeitos sobre a provisão de serviços.
+\end{itemize}
+
+\begin{boxexemplo}{Exemplo prático --- Avaliando o impacto do FPM sobre gasto municipal e resultados de saúde}
+O Fundo de Participação dos Municípios (FPM) distribui recursos federais aos municípios com base em faixas populacionais discretas: municípios que cruzam determinados limiares populacionais recebem mais recursos por habitante do que municípios imediatamente abaixo do limiar. Pesquisadores utilizaram essa descontinuidade como estratégia de regressão descontínua: municípios logo acima e logo abaixo do limiar são comparáveis em tudo, exceto pelo valor das transferências recebidas. Combinando dados do FINBRA (receita do FPM e gasto por função) com dados do DATASUS (mortalidade infantil) e do Censo Escolar (matrículas e IDEB), foi possível estimar o efeito causal de um real adicional de transferência federal sobre o gasto em saúde e educação e sobre os respectivos indicadores de resultado.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{Portais de Transparência}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Portal da Transparência do Governo Federal}
+  {Controladoria-Geral da União (CGU)}
+  {https://portaldatransparencia.gov.br}
+  {Governo Federal}
+  {Diário (desde 2004)}
+  {Despesa pública, transferência, beneficiário de programa social}
+
+\subsection{Portal da Transparência Federal}
+
+O Portal da Transparência do Governo Federal, operado pela CGU, disponibiliza em nível de detalhe muito maior do que o Siconfi:
+
+\begin{itemize}
+  \item \textbf{Despesas por empenho}: cada empenho individual, com identificação do credor (CNPJ ou CPF), valor, programa, ação e unidade orçamentária;
+  \item \textbf{Transferências a estados e municípios}: convênios, contratos de repasse e transferências fundo a fundo, com objeto, valor e situação;
+  \item \textbf{Beneficiários de programas sociais}: pagamentos do Bolsa Família, BPC e outros programas por beneficiário (NIS);
+  \item \textbf{Servidores públicos federais}: remuneração, lotação e cargo de cada servidor ativo, aposentado e pensionista do Poder Executivo federal;
+  \item \textbf{Contratos e licitações}: contratos firmados pela administração federal com fornecedores, com objeto, valor e vigência.
+\end{itemize}
+
+\subsection{Portais estaduais e municipais}
+
+A Lei de Transparência (LC n.º 131/2009) obrigou estados e municípios a disponibilizarem suas execuções orçamentárias em tempo real na internet. Na prática, a qualidade e a funcionalidade dos portais variam enormemente:
+
+\begin{itemize}
+  \item \textbf{Estados com portais bem estruturados}: São Paulo, Minas Gerais, Rio Grande do Sul e outros estados maiores têm portais de transparência com APIs e dados abertos em formatos padronizados;
+  \item \textbf{Municípios}: a qualidade dos portais municipais varia dramaticamente pelo porte do município e pela capacidade técnica da administração. Para análises que precisem de dados de execução orçamentária municipal mais detalhados do que o Siconfi oferece, a alternativa é acessar diretamente o portal de transparência de cada município --- o que pode exigir automação via \textit{web scraping} para estudos com muitos municípios.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{SIOPE --- Sistema de Informações sobre Orçamentos
+         Públicos em Educação}
+% ────────────────────────────────────────────────────────────
+
+O SIOPE foi detalhado no Capítulo~6 (Educação), ao qual remetemos o leitor para a descrição completa da fonte. Para fins de completude desta seção sobre finanças públicas, destacamos os principais usos do SIOPE em análises fiscais:
+
+\begin{itemize}
+  \item Cálculo do \textbf{gasto por aluno} por município e UF, combinando os dados de despesa do SIOPE com os dados de matrícula do Censo Escolar;
+  \item Análise do \textbf{cumprimento do piso constitucional} de gasto em educação (25\% das receitas para municípios; 18\% para estados e União);
+  \item Avaliação do impacto do \textbf{FUNDEB} sobre o gasto educacional municipal: a redistribuição de recursos do FUNDEB entre municípios de uma mesma UF cria variação exógena no gasto por aluno que pode ser explorada como estratégia de identificação.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{SIOPS --- Sistema de Informações sobre Orçamentos
+         Públicos em Saúde}
+% ────────────────────────────────────────────────────────────
+
+O SIOPS foi detalhado no Capítulo~5 (Saúde). Para o contexto deste capítulo, destacamos:
+
+\begin{itemize}
+  \item O SIOPS permite calcular o \textbf{gasto per capita em saúde} por município, indicador central para análises de eficiência e equidade no financiamento da saúde pública;
+  \item A \textbf{vinculação constitucional} de 15\% das receitas municipais à saúde cria uma relação mecânica entre receita e gasto em saúde que pode ser explorada como instrumento para identificar o impacto causal do gasto em saúde sobre resultados sanitários;
+  \item A combinação de SIOPS + DATASUS (SIM, SINASC, SIH) + Censo Demográfico (denominadores populacionais) é a tríade de fontes para análises de eficiência do gasto público em saúde municipal.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Dados do TSE --- Financiamento Eleitoral}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Dados Eleitorais e de Financiamento de Campanha}
+  {Tribunal Superior Eleitoral (TSE)}
+  {https://dadosabertos.tse.jus.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Por eleição (municipais e gerais, desde 2002)}
+  {Candidato, doador e prestação de contas}
+
+\subsection{O que é e estrutura}
+
+O TSE disponibiliza um conjunto abrangente de dados eleitorais e de financiamento de campanha no portal de dados abertos \url{dadosabertos.tse.jus.br}. Para a avaliação de políticas públicas, os dados mais relevantes são:
+
+\begin{itemize}
+  \item \textbf{Prestações de contas de candidatos}: receitas e despesas de campanha por candidato, com identificação dos doadores (pessoas físicas e jurídicas, até 2015; após a reforma eleitoral de 2015, apenas pessoas físicas e fundos partidários) e dos fornecedores de serviços eleitorais;
+  \item \textbf{Resultados eleitorais}: votação por candidato, seção eleitoral, município e UF;
+  \item \textbf{Perfil dos candidatos}: partido, cargo disputado, sexo, idade, raça/cor autodeclarada, escolaridade, ocupação;
+  \item \textbf{Filiações partidárias}: número de filiados por partido e município ao longo do tempo.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Ciclo político-orçamentário}: análise de como a proximidade de eleições afeta o gasto público municipal (combinando dados do TSE com FINBRA);
+  \item \textbf{Impacto do financiamento de campanha sobre políticas}: avaliação de se candidatos que receberam doações de determinados setores econômicos favoreceram esses setores quando eleitos;
+  \item \textbf{Efeito da alternância política}: análise de como mudanças no partido do prefeito afetam a alocação do gasto municipal;
+  \item \textbf{Representatividade e políticas públicas}: análise de se a eleição de candidatas mulheres, negros ou de determinados partidos afeta a composição do gasto público;
+  \item \textbf{Avaliação de reformas eleitorais}: impacto das mudanças nas regras de financiamento de campanha sobre o perfil dos candidatos eleitos e sobre as políticas adotadas.
+\end{itemize}
+
+\begin{boxexemplo}{Exemplo prático --- Avaliando o impacto da proibição de doações empresariais sobre o perfil dos eleitos}
+A decisão do STF em 2015 que proibiu doações de empresas a campanhas eleitorais foi implementada a partir das eleições municipais de 2016. Pesquisadores usaram essa mudança exógena nas regras de financiamento como um experimento natural: compararam o perfil dos vereadores e prefeitos eleitos em 2016 (sem doações empresariais) com os eleitos em 2012 (com doações empresariais), controlando por características dos municípios. Os dados do TSE sobre receitas de campanha por fonte de financiamento foram fundamentais para identificar quais candidatos foram mais afetados pela mudança.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{Dados do Banco Central}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Sistema Gerenciador de Séries Temporais (SGS) e outras bases do BCB}
+  {Banco Central do Brasil (BCB)}
+  {https://www.bcb.gov.br/estatisticas}
+  {Brasil (séries macroeconômicas) e municípios (crédito)}
+  {Variável (mensal a anual)}
+  {Série macroeconômica ou município}
+
+\subsection{O que é e principais bases}
+
+O Banco Central do Brasil disponibiliza um conjunto abrangente de dados macroeconômicos e financeiros com relevância para a avaliação de políticas públicas:
+
+\begin{itemize}
+  \item \textbf{SGS --- Sistema Gerenciador de Séries Temporais}: base central de séries macroeconômicas do BCB, acessível via API. Inclui IPCA, IGP, taxa Selic, câmbio, PIB, índices de preços setoriais e centenas de outras séries. É a fonte de referência para deflacionamento de séries históricas de gasto público;
+
+  \item \textbf{Estban --- Estatística Bancária por Município}: dados mensais de depósitos e operações de crédito por município e por tipo (crédito pessoal, habitacional, rural, para empresas). Fundamental para análises de acesso ao crédito e de impacto de políticas de crédito rural (como o Pronaf) por município;
+
+  \item \textbf{SCR --- Sistema de Informações de Crédito}: dados individualizados de operações de crédito (acesso restrito via convênio). Permite análises de acesso ao crédito, inadimplência e perfil dos tomadores;
+
+  \item \textbf{PIX e meios de pagamento}: dados de transações financeiras digitais por município, relevantes para análises de inclusão financeira.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de crédito rural}: os dados do Estban (crédito rural por município) combinados com dados do Censo Agropecuário permitem avaliar o impacto do Pronaf sobre produção agrícola e renda rural;
+  \item \textbf{Deflacionamento de séries de gasto}: o SGS é a fonte de referência para obter o IPCA e outros índices de preços para deflacionar séries históricas de receitas e despesas municipais;
+  \item \textbf{Inclusão financeira}: análise de acesso a serviços bancários por município, combinada com dados socioeconômicos do Censo.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Desafios de qualidade e comparabilidade dos dados fiscais}
+% ────────────────────────────────────────────────────────────
+
+Trabalhar com dados fiscais brasileiros exige atenção especial a três categorias de problemas que são mais agudos nessa área do que em outras fontes:
+
+\subsection{Heterogeneidade de classificação}
+
+A classificação orçamentária brasileira --- especialmente para municípios --- oferece considerável discricionariedade na alocação de despesas entre funções, subfunções e programas. Isso cria heterogeneidade na classificação que pode ser sistematicamente correlacionada com características dos municípios (porte, capacidade técnica, orientação política), comprometendo comparações.
+
+\subsection{Competência vs. caixa}
+
+Os dados orçamentários podem ser registrados em regime de \textbf{competência} (quando a obrigação é gerada) ou de \textbf{caixa} (quando o pagamento é efetivamente realizado). O Brasil adota formalmente o regime de competência para a despesa, mas o RREO e outros instrumentos reportam também o regime de caixa. Análises que misturam os dois regimes produzem resultados inconsistentes.
+
+\subsection{Consistência entre fontes}
+
+Um mesmo indicador fiscal pode diferir entre o Siconfi, o portal de transparência e os dados da STN, por razões que incluem diferentes momentos de extração, revisões retroativas e diferenças nos critérios de consolidação. Sempre que possível, verifique a consistência entre fontes e documente qual fonte foi utilizada e em que momento foi extraída.
+
+\subsection{Qualidade variável entre municípios}
+
+A capacidade técnica das equipes de finanças municipais varia dramaticamente entre municípios de diferentes portes e regiões. Municípios muito pequenos ou com menor capacidade administrativa tendem a ter dados de menor qualidade, com mais campos em branco, classificações incorretas e inconsistências entre as diferentes peças orçamentárias. Em análises com amostra ampla de municípios, é boa prática verificar a distribuição dos dados e identificar possíveis outliers antes da análise.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou as principais fontes de dados de finanças públicas disponíveis para o Brasil. A Tabela~\ref{tab:sintese_cap10} resume suas características essenciais.
+
+\begin{table}[H]
+\centering
+\caption{Síntese das fontes de dados de finanças públicas}
+\label{tab:sintese_cap10}
+\small
+\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} &
+\textbf{Principal uso em avaliação} \\
+\midrule
+FINBRA/Siconfi   & Receitas e despesas anuais    & Municipal/estadual & Gasto por função, capacidade fiscal \\
+RREO             & Execução bimestral            & Municipal/estadual & Acompanhamento infraanual \\
+RGF              & Limites LRF                   & Municipal/estadual & Endividamento, risco fiscal \\
+Portal Transparência & Execução orçamentária     & Federal            & Programas, transferências, beneficiários \\
+SIOPE            & Gasto em educação             & Municipal/estadual & Custo-aluno, FUNDEB \\
+SIOPS            & Gasto em saúde                & Municipal/estadual & Gasto per capita em saúde \\
+TSE              & Financiamento eleitoral       & Municipal/estadual & Ciclo político, reforma eleitoral \\
+BCB/SGS          & Séries macroeconômicas        & Nacional           & Deflacionamento, índices de preços \\
+BCB/Estban       & Crédito por município         & Municipal          & Acesso ao crédito, políticas de crédito \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+Os pontos centrais do capítulo são:
+
+\begin{itemize}
+  \item O \textbf{FINBRA/Siconfi} é a fonte central para dados de gasto municipal e estadual, com série histórica longa. O \textbf{RREO} e o \textbf{RGF} são instrumentos complementares essenciais: o primeiro para acompanhamento infraanual da execução; o segundo para análise de capacidade fiscal e cumprimento dos limites da LRF;
+
+  \item As \textbf{receitas tributárias municipais} --- em especial IPTU, ISS e ITBI no Siconfi --- permitem analisar capacidade fiscal local e, no caso do ITBI agregado, servem como proxy da atividade do mercado imobiliário quando os microdados de transações não estão disponíveis;
+
+  \item Os \textbf{portais de transparência} oferecem granularidade muito maior do que o Siconfi --- até o nível do empenho individual ---, mas a qualidade e a acessibilidade dos dados variam muito entre entes federativos;
+
+  \item O \textbf{SIOPE} e o \textbf{SIOPS} são as referências setoriais para gasto em educação e saúde, respectivamente, e são fundamentais para análises de custo-efetividade e de cumprimento dos pisos constitucionais;
+
+  \item Os dados do \textbf{TSE} permitem análises da interface entre política eleitoral e políticas públicas, especialmente sobre ciclo político-orçamentário e impacto de reformas eleitorais;
+
+  \item Os dados do \textbf{Banco Central} --- especialmente o SGS e o Estban --- complementam as fontes fiscais com informações sobre crédito, preços e condições macroeconômicas;
+
+  \item A \textbf{heterogeneidade de classificação}, os desafios de comparabilidade entre fontes e a variação na qualidade do dado entre municípios são riscos específicos dos dados fiscais que exigem cuidado metodológico redobrado.
+\end{itemize}
+
+O próximo capítulo aborda as fontes internacionais e comparadas, com foco nas bases do Banco Mundial, da OCDE, do PISA e de organismos multilaterais relevantes para políticas públicas no Brasil.

@@ -1,0 +1,64 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
+library(dplyr)
+library(stargazer)
+
+df <- read.csv("base_MULT_did.csv")
+
+```
+
+Após subir a base, vamos calcular a média de cada grupo para cada período do tempo, i.e., $\Bar{y}_{\infty t}$ e $\Bar{y}_{1t}$
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
+Bary_inf = c()
+Bary_1 = c()
+for(t in 2011:2020){
+  
+  Bary_inf[as.character(t)] = mean(df$y[df$d==0 & df$ano == t])
+  Bary_1[as.character(t)] = mean(df$y[df$d==1 & df$ano == t])
+
+}
+
+round(Bary_inf, 3)
+round(Bary_1, 3)
+
+```
+
+E vamos calcular $\hat{ATT}(t)$. Pela formula abaixo:
+
+$$ \Hat{ATT}(t) = (\Bar{y}_{1t} - \Bar{y}_{10}) - (\Bar{y}_{\infty t} -  \Bar{y}_{\infty 0}) $$
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
+ATT= c()
+for( t in 2012:2020){
+  t = as.character(t)
+  ATT[t] = (Bary_1[t] - Bary_1["2011"]) - (Bary_0[t] - Bary_0["2011"])
+}
+
+round(ATT, 3)
+
+```
+
+```{r echo=TRUE, message=FALSE, paged.print=TRUE}
+
+library(ggplot2)
+ggplot(data = data.frame(x=2012:2020, y=ATT), aes(x=x, y=y)) + geom_line() + geom_point() + 
+  geom_line(y = 0, linetype = "dashed") +
+  ylim(-3, 1) + ylab("ATT") + xlab("Ano") +
+  theme_classic()
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=TRUE}
+
+mean(ATT)
+
+```
+

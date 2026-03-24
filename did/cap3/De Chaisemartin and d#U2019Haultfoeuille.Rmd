@@ -1,0 +1,60 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+rm(list=ls())
+library(dplyr)
+
+df <- read.csv("base_stagger_did.csv")
+
+head(df)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+library(DIDmultiplegt)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+did = did_multiplegt(
+  df = df,
+  Y = "y",
+  G = "G",
+  T = "ano",
+  D = "d_x_t",
+  controls = c("renda", "escolaridade", "populacao"),
+  average_effect = T
+)
+
+did
+
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+did = did_multiplegt(
+  df = df,
+  Y = "y",
+  G = "G",
+  T = "ano",
+  D = "d_x_t",
+  controls = c("renda", "escolaridade", "populacao"),
+  placebo = 6,
+  dynamic = 8,
+  brep = 2
+)
+
+did
+
+
+```
+

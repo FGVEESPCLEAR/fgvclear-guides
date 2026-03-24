@@ -1,0 +1,158 @@
+% ============================================================
+%  cap01_introducao.tex
+%  Capítulo 1: Por que as fontes de dados importam para
+%              avaliação de políticas públicas?
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Por que as fontes de dados importam para avaliação de políticas públicas?}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+A escolha da fonte de dados não é uma decisão técnica menor --- é um passo metodológico com consequências diretas sobre a validade das conclusões de qualquer avaliação. Este capítulo apresenta os princípios que orientam essa escolha: o que distingue dados bons de dados ruins para uma determinada pergunta avaliativa, como pensar a complementaridade entre diferentes tipos de fontes, e o que o avaliador precisa verificar antes de depositar confiança em qualquer base. O capítulo também oferece uma visão panorâmica do ecossistema de dados disponíveis para avaliação de políticas públicas no Brasil.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{A fonte de dados como escolha metodológica}
+% ────────────────────────────────────────────────────────────
+
+Toda avaliação de políticas públicas começa com uma pergunta. Mas entre a pergunta e a resposta existe uma etapa que frequentemente recebe menos atenção do que merece: a escolha dos dados. Essa escolha não é neutra. A fonte de dados selecionada determina o que pode ser medido, com que precisão, para quem e em que período. Quando a fonte é inadequada para a pergunta, nem a mais sofisticada estratégia de identificação causal produz resultados válidos.
+
+Considere um exemplo simples. Um avaliador quer estimar o impacto de um programa de capacitação profissional sobre a empregabilidade dos participantes. Se usar a PNAD Contínua como fonte de dados, estará trabalhando com uma amostra representativa da população geral --- mas provavelmente insuficiente para identificar os próprios beneficiários do programa, cujo número pode ser pequeno. Se usar a RAIS, terá dados administrativos sobre o emprego formal de praticamente toda a força de trabalho formal brasileira --- mas perderá de vista os trabalhadores informais, que frequentemente são o público prioritário desses programas. Se conseguir acesso aos registros administrativos do programa, terá os beneficiários identificados individualmente --- mas precisará de uma fonte externa para construir o grupo de comparação.
+
+Cada uma dessas fontes captura uma dimensão diferente da realidade, e a pergunta avaliativa determina qual delas --- ou qual combinação --- é mais adequada. Essa lógica de adequação entre pergunta e fonte é o fio condutor deste guia.
+
+\begin{boxatencao}{Atenção --- Não existe fonte perfeita}
+Toda fonte de dados tem limitações. O Censo Demográfico tem cobertura universal, mas é realizado apenas a cada dez anos. A PNAD Contínua é anual e tempestiva, mas tem tamanho de amostra insuficiente para análises no nível de municípios pequenos. Os registros administrativos têm cobertura ampla dos eventos que registram, mas cobrem apenas quem interage com o sistema --- excluindo populações que precisam de serviços mas não os acessam. Reconhecer as limitações das fontes que se usa não é fraqueza metodológica: é o primeiro passo para interpretar resultados com honestidade.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Tipos de fontes de dados: uma primeira distinção}
+% ────────────────────────────────────────────────────────────
+
+Antes de discutir os critérios de seleção de fontes, é útil entender as grandes categorias em que as fontes disponíveis se organizam. O Capítulo~2 apresenta uma tipologia completa; aqui basta introduzir a distinção fundamental.
+
+\subsection{Registros administrativos}
+
+Registros administrativos são dados coletados como subproduto da operação de sistemas governamentais ou privados: cada empregado registrado na RAIS, cada internação no SIH, cada aluno matriculado no Censo Escolar, cada beneficiário do Bolsa Família no CadÚnico. Esses dados não foram coletados para fins de pesquisa, mas para gerir programas e sistemas.
+
+As vantagens são claras: cobertura potencialmente universal da população atendida pelo sistema, baixo custo de coleta para o pesquisador (os dados já existem) e, frequentemente, possibilidade de acompanhamento longitudinal por meio de identificadores individuais (CPF, NIS, código de escola). A limitação central é que o dado registrado é aquele que o sistema precisa registrar --- não necessariamente o que o avaliador quer medir.
+
+\subsection{Pesquisas amostrais}
+
+Pesquisas amostrais --- como a PNAD Contínua, a POF e as pesquisas de saúde e vitimização --- coletam dados diretamente dos informantes (domicílios, pessoas, estabelecimentos) por meio de questionários estruturados aplicados a amostras representativas da população. Permitem medir variáveis que os registros administrativos não capturam: percepções, comportamentos, condições de saúde, consumo, experiências de vitimização.
+
+A limitação central é o tamanho da amostra: pesquisas amostrais são projetadas para produzir estimativas representativas para determinados domínios geográficos e populacionais, e análises que extrapolam esses domínios produzem estimativas com erros padrão proibitivamente grandes.
+
+\subsection{Censos}
+
+Censos são levantamentos que cobrem toda a população de interesse, não uma amostra. O Censo Demográfico do IBGE, o Censo Escolar do Inep e o Censo Agropecuário são exemplos. Combinam a cobertura universal dos registros administrativos com a riqueza temática das pesquisas amostrais --- mas a custos de coleta muito elevados, o que os torna periodicamente irregulares.
+
+% ────────────────────────────────────────────────────────────
+\section{Critérios para avaliar a adequação de uma fonte}
+% ────────────────────────────────────────────────────────────
+
+Identificada a categoria de fonte potencialmente adequada para uma pergunta avaliativa, o passo seguinte é verificar se uma fonte específica é realmente adequada. Oito critérios organizam essa verificação.
+
+\subsection{Cobertura geográfica}
+
+A fonte cobre o território relevante para a pergunta? Uma pesquisa representativa para o Brasil como um todo pode não produzir estimativas confiáveis para municípios individuais ou para regiões específicas. A PNAD Contínua, por exemplo, produz estimativas trimestrais para o Brasil, grandes regiões, UFs e regiões metropolitanas --- mas não para municípios. Se a pergunta avaliativa requer análise municipal, é preciso buscar fontes com cobertura universal no nível do município (como o Censo Escolar ou a RAIS) ou construir estratégias de análise compatíveis com o que a fonte oferece.
+
+\subsection{Periodicidade}
+
+A periodicidade da fonte permite capturar o período relevante --- antes e depois da intervenção? Uma política implementada em 2018 que precisa ser avaliada com base em dados de 2016 e 2020 requer fontes que cubram esses dois momentos com metodologia comparável. Quebras metodológicas em séries históricas --- quando a fonte muda o questionário, a amostra ou os procedimentos de coleta entre as edições --- podem impossibilitar comparações ao longo do tempo.
+
+\subsection{Unidade de análise}
+
+A unidade de análise da fonte é compatível com a da pergunta? Se a pergunta é sobre alunos individuais, é preciso microdados de alunos (como o Censo Escolar), não dados agregados por escola ou município. Se a pergunta é sobre estabelecimentos de saúde, o CNES é mais adequado do que o SIM. Trabalhar com unidades de análise incorretas leva a falácias ecológicas e erros de inferência.
+
+\subsection{Representatividade}
+
+Para pesquisas amostrais: a amostra é representativa para o domínio de interesse? Verificar os domínios de representatividade declarados pela pesquisa antes de qualquer análise. Para registros administrativos: a cobertura do sistema é suficiente para os fins da análise, ou há exclusão sistemática de subgrupos relevantes?
+
+\subsection{Granularidade temática}
+
+A fonte contém as variáveis de que o analista precisa --- ou variáveis a partir das quais elas podem ser construídas? Um estudo sobre o impacto da escolaridade materna sobre saúde infantil precisa de uma fonte que contenha simultaneamente informações sobre a mãe e sobre a criança. Verificar os dicionários de variáveis antes de comprometer o desenho de avaliação com uma fonte específica.
+
+\subsection{Identificadores para linkagem}
+
+A fonte tem identificadores que permitem linkar com outras bases de que o analista precisa? CPF, NIS, CNPJ, código de escola do Inep e código de estabelecimento de saúde (CNES) são os principais identificadores que viabilizam linkagens no ecossistema de dados brasileiro. A disponibilidade desses identificadores --- e as restrições de acesso que os acompanham --- é uma dimensão crítica na fase de planejamento.
+
+\subsection{Qualidade do preenchimento}
+
+Qual é a taxa de não-resposta para as variáveis de interesse? Há subregistro sistemático --- concentrado em determinadas regiões, grupos populacionais ou períodos? O SIM, por exemplo, tem subregistro de óbitos mais elevado no Norte e Nordeste; o SINAN tem subnotificação estrutural que varia muito por tipo de agravo. Ignorar esses padrões de subregistro diferencial leva a conclusões enganosas sobre desigualdades regionais e populacionais.
+
+\subsection{Documentação e historicidade}
+
+A fonte tem documentação metodológica que permita entender o que cada variável mede de fato? Há quebras metodológicas documentadas que afetam comparações ao longo do tempo? Fontes com documentação adequada reduzem o risco de erros de interpretação; fontes com histórico longo permitem análises de tendências e construção de contrafactuais mais robustos.
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxdica}{Dica — Consulte sempre a documentação metodológica}
+Todo grande produtor de dados brasileiro publica notas metodológicas, questionários e dicionários de variáveis. O IBGE publica documentação detalhada para a PNAD Contínua, o Censo Demográfico e todas as suas pesquisas. O Inep publica os cadernos de metodologia do Censo Escolar, do SAEB e do ENEM. O DATASUS disponibiliza os manuais de instrução de preenchimento do SIM, do SINASC e dos demais sistemas. Ler essa documentação antes de iniciar a análise é um investimento que poupa erros custosos.
+\end{boxdica}
+
+% ────────────────────────────────────────────────────────────
+\section{O ecossistema de dados brasileiro: uma visão panorâmica}
+% ────────────────────────────────────────────────────────────
+
+O Brasil dispõe de um ecossistema de dados para avaliação de políticas públicas notavelmente rico, organizado em torno de três grandes pilares institucionais.
+
+\textbf{O IBGE} é o produtor central do sistema estatístico nacional. Conduz o Censo Demográfico (decenal), a PNAD Contínua (trimestral/anual), a POF, o Censo Agropecuário e diversas outras pesquisas temáticas. Produz também as malhas territoriais e setores censitários que servem de base para análises espaciais. Para qualquer avaliação que precise de dados representativos da população brasileira em suas dimensões socioeconômicas, demográficas e de condições de vida, o ponto de partida é invariavelmente o IBGE.
+
+\textbf{Os ministérios e sistemas setoriais} produzem os registros administrativos que documentam a operação das políticas públicas nas diferentes áreas. O Ministério da Saúde, via DATASUS, mantém o SIM, o SINASC, o SIH, o SINAN, o CNES e outros sistemas. O Ministério da Educação, via Inep, conduz o Censo Escolar, o SAEB e o ENEM. O Ministério do Trabalho gerencia a RAIS e o CAGED. O Ministério do Desenvolvimento e Assistência Social opera o CadÚnico e os dados do Bolsa Família. A Secretaria do Tesouro Nacional mantém o Siconfi/FINBRA. Cada um desses sistemas é descrito em detalhe nos capítulos temáticos deste guia.
+
+\textbf{As agências reguladoras e outros produtores especializados} cobrem setores específicos com dados que não estão disponíveis no sistema estatístico central: a ANEEL para energia elétrica, a ANATEL para telecomunicações, o INPE para dados de desmatamento, o TSE para dados eleitorais e de financiamento de campanha.
+
+\begin{table}[H]
+\centering
+\caption{Visão panorâmica do ecossistema de dados para avaliação de políticas públicas}
+\label{tab:ecossistema_geral}
+\small
+\begin{tabularx}{\textwidth}{@{} p{3.5cm} p{3cm} X @{}}
+\toprule
+\textbf{Pilar} & \textbf{Principais fontes} & \textbf{Uso central em avaliação} \\
+\midrule
+IBGE           & Censo Demográfico, PNAD-C, POF, Censo Agropecuário & Perfil populacional, condições de vida, representatividade nacional \\
+Saúde (MS/DATASUS) & SIM, SINASC, SIH, SINAN, CNES & Mortalidade, nascimentos, internações, infraestrutura de saúde \\
+Educação (Inep) & Censo Escolar, SAEB, ENEM & Matrículas, desempenho cognitivo, acesso ao ensino \\
+Trabalho (MTE)  & RAIS, CAGED & Emprego formal, salários, rotatividade \\
+Proteção social (MDS) & CadÚnico, Bolsa Família, BPC & Famílias vulneráveis, transferências de renda \\
+Finanças públicas (STN) & Siconfi/FINBRA, Portal da Transparência & Gasto público, execução orçamentária \\
+Agências reguladoras & ANEEL, ANATEL, ANS, ANTT & Infraestrutura setorial, cobertura, qualidade \\
+Outros produtores & TSE, INPE, SNIS, Ipea & Eleitoral, ambiental, saneamento, indicadores derivados \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+% ────────────────────────────────────────────────────────────
+\section{Complementaridade e linkagem entre fontes}
+% ────────────────────────────────────────────────────────────
+
+Uma das características mais importantes --- e mais subutilizadas --- do ecossistema de dados brasileiro é a possibilidade de \textbf{linkar bases de dados} por meio de identificadores individuais. O CPF vincula pessoas físicas em qualquer base que o contenha. O NIS conecta beneficiários de programas sociais ao CadÚnico. O código de escola do Inep está presente no Censo Escolar e no SAEB. O CNES identifica estabelecimentos de saúde no SIH, no SIA e no SINAN.
+
+Essas linkagens permitem construir perfis multidimensionais que nenhuma fonte isolada poderia fornecer. Um exemplo clássico: linkar o CadÚnico com o Censo Escolar pelo número de identificação do aluno permite analisar simultaneamente as condições de vida da família (renda, composição familiar, acesso a serviços) e o desempenho e a trajetória escolar das crianças. Linkar a RAIS com dados de mortalidade do SIM pelo CPF permite estimar o impacto da formalização do emprego sobre expectativa de vida.
+
+A capacidade de fazer essas linkagens é, em muitos casos, o que torna avaliações causais rigorosas possíveis no Brasil. O Capítulo~13 discute as boas práticas e as obrigações legais que acompanham o uso de linkagens de bases.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo estabeleceu os fundamentos que norteiam todo o guia. Os pontos centrais são:
+
+\begin{itemize}
+  \item A escolha da fonte de dados é uma \textbf{decisão metodológica} com consequências diretas sobre a validade das conclusões: não existe fonte perfeita, mas existem fontes mais ou menos adequadas para cada pergunta avaliativa;
+
+  \item As fontes se organizam em três grandes categorias --- \textbf{registros administrativos}, \textbf{pesquisas amostrais} e \textbf{censos} --- com perfis de vantagens e limitações complementares que o avaliador precisa conhecer;
+
+  \item Oito critérios estruturam a avaliação de adequação de uma fonte: cobertura geográfica, periodicidade, unidade de análise, representatividade, granularidade temática, identificadores para linkagem, qualidade do preenchimento e documentação metodológica;
+
+  \item O ecossistema brasileiro é organizado em torno do \textbf{IBGE}, dos \textbf{sistemas setoriais} dos ministérios e das \textbf{agências reguladoras e outros produtores especializados} --- cada pilar com fontes distintas e complementares;
+
+  \item A \textbf{linkagem entre bases} por identificadores individuais é um dos ativos mais poderosos do ecossistema brasileiro, viabilizando análises multidimensionais que nenhuma fonte isolada permitiria.
+\end{itemize}
+
+\medskip
+
+Para navegar esse ecossistema com profundidade, é preciso primeiro entender as diferentes categorias de fontes e as lógicas que as distinguem. O capítulo seguinte oferece exatamente isso: uma tipologia sistemática que organiza o território antes que percorramos cada região temática.

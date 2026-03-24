@@ -1,0 +1,47 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+library(dplyr)
+library(stargazer)
+
+df <- read.csv("base_MULT_did.csv")
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+df <- df %>% mutate(Tt = ifelse(ano >= 2012, 1, 0))
+
+```
+
+```{r}
+Reg_did <- lm(y ~ d * Tt, data = df)
+```
+
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='asis'}
+
+# # Load libraries
+# library("lmtest")
+# library("sandwich")
+# 
+# # Robust t test
+# coeftest(Reg_did, vcov = vcovHC(Reg_did, type = "HC0"))
+# Load libraries
+library("lmtest")
+library("sandwich")
+
+# Robust t test
+cov1 <- sandwich::vcovHC(Reg_did, type = "HC0")
+sd = sqrt(diag(cov1))
+stargazer(Reg_did, type = "latex", se = list(sd),
+          title = "Regressão Linear com Erros Padrão Robustos")
+
+```
+
+

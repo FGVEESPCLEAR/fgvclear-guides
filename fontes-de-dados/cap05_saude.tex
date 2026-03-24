@@ -1,0 +1,394 @@
+% ============================================================
+%  cap05_saude.tex — Capítulo 5: Saúde
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Saúde}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes de dados sobre saúde disponíveis para o Brasil. Cobrimos o DATASUS e seus sistemas componentes --- SIM, SINASC, SIH, SIA, SINAN, CNES, SIOPS e SISVAN ---, a Pesquisa Nacional de Saúde (PNS) e a Pesquisa de Assistência Médico-Sanitária (AMS). Para cada fonte, detalhamos histórico, estrutura, variáveis disponíveis, forma de acesso e aplicações típicas em avaliação de políticas de saúde pública.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: o ecossistema de dados de saúde no Brasil}
+% ────────────────────────────────────────────────────────────
+
+O Brasil dispõe de um dos sistemas de informação em saúde mais abrangentes do mundo em desenvolvimento, construído ao longo de décadas a partir da estrutura do Sistema Único de Saúde (SUS). O DATASUS --- Departamento de Informática do SUS, criado em 1991 --- é o principal repositório desses dados, reunindo em uma única plataforma sistemas de mortalidade, nascimentos, internações, ambulatório, vigilância epidemiológica, cadastro de estabelecimentos e orçamento público em saúde.
+
+Essa riqueza de fontes é um ativo extraordinário para a avaliação de políticas de saúde. Ao mesmo tempo, o ecossistema é complexo: cada sistema tem sua própria lógica de produção, periodicidade, cobertura e qualidade. Entender o que cada sistema mede --- e, igualmente importante, o que não mede --- é o ponto de partida para qualquer análise séria.
+
+A Figura~\ref{fig:datasus_sistemas} apresenta uma visão esquemática dos principais sistemas do DATASUS e sua relação com os diferentes pontos de contato do cidadão com o sistema de saúde.
+
+\begin{table}[H]
+\centering
+\caption{Principais sistemas do DATASUS e suas coberturas}
+\label{fig:datasus_sistemas}
+\small
+\begin{tabularx}{\textwidth}{@{} p{1.8cm} p{3.5cm} p{2cm} X @{}}
+\toprule
+\textbf{Sistema} & \textbf{O que registra} & \textbf{Desde} & \textbf{Principal uso em avaliação} \\
+\midrule
+SIM    & Óbitos                        & 1979 & Mortalidade, causas de morte, violência \\
+SINASC & Nascimentos vivos             & 1990 & Saúde materna, prematuridade, desigualdades \\
+SIH    & Internações hospitalares SUS  & 1992 & Uso hospitalar, procedimentos, custos \\
+SIA    & Atendimentos ambulatoriais SUS & 1994 & Produção ambulatorial, cobertura \\
+SINAN  & Agravos de notificação        & 1993 & Doenças infecciosas, vigilância epidemiológica \\
+CNES   & Estabelecimentos de saúde     & 2005 & Infraestrutura, RH, capacidade instalada \\
+SIOPS  & Orçamento público em saúde    & 2000 & Gasto público, financiamento do SUS \\
+SISVAN & Vigilância alimentar/nutricional & 2008 & Desnutrição, obesidade, segurança alimentar \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria com base em DATASUS.}
+\end{table}
+
+% ────────────────────────────────────────────────────────────
+\section{SIM --- Sistema de Informações sobre Mortalidade}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SIM --- Sistema de Informações sobre Mortalidade}
+  {Ministério da Saúde / DATASUS}
+  {https://datasus.saude.gov.br/mortalidade-desde-1996-pela-cid-10}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (desde 1979; dados consistentes a partir de 1996 com a CID-10)}
+  {Óbito}
+
+\subsection{O que é e por que importa}
+
+O Sistema de Informações sobre Mortalidade (SIM) é o registro nacional de óbitos no Brasil. Criado em 1979, o SIM coleta informações de todas as Declarações de Óbito (DO) emitidas no país, processadas pelas Secretarias Estaduais de Saúde e consolidadas pelo Ministério da Saúde. A partir de 1996, com a adoção da Classificação Internacional de Doenças em sua décima revisão (CID-10), as séries do SIM tornaram-se mais comparáveis internacionalmente e consistentes para análises de longo prazo.
+
+Para a avaliação de políticas públicas, o SIM é uma fonte insubstituível porque a morte é um desfecho objetivo, verificável e registrado de forma relativamente padronizada --- ao contrário de muitos outros indicadores de saúde que dependem de autoavaliação ou de acesso a serviços. Políticas de saúde materno-infantil, de atenção primária, de combate à violência e de doenças crônicas têm no SIM uma das principais fontes de avaliação de resultados e impacto.
+
+\subsection{Estrutura e principais variáveis}
+
+Cada registro do SIM corresponde a uma Declaração de Óbito e contém:
+
+\begin{itemize}
+  \item \textbf{Características do falecido}: sexo, idade, raça/cor, escolaridade, estado civil, ocupação;
+  \item \textbf{Causa da morte}: causa básica e causas associadas, codificadas pela CID-10; causa externa (para mortes violentas);
+  \item \textbf{Localização}: município de residência e município de ocorrência do óbito;
+  \item \textbf{Data e local do óbito}: data, hora, local (hospital, domicílio, via pública, etc.);
+  \item \textbf{Para óbitos infantis e fetais}: informações adicionais sobre a mãe (idade, número de filhos, gestação) e sobre o recém-nascido (peso ao nascer, duração da gestação).
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Mortalidade infantil e materna}: o SIM, combinado com o SINASC (para os denominadores de nascidos vivos), é a fonte padrão para calcular as taxas de mortalidade infantil e materna por município;
+  \item \textbf{Atlas da Violência}: o Instituto de Pesquisa Econômica Aplicada (Ipea) e o Fórum Brasileiro de Segurança Pública produzem anualmente o Atlas da Violência a partir de mortes por causas externas (homicídios, acidentes de trânsito) registradas no SIM;
+  \item \textbf{Avaliação do Programa Saúde da Família}: um dos usos mais citados do SIM em avaliação de impacto é a estimação dos efeitos da expansão do PSF sobre mortalidade infantil e materna em municípios brasileiros;
+  \item \textbf{Doenças crônicas não transmissíveis}: mortalidade por doenças cardiovasculares, câncer e diabetes para avaliação de programas de rastreamento e tratamento.
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxatencao}{Atenção --- Subregistro e causa básica no SIM}
+O SIM tem dois problemas de qualidade conhecidos que o analista deve considerar. Primeiro, o \textbf{subregistro de óbitos}: estima-se que uma parcela dos óbitos --- especialmente em municípios pequenos, áreas rurais e regiões Norte e Nordeste --- não é registrada, o que subestima a mortalidade real nessas áreas. Segundo, a \textbf{qualidade do preenchimento da causa básica}: uma proporção relevante dos óbitos é classificada como ``causas mal definidas'' (capítulo XVIII da CID-10), especialmente em regiões com menor cobertura de serviços de saúde. Análises de mortalidade por causa específica devem sempre verificar a proporção de causas mal definidas no universo analisado e, se necessário, aplicar redistribuição proporcional.
+\end{boxatencao}
+
+\subsection{Acesso aos dados}
+
+Os microdados do SIM são disponibilizados gratuitamente pelo DATASUS em formato DBC (comprimido) ou DBF. O portal TabNet (\url{tabnet.datasus.gov.br}) permite tabulações online sem necessidade de download. Para análises com microdados, a plataforma \textit{Base dos Dados} disponibiliza o SIM já tratado e compatibilizado em formato Parquet/BigQuery.
+
+\begin{boxdica}{Dica --- Pacote \texttt{microdatasus} no R}
+O pacote \texttt{microdatasus} (disponível no CRAN) facilita enormemente o download e a leitura dos microdados do SIM e de outros sistemas do DATASUS diretamente no R, convertendo automaticamente os arquivos DBC para formato utilizável e aplicando os dicionários de variáveis.
+\end{boxdica}
+
+% ────────────────────────────────────────────────────────────
+\section{SINASC --- Sistema de Informações sobre Nascidos Vivos}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SINASC --- Sistema de Informações sobre Nascidos Vivos}
+  {Ministério da Saúde / DATASUS}
+  {https://datasus.saude.gov.br/nascidos-vivos-desde-1994}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (desde 1990; dados mais consistentes a partir de 1994)}
+  {Nascimento vivo}
+
+\subsection{O que é e principais variáveis}
+
+O SINASC registra todos os nascimentos vivos ocorridos no Brasil a partir das Declarações de Nascido Vivo (DNV) preenchidas nas maternidades e unidades de saúde. É a principal fonte de dados sobre saúde perinatal e materna no país.
+
+Cada registro contém:
+
+\begin{itemize}
+  \item \textbf{Características do recém-nascido}: sexo, peso ao nascer, duração da gestação (semanas), índice de Apgar, presença de anomalia congênita;
+  \item \textbf{Características da mãe}: idade, escolaridade, raça/cor, município de residência, número de filhos anteriores (nascidos vivos e mortos), número de consultas de pré-natal, tipo de parto (vaginal ou cesáreo);
+  \item \textbf{Local do nascimento}: município e estabelecimento de saúde.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Denominador para taxas de mortalidade infantil}: o SINASC fornece o número de nascidos vivos por município, necessário para calcular a taxa de mortalidade infantil com dados do SIM;
+  \item \textbf{Avaliação de políticas de pré-natal}: o número de consultas de pré-natal registrado no SINASC permite avaliar a cobertura e a qualidade do pré-natal por município;
+  \item \textbf{Desigualdades no nascimento}: o cruzamento de variáveis como peso ao nascer, prematuridade e características socioeconômicas da mãe permite análises de equidade em saúde materna;
+  \item \textbf{Impacto de políticas sobre cesáreas}: o SINASC é a fonte de referência para monitorar a proporção de partos cesáreos --- indicador de uso excessivo de intervenção cirúrgica no parto.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{SIH e SIA --- Internações e Atendimento Ambulatorial}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SIH/SIA --- Sistemas de Informações Hospitalares e Ambulatoriais}
+  {Ministério da Saúde / DATASUS}
+  {https://datasus.saude.gov.br/producao-hospitalar-desde-1994}
+  {Brasil, Unidades da Federação e municípios}
+  {Mensal (SIH desde 1992; SIA desde 1994)}
+  {Autorização de Internação Hospitalar (SIH) e procedimento ambulatorial (SIA)}
+
+\subsection{O que são e o que cobrem}
+
+O Sistema de Informações Hospitalares (SIH) e o Sistema de Informações Ambulatoriais (SIA) registram a \textbf{produção de serviços de saúde} financiados pelo SUS --- internações hospitalares e atendimentos ambulatoriais, respectivamente. Não cobrem serviços prestados pela saúde suplementar (planos de saúde privados) nem atendimentos particulares.
+
+O SIH registra cada internação por meio da Autorização de Internação Hospitalar (AIH), que contém:
+\begin{itemize}
+  \item Diagnóstico principal e secundário (CID-10);
+  \item Procedimento realizado;
+  \item Tempo de permanência;
+  \item Valor pago pelo SUS;
+  \item Características do paciente (sexo, idade, município de residência);
+  \item Estabelecimento de saúde (CNES).
+\end{itemize}
+
+O SIA registra cada procedimento ambulatorial realizado em estabelecimentos credenciados ao SUS, com informações sobre o tipo de procedimento, especialidade, estabelecimento e município.
+
+\subsection{Aplicações típicas e limitações}
+
+Os sistemas SIH e SIA são especialmente úteis para:
+\begin{itemize}
+  \item Avaliar \textbf{mudanças no padrão de utilização hospitalar} decorrentes de políticas de atenção primária (como a expansão do PSF, que teoricamente deveria reduzir internações evitáveis);
+  \item Calcular \textbf{custos de procedimentos} para análises de custo-efetividade;
+  \item Monitorar a \textbf{produção de serviços} de saúde por região e estabelecimento.
+\end{itemize}
+
+A limitação central é que SIH e SIA cobrem \textbf{apenas o SUS}: aproximadamente 25\% da população brasileira possui plano de saúde privado e seus atendimentos não constam nessas bases. Para análises da população como um todo, é preciso combinar dados do SUS com fontes que cubram a saúde suplementar.
+
+% ────────────────────────────────────────────────────────────
+\section{SINAN --- Sistema de Informação de Agravos de Notificação}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SINAN --- Sistema de Informação de Agravos de Notificação}
+  {Ministério da Saúde / DATASUS}
+  {https://datasus.saude.gov.br/doencas-e-agravos-de-notificacao-de-2007-em-diante-sinan}
+  {Brasil, Unidades da Federação e municípios}
+  {Contínuo (desde 1993; integração com VIVA a partir de 2009)}
+  {Caso notificado de agravo ou doença de notificação compulsória}
+
+\subsection{O que é e principais doenças cobertas}
+
+O SINAN reúne as notificações compulsórias de doenças e agravos à saúde --- ou seja, condições que, por lei, os profissionais e serviços de saúde são obrigados a comunicar às autoridades sanitárias. A lista de doenças de notificação compulsória é definida pelo Ministério da Saúde e inclui atualmente mais de 70 agravos.
+
+Entre os mais relevantes para avaliação de políticas:
+
+\begin{itemize}
+  \item \textbf{Doenças infecciosas e parasitárias}: dengue, chikungunya, zika, malária, tuberculose, hanseníase, leishmaniose, hepatites virais;
+  \item \textbf{Doenças imunopreveníveis}: sarampo, rubéola, coqueluche, poliomielite;
+  \item \textbf{HIV/AIDS}: casos novos, perfil epidemiológico;
+  \item \textbf{Violências e acidentes} (via integração com o VIVA): violência doméstica, sexual, autoprovocada, acidentes de trabalho.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de programas de vacinação}: a cobertura vacinal pode ser combinada com dados do SINAN sobre incidência das doenças-alvo para avaliar efetividade;
+  \item \textbf{Políticas de controle de endemias}: monitoramento de dengue, malária e leishmaniose em resposta a intervenções de saneamento e controle vetorial;
+  \item \textbf{Políticas de combate à tuberculose}: o SINAN é a referência para avaliação de programas de tratamento e controle da tuberculose, incluindo taxas de cura, abandono e resistência;
+  \item \textbf{Violência doméstica e sexual}: desde a integração com o VIVA, o SINAN passou a ser uma das principais fontes sobre violência atendida em serviços de saúde.
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxatencao}{Atenção --- Subnotificação no SINAN}
+A notificação compulsória é obrigatória por lei, mas o cumprimento da obrigação varia enormemente entre doenças, regiões e tipos de serviço. Estima-se que para dengue, por exemplo, apenas uma fração dos casos reais é notificada --- especialmente em períodos de alta demanda, quando os serviços ficam sobrecarregados. Para doenças com maior estigma social (como HIV/AIDS e hepatites), a subnotificação pode ser ainda maior. Análises com dados do SINAN devem sempre discutir o potencial de subnotificação e, quando possível, triangular com outras fontes.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{CNES --- Cadastro Nacional de Estabelecimentos de Saúde}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {CNES --- Cadastro Nacional de Estabelecimentos de Saúde}
+  {Ministério da Saúde / DATASUS}
+  {https://cnes.datasus.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Contínuo (atualização mensal; desde 2005)}
+  {Estabelecimento de saúde}
+
+\subsection{O que é e principais variáveis}
+
+O CNES é o cadastro de todos os estabelecimentos de saúde do Brasil --- públicos e privados, com e sem fins lucrativos, vinculados ou não ao SUS. Cada estabelecimento é identificado por um código único (CNES) que serve de chave de linkagem com os sistemas SIH, SIA e SINAN.
+
+As principais variáveis disponíveis incluem:
+
+\begin{itemize}
+  \item \textbf{Tipo e natureza do estabelecimento}: hospital, UBS, UPA, clínica, laboratório, etc.; público, privado, filantrópico;
+  \item \textbf{Localização}: município, UF, endereço georreferenciado;
+  \item \textbf{Infraestrutura}: número de leitos por tipo (SUS, não-SUS, UTI), equipamentos disponíveis;
+  \item \textbf{Recursos humanos}: profissionais de saúde vinculados por categoria (médicos, enfermeiros, técnicos), carga horária e vínculo;
+  \item \textbf{Serviços oferecidos}: especialidades, procedimentos habilitados, serviços de apoio diagnóstico.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de acesso a serviços de saúde}: o CNES permite calcular indicadores de disponibilidade de serviços (leitos por mil habitantes, médicos por habitante) por município, essenciais para análises de equidade no acesso;
+  \item \textbf{Avaliação de políticas de expansão da rede}: monitoramento da abertura ou fechamento de estabelecimentos em resposta a políticas de investimento em infraestrutura;
+  \item \textbf{Variável de controle em avaliações de impacto}: características da oferta de saúde (número de leitos, cobertura de ESF) são frequentemente usadas como variáveis de controle em estudos que avaliam outros desfechos de saúde.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{SIOPS --- Sistema de Informações sobre Orçamentos Públicos em Saúde}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SIOPS}
+  {Ministério da Saúde}
+  {https://siops.datasus.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (desde 2000)}
+  {Ente federativo (município, estado ou União)}
+
+\subsection{O que é e aplicações}
+
+O SIOPS reúne dados sobre o orçamento público destinado à saúde pelos municípios, estados e União, conforme a obrigação constitucional de aplicação mínima de recursos próprios na área. Cada ente declarante informa suas receitas totais e os gastos realizados em ações e serviços públicos de saúde (ASPS).
+
+Para avaliação de políticas, o SIOPS é fundamental para:
+\begin{itemize}
+  \item Analisar o \textbf{nível de financiamento público da saúde} por município e UF ao longo do tempo;
+  \item Calcular \textbf{gasto per capita em saúde} e comparar entre entes federativos;
+  \item Avaliar o cumprimento dos \textbf{pisos constitucionais} de gasto em saúde (municípios devem aplicar mínimo de 15\% da receita própria; estados, 12\%).
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{SISVAN --- Sistema de Vigilância Alimentar e Nutricional}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SISVAN}
+  {Ministério da Saúde / DATASUS}
+  {https://sisvan.saude.gov.br}
+  {Brasil, Unidades da Federação e municípios}
+  {Contínuo (desde 2008 com cobertura ampliada)}
+  {Indivíduo atendido na atenção básica}
+
+\subsection{O que é e aplicações}
+
+O SISVAN registra o estado nutricional e o consumo alimentar de indivíduos acompanhados pela atenção básica do SUS. Os dados são coletados nas consultas de rotina nas Unidades Básicas de Saúde e cobrem principalmente crianças menores de 5 anos, gestantes, mulheres em idade fértil e idosos.
+
+As principais aplicações em avaliação incluem:
+\begin{itemize}
+  \item Monitoramento de \textbf{desnutrição e obesidade} por município, especialmente em populações vulneráveis atendidas pelo SUS;
+  \item Avaliação de \textbf{políticas de segurança alimentar} e programas de suplementação nutricional;
+  \item Acompanhamento nutricional de \textbf{beneficiários do Bolsa Família}, que têm condicionalidades de saúde vinculadas ao SISVAN.
+\end{itemize}
+
+A principal limitação do SISVAN é que cobre apenas indivíduos que comparecem às consultas na atenção básica --- portanto, não é representativo da população geral.
+
+% ────────────────────────────────────────────────────────────
+\section{Pesquisa Nacional de Saúde (PNS)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Pesquisa Nacional de Saúde (PNS)}
+  {IBGE em parceria com o Ministério da Saúde / Fiocruz}
+  {https://www.ibge.gov.br/estatisticas/sociais/saude/9160-pesquisa-nacional-de-saude.html}
+  {Brasil, Grandes Regiões, Unidades da Federação e capitais}
+  {Quinquenal: 2013 e 2019}
+  {Domicílio e morador}
+
+\subsection{O que é e por que importa}
+
+A Pesquisa Nacional de Saúde (PNS) é o principal inquérito domiciliar de saúde do Brasil, realizado pelo IBGE em parceria com o Ministério da Saúde e a Fiocruz. Diferentemente dos sistemas do DATASUS --- que captam apenas quem utiliza serviços de saúde ---, a PNS é uma pesquisa amostral representativa de toda a população residente em domicílios particulares, o que permite estimar a prevalência de condições de saúde na população geral, independentemente do uso de serviços.
+
+\subsection{Principais temas cobertos}
+
+A PNS abrange um conjunto amplo de dimensões da saúde individual e coletiva:
+
+\begin{itemize}
+  \item \textbf{Percepção do estado de saúde}: autoavaliação da saúde, limitações funcionais;
+  \item \textbf{Doenças crônicas não transmissíveis}: hipertensão, diabetes, doenças cardíacas, AVC, câncer, problemas respiratórios crônicos;
+  \item \textbf{Saúde mental}: depressão, ansiedade (edição 2019 com módulo específico);
+  \item \textbf{Acesso e uso de serviços de saúde}: consultas médicas, internações, uso de plano de saúde, acesso à atenção básica;
+  \item \textbf{Fatores de risco e proteção}: tabagismo, consumo de álcool, atividade física, alimentação;
+  \item \textbf{Saúde da mulher}: mamografia, preventivo, pré-natal;
+  \item \textbf{Características do domicílio e socioeconômicas}: escolaridade, renda, trabalho.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Estimação de prevalências populacionais} de doenças crônicas e fatores de risco, impossível com os sistemas do DATASUS;
+  \item \textbf{Avaliação de acesso a serviços}: comparação entre grupos populacionais (por renda, raça, região) no uso de consultas médicas, exames e internações;
+  \item \textbf{Linha de base para políticas de saúde}: as edições de 2013 e 2019 fornecem um retrato do estado de saúde da população antes e depois de mudanças de política relevantes;
+  \item \textbf{Desigualdades em saúde}: a PNS permite analisar gradientes socioeconômicos em saúde de forma muito mais rica do que as fontes administrativas.
+\end{itemize}
+
+\begin{boxatencao}{Atenção --- Periodicidade quinquenal}
+A PNS é realizada a cada cinco anos, o que limita seu uso para avaliações de políticas de curto prazo. Entre edições, os sistemas do DATASUS são as principais fontes para acompanhamento de indicadores de saúde. A edição 2024/25 estava em planejamento no momento da elaboração deste guia; recomenda-se verificar o site do IBGE para informações atualizadas.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{AMS --- Pesquisa de Assistência Médico-Sanitária}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {AMS --- Pesquisa de Assistência Médico-Sanitária}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/saude/9067-pesquisa-de-assistencia-medico-sanitaria.html}
+  {Brasil, Unidades da Federação e municípios}
+  {Cross-sections: 1999, 2002, 2005, 2009 (descontinuada; substituída parcialmente pelo CNES)}
+  {Estabelecimento de saúde}
+
+\subsection{O que é e aplicações}
+
+A AMS era um censo de todos os estabelecimentos de saúde do Brasil --- públicos e privados ---, realizado pelo IBGE. Diferentemente do CNES (que é um cadastro administrativo atualizado mensalmente), a AMS era uma pesquisa estruturada com questionários padronizados aplicados a cada estabelecimento, coletando informações detalhadas sobre infraestrutura, equipamentos, recursos humanos e serviços oferecidos.
+
+Com a consolidação do CNES como fonte administrativa de referência, a AMS foi descontinuada após 2009. Para análises históricas da oferta de serviços de saúde no período 1999--2009, a AMS ainda é uma fonte relevante, especialmente para comparações que incluam estabelecimentos privados não vinculados ao SUS --- categoria que o CNES cobre com menor profundidade analítica.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo percorreu o ecossistema de dados de saúde disponível para o Brasil. A Tabela~\ref{tab:sintese_cap5} resume as características essenciais de cada fonte.
+
+\begin{table}[H]
+\centering
+\caption{Síntese das fontes de dados de saúde}
+\label{tab:sintese_cap5}
+\small
+\begin{tabularx}{\textwidth}{@{} p{2cm} p{3.5cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} & \textbf{Principal uso em avaliação} \\
+\midrule
+SIM    & Óbitos                     & Total (com subregistro) & Mortalidade, causas externas, violência \\
+SINASC & Nascimentos vivos          & Total (com subregistro) & Saúde materna, prematuridade \\
+SIH    & Internações SUS            & SUS apenas & Uso hospitalar, procedimentos \\
+SIA    & Atendimentos ambulatoriais SUS & SUS apenas & Produção ambulatorial \\
+SINAN  & Agravos notificáveis       & Notificados (subnotificação) & Vigilância epidemiológica \\
+CNES   & Estabelecimentos de saúde  & Todos (públicos e privados) & Infraestrutura, acesso \\
+SIOPS  & Orçamento público em saúde & Entes federativos & Financiamento do SUS \\
+SISVAN & Estado nutricional         & Usuários da atenção básica & Nutrição, segurança alimentar \\
+PNS    & Saúde da população geral   & Amostra representativa & Prevalências, acesso, desigualdades \\
+AMS    & Estabelecimentos (histórico) & Todos (descontinuada) & Séries históricas 1999--2009 \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+Os pontos centrais do capítulo são:
+
+\begin{itemize}
+  \item O \textbf{SIM} e o \textbf{SINASC} são as fontes de referência para mortalidade e nascimentos, com cobertura nacional e séries históricas longas, mas sujeitos a subregistro diferencial por região;
+  \item O \textbf{SIH} e o \textbf{SIA} registram a produção de serviços do SUS, mas não cobrem a saúde suplementar privada;
+  \item O \textbf{SINAN} é fundamental para vigilância epidemiológica, mas a subnotificação é estrutural e varia muito entre agravos;
+  \item O \textbf{CNES} é a referência para infraestrutura e recursos humanos em saúde, com atualização mensal;
+  \item A \textbf{PNS} é a única fonte que permite estimar prevalências de condições de saúde na população geral, independentemente do uso de serviços --- mas sua periodicidade quinquenal limita o acompanhamento de curto prazo;
+  \item A \textbf{combinação estratégica} das fontes --- por exemplo, SIM + SINASC para mortalidade infantil, ou CNES + SIH para análises de acesso e uso --- é o que permite avaliações mais robustas do setor saúde.
+\end{itemize}
+
+\medskip
+
+Saúde e educação são dimensões que se alimentam mutuamente no desenvolvimento humano: crianças mais saudáveis aprendem mais, e populações mais escolarizadas vivem mais. O capítulo seguinte cruza essa fronteira, apresentando as fontes que documentam o que os brasileiros sabem, onde estudam e como progridem no sistema educacional --- um ecossistema igualmente rico, coordenado pelo Inep.

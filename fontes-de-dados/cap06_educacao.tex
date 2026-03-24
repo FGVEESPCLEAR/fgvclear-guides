@@ -1,0 +1,349 @@
+% ============================================================
+%  cap06_educacao.tex
+%  Capítulo 6: Educação
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Educação}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes de dados sobre educação disponíveis para o Brasil. Cobrimos o Censo Escolar, o Censo da Educação Superior, o Sistema de Avaliação da Educação Básica (SAEB), o ENEM, o SIOPE e outras fontes complementares. Para cada fonte, detalhamos histórico, estrutura, variáveis disponíveis, forma de acesso e aplicações típicas em avaliação de políticas educacionais.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: o ecossistema de dados de educação no Brasil}
+% ────────────────────────────────────────────────────────────
+
+A educação brasileira é monitorada por um sistema de informações relativamente maduro, coordenado principalmente pelo Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (Inep), autarquia vinculada ao Ministério da Educação. O Inep produz e mantém os principais censos, avaliações e indicadores educacionais do país, combinando registros administrativos (como o Censo Escolar) com avaliações de desempenho em larga escala (como o SAEB e o ENEM).
+
+Esse ecossistema oferece ao avaliador uma combinação rara: dados administrativos com cobertura universal (o Censo Escolar registra cada aluno, professor e escola individualmente), avaliações cognitivas padronizadas com séries históricas de mais de duas décadas, e dados de financiamento que permitem análises de eficiência e alocação de recursos.
+
+\begin{table}[H]
+\centering
+\caption{Principais fontes de dados de educação e suas coberturas}
+\label{tab:ecossistema_edu}
+\small
+\begin{tabularx}{\textwidth}{@{} p{2.5cm} p{3.5cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Desde} & \textbf{Principal uso em avaliação} \\
+\midrule
+Censo Escolar   & Matrículas, escolas, docentes & 1932 & Cobertura, acesso, infraestrutura \\
+Censo Ed. Superior & IES, cursos, alunos, docentes & 2001 & Acesso ao ensino superior \\
+SAEB            & Desempenho cognitivo (básica) & 1990 & Qualidade do aprendizado \\
+ENEM            & Desempenho no ensino médio  & 1998 & Acesso ao ensino superior, desigualdade \\
+SIOPE           & Gasto público em educação   & 1999 & Financiamento, custo-aluno \\
+IDEB            & Índice sintético de qualidade & 2005 & Monitoramento da educação básica \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+% ────────────────────────────────────────────────────────────
+\section{Censo Escolar}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Censo Escolar da Educação Básica}
+  {Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (Inep)}
+  {https://www.gov.br/inep/pt-br/areas-de-atuacao/pesquisas-estatisticas-e-indicadores/censo-escolar}
+  {Brasil, Unidades da Federação, municípios e escolas}
+  {Anual (desde 1932; microdados públicos a partir de 1995)}
+  {Escola, turma, aluno e docente}
+
+\subsection{O que é e por que importa}
+
+O Censo Escolar da Educação Básica é o mais abrangente levantamento estatístico da educação brasileira. Realizado anualmente pelo Inep desde 1932 — tornando-o uma das séries históricas mais longas do sistema estatístico nacional —, o Censo Escolar registra individualmente cada escola, cada turma, cada aluno e cada profissional de educação do Brasil, cobrindo tanto a rede pública (federal, estadual e municipal) quanto a rede privada.
+
+A coleta ocorre anualmente com data de referência na última quarta-feira de maio. As informações são prestadas pelos próprios estabelecimentos de ensino por meio do sistema Educacenso, que substituiu os questionários em papel a partir de 2007. Essa transição para a coleta eletrônica melhorou substancialmente a qualidade e a tempestividade dos dados.
+
+Para a avaliação de políticas educacionais, o Censo Escolar é insubstituível por três razões: cobertura universal (não é amostra — registra todos os alunos e escolas), granularidade (permite análises no nível da escola individual, da turma ou do aluno), e longitudinalidade (o código único de cada aluno permite acompanhar sua trajetória escolar ao longo dos anos).
+
+\subsection{Estrutura e unidades de análise}
+
+O Censo Escolar é organizado em quatro arquivos principais, cada um com uma unidade de análise distinta:
+
+\begin{itemize}
+  \item \textbf{Escolas}: cada linha é uma escola. Contém informações sobre localização (município, zona urbana/rural), dependência administrativa (federal, estadual, municipal, privada), infraestrutura (laboratórios, biblioteca, quadra, acesso à internet, saneamento), equipamentos disponíveis e etapas de ensino ofertadas;
+
+  \item \textbf{Turmas}: cada linha é uma turma. Contém informações sobre etapa e modalidade de ensino, turno, tamanho da turma e código da escola;
+
+  \item \textbf{Alunos}: cada linha é uma matrícula. Contém informações sobre o aluno (sexo, data de nascimento, raça/cor, deficiência, município de residência) e sobre a matrícula (etapa, série, turno, situação ao final do ano — aprovado, reprovado, abandonou). O código único do aluno (\texttt{CO\_PESSOA\_FISICA}) permite construir um painel longitudinal seguindo o mesmo aluno ao longo de vários anos;
+
+  \item \textbf{Docentes}: cada linha é um vínculo de docente. Contém informações sobre o professor (sexo, idade, raça/cor, escolaridade, formação) e sobre o vínculo (escola, disciplinas lecionadas, carga horária, tipo de contrato).
+\end{itemize}
+
+\subsection{Principais variáveis de interesse}
+
+\textbf{No arquivo de alunos:}
+\begin{itemize}
+  \item Etapa e modalidade: educação infantil, ensino fundamental (anos iniciais e finais), ensino médio, EJA, educação especial, educação profissional;
+  \item Situação de rendimento ao final do ano (aprovado, reprovado, transferido, falecido, abandono);
+  \item Indicadores de vulnerabilidade: se recebe Bolsa Família, se é quilombola, indígena, com deficiência, em situação de itinerância;
+  \item Transporte escolar público.
+\end{itemize}
+
+\textbf{No arquivo de escolas:}
+\begin{itemize}
+  \item Infraestrutura: existência de água tratada, esgoto, energia elétrica, internet banda larga, laboratório de informática, laboratório de ciências, biblioteca/sala de leitura, quadra esportiva;
+  \item Localização: município, UF, zona (urbana/rural), se localizada em área quilombola ou indígena;
+  \item Alimentação escolar, atendimento educacional especializado.
+\end{itemize}
+
+\subsection{O IDEB — Índice de Desenvolvimento da Educação Básica}
+
+O IDEB é o principal indicador sintético de qualidade da educação básica brasileira, calculado pelo Inep a partir de 2005 com base em dois componentes:
+
+\begin{enumerate}
+  \item \textbf{Desempenho}: médias de proficiência em Língua Portuguesa e Matemática nas avaliações do SAEB/Prova Brasil;
+  \item \textbf{Fluxo}: taxa de aprovação, calculada a partir dos dados do Censo Escolar.
+\end{enumerate}
+
+A fórmula do IDEB penaliza tanto o baixo desempenho quanto a alta reprovação ou abandono, capturando a ideia de que uma escola que aprova todos os alunos sem ensiná-los, ou que ensina bem mas reprova muitos, não tem boa qualidade educacional.
+
+O IDEB é calculado e publicado para os anos iniciais do ensino fundamental (5º ano), anos finais (9º ano) e ensino médio (3ª série), com desagregação por escola, município, UF e Brasil. Está disponível no site do Inep e pode ser acessado diretamente ou por meio de pacotes de R como o \texttt{idebr}.
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxexemplo}{Exemplo — Infraestrutura escolar e rendimento}
+Um estado implementou um programa de reforma e ampliação de escolas rurais, priorizando municípios com infraestrutura mais precária. Para avaliar o impacto do programa sobre a frequência e o rendimento escolar, pesquisadores utilizaram o painel longitudinal do Censo Escolar: identificaram as escolas beneficiadas pelo programa (grupo de tratamento) e escolas com características similares que não foram beneficiadas (grupo de controle, via pareamento por escore de propensão com variáveis de infraestrutura do Censo Escolar de anos anteriores). A variável de resultado foi a taxa de abandono e a taxa de aprovação nos dois anos seguintes à reforma. O código único do aluno permitiu controlar pela composição do alunado em cada escola ao longo do tempo.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+\subsection{Acesso aos microdados}
+
+Os microdados do Censo Escolar são disponibilizados gratuitamente pelo Inep, com os quatro arquivos (escolas, turmas, alunos, docentes) em formato CSV. A defasagem entre o período de referência (maio) e a publicação dos microdados costuma ser de seis a doze meses.
+
+\begin{boxdica}{Dica — Pacotes para trabalhar com o Censo Escolar}
+\begin{itemize}
+  \item \textbf{R}: o pacote \texttt{educaR} facilita o download e a leitura dos microdados do Censo Escolar, com dicionários de variáveis já integrados;
+  \item \textbf{Python}: a plataforma \textit{Base dos Dados} disponibiliza o Censo Escolar compatibilizado e tratado em BigQuery, com tabelas linkáveis por código de escola e de aluno;
+  \item \textbf{Stata}: os arquivos CSV podem ser importados com \texttt{import delimited}; o dicionário de variáveis do Inep deve ser consultado para decodificar as variáveis categóricas.
+\end{itemize}
+\end{boxdica}
+
+\subsection{Limitações e cuidados}
+
+\begin{itemize}
+  \item \textbf{Data de referência única}: o Censo Escolar captura um retrato de maio de cada ano. Alunos que se matriculam após essa data — ou que abandonam antes — podem não ser adequadamente captados;
+  \item \textbf{Mudanças no sistema de coleta}: a transição para o Educacenso em 2007 introduziu mudanças que limitam comparações com edições anteriores para algumas variáveis;
+  \item \textbf{Qualidade do preenchimento}: embora melhorada pela coleta eletrônica, ainda há inconsistências no preenchimento de campos como raça/cor e deficiência, especialmente em redes municipais menores.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Censo da Educação Superior}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Censo da Educação Superior}
+  {Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (Inep)}
+  {https://www.gov.br/inep/pt-br/areas-de-atuacao/pesquisas-estatisticas-e-indicadores/censo-da-educacao-superior}
+  {Brasil, Unidades da Federação, municípios e instituições}
+  {Anual (desde 2001)}
+  {Instituição de Educação Superior (IES), curso, aluno e docente}
+
+\subsection{O que é e principais variáveis}
+
+O Censo da Educação Superior registra anualmente todas as Instituições de Educação Superior (IES) do Brasil — públicas e privadas — e seus cursos de graduação e sequenciais. Criado em 2001 pelo Inep, o censo produz estatísticas sobre:
+
+\begin{itemize}
+  \item \textbf{Instituições}: categoria administrativa (federal, estadual, municipal, privada com e sem fins lucrativos), organização acadêmica (universidade, centro universitário, faculdade), município sede, número de cursos e vagas ofertadas;
+  \item \textbf{Cursos}: área do conhecimento, grau (bacharelado, licenciatura, tecnológico), modalidade (presencial ou a distância), número de vagas, ingressantes, matriculados e concluintes;
+  \item \textbf{Alunos}: sexo, idade, raça/cor, situação socioeconômica (para alunos do ProUni e FIES), modalidade de ingresso (ENEM/SISU, vestibular, outros);
+  \item \textbf{Docentes}: titulação (graduado, especialista, mestre, doutor), regime de trabalho, sexo e raça/cor.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de expansão do acesso ao ensino superior}: o Censo da Educação Superior é a principal fonte para avaliar o impacto do REUNI, do ProUni e do FIES sobre matrículas e perfil dos estudantes;
+  \item \textbf{Análise de desigualdades no acesso}: evolução da proporção de estudantes negros, de baixa renda e de escolas públicas no ensino superior ao longo do tempo;
+  \item \textbf{Avaliação de políticas de cotas}: comparação do perfil dos ingressantes antes e depois da Lei de Cotas (Lei n.º 12.711/2012);
+  \item \textbf{Monitoramento da educação a distância}: expansão das matrículas EAD e seu perfil demográfico.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{SAEB — Sistema de Avaliação da Educação Básica}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SAEB — Sistema de Avaliação da Educação Básica}
+  {Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (Inep)}
+  {https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/saeb}
+  {Brasil, Unidades da Federação, municípios e escolas (para a Prova Brasil)}
+  {Bienal (desde 1990; Prova Brasil desde 2005)}
+  {Aluno (com agregações para escola, município e UF)}
+
+\subsection{O que é e estrutura}
+
+O Sistema de Avaliação da Educação Básica (SAEB) é o principal sistema de avaliação em larga escala da educação básica brasileira. Criado em 1990, passou por diversas reformulações ao longo dos anos. Em sua configuração atual, o SAEB engloba três avaliações principais:
+
+\begin{itemize}
+  \item \textbf{ANEB} (Avaliação Nacional da Educação Básica): amostral, aplicada a estudantes do 5º e 9º anos do ensino fundamental e da 3ª série do ensino médio em escolas públicas e privadas. Produz resultados representativos para o Brasil, regiões e UFs;
+
+  \item \textbf{ANRESC/Prova Brasil}: censitária para escolas públicas urbanas com mais de 20 alunos nas séries avaliadas. Produz resultados para cada escola individualmente, o que a torna muito mais útil para avaliações de impacto no nível de escola;
+
+  \item \textbf{ANA} (Avaliação Nacional da Alfabetização): aplicada ao 3º ano do ensino fundamental, avalia alfabetização em Língua Portuguesa e Matemática. Incorporada ao SAEB a partir de 2019.
+\end{itemize}
+
+As avaliações medem proficiência em \textbf{Língua Portuguesa} (leitura e interpretação) e \textbf{Matemática}, com escalas padronizadas que permitem comparações ao longo do tempo. Cada aluno avaliado também responde a um \textbf{questionário contextual} sobre características socioeconômicas, hábitos de estudo e percepção da escola — informações fundamentais para análises de equidade.
+
+\subsection{Escala de proficiência e comparabilidade}
+
+As notas do SAEB são expressas em uma escala de proficiência que vai de 0 a 500 pontos (aproximadamente), com âncoras que descrevem o que os alunos em diferentes níveis são capazes de fazer. A escala é construída por Teoria de Resposta ao Item (TRI), o que teoricamente permite comparar o desempenho entre anos diferentes.
+
+\begin{boxatencao}{Atenção — Mudanças metodológicas no SAEB}
+O SAEB passou por reformulações metodológicas significativas ao longo de sua história — em particular em 1995, 2005 e 2019 — que afetam a comparabilidade das séries históricas. A edição de 2019 incorporou a ANA e trouxe novos itens e matrizes de referência. Análises de tendência de longo prazo devem verificar cuidadosamente quais edições são metodologicamente comparáveis. O Inep publica documentação técnica detalhada sobre cada mudança.
+\end{boxatencao}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de impacto de políticas educacionais}: a Prova Brasil — por produzir resultados no nível de escola — é amplamente usada em avaliações de programas que intervêm em escolas específicas (como programas de formação docente, de gestão escolar ou de infraestrutura);
+  \item \textbf{Análise de desigualdades educacionais}: o questionário contextual permite decompor as diferenças de desempenho por características socioeconômicas, raça/cor e localização;
+  \item \textbf{Monitoramento do IDEB}: as notas do SAEB são um dos dois componentes do IDEB, tornando-o essencial para entender a evolução do índice;
+  \item \textbf{Estudos de eficácia escolar}: identificação de escolas que produzem desempenho acima do esperado dado o perfil socioeconômico de seus alunos.
+\end{itemize}
+
+\subsection{Acesso aos microdados}
+
+Os microdados do SAEB são disponibilizados gratuitamente pelo Inep após cada edição da avaliação. Os arquivos contêm as notas individuais dos alunos, as respostas ao questionário contextual e os identificadores de escola e município. A anonimização impede a identificação direta dos alunos, mas os identificadores de escola permitem a linkagem com o Censo Escolar.
+
+% ────────────────────────────────────────────────────────────
+\section{ENEM — Exame Nacional do Ensino Médio}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {ENEM — Exame Nacional do Ensino Médio}
+  {Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira (Inep)}
+  {https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem}
+  {Brasil (participação individual, não representativa da população)}
+  {Anual (desde 1998; reestruturado em 2009)}
+  {Participante individual}
+
+\subsection{O que é e evolução}
+
+O Exame Nacional do Ensino Médio (ENEM) foi criado em 1998 com o objetivo de avaliar o desempenho dos estudantes ao final da educação básica. Em 2009, passou por uma reestruturação significativa: adotou a TRI como metodologia de cálculo das notas (tornando-as comparáveis entre anos) e passou a ser utilizado como principal critério de acesso ao ensino superior por meio do SISU (Sistema de Seleção Unificada), substituindo progressivamente os vestibulares tradicionais das universidades federais.
+
+O ENEM avalia quatro áreas do conhecimento (Linguagens, Matemática, Ciências da Natureza e Ciências Humanas) e uma redação, com notas em escala TRI de 0 a 1000 para cada área.
+
+\subsection{Questionário socioeconômico}
+
+Um dos ativos mais valiosos do ENEM para pesquisa em políticas públicas é o \textbf{questionário socioeconômico} respondido por todos os inscritos, que coleta informações detalhadas sobre:
+
+\begin{itemize}
+  \item Renda familiar mensal (em faixas);
+  \item Escolaridade dos pais;
+  \item Raça/cor autodeclarada;
+  \item Tipo de escola cursada no ensino médio (pública estadual, federal, privada);
+  \item Acesso à internet e posse de bens no domicílio;
+  \item Se trabalha ou já trabalhou.
+\end{itemize}
+
+Esse questionário, combinado com as notas, permite análises riquíssimas sobre desigualdades educacionais por origem social.
+
+\subsection{Limitações importantes}
+
+O ENEM tem duas limitações estruturais que o analista deve ter em mente:
+
+\begin{itemize}
+  \item \textbf{Não é representativo}: a participação é voluntária. O perfil dos inscritos é sistematicamente diferente do perfil de todos os concluintes do ensino médio — há viés de seleção em direção a estudantes com maior motivação para o ensino superior e de escolas privadas. Análises que tratem o ENEM como censo do desempenho educacional estão erradas;
+
+  \item \textbf{Mudança de uso em 2009}: a adoção do ENEM como critério de acesso ao ensino superior alterou profundamente o perfil dos participantes e seus incentivos. Comparações de desempenho entre o ENEM anterior e posterior a 2009 são problemáticas.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de cotas e acesso ao ensino superior}: o ENEM/SISU permite analisar como mudanças nas regras de acesso afetam o perfil dos ingressantes nas universidades federais;
+  \item \textbf{Análises de desigualdade educacional}: o questionário socioeconômico detalhado permite decompor diferenças de desempenho por renda, raça e tipo de escola;
+  \item \textbf{Avaliação de escolas}: para escolas com número suficiente de participantes, é possível construir indicadores de desempenho médio e compará-los com o perfil socioeconômico dos alunos;
+  \item \textbf{Impacto de programas de preparação}: avaliações de cursinhos populares, programas de reforço e outras intervenções voltadas ao acesso ao ensino superior.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{SIOPE — Sistema de Informações sobre Orçamentos Públicos em Educação}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SIOPE}
+  {Fundo Nacional de Desenvolvimento da Educação (FNDE) / MEC}
+  {https://www.fnde.gov.br/siope}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (desde 1999)}
+  {Ente federativo (município, estado ou União)}
+
+\subsection{O que é e aplicações}
+
+O SIOPE reúne informações sobre receitas e despesas com educação de todos os entes federativos brasileiros, em cumprimento à obrigação constitucional de aplicação mínima de recursos próprios em educação (municípios: 25\% da receita; estados e União: 18\%). Operacionalizado pelo FNDE, o sistema permite acompanhar o cumprimento dos pisos constitucionais e comparar o esforço fiscal de diferentes entes.
+
+Para avaliação de políticas educacionais, o SIOPE é fundamental para:
+
+\begin{itemize}
+  \item Calcular o \textbf{gasto público por aluno} por município e UF, indicador central de análises de custo-efetividade na educação;
+  \item Avaliar o impacto de mudanças no \textbf{FUNDEB} (Fundo de Manutenção e Desenvolvimento da Educação Básica) sobre o gasto educacional municipal;
+  \item Analisar a \textbf{composição do gasto} por subfunção (ensino fundamental, médio, infantil, EJA) e natureza (pessoal, custeio, investimento).
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxexemplo}{Exemplo — SIOPE e Censo Escolar para calcular custo-aluno}
+Para avaliar a eficiência de diferentes redes municipais de educação, pesquisadores combinaram dados do SIOPE (gasto total em educação fundamental por município) com dados do Censo Escolar (número de matrículas no ensino fundamental) para calcular o custo-aluno efetivo de cada rede. Esse indicador foi então cruzado com o IDEB dos municípios para identificar redes que obtinham resultados acima da média com gasto abaixo da média — e investigar o que essas redes faziam de diferente.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{Fontes complementares de dados educacionais}
+% ────────────────────────────────────────────────────────────
+
+\subsection{PISA — Programme for International Student Assessment}
+
+O PISA é uma avaliação internacional coordenada pela OCDE que mede o desempenho de estudantes de 15 anos em Leitura, Matemática e Ciências. Realizado a cada três anos (2000, 2003, 2006, 2009, 2012, 2015, 2018, 2022), com um domínio principal em cada edição, o PISA permite comparar o desempenho educacional do Brasil com o de mais de 80 países participantes.
+
+Para a avaliação de políticas, o PISA é útil para contextualizar o desempenho educacional brasileiro em perspectiva internacional e para avaliar o quanto o Brasil avançou — ou regrediu — em relação a países com trajetórias similares. Sua limitação é que a amostra brasileira é representativa do grupo etário (15 anos) a nível nacional, sem desagregação estadual ou municipal.
+
+\subsection{Censo do Professor e Pesquisa do Professor}
+
+O Inep realizou, em anos específicos, levantamentos focados nos docentes da educação básica que complementam as informações do Censo Escolar sobre o perfil e as condições de trabalho dos professores brasileiros. Esses dados são especialmente úteis para avaliações de políticas de valorização docente e de formação inicial e continuada.
+
+\subsection{Plataforma Nilo Peçanha (PNP)}
+
+A Plataforma Nilo Peçanha reúne dados sobre a Rede Federal de Educação Profissional, Científica e Tecnológica (Institutos Federais, CEFETs e outras instituições federais de educação profissional). Disponibiliza anualmente informações sobre matrículas, cursos, docentes e servidores técnico-administrativos de toda a rede federal de educação profissional.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou o ecossistema de dados de educação disponível para o Brasil. A Tabela~\ref{tab:sintese_cap6} resume as características essenciais de cada fonte.
+
+\begin{table}[H]
+\centering
+\caption{Síntese das fontes de dados de educação}
+\label{tab:sintese_cap6}
+\small
+\begin{tabularx}{\textwidth}{@{} p{2.5cm} p{3cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} & \textbf{Principal uso em avaliação} \\
+\midrule
+Censo Escolar      & Matrículas, escolas, docentes & Universal & Acesso, fluxo, infraestrutura, painel de alunos \\
+Censo Ed. Superior & IES, cursos, alunos           & Universal & Acesso ao ensino superior, cotas, perfil \\
+SAEB/Prova Brasil  & Desempenho cognitivo          & Censitária (escolas públicas) & Qualidade do aprendizado, IDEB \\
+ENEM               & Desempenho no EM              & Voluntária (não representativa) & Acesso ao superior, desigualdade \\
+SIOPE              & Gasto público em educação     & Entes federativos & Financiamento, custo-aluno \\
+PISA               & Desempenho (15 anos)          & Amostral nacional & Comparação internacional \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+Os pontos centrais do capítulo são:
+
+\begin{itemize}
+  \item O \textbf{Censo Escolar} é a fonte fundamental da educação brasileira: cobertura universal, granularidade no nível do aluno e série histórica longa permitem análises que nenhuma outra fonte viabiliza;
+  \item O \textbf{SAEB/Prova Brasil} é a referência para avaliações de desempenho cognitivo, especialmente por produzir resultados no nível de escola — essencial para estudos de impacto de intervenções escolares;
+  \item O \textbf{ENEM} tem um questionário socioeconômico muito rico, mas não é representativo: seu uso para inferências sobre a população de concluintes do ensino médio exige cuidados metodológicos;
+  \item O \textbf{SIOPE} é indispensável para análises de financiamento e custo-efetividade na educação;
+  \item A \textbf{combinação estratégica} dessas fontes — como Censo Escolar + SAEB para o IDEB, ou SIOPE + Censo Escolar para custo-aluno — é o que permite avaliações mais robustas das políticas educacionais.
+\end{itemize}
+
+A escola é muitas vezes o primeiro ponto de contato do Estado com as crianças mais vulneráveis — e também o lugar onde a falta de renda em casa se manifesta em frequência irregular, abandono e baixo desempenho. As políticas de assistência social e transferência de renda existem, em parte, para romper esse ciclo. O próximo capítulo apresenta o CadÚnico, o Bolsa Família, o BPC e o SUAS: as fontes que permitem identificar quem são as famílias atendidas, quais são seus perfis e o que muda na vida delas com o acesso aos programas.

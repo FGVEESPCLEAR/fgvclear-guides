@@ -1,0 +1,373 @@
+% ============================================================
+%  cap11_fontes_internacionais.tex
+%  Capítulo 11: Fontes Internacionais e Comparadas
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Fontes Internacionais e Comparadas}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes internacionais e comparadas disponíveis para pesquisadores e avaliadores de políticas públicas no Brasil. Cobrimos as bases do Banco Mundial, da OCDE, do PISA, da OIT, da OMS, do PNUD e da CEPAL, além de bases temáticas especializadas. Para cada fonte, detalhamos o que contém, como acessar, quando usar e quais são as limitações de comparabilidade com dados nacionais.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: quando e por que usar fontes internacionais}
+% ────────────────────────────────────────────────────────────
+
+Fontes internacionais cumprem um papel específico e insubstituível na avaliação de políticas públicas: permitem contextualizar o desempenho do Brasil em perspectiva comparada, identificar trajetórias de países com características similares, aprender com experiências internacionais e verificar se os resultados observados no Brasil são consistentes com evidências de outros contextos.
+
+Há pelo menos quatro situações em que o avaliador deve considerar seriamente o uso de fontes internacionais:
+
+\begin{enumerate}
+  \item \textbf{Benchmarking}: quando a pergunta é ``como o Brasil se compara a outros países em determinado indicador?'' --- taxas de mortalidade infantil, desempenho educacional, gasto público em saúde, índice de desigualdade;
+  \item \textbf{Evidências externas}: quando se quer verificar se o efeito estimado de uma política no Brasil é plausível à luz de avaliações similares em outros países;
+  \item \textbf{Dados não disponíveis nacionalmente}: quando uma variável de interesse não está disponível em fontes nacionais, mas está em bases internacionais que cobrem o Brasil (como alguns indicadores ambientais ou de governança);
+  \item \textbf{Análises comparativas cross-country}: quando a própria pergunta de pesquisa é comparativa --- por exemplo, o impacto de diferentes estruturas de proteção social sobre a desigualdade em países da América Latina.
+\end{enumerate}
+
+Ao mesmo tempo, fontes internacionais têm limitações estruturais que precisam ser consideradas. A harmonização metodológica necessária para comparações entre países implica perdas de detalhe e pode não capturar especificidades do contexto brasileiro. Além disso, os dados costumam ter maior defasagem do que as fontes nacionais originais, e a cobertura histórica é frequentemente menor.
+
+\begin{boxatencao}{Atenção --- Fontes internacionais e dados nacionais}
+A maior parte das bases internacionais não coleta dados primários no Brasil: ela usa como insumo os dados produzidos pelo IBGE, pelo Ministério da Saúde, pelo Inep e por outras fontes nacionais, aplicando ajustes de harmonização. Isso significa que, quando há divergência entre um indicador nacional e o equivalente em uma base internacional, a base nacional é geralmente mais precisa para análises do Brasil especificamente. Use fontes internacionais quando a comparação com outros países for o objetivo --- não como substituto para as fontes nacionais.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Banco Mundial}
+% ────────────────────────────────────────────────────────────
+
+\subsection{World Development Indicators (WDI)}
+
+\ficharapida
+  {World Development Indicators (WDI)}
+  {Banco Mundial}
+  {https://databank.worldbank.org/source/world-development-indicators}
+  {Mais de 200 países e territórios}
+  {Anual (séries históricas variáveis por indicador, em geral desde 1960)}
+  {País}
+
+O WDI é a principal base de dados comparados do Banco Mundial, reunindo mais de 1.400 indicadores de desenvolvimento para mais de 200 países. Para o Brasil, os principais indicadores disponíveis incluem:
+
+\begin{itemize}
+  \item \textbf{Desenvolvimento econômico}: PIB per capita (em dólares correntes, PPC e constantes), crescimento do PIB, inflação, balança comercial, dívida pública;
+  \item \textbf{Pobreza e desigualdade}: taxas de pobreza a diferentes linhas internacionais (US\$ 2,15 e US\$ 6,85 por dia em PPC 2017), índice de Gini, participação na renda por décil;
+  \item \textbf{Saúde}: mortalidade infantil, mortalidade materna, esperança de vida ao nascer, cobertura de vacinação, prevalência de doenças;
+  \item \textbf{Educação}: taxa de matrícula por nível, taxa de conclusão, alfabetização, razão aluno-professor;
+  \item \textbf{Infraestrutura}: acesso à água tratada, saneamento, eletricidade, internet;
+  \item \textbf{Governança e instituições}: indicadores do projeto Worldwide Governance Indicators (WGI).
+\end{itemize}
+
+\textbf{Acesso}: os dados estão disponíveis gratuitamente no portal DataBank do Banco Mundial, com opções de download em CSV e Excel. A API do Banco Mundial (\url{api.worldbank.org}) permite acesso programático, com pacotes disponíveis em R (\texttt{WDI}) e Python (\texttt{wbgapi}).
+
+\subsection{PovcalNet e Poverty and Inequality Platform (PIP)}
+
+\ficharapida
+  {Poverty and Inequality Platform (PIP)}
+  {Banco Mundial}
+  {https://pip.worldbank.org}
+  {Mais de 100 países}
+  {Por pesquisa domiciliar disponível (irregular)}
+  {País e, em alguns casos, área urbana/rural}
+
+O PIP é a plataforma do Banco Mundial para estimativas de pobreza e desigualdade baseadas em microdados de pesquisas domiciliares. Para o Brasil, o PIP usa os microdados da PNAD Contínua e da POF como insumo, produzindo estimativas compatíveis internacionalmente.
+
+É a fonte de referência para comparações de pobreza e desigualdade entre o Brasil e outros países em desenvolvimento, especialmente para análises que usam as linhas de pobreza internacionais do Banco Mundial (US\$ 2,15/dia para pobreza extrema e US\$ 6,85/dia para pobreza moderada em PPC 2017).
+
+\subsection{Banco de Dados de Projetos do Banco Mundial}
+
+Além das bases estatísticas, o Banco Mundial disponibiliza dados sobre seus próprios projetos de financiamento --- incluindo projetos no Brasil --- com informações sobre valores comprometidos e desembolsados, objetivos, setores e resultados reportados. Útil para avaliações de projetos financiados pelo Banco no Brasil.
+
+% ────────────────────────────────────────────────────────────
+\section{OCDE}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Bases de Dados da OCDE}
+  {Organização para a Cooperação e Desenvolvimento Econômico (OCDE)}
+  {https://stats.oecd.org}
+  {38 países membros + parceiros (inclui Brasil como parceiro)}
+  {Anual (séries variáveis por indicador)}
+  {País}
+
+\subsection{O que é e relevância para o Brasil}
+
+A OCDE é uma organização de países desenvolvidos, e o Brasil não é membro pleno --- mas participa como país parceiro e candidato à adesão (processo em curso desde 2022). Essa posição confere ao Brasil uma presença crescente nas bases de dados da OCDE, tornando-a uma fonte relevante para comparações com países de renda alta e para indicadores setoriais nos quais a OCDE tem metodologia superior.
+
+\subsection{Principais bases temáticas}
+
+\subsubsection{OECD Health Statistics}
+
+A base de estatísticas de saúde da OCDE cobre os países membros e alguns parceiros (incluindo o Brasil) com indicadores como:
+\begin{itemize}
+  \item Gasto em saúde como proporção do PIB e per capita (em PPC);
+  \item Número de médicos, enfermeiros e leitos hospitalares por habitante;
+  \item Esperança de vida e anos de vida saudável;
+  \item Mortalidade por causas específicas comparável entre países.
+\end{itemize}
+
+Para o Brasil, é especialmente útil para contextualizar o nível de gasto em saúde e a eficiência do sistema de saúde em perspectiva internacional.
+
+\subsubsection{OECD Education at a Glance}
+
+A publicação anual \textit{Education at a Glance} reúne indicadores educacionais comparados para os países da OCDE e parceiros:
+\begin{itemize}
+  \item Taxas de matrícula e conclusão por nível de ensino;
+  \item Gasto público em educação como proporção do PIB e por aluno;
+  \item Salários de professores em relação à renda média;
+  \item Retornos à educação no mercado de trabalho.
+\end{itemize}
+
+\subsubsection{OECD Employment and Labour Market Statistics}
+
+Dados comparados sobre mercado de trabalho, incluindo taxas de desemprego com definições harmonizadas pela OIT, participação laboral por sexo e faixa etária, e indicadores de qualidade do emprego.
+
+\subsubsection{OECD Revenue Statistics}
+
+Dados comparados sobre carga tributária por país, com decomposição por tipo de tributo (imposto sobre renda, consumo, propriedade, contribuições sociais). Fundamental para análises comparativas sobre o tamanho e a estrutura tributária do Brasil.
+
+% ────────────────────────────────────────────────────────────
+\section{PISA --- Programme for International Student Assessment}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {PISA --- Programme for International Student Assessment}
+  {OCDE / Inep (coordenação nacional)}
+  {https://www.oecd.org/pisa}
+  {Mais de 80 países e economias participantes}
+  {Trienal: 2000, 2003, 2006, 2009, 2012, 2015, 2018, 2022}
+  {Estudante de 15 anos (amostra representativa nacional)}
+
+\subsection{O que é e estrutura}
+
+O PISA é uma avaliação internacional coordenada pela OCDE que mede o desempenho de estudantes de 15 anos em três domínios: Leitura, Matemática e Ciências. Cada edição tem um domínio principal --- com avaliação mais aprofundada --- e dois domínios secundários. O Brasil participa do PISA desde a primeira edição, em 2000, sendo um dos países em desenvolvimento com a série histórica mais longa.
+
+O PISA aplica testes padronizados internacionalmente e questiona os estudantes sobre seu contexto socioeconômico, motivação e estratégias de aprendizagem. Também inclui questionários para diretores de escola e, em algumas edições, para professores e pais.
+
+\subsection{Por que o PISA é especialmente relevante para o Brasil}
+
+O Brasil apresenta, nas edições do PISA, um desempenho sistematicamente abaixo da média da OCDE nos três domínios avaliados --- embora com tendência de melhora ao longo das edições. Esse contraste com países de renda similar torna o PISA uma fonte essencial para:
+
+\begin{itemize}
+  \item \textbf{Diagnosticar a magnitude do deficit educacional} brasileiro em perspectiva internacional;
+  \item \textbf{Identificar fatores associados ao desempenho}: o questionário socioeconômico do PISA permite análises de quais características de alunos, escolas e sistemas educacionais estão associadas a melhores resultados;
+  \item \textbf{Acompanhar tendências}: a série desde 2000 permite analisar como o desempenho brasileiro evoluiu em relação a outros países ao longo de mais de duas décadas de reformas educacionais.
+\end{itemize}
+
+\subsection{Microdados e acesso}
+
+O Inep disponibiliza os microdados do PISA para o Brasil no seu portal, com os resultados por estudante e os questionários contextuais. Os microdados internacionais completos (todos os países) estão disponíveis no site da OCDE. O R tem o pacote \texttt{PISA} que facilita o acesso e a análise dos microdados com o desenho amostral correto.
+
+\begin{boxatencao}{Atenção --- PISA: representatividade nacional}
+A amostra do PISA é desenhada para ser representativa da população de estudantes de 15 anos no nível nacional, não estadual ou municipal. Análises que tentem produzir estimativas estaduais a partir dos microdados do PISA para o Brasil estarão extrapolando além do que o desenho amostral permite. Para análises estaduais de desempenho educacional, o SAEB (especialmente a Prova Brasil) é a fonte adequada.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Organização Internacional do Trabalho (OIT)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {ILOSTAT --- Base de Dados da OIT}
+  {Organização Internacional do Trabalho (OIT)}
+  {https://ilostat.ilo.org}
+  {Mais de 200 países}
+  {Anual (séries variáveis)}
+  {País}
+
+\subsection{O que é e principais indicadores}
+
+O ILOSTAT é a principal base de dados de trabalho e emprego da OIT, reunindo indicadores harmonizados para mais de 200 países. Para o Brasil, as principais séries disponíveis incluem:
+
+\begin{itemize}
+  \item Taxa de desemprego (definição OIT), participação na força de trabalho e emprego por setor;
+  \item Trabalho informal: proporção de trabalhadores em emprego informal, por sexo e setor;
+  \item Condições de trabalho: salário mínimo como proporção do salário mediano, horas trabalhadas;
+  \item Trabalho infantil: incidência por faixa etária, sexo e tipo de atividade;
+  \item Seguridade social: cobertura de proteção social por tipo de benefício.
+\end{itemize}
+
+O ILOSTAT é especialmente útil para comparações sobre trabalho informal e trabalho infantil, dimensões em que o Brasil tem indicadores que diferem dos países da OCDE e que são melhor contextualizados em comparação com países de renda média.
+
+% ────────────────────────────────────────────────────────────
+\section{Organização Mundial da Saúde (OMS)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Global Health Observatory (GHO)}
+  {Organização Mundial da Saúde (OMS)}
+  {https://www.who.int/data/gho}
+  {Países membros da OMS (194)}
+  {Anual (séries variáveis)}
+  {País}
+
+\subsection{O que é e principais indicadores}
+
+O Global Health Observatory (GHO) é a plataforma de dados de saúde da OMS, reunindo indicadores para os países membros com metodologias harmonizadas. Para o Brasil, os indicadores mais relevantes incluem:
+
+\begin{itemize}
+  \item \textbf{Mortalidade e morbidade}: taxas de mortalidade por causa (padronizadas por idade), carga de doença em DALYs (anos de vida ajustados por incapacidade), esperança de vida saudável;
+  \item \textbf{Doenças específicas}: tuberculose (incidência, prevalência, mortalidade), HIV/AIDS, malária, doenças não transmissíveis;
+  \item \textbf{Cobertura de serviços de saúde}: cobertura universal de saúde (UHC index), vacinação, pré-natal;
+  \item \textbf{Determinantes da saúde}: tabagismo, obesidade, saneamento, poluição do ar.
+\end{itemize}
+
+Uma vantagem específica da OMS sobre as fontes nacionais é que suas estimativas de mortalidade são corrigidas para subregistro e causas mal definidas --- o que as torna mais comparáveis entre países, mas também as afasta dos dados brutos do SIM. Para análises do Brasil especificamente, o SIM é a fonte primária; para comparações internacionais, o GHO é a referência.
+
+% ────────────────────────────────────────────────────────────
+\section{PNUD --- Programa das Nações Unidas para o Desenvolvimento}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Human Development Data (HDR)}
+  {Programa das Nações Unidas para o Desenvolvimento (PNUD)}
+  {https://hdr.undp.org/data-center}
+  {Países membros da ONU}
+  {Anual}
+  {País}
+
+\subsection{IDH e índices derivados}
+
+O PNUD é o produtor do \textbf{Índice de Desenvolvimento Humano (IDH)}, o indicador sintético de desenvolvimento mais conhecido mundialmente, que combina dimensões de saúde (esperança de vida), educação (anos de escolaridade esperados e médios) e renda (RNB per capita em PPC).
+
+Além do IDH, o PNUD publica índices derivados relevantes para avaliação:
+\begin{itemize}
+  \item \textbf{IDHI --- IDH ajustado pela Desigualdade}: penaliza países com maior desigualdade nas três dimensões;
+  \item \textbf{IDG --- Índice de Desigualdade de Gênero}: mede desigualdades entre homens e mulheres em saúde reprodutiva, empoderamento e mercado de trabalho;
+  \item \textbf{IPM --- Índice de Pobreza Multidimensional}: mede pobreza além da renda, incorporando privações em saúde, educação e padrão de vida.
+\end{itemize}
+
+Para análises subnacionais, o PNUD Brasil publica o \textbf{IDHM} --- IDH Municipal --- calculado para todos os municípios brasileiros com base nos dados do Censo Demográfico. O IDHM é amplamente utilizado como variável de desenvolvimento municipal em avaliações de políticas públicas no Brasil.
+
+% ────────────────────────────────────────────────────────────
+\section{CEPAL --- Comissão Econômica para a América Latina e o Caribe}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {CEPALSTAT}
+  {Comissão Econômica para a América Latina e o Caribe (CEPAL)}
+  {https://statistics.cepal.org/portal/cepalstat}
+  {América Latina e Caribe (33 países)}
+  {Anual (séries variáveis)}
+  {País}
+
+\subsection{O que é e relevância}
+
+O CEPALSTAT é o portal de dados estatísticos da CEPAL para a América Latina e o Caribe. Diferentemente das bases globais do Banco Mundial e da ONU, o CEPALSTAT foca especificamente na região, o que o torna especialmente útil para comparações do Brasil com seus vizinhos regionais.
+
+As principais bases disponíveis incluem:
+
+\begin{itemize}
+  \item \textbf{BADEHOG --- Base de Datos de Hogares}: microdados harmonizados de pesquisas domiciliares de países latino-americanos, incluindo o Brasil. Permite comparações de pobreza, desigualdade e mercado de trabalho com metodologias padronizadas;
+  \item \textbf{Indicadores macroeconômicos}: PIB, inflação, balança de pagamentos, dívida pública por país;
+  \item \textbf{Indicadores sociais}: pobreza, desigualdade (Gini), gasto social por função (educação, saúde, proteção social, habitação);
+  \item \textbf{Gênero}: indicadores de desigualdade de gênero no mercado de trabalho, violência contra a mulher, participação política.
+\end{itemize}
+
+\begin{boxexemplo}{Exemplo --- CEPALSTAT e desigualdade na América Latina}
+O Brasil tem consistentemente um dos índices de Gini mais elevados da América Latina, que por sua vez é a região mais desigual do mundo. Para contextualizar essa posição e avaliar se as políticas de transferência de renda implementadas no país produziram convergência em relação à média regional, pesquisadores utilizaram os dados do CEPALSTAT sobre o índice de Gini para todos os países latino-americanos no período 2000--2020. A comparação mostrou que, embora o Gini brasileiro tenha caído substancialmente entre 2003 e 2015, o Brasil ainda permanecia entre os países mais desiguais da região ao final do período --- sugerindo que as melhorias, embora reais, foram insuficientes para alterar a posição relativa do país.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{Outras fontes internacionais relevantes}
+% ────────────────────────────────────────────────────────────
+
+\subsection{FAO --- Organização das Nações Unidas para Alimentação e Agricultura}
+
+\ficharapida
+  {FAOSTAT}
+  {Organização das Nações Unidas para Alimentação e Agricultura (FAO)}
+  {https://www.fao.org/faostat}
+  {Mais de 245 países e territórios}
+  {Anual (desde 1961 para produção agrícola)}
+  {País}
+
+O FAOSTAT é a principal base de dados sobre produção agrícola, pecuária, pesca, florestas e uso do solo em perspectiva comparada. Para o Brasil --- um dos maiores produtores agropecuários do mundo ---, o FAOSTAT é relevante para:
+\begin{itemize}
+  \item Comparações de produtividade agrícola e pecuária com outros países exportadores;
+  \item Análise de segurança alimentar: subalimentação, disponibilidade calórica per capita;
+  \item Dados de uso do solo e desmatamento em perspectiva global.
+\end{itemize}
+
+\subsection{Banco Interamericano de Desenvolvimento (BID)}
+
+O BID disponibiliza dados sobre seus projetos de financiamento na América Latina e o Caribe, bem como bases de dados temáticas sobre infraestrutura, educação, saúde e governança na região. O portal \textit{IDB Data} (\url{data.iadb.org}) oferece acesso gratuito a indicadores regionais e dados de projetos.
+
+\subsection{Varieties of Democracy (V-Dem)}
+
+O projeto V-Dem, coordenado pela Universidade de Gotemburgo, produz indicadores de qualidade democrática e governança para mais de 200 países desde 1789. Inclui dimensões como liberdade de expressão, eleições livres e justas, Estado de Direito, participação civil e igualdade política. Para avaliações de políticas que dependem de contexto institucional e democrático, o V-Dem é uma fonte de referência internacional.
+
+\subsection{Freedom House e The Economist Intelligence Unit}
+
+O Freedom House publica anualmente o índice \textit{Freedom in the World}, que classifica países em ``livres'', ``parcialmente livres'' e ``não livres'' com base em indicadores de direitos políticos e liberdades civis. O EIU publica o \textit{Democracy Index}, com classificação em quatro tipos de regime (democracia plena, democracia imperfeita, regime híbrido e regime autoritário). Ambos são usados em estudos comparativos sobre a relação entre qualidade democrática e indicadores de bem-estar.
+
+\subsection{Notre Dame Global Adaptation Initiative (ND-GAIN)}
+
+O ND-GAIN produz um índice de vulnerabilidade e prontidão para adaptação às mudanças climáticas para mais de 180 países. Para avaliações de políticas de adaptação climática e de resiliência a desastres naturais, é uma referência internacional útil para contextualizar a posição do Brasil.
+
+% ────────────────────────────────────────────────────────────
+\section{Como usar fontes internacionais com rigor metodológico}
+% ────────────────────────────────────────────────────────────
+
+O uso de fontes internacionais em avaliações de políticas públicas exige atenção a um conjunto específico de questões metodológicas:
+
+\subsection{Verificar a fonte original dos dados para o Brasil}
+
+Como mencionado na introdução, a maioria das bases internacionais usa dados nacionais como insumo. Antes de usar um indicador internacional para o Brasil, verifique qual fonte nacional o organismo internacional utilizou. Se a fonte original for a PNAD Contínua ou o Censo Demográfico, pode ser mais eficiente trabalhar diretamente com essas fontes nacionais para análises focadas no Brasil.
+
+\subsection{Atentar para diferenças de definição}
+
+Conceitos aparentemente idênticos podem ter definições operacionais diferentes entre países e organismos internacionais. A ``taxa de desemprego'' da OIT difere da taxa calculada pelo IBGE em alguns aspectos metodológicos. A ``linha de pobreza'' do Banco Mundial (US\$ 2,15/dia em PPC 2017) é diferente das linhas nacionais utilizadas pelo IBGE e pelo governo brasileiro. Sempre que usar um indicador internacional para comparações, verifique se as definições são comparáveis.
+
+\subsection{Cuidado com a defasagem temporal}
+
+Bases internacionais frequentemente publicam dados com um ou dois anos de defasagem em relação às fontes nacionais originais. Para análises que requerem dados recentes, as fontes nacionais são geralmente mais atualizadas.
+
+\subsection{Usar fontes internacionais para o que elas fazem de melhor}
+
+Fontes internacionais são superiores às nacionais em dois cenários específicos: (1) quando a comparação com outros países é o objetivo da análise; (2) quando o organismo internacional aplicou ajustes metodológicos que tornam o dado mais comparável ou mais correto do que o dado bruto nacional (como as estimativas de mortalidade corrigidas para subregistro da OMS). Fora desses cenários, as fontes nacionais são geralmente preferíveis.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou as principais fontes internacionais e comparadas disponíveis para avaliadores de políticas públicas. A Tabela~\ref{tab:sintese_cap11} resume suas características essenciais.
+
+\begin{table}[H]
+\centering
+\caption{Síntese das principais fontes internacionais}
+\label{tab:sintese_cap11}
+\small
+\begin{tabularx}{\textwidth}{@{} p{2.5cm} p{2.5cm} p{2.5cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{Produtor} & \textbf{Cobertura} &
+\textbf{Principal uso} \\
+\midrule
+WDI               & Banco Mundial        & 200+ países        & Benchmarking geral de desenvolvimento \\
+PIP               & Banco Mundial        & 100+ países        & Pobreza e desigualdade comparadas \\
+OECD Stats        & OCDE                 & 38+ países         & Saúde, educação, trabalho, tributação \\
+PISA              & OCDE/Inep            & 80+ países         & Desempenho educacional comparado \\
+ILOSTAT           & OIT                  & 200+ países        & Trabalho, informalidade, trabalho infantil \\
+GHO               & OMS                  & 194 países         & Saúde, mortalidade, doenças \\
+HDR/IDHM          & PNUD                 & 190+ países        & IDH, pobreza multidimensional \\
+CEPALSTAT/BADEHOG & CEPAL                & 33 países AL       & Comparações regionais, microdados \\
+FAOSTAT           & FAO                  & 245+ países        & Agropecuária, segurança alimentar \\
+V-Dem             & Univ.\ Gotemburgo    & 200+ países        & Qualidade democrática, governança \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+Os pontos centrais do capítulo são:
+
+\begin{itemize}
+  \item Fontes internacionais são superiores para \textbf{benchmarking} e \textbf{comparações cross-country}; para análises focadas no Brasil, as fontes nacionais são geralmente mais precisas e atualizadas;
+  \item A maior parte das bases internacionais usa \textbf{dados nacionais como insumo} --- verificar qual fonte original foi utilizada é o primeiro passo antes de usar qualquer indicador internacional;
+  \item O \textbf{WDI} (Banco Mundial) e o \textbf{CEPALSTAT} (CEPAL) são as referências para comparações macroeconômicas e sociais gerais; o \textbf{PISA} (OCDE) é a referência para comparações educacionais; o \textbf{ILOSTAT} (OIT) para trabalho; o \textbf{GHO} (OMS) para saúde;
+  \item O \textbf{IDHM} do PNUD é amplamente utilizado como variável de desenvolvimento municipal em avaliações brasileiras, sendo derivado do Censo Demográfico com metodologia própria;
+  \item A \textbf{harmonização metodológica} necessária para comparações internacionais implica perdas de detalhe que precisam ser consideradas; diferenças de definição entre organismos internacionais são comuns e devem ser verificadas antes de qualquer comparação.
+\end{itemize}
+
+\medskip
+
+As fontes tradicionais cobrem um vasto território, mas há um ecossistema emergente que as complementa e, em alguns casos, transforma: dados estruturados com apoio de APIs governamentais, \textit{web scraping} e inteligência artificial. Essas ferramentas não substituem as fontes institucionais --- elas preenchem lacunas, aceleram a coleta e criam possibilidades analíticas novas que seriam impraticáveis sem elas. O capítulo seguinte discute como aproveitá-las com rigor metodológico.

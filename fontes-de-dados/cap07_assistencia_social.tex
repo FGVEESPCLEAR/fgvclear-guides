@@ -1,0 +1,294 @@
+% ============================================================
+%  cap07_assistencia_social.tex
+%  Capítulo 7: Assistência Social e Transferência de Renda
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Assistência Social e Transferência de Renda}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes de dados sobre assistência social e transferência de renda no Brasil. Cobrimos o Bolsa Família e seu histórico de dados, o Benefício de Prestação Continuada (BPC), o Censo SUAS e os sistemas de informação do Sistema Único de Assistência Social. Para cada fonte, detalhamos histórico, estrutura, variáveis disponíveis, forma de acesso e aplicações típicas em avaliação de políticas sociais.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: o ecossistema de dados da assistência social}
+% ────────────────────────────────────────────────────────────
+
+A política de assistência social brasileira é estruturada em torno do Sistema Único de Assistência Social (SUAS), criado em 2005, que organiza serviços, benefícios e programas em uma rede integrada de proteção social. O Ministério do Desenvolvimento e Assistência Social (MDS) é o principal produtor de dados dessa área, operando sistemas que cobrem desde o cadastro das famílias beneficiárias até o monitoramento dos equipamentos da rede socioassistencial.
+
+Para a avaliação de políticas públicas, a assistência social oferece um conjunto de fontes administrativas de qualidade crescente. O Cadastro Único — já tratado no Capítulo~4 como fonte de dados sobre mercado de trabalho e renda — é a espinha dorsal desse sistema: praticamente todos os programas sociais federais usam o CadÚnico como base de elegibilidade. Os dados do Bolsa Família, do BPC e do SUAS complementam esse cadastro com informações sobre benefícios recebidos, condicionalidades cumpridas e serviços acessados.
+
+\begin{table}[H]
+\centering
+\caption{Principais fontes de dados da assistência social}
+\label{tab:ecossistema_suas}
+\small
+\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Desde} &
+\textbf{Principal uso em avaliação} \\
+\midrule
+CadÚnico         & Famílias de baixa renda     & 2001 & Elegibilidade, perfil do público-alvo \\
+Bolsa Família    & Beneficiários e pagamentos  & 2004 & Avaliação de transferência de renda \\
+BPC              & Beneficiários idosos e PcD  & 1996 & Proteção social não contributiva \\
+Censo SUAS       & Equipamentos e equipes      & 2007 & Infraestrutura socioassistencial \\
+RMA/SUAS         & Atendimentos mensais        & 2012 & Produção de serviços socioassistenciais \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+% ────────────────────────────────────────────────────────────
+\section{Bolsa Família — histórico e dados disponíveis}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Bolsa Família / Auxílio Brasil / Bolsa Família (novo)}
+  {Ministério do Desenvolvimento e Assistência Social (MDS)}
+  {https://www.gov.br/mds/pt-br/acoes-e-programas/transferencia-de-renda/bolsa-familia}
+  {Brasil, Unidades da Federação e municípios}
+  {Mensal (desde 2004)}
+  {Família beneficiária}
+
+\subsection{Histórico do programa e das fontes de dados}
+
+O Programa Bolsa Família foi criado em outubro de 2003 (Lei n.º 10.836/2004), unificando quatro programas de transferência de renda então existentes: Bolsa Escola, Bolsa Alimentação, Auxílio Gás e Cartão Alimentação. Desde sua criação, tornou-se o maior programa de transferência condicionada de renda do mundo em número de beneficiários, chegando a cobrir mais de 14 milhões de famílias em seu auge.
+
+Em 2021, o programa foi renomeado \textbf{Auxílio Brasil} e passou por reformulações nas regras de elegibilidade e nos valores dos benefícios. Em 2023, foi recriado como \textbf{Bolsa Família} com novas regras, incluindo o benefício mínimo de R\$~600,00 por família e o adicional por criança.
+
+Para fins analíticos, é importante distinguir três períodos:
+
+\begin{enumerate}
+  \item \textbf{Bolsa Família original (2004--2021)}: série histórica mais longa e metodologicamente consistente;
+  \item \textbf{Auxílio Brasil (2021--2022)}: período de transição com mudanças nas regras de elegibilidade e valores, o que limita comparações diretas com o período anterior;
+  \item \textbf{Bolsa Família novo (2023--atual)}: nova reformulação com regras distintas de benefício por composição familiar.
+\end{enumerate}
+
+\subsection{Fontes de dados disponíveis}
+
+Os dados do Bolsa Família estão disponíveis em múltiplas plataformas com diferentes níveis de desagregação:
+
+\subsubsection{Portal da Transparência do Governo Federal}
+
+O Portal da Transparência (\url{portaldatransparencia.gov.br}) disponibiliza mensalmente os dados de pagamentos do Bolsa Família com as seguintes informações por beneficiário:
+
+\begin{itemize}
+  \item NIS do responsável familiar;
+  \item Nome do responsável (até 2020; posteriormente anonimizado);
+  \item Município e UF de residência;
+  \item Valor do benefício recebido no mês;
+  \item Quantidade de membros da família.
+\end{itemize}
+
+Esses dados permitem construir séries históricas municipais de cobertura (número de famílias beneficiárias) e valor médio dos benefícios, além de análises individuais quando linkados com o CadÚnico pelo NIS.
+
+\subsubsection{CECAD — Consulta, Seleção e Extração de Informações do CadÚnico}
+
+O CECAD (\url{cecad.cidadania.gov.br}) é a plataforma de acesso a dados agregados do CadÚnico e do Bolsa Família por município. Permite consultar, sem necessidade de convênio:
+
+\begin{itemize}
+  \item Número de famílias beneficiárias por município e perfil de renda;
+  \item Composição familiar dos beneficiários (número de crianças, gestantes, idosos);
+  \item Taxas de cobertura estimadas em relação à população elegível.
+\end{itemize}
+
+\subsubsection{VISDATA — Visualização de Dados do MDS}
+
+O VISDATA (\url{aplicacoes.mds.gov.br/sagi/vis/data3}) oferece painéis interativos com indicadores do Bolsa Família, do CadÚnico e de outros programas do MDS, com desagregação municipal e séries históricas. É a ferramenta mais acessível para gestores que precisam de indicadores sem trabalhar diretamente com microdados.
+
+\subsection{Condicionalidades: dados de saúde e educação}
+
+Uma característica central do Bolsa Família é o sistema de \textbf{condicionalidades}: para receber o benefício, as famílias devem cumprir compromissos nas áreas de saúde (vacinação, pré-natal, acompanhamento nutricional) e educação (frequência escolar mínima de 85\% para crianças de 6 a 15 anos e 75\% para jovens de 16 e 17 anos).
+
+O acompanhamento das condicionalidades gera dados específicos que são fontes valiosas para avaliação:
+
+\begin{itemize}
+  \item \textbf{Condicionalidade de educação}: registros de frequência escolar dos beneficiários, coletados semestralmente pelas escolas e consolidados pelo MEC/Inep. Esses dados podem ser cruzados com o Censo Escolar pelo código do aluno;
+  \item \textbf{Condicionalidade de saúde}: registros de acompanhamento do calendário vacinal, consultas de pré-natal e acompanhamento nutricional, coletados nas UBS e registrados no SISVAN e no sistema de acompanhamento de condicionalidades do MDS.
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxexemplo}{Exemplo — Bolsa Família e frequência escolar}
+Uma das formas mais rigorosas de avaliar o impacto do Bolsa Família sobre a frequência escolar usa a \textbf{regressão descontínua} na renda familiar per capita: famílias imediatamente abaixo do limite de elegibilidade recebem o benefício; famílias imediatamente acima não recebem. Comparando a frequência escolar de crianças dessas duas famílias — assumindo que a única diferença relevante entre elas é o recebimento do benefício — é possível estimar o efeito causal da condicionalidade. Essa estratégia foi implementada usando os dados de condicionalidade de educação do MDS linkados com o Censo Escolar pelo código do aluno.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de impacto sobre pobreza e desigualdade}: o Bolsa Família é um dos programas mais avaliados do mundo; suas bases de dados permitem estudos com diferentes estratégias de identificação (RDD na renda, DID na expansão municipal, IV na elegibilidade);
+  \item \textbf{Efeitos sobre educação}: frequência escolar, progressão de série e conclusão do ensino fundamental e médio entre beneficiários;
+  \item \textbf{Efeitos sobre saúde}: mortalidade infantil, cobertura vacinal, pré-natal e estado nutricional;
+  \item \textbf{Efeitos sobre mercado de trabalho}: impacto da transferência sobre oferta de trabalho dos adultos da família — um dos debates mais ricos na literatura sobre o programa;
+  \item \textbf{Análise de cobertura e focalização}: proporção das famílias elegíveis que estão sendo atendidas e perfil das famílias excluídas.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{BPC — Benefício de Prestação Continuada}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {BPC — Benefício de Prestação Continuada}
+  {Ministério do Desenvolvimento e Assistência Social (MDS) / INSS}
+  {https://www.gov.br/mds/pt-br/acoes-e-programas/assistencia-social/beneficios-assistenciais/beneficio-de-prestacao-continuada-bpc}
+  {Brasil, Unidades da Federação e municípios}
+  {Contínuo (desde 1996)}
+  {Beneficiário individual}
+
+\subsection{O que é e quem cobre}
+
+O Benefício de Prestação Continuada (BPC) é o principal benefício de proteção social não contributiva do Brasil. Garantido pela Constituição Federal de 1988 e regulamentado pela Lei Orgânica da Assistência Social (LOAS), o BPC assegura um salário mínimo mensal a dois grupos populacionais:
+
+\begin{itemize}
+  \item \textbf{Idosos}: pessoas com 65 anos ou mais cuja renda familiar per capita seja inferior a um quarto do salário mínimo;
+  \item \textbf{Pessoas com deficiência (PcD)}: pessoas com deficiência de qualquer idade cuja renda familiar per capita também seja inferior a um quarto do salário mínimo e cuja deficiência impeça a participação plena e efetiva na sociedade em igualdade de condições com as demais pessoas.
+\end{itemize}
+
+Diferentemente do Bolsa Família, o BPC não tem condicionalidades e é operado pelo INSS — embora seja um benefício assistencial, não previdenciário.
+
+\subsection{Dados disponíveis e acesso}
+
+Os dados do BPC estão disponíveis em múltiplas fontes:
+
+\begin{itemize}
+  \item \textbf{Portal da Transparência}: pagamentos mensais por beneficiário (NIS, município, valor), com histórico desde 2013;
+  \item \textbf{Anuário Estatístico da Previdência Social (AEPS)}: publicação anual do MPS/MDS com estatísticas agregadas do BPC por UF, município, faixa etária e tipo (idoso ou PcD);
+  \item \textbf{SUIBE — Sistema Único de Informações de Benefícios}: sistema administrativo do INSS com dados detalhados sobre cada benefício concedido, mantido, suspenso ou cancelado. O acesso aos microdados requer convênio com o INSS.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de impacto sobre pobreza de idosos}: o BPC é o principal mecanismo de proteção de idosos de baixa renda fora do sistema previdenciário; análises de regressão descontínua no critério de renda são a estratégia mais comum;
+  \item \textbf{Impacto sobre saúde dos beneficiários}: linkagem com dados do DATASUS (SIH, SIM) para analisar efeitos sobre hospitalização e mortalidade de idosos e PcD;
+  \item \textbf{Análise de cobertura}: proporção de idosos e PcD elegíveis que estão recebendo o benefício por município;
+  \item \textbf{Efeitos de transbordamento}: impacto do BPC sobre outros membros do domicílio do beneficiário (como educação de crianças que moram com um idoso beneficiário).
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Censo SUAS}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Censo SUAS}
+  {Ministério do Desenvolvimento e Assistência Social (MDS)}
+  {https://www.gov.br/mds/pt-br/acoes-e-programas/assistencia-social/monitoramento-e-avaliacao/censo-suas}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (desde 2007)}
+  {Equipamento socioassistencial (CRAS, CREAS, Centro POP, etc.)}
+
+\subsection{O que é e estrutura}
+
+O Censo SUAS é o levantamento anual das condições de funcionamento dos equipamentos da rede socioassistencial brasileira. Realizado pelo MDS desde 2007, o Censo SUAS coleta informações de todos os equipamentos cadastrados no sistema, organizados por tipo:
+
+\begin{itemize}
+  \item \textbf{CRAS} — Centro de Referência de Assistência Social: unidade pública estatal de proteção social básica, responsável pela oferta do PAIF (Serviço de Proteção e Atendimento Integral à Família) e pelo encaminhamento ao CadÚnico;
+  \item \textbf{CREAS} — Centro de Referência Especializado de Assistência Social: oferta serviços de proteção social especial para famílias e indivíduos em situação de risco pessoal e social;
+  \item \textbf{Centro POP}: atendimento especializado para pessoas em situação de rua;
+  \item \textbf{Gestão municipal e estadual}: informações sobre a estrutura administrativa das secretarias de assistência social.
+\end{itemize}
+
+\subsection{Principais variáveis coletadas}
+
+Para cada equipamento, o Censo SUAS coleta:
+
+\begin{itemize}
+  \item \textbf{Infraestrutura}: tipo de imóvel (próprio, cedido, alugado), condições físicas, acessibilidade para PcD, equipamentos disponíveis (computadores, internet, veículo);
+  \item \textbf{Recursos humanos}: número de profissionais por categoria (assistente social, psicólogo, advogado, auxiliar administrativo), vínculo empregatício (estatutário, CLT, comissionado, terceirizado), carga horária;
+  \item \textbf{Serviços ofertados}: tipos de serviços, número de famílias e indivíduos acompanhados, grupos e atividades realizadas no mês;
+  \item \textbf{Articulação intersetorial}: parcerias com saúde, educação e outros setores.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação da expansão da rede SUAS}: monitoramento do crescimento do número de CRAS e CREAS por município ao longo do tempo e seu impacto sobre indicadores de vulnerabilidade social;
+  \item \textbf{Análise de capacidade instalada}: identificação de municípios com cobertura insuficiente da rede de proteção básica em relação ao número de famílias vulneráveis cadastradas no CadÚnico;
+  \item \textbf{Variável de controle em avaliações de impacto}: a presença e a qualidade dos equipamentos do SUAS são variáveis de contexto importantes em avaliações de políticas sociais mais amplas;
+  \item \textbf{Avaliação de gestão}: análise da qualidade da gestão municipal do SUAS a partir de indicadores compostos como o Índice de Gestão Descentralizada (IGD-SUAS).
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{RMA — Registro Mensal de Atendimentos}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {RMA — Registro Mensal de Atendimentos}
+  {Ministério do Desenvolvimento e Assistência Social (MDS)}
+  {https://www.gov.br/mds/pt-br/acoes-e-programas/assistencia-social/monitoramento-e-avaliacao/rede-suas}
+  {Brasil, Unidades da Federação e municípios}
+  {Mensal (desde 2012)}
+  {Atendimento realizado por CRAS ou CREAS}
+
+\subsection{O que é e aplicações}
+
+O Registro Mensal de Atendimentos (RMA) é o sistema de monitoramento da produção de serviços socioassistenciais realizados pelos CRAS e CREAS. Diferentemente do Censo SUAS — que captura uma fotografia anual das condições estruturais dos equipamentos —, o RMA registra mensalmente o volume e o tipo de atendimentos realizados.
+
+As principais informações disponíveis incluem:
+\begin{itemize}
+  \item Número de famílias atendidas no mês pelo PAIF e pelo PAEFI;
+  \item Número de visitas domiciliares realizadas;
+  \item Grupos e atividades coletivas oferecidas;
+  \item Atendimentos individualizados por tipo de demanda.
+\end{itemize}
+
+O RMA é especialmente útil para monitorar a \textbf{regularidade e a intensidade} dos serviços prestados, complementando o Censo SUAS que mede a estrutura disponível. Para avaliações de fidelidade à implementação — verificar se os serviços estão sendo entregues conforme o planejado — o RMA é uma fonte fundamental.
+
+% ────────────────────────────────────────────────────────────
+\section{Outros programas: dados específicos}
+% ────────────────────────────────────────────────────────────
+
+\subsection{Minha Casa Minha Vida (MCMV)}
+
+O programa Minha Casa Minha Vida — e sua versão anterior, o Programa de Aceleração do Crescimento habitacional — gera dados administrativos sobre contratos, beneficiários e unidades habitacionais entregues. Os dados estão disponíveis parcialmente no Portal da Transparência e, de forma mais detalhada, via convênio com a Caixa Econômica Federal e o Ministério das Cidades.
+
+Para avaliações de impacto do MCMV, as principais fontes de dados são:
+\begin{itemize}
+  \item \textbf{Dados de contratos}: disponíveis no Portal da Transparência, com localização, faixa de renda e data de assinatura do contrato por beneficiário (NIS);
+  \item \textbf{CadÚnico}: para caracterização socioeconômica dos beneficiários da Faixa 1 (população de menor renda);
+  \item \textbf{RAIS e CAGED}: para análises de impacto sobre mercado de trabalho local (efeitos da construção sobre o emprego formal).
+\end{itemize}
+
+\subsection{Tarifa Social de Energia Elétrica (TSEE)}
+
+A Tarifa Social de Energia Elétrica concede descontos na conta de luz para famílias de baixa renda cadastradas no CadÚnico. Os dados de beneficiários estão disponíveis na ANEEL e podem ser linkados com o CadÚnico pelo NIS para análises de cobertura e focalização.
+
+\subsection{Programas estaduais e municipais}
+
+Além dos programas federais, estados e municípios operam programas próprios de assistência social e transferência de renda. A disponibilidade de dados varia amplamente: alguns estados têm sistemas de informação bem estruturados e dados abertos; outros têm dados dispersos ou indisponíveis. Para avaliações de programas subnacionais, recomenda-se contato direto com as secretarias responsáveis para verificar a existência e o formato dos dados administrativos disponíveis.
+
+% ────────────────────────────────────────────────────────────
+\section{Combinando fontes para avaliação de políticas sociais}
+% ────────────────────────────────────────────────────────────
+
+A avaliação de políticas de assistência social e transferência de renda se beneficia enormemente da \textbf{linkagem entre bases}. O CadÚnico, por usar o NIS como identificador único de cada pessoa, serve como elo central que conecta:
+
+\begin{itemize}
+  \item \textbf{CadÚnico $\leftrightarrow$ Bolsa Família}: identifica quais famílias elegíveis estão recebendo o benefício e quais não estão — essencial para análises de cobertura e para construir grupos de controle em avaliações de impacto;
+  \item \textbf{CadÚnico $\leftrightarrow$ Censo Escolar}: permite analisar o desempenho escolar de crianças de famílias beneficiárias em relação a crianças de famílias com perfil similar não beneficiárias;
+  \item \textbf{CadÚnico $\leftrightarrow$ DATASUS}: linkagem por CPF ou NIS permite analisar desfechos de saúde (mortalidade, internações, vacinação) em função do recebimento de benefícios;
+  \item \textbf{CadÚnico $\leftrightarrow$ RAIS/CAGED}: permite rastrear a inserção no mercado formal de trabalho de beneficiários ao longo do tempo.
+\end{itemize}
+
+% CORRIGIDO: título encurtado para caber na caixa
+\begin{boxdica}{Dica — Plataforma de Dados Sociais do MDS}
+O MDS disponibiliza, para pesquisadores com convênio, uma plataforma de análise de dados que permite trabalhar com os microdados do CadÚnico e do Bolsa Família em ambiente seguro, sem necessidade de transferir os arquivos. Isso facilita enormemente as análises que envolvem dados sensíveis de beneficiários. Informações sobre como solicitar acesso estão disponíveis no portal do MDS.
+\end{boxdica}
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou o ecossistema de dados da assistência social e transferência de renda no Brasil. Os pontos centrais são:
+
+\begin{itemize}
+  \item O \textbf{CadÚnico} é a espinha dorsal do sistema de dados de assistência social: serve como porta de entrada para os principais programas e como base para linkagem com outras fontes;
+  \item Os dados do \textbf{Bolsa Família} — disponíveis no Portal da Transparência, no CECAD e no VISDATA — permitem análises de cobertura, focalização e impacto com diferentes estratégias de identificação causal;
+  \item O \textbf{BPC} cobre idosos e pessoas com deficiência de baixa renda e seus dados, disponíveis via Portal da Transparência e SUIBE, permitem avaliações de impacto com regressão descontínua na renda;
+  \item O \textbf{Censo SUAS} e o \textbf{RMA} monitoram a estrutura e a produção dos equipamentos da rede socioassistencial, sendo fundamentais para avaliações de implementação e fidelidade;
+  \item A \textbf{linkagem entre bases} — especialmente CadÚnico com Censo Escolar, DATASUS e RAIS — é o que permite as avaliações mais robustas de políticas sociais.
+\end{itemize}
+
+O CadÚnico mapeia a vulnerabilidade socioeconômica com uma precisão geográfica notável — e não surpreende que os mapas de cobertura dos programas sociais se sobreponham fortemente aos mapas de violência. Pobreza, exclusão e crime não são a mesma coisa, mas compartilham territórios. O próximo capítulo aborda as fontes de dados sobre segurança pública: o Atlas da Violência, o Anuário FBSP, os registros estaduais e as pesquisas de vitimização, ferramentas essenciais para quem quer entender — e avaliar intervenções sobre — a violência no Brasil.

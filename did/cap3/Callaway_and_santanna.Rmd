@@ -1,0 +1,85 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+rm(list=ls())
+library(dplyr)
+
+df <- read.csv("base_stagger_did.csv")
+
+head(df)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+library(did)
+library(stargazer)
+
+# Rodando Callaway and Sant'ana pelo método 'dr'
+ATT_gt = att_gt(yname = 'y', 
+                tname = 'ano', 
+                idname = 'id_municipio', 
+                gname = 'G', 
+                xformla = ~ 1 + renda + populacao + escolaridade,
+                
+                data = df, 
+                control_group = 'nevertreated', 
+                est_method = 'dr'
+                )
+
+ATT_gt
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+# Média dos ATTs (ponderada por tamanho do grupo)
+
+ATT_simples = aggte(ATT_gt, type = 'simple')
+
+ATT_simples
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#Efeito médio por período
+
+att_t = aggte(ATT_gt, type = 'calendar')
+
+summary(att_t)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#Plotando efeito médio por período
+ggdid(att_t)
+
+```
+
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#Efeito dinâmico
+att_d = aggte(ATT_gt, type = 'dynamic')
+
+summary(att_d)
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+
+#Plotando efeito dinâmico
+ggdid(att_d)
+
+
+```

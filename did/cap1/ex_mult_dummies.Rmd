@@ -1,0 +1,92 @@
+---
+output: 
+  pdf_document: 
+    keep_tex: yes
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+library(dplyr)
+library(stargazer)
+
+df <- read.csv("base_MULT_did.csv")
+
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+
+df <- df %>% mutate(Tt = ifelse(ano >= 2012, 1, 0),
+                    ano = as.factor(ano) #para criar automaticamente as Dummies)
+                    )
+```
+
+
+```{r}
+Reg_did <- lm(y ~ as.factor(d) + ano + ano:d:Tt, data = df)
+```
+
+```{r}
+library("lmtest")
+library("sandwich")
+
+# Robust t test
+cov1 <- sandwich::vcovHC(Reg_did, type = "HC0")
+sd_robust = sqrt(diag(cov1))
+# Especifique as variáveis que você deseja incluir na tabela
+
+# Extraia os coeficientes relevantes
+coef_names <- names(coef(Reg_did))
+vars_to_include <- grep(paste0("ano\\d{4}:d:Tt"), coef_names, value = TRUE)
+
+
+# Gere a tabela usando stargazer
+stargazer(Reg_did, type = "latex", se = list(sd_robust), 
+          title = "Regressão Linear com Erros Padrão Robustos")
+
+
+```
+
+```{r}
+
+ATT = Reg_did$coefficients[paste0("ano", 2012:2020, ":d:Tt")]
+
+```
+
+
+```{r}
+
+wt = 1/9 #(1/T)
+
+Gamma = sum(wt*ATT)
+
+#calculado Sd via Delta method
+Grad = matrix(c(rep(0, 11), rep(wt,9)), ncol = 1)
+Sd_Gamma = sqrt(t(Grad)%*%cov1%*%Grad)
+# Calcula o p_valor
+  valor_t <- (Gamma)*sqrt(12000) /Sd_Gamma
+  gl <- Reg_did$df.residual
+  valor_p <- 2 * pt(abs(valor_t), df=gl, lower.tail=FALSE)
+
+print(c("Gamma", "Sd", "P_valor"))
+print(c(Gamma, Sd_Gamma, valor_p))
+
+```
+
+
+```{r}
+
+wt = c(rep(-1/4, 4), rep(1/4,5))
+
+Gamma = sum(wt*ATT)
+
+#calculado Sd via Delta method
+Grad = matrix(c(rep(0, 11), wt), ncol = 1)
+Sd_Gamma = sqrt(t(Grad)%*%cov1%*%Grad)
+# Calcula o p_valor
+  valor_t <- (Gamma)*sqrt(12000) /Sd_Gamma
+  gl <- Reg_did$df.residual
+  valor_p <- 2 * pt(abs(valor_t), df=gl, lower.tail=FALSE)
+
+print(c("Gamma", "Sd", "P_valor"))
+print(c(Gamma, Sd_Gamma, valor_p))
+
+```

@@ -1,0 +1,345 @@
+% ============================================================
+%  cap08_seguranca.tex
+%  Capítulo 8: Segurança Pública
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Segurança Pública}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais fontes de dados sobre segurança pública disponíveis para o Brasil. Cobrimos o Atlas da Violência, o Anuário Brasileiro de Segurança Pública, os registros de ocorrências policiais estaduais, os dados do sistema penitenciário (DEPEN/MJSP) e os suplementos de vitimização da PNAD. Para cada fonte, detalhamos histórico, estrutura, variáveis disponíveis, forma de acesso, aplicações típicas em avaliação e — especialmente importante nessa área — as limitações e os vieses de cobertura.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Introdução: os desafios dos dados de segurança pública}
+% ────────────────────────────────────────────────────────────
+
+A segurança pública é uma das áreas em que a qualidade e a comparabilidade dos dados entre unidades federativas apresentam os maiores desafios do sistema estatístico brasileiro. Ao contrário da saúde — onde o DATASUS oferece sistemas nacionais padronizados — ou da educação — onde o Inep coordena um sistema unificado —, os dados de segurança pública no Brasil são produzidos principalmente pelas Secretarias de Segurança Pública estaduais, com metodologias, definições e sistemas de informação que variam significativamente entre estados.
+
+Essa fragmentação tem consequências diretas para o avaliador: comparações entre estados devem ser feitas com cautela redobrada, séries históricas podem ser interrompidas por mudanças metodológicas estaduais, e a ausência de um identificador único nacional para ocorrências criminais impede a construção de painéis longitudinais comparáveis.
+
+Há, no entanto, exceções importantes. A mortalidade por causas externas registrada no SIM — especialmente os homicídios — oferece uma série histórica nacional relativamente confiável, porque a morte é um evento objetivo e o registro de óbito é obrigatório. É sobre essa base que o Atlas da Violência é construído, tornando-o a referência mais sólida para análises nacionais de violência letal.
+
+\begin{boxatencao}{Atenção — O problema da cifra oculta}
+Em segurança pública, a diferença entre o crime que ocorre e o crime que é registrado é estrutural e se chama \textbf{cifra oculta} (ou \textit{dark figure of crime}). Estimativas internacionais sugerem que apenas uma fração dos crimes é reportada à polícia --- proporção que varia muito por tipo de crime (homicídios têm taxa de registro mais alta; crimes patrimoniais menores e violência doméstica têm taxas muito mais baixas). No Brasil, pesquisas de vitimização sugerem que menos de 40\% dos crimes são registrados em boletim de ocorrência. Qualquer análise baseada em registros policiais está, portanto, analisando o crime \textit{registrado} --- não o crime \textit{ocorrido}. Essa distinção é crítica para a interpretação dos resultados.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Atlas da Violência}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Atlas da Violência}
+  {Instituto de Pesquisa Econômica Aplicada (Ipea) e Fórum Brasileiro de Segurança Pública (FBSP)}
+  {https://www.ipea.gov.br/atlasviolencia}
+  {Brasil, Unidades da Federação e municípios}
+  {Anual (desde 2016; dados retroativos a 1980)}
+  {Município (agregação de dados individuais do SIM)}
+
+\subsection{O que é e base metodológica}
+
+O Atlas da Violência é uma publicação anual produzida pelo Ipea em parceria com o Fórum Brasileiro de Segurança Pública (FBSP) desde 2016. Seu diferencial em relação a outras fontes de dados de segurança pública é a base metodológica: os indicadores de violência letal do Atlas são construídos a partir dos dados do \textbf{Sistema de Informações sobre Mortalidade (SIM)} do Ministério da Saúde --- não a partir dos registros policiais estaduais.
+
+Essa escolha metodológica tem implicações importantes. O SIM registra \textit{todos} os óbitos, independentemente de terem sido comunicados à polícia. Para homicídios --- classificados pela CID-10 como ``agressões'' (X85 a Y09) ---, a concordância entre os registros do SIM e os boletins de ocorrência é razoavelmente alta, porque um corpo encontrado gera automaticamente um registro de óbito. Para outros tipos de violência (lesões corporais, ameaças, roubos), o SIM não é útil --- mas para violência letal, é a fonte mais confiável disponível.
+
+\subsection{Principais indicadores disponíveis}
+
+O Atlas da Violência disponibiliza, por município e ano:
+
+\begin{itemize}
+  \item \textbf{Taxa de homicídios}: número de óbitos por agressão por 100 mil habitantes, desagregada por sexo, raça/cor e faixa etária;
+  \item \textbf{Taxa de homicídios de jovens negros}: indicador central para análises de desigualdade racial na violência;
+  \item \textbf{Taxa de feminicídios}: óbitos femininos por agressão, com tendência histórica;
+  \item \textbf{Mortes no trânsito}: óbitos por acidentes de transporte terrestre;
+  \item \textbf{Mortes por intervenção policial}: registradas no SIM como ``intervenção legal''.
+\end{itemize}
+
+Os dados cobrem o período de 1980 até os últimos dois anos disponíveis no SIM (há defasagem de aproximadamente dois anos na publicação dos dados de mortalidade).
+
+\subsection{Acesso aos dados}
+
+O Atlas da Violência disponibiliza seus dados em três formatos:
+\begin{itemize}
+  \item \textbf{Plataforma interativa}: painéis de visualização com mapas e séries históricas em \url{www.ipea.gov.br/atlasviolencia};
+  \item \textbf{Planilhas para download}: tabelas com todos os indicadores por município e ano, em formato Excel e CSV;
+  \item \textbf{Publicação anual}: relatório com análises temáticas aprofundadas, metodologia e contextualização dos dados.
+\end{itemize}
+
+Para análises com microdados de mortalidade --- necessárias para estudos mais detalhados por características individuais das vítimas ---, o pesquisador deve acessar diretamente os microdados do SIM no DATASUS (ver Capítulo~5).
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de segurança pública estaduais}: monitoramento da taxa de homicídios antes e depois da implementação de programas como o Pacto pela Vida (Pernambuco) ou o Programa Estado Presente (Espírito Santo);
+  \item \textbf{Análises de desigualdade racial na violência}: a desagregação por raça/cor permite avaliar se políticas de segurança afetam de forma diferente a mortalidade de negros e brancos;
+  \item \textbf{Avaliação de programas de prevenção da violência juvenil}: foco na taxa de homicídios de jovens (15 a 29 anos) por município;
+  \item \textbf{Estudos de impacto de intervenções urbanísticas}: relação entre urbanização, iluminação pública, equipamentos culturais e esportivos e taxas de violência letal.
+\end{itemize}
+
+\begin{boxexemplo}{Exemplo --- Pacto pela Vida e homicídios em Pernambuco}
+O Pacto pela Vida, lançado em Pernambuco em 2007, é frequentemente citado como um dos programas estaduais de segurança pública mais bem avaliados do Brasil. Pesquisadores utilizaram os dados do SIM para construir uma série histórica de taxas de homicídio nos municípios pernambucanos e em municípios de outros estados com tendências pré-tratamento similares (construindo um controle sintético). Os resultados sugeriram uma redução expressiva nos homicídios em Pernambuco após 2007, não observada nos estados de comparação. A base metodológica no SIM --- e não nos registros policiais --- foi fundamental para a credibilidade do estudo, pois eliminou a possibilidade de que a redução observada fosse apenas um artefato de mudanças na forma de registro das ocorrências pela polícia.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+% ────────────────────────────────────────────────────────────
+\section{Anuário Brasileiro de Segurança Pública}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Anuário Brasileiro de Segurança Pública}
+  {Fórum Brasileiro de Segurança Pública (FBSP)}
+  {https://forumseguranca.org.br/anuario-brasileiro-seguranca-publica}
+  {Brasil e Unidades da Federação}
+  {Anual (desde 2007)}
+  {Unidade da Federação}
+
+\subsection{O que é e metodologia de coleta}
+
+O Anuário Brasileiro de Segurança Pública é a principal publicação nacional que consolida dados de segurança pública provenientes das Secretarias Estaduais de Segurança Pública. Produzido anualmente pelo Fórum Brasileiro de Segurança Pública (FBSP) desde 2007, o Anuário reúne informações que não estão disponíveis em nenhuma base federal centralizada --- justamente porque, no Brasil, as polícias são estaduais e cada estado opera seus próprios sistemas de registro.
+
+A metodologia de coleta do Anuário combina dois mecanismos:
+\begin{itemize}
+  \item \textbf{Solicitações via Lei de Acesso à Informação (LAI)}: o FBSP encaminha anualmente pedidos de informação padronizados a todas as Secretarias Estaduais de Segurança Pública, solicitando dados sobre ocorrências registradas por tipo de crime;
+  \item \textbf{Convênios e acordos de compartilhamento}: em alguns estados, acordos específicos facilitam o acesso a dados mais detalhados.
+\end{itemize}
+
+\subsection{Indicadores disponíveis}
+
+O Anuário publica anualmente, para cada Unidade da Federação, 24 indicadores de segurança pública, incluindo:
+
+\begin{itemize}
+  \item Homicídios dolosos (registros policiais);
+  \item Latrocínios (roubo seguido de morte);
+  \item Lesões corporais dolosas;
+  \item Estupros e estupros de vulnerável;
+  \item Roubos (total, de veículos, a estabelecimentos comerciais, a transeuntes);
+  \item Furtos;
+  \item Mortes decorrentes de intervenção policial (civis mortos por policiais em serviço e fora de serviço);
+  \item Policiais mortos em serviço e fora de serviço;
+  \item Número de presos provisórios e definitivos.
+\end{itemize}
+
+\subsection{Limitações críticas}
+
+O Anuário é uma fonte valiosa, mas suas limitações são substanciais e devem ser explicitadas em qualquer análise:
+
+\begin{itemize}
+  \item \textbf{Heterogeneidade metodológica entre estados}: cada estado define e registra os crimes de forma diferente. O que é classificado como ``homicídio doloso'' em São Paulo pode ser registrado de forma diferente no Pará. Comparações diretas entre estados exigem cautela;
+  \item \textbf{Cobertura incompleta}: nem todos os estados respondem a todos os pedidos LAI com a mesma completude. Em alguns anos, certos estados não fornecem dados para determinados indicadores;
+  \item \textbf{Cifra oculta}: como discutido na introdução do capítulo, os registros policiais capturam apenas os crimes reportados --- fração que varia por tipo de crime e por estado;
+  \item \textbf{Mudanças nos critérios de registro}: estados podem alterar seus critérios de classificação ao longo do tempo, introduzindo quebras nas séries históricas que não refletem mudanças reais na criminalidade.
+\end{itemize}
+
+\begin{boxatencao}{Atenção --- Comparações estaduais: verificar definições}
+Antes de comparar indicadores do Anuário entre estados diferentes, verifique se as definições operacionais são compatíveis. O FBSP publica notas metodológicas sobre as diferenças entre estados em cada edição do Anuário. Para alguns indicadores --- especialmente homicídios ---, a comparação com os dados do SIM/Atlas da Violência é uma forma de verificar a consistência dos registros policiais estaduais.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Registros de Ocorrências Policiais Estaduais}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Registros de Ocorrências Policiais}
+  {Secretarias Estaduais de Segurança Pública}
+  {Varia por estado (ver portais estaduais de dados abertos)}
+  {Município e delegacia (varia por estado)}
+  {Variável por estado (mensal a anual)}
+  {Ocorrência policial ou boletim de ocorrência}
+
+\subsection{O que são e heterogeneidade}
+
+Os registros de ocorrências policiais são os dados primários da segurança pública estadual: cada boletim de ocorrência (BO) registrado em uma delegacia é uma unidade de dado. Agregados por tipo de crime, município e período, esses registros são a principal fonte para análises de criminalidade abaixo do nível estadual --- especialmente para crimes que não resultam em morte e, portanto, não aparecem no SIM.
+
+A disponibilidade e o formato desses dados variam enormemente entre estados:
+
+\begin{itemize}
+  \item \textbf{Estados com dados abertos bem estruturados}: São Paulo (SSP-SP), Minas Gerais (CINDS-MG) e Rio de Janeiro (ISP-RJ) disponibilizam microdados de ocorrências com desagregação por delegacia, mês e tipo de crime, em formatos abertos (CSV, API);
+  \item \textbf{Estados com dados parcialmente disponíveis}: algumas UFs publicam tabelas agregadas em seus portais de transparência, mas sem microdados;
+  \item \textbf{Estados com dados indisponíveis ou de difícil acesso}: em vários estados, os dados só são obtidos via LAI, com resposta variável em qualidade e tempestividade.
+\end{itemize}
+
+\subsection{Instituto de Segurança Pública do Rio de Janeiro (ISP-RJ)}
+
+O ISP-RJ merece destaque como referência de boas práticas em transparência de dados de segurança pública. O instituto disponibiliza:
+
+\begin{itemize}
+  \item Microdados mensais de ocorrências por tipo de crime e circunscrição policial (AISP), desde 2003;
+  \item Dados de letalidade policial com desagregação por raça/cor e circunstâncias;
+  \item Dados de apreensão de armas e drogas;
+  \item APIs de acesso programático para download automatizado.
+\end{itemize}
+
+Esses dados têm sido amplamente utilizados em pesquisas sobre o impacto das Unidades de Polícia Pacificadora (UPPs) e de outras políticas de segurança no Rio de Janeiro.
+
+\subsection{Secretaria de Segurança Pública de São Paulo (SSP-SP)}
+
+A SSP-SP disponibiliza dados mensais de ocorrências para todos os municípios do estado, com desagregação por delegacia, desde 2001. Os dados cobrem homicídios dolosos, tentativas de homicídio, latrocínios, estupros, roubos, furtos e tráfico de drogas, e são disponibilizados em planilhas Excel no portal da SSP-SP e via API no portal de dados abertos do estado.
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de policiamento}: impacto de mudanças no patrulhamento, na distribuição de efetivo ou em operações específicas sobre taxas de crime;
+  \item \textbf{Avaliação de intervenções urbanísticas}: relação entre iluminação pública, câmeras de segurança, revitalização de espaços públicos e criminalidade;
+  \item \textbf{Análise de deslocamento de crime}: verificar se intervenções reduziram o crime na área tratada ou apenas deslocaram para áreas vizinhas;
+  \item \textbf{Estudos de reincidência}: em estados com identificadores individuais nos registros, é possível construir históricos criminais para análises de reincidência.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Sistema Penitenciário — DEPEN e MJSP}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Dados do Sistema Penitenciário (DEPEN/Infopen)}
+  {Departamento Penitenciário Nacional (DEPEN) / Ministério da Justiça e Segurança Pública (MJSP)}
+  {https://www.gov.br/senappen/pt-br/servicos/sisdepen}
+  {Brasil, Unidades da Federação e estabelecimentos penais}
+  {Semestral (desde 2004; anual em edições anteriores)}
+  {Estabelecimento penal e preso}
+
+\subsection{O que é e estrutura}
+
+Os dados do sistema penitenciário brasileiro são coletados pelo Departamento Penitenciário Nacional (DEPEN), vinculado ao Ministério da Justiça e Segurança Pública, por meio do \textbf{Levantamento Nacional de Informações Penitenciárias (Infopen)}. Publicado semestralmente desde 2004, o Infopen consolida informações de todos os estabelecimentos penais do país sobre a população carcerária e as condições de encarceramento.
+
+Em 2021, o Infopen foi substituído pelo \textbf{SISDEPEN} (Sistema de Informações do Departamento Penitenciário Nacional), que opera em tempo quase real com dados inseridos pelos próprios estabelecimentos penais. O SISDEPEN permite consultas mais frequentes e desagregadas do que o antigo Infopen.
+
+\subsection{Principais variáveis disponíveis}
+
+Para cada estabelecimento penal:
+\begin{itemize}
+  \item Capacidade e lotação (número de vagas vs. número de presos);
+  \item Regime de cumprimento (fechado, semiaberto, aberto);
+  \item Tipo de estabelecimento (penitenciária, casa de detenção, cadeia pública, etc.);
+  \item Natureza (federal, estadual);
+  \item Existência de serviços de saúde, educação e trabalho dentro do estabelecimento.
+\end{itemize}
+
+Para a população carcerária agregada por estabelecimento:
+\begin{itemize}
+  \item Número de presos por sexo, faixa etária e raça/cor;
+  \item Situação jurídica: presos provisórios (sem condenação definitiva) vs. condenados;
+  \item Tipo penal: crimes contra a pessoa, contra o patrimônio, tráfico de drogas, etc.;
+  \item Nível de escolaridade da população carcerária.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Avaliação de políticas de desencarceramento}: monitoramento do impacto de medidas alternativas à prisão, como tornozeleiras eletrônicas, sobre o tamanho da população carcerária;
+  \item \textbf{Análise de superlotação}: identificação de estabelecimentos com maior nível de superlotação e sua relação com reincidência e violência intramuros;
+  \item \textbf{Políticas de educação e trabalho no sistema prisional}: cobertura de programas de educação e qualificação profissional dentro dos estabelecimentos;
+  \item \textbf{Análise de desigualdades no encarceramento}: perfil racial e socioeconômico da população carcerária em comparação com a população geral.
+\end{itemize}
+
+\begin{boxatencao}{Atenção --- Sistema penitenciário: dados variáveis}
+A qualidade dos dados do DEPEN/SISDEPEN varia entre estados, refletindo diferenças na capacidade administrativa dos sistemas penitenciários estaduais. Alguns estados têm registros mais completos e atualizados; outros apresentam inconsistências e lacunas. Além disso, o número de presos provisórios --- pessoas detidas sem condenação definitiva --- é frequentemente subestimado, pois nem sempre os registros são atualizados quando há mudança de situação jurídica. Análises com esses dados devem sempre considerar a possibilidade de subregistro diferencial entre estados.
+\end{boxatencao}
+
+% ────────────────────────────────────────────────────────────
+\section{Pesquisas de Vitimização}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Suplementos de Vitimização da PNAD}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/justica-e-seguranca/9127-pesquisa-nacional-por-amostra-de-domicilios.html}
+  {Brasil, Grandes Regiões e Unidades da Federação}
+  {Pontual: 1988 e 2009}
+  {Domicílio e morador}
+
+\subsection{O que são e por que importam}
+
+Pesquisas de vitimização são levantamentos domiciliares que perguntam diretamente às pessoas se foram vítimas de crimes em determinado período --- independentemente de terem registrado boletim de ocorrência. São a principal ferramenta para estimar a \textbf{cifra oculta} e para compreender a experiência real da população com a criminalidade, em contraste com os registros policiais.
+
+No Brasil, as duas principais pesquisas de vitimização de abrangência nacional foram os suplementos da PNAD de 1988 e 2009. O suplemento de 2009 --- ``Características da vitimização e do acesso à Justiça no Brasil'' --- é o mais detalhado e metodologicamente mais robusto, cobrindo:
+
+\begin{itemize}
+  \item Vitimização por tipo de crime (roubo, furto, agressão física, ameaça, estupro) nos últimos 12 meses;
+  \item Características da ocorrência (local, horário, uso de arma, relação com o agressor);
+  \item Taxa de registro policial e razões para não registrar;
+  \item Acesso à Justiça: experiências com o sistema de justiça criminal (polícia, promotoria, tribunal).
+\end{itemize}
+
+\subsection{Outras pesquisas de vitimização}
+
+Além dos suplementos da PNAD, há outras fontes de dados de vitimização relevantes:
+
+\begin{itemize}
+  \item \textbf{PNAD Contínua --- Módulo de Segurança Pública (2017 e 2021)}: o IBGE realizou módulos específicos de segurança pública na PNAD Contínua, com metodologia atualizada e maior cobertura temática;
+  \item \textbf{Pesquisas estaduais}: alguns estados realizaram pesquisas de vitimização próprias --- São Paulo (2008--2010), Rio de Janeiro (várias edições pelo ISP-RJ), Minas Gerais. Essas pesquisas permitem análises mais detalhadas no nível municipal, mas não são comparáveis entre estados por diferenças metodológicas;
+  \item \textbf{Pesquisas internacionais}: o \textit{International Crime Victims Survey} (ICVS) incluiu o Brasil em algumas de suas rodadas, permitindo comparações internacionais de vitimização.
+\end{itemize}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item \textbf{Estimação da cifra oculta}: comparação entre vitimização declarada e registros policiais para estimar a proporção de crimes não reportados por tipo e perfil da vítima;
+  \item \textbf{Análise de subnotificação diferencial}: identificar se grupos específicos (mulheres, negros, moradores de favelas) reportam menos crimes à polícia e por quê;
+  \item \textbf{Avaliação de confiança nas instituições}: as pesquisas de vitimização geralmente incluem perguntas sobre percepção de segurança e confiança na polícia, úteis para avaliar o impacto de reformas institucionais;
+  \item \textbf{Análise de vitimização por violência doméstica}: dado que a subnotificação da violência doméstica é estruturalmente alta, as pesquisas de vitimização são frequentemente a única fonte para estimar sua prevalência real.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Sistema de Vigilância de Violências e Acidentes (VIVA)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {VIVA — Sistema de Vigilância de Violências e Acidentes}
+  {Ministério da Saúde / DATASUS}
+  {https://datasus.saude.gov.br/viva-desde-2006}
+  {Brasil, Unidades da Federação e municípios}
+  {Contínuo (desde 2006; integrado ao SINAN a partir de 2009)}
+  {Atendimento em unidade de saúde por violência ou acidente}
+
+\subsection{O que é e aplicações}
+
+O VIVA registra atendimentos realizados em unidades de saúde sentinela por vítimas de violências e acidentes. Diferentemente do SIM --- que registra apenas óbitos --- o VIVA captura a violência não fatal que demanda atendimento de saúde: lesões corporais, violência sexual, violência doméstica, acidentes de trânsito e acidentes de trabalho atendidos em prontos-socorros e UPAs.
+
+A partir de 2009, o VIVA foi integrado ao SINAN como parte das notificações compulsórias, ampliando sua cobertura para além das unidades sentinela. As principais aplicações em avaliação incluem:
+
+\begin{itemize}
+  \item \textbf{Violência doméstica e sexual}: o VIVA é uma das poucas fontes com dados sobre violência não fatal atendida em serviços de saúde, complementando as pesquisas de vitimização;
+  \item \textbf{Avaliação de políticas de proteção à mulher}: monitoramento do impacto da Lei Maria da Penha e de outras políticas sobre atendimentos por violência contra a mulher;
+  \item \textbf{Acidentes de trânsito}: comparação com os dados de mortalidade do SIM para avaliar políticas de segurança viária.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou as principais fontes de dados sobre segurança pública disponíveis para o Brasil. A Tabela~\ref{tab:sintese_cap8} resume suas características essenciais.
+
+\begin{table}[H]
+\centering
+\caption{Síntese das fontes de dados de segurança pública}
+\label{tab:sintese_cap8}
+\small
+\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} &
+\textbf{Principal uso em avaliação} \\
+\midrule
+Atlas da Violência  & Mortes violentas (SIM)       & Nacional (municipal) & Violência letal, tendências históricas \\
+Anuário FBSP        & Ocorrências policiais        & Nacional (estadual)  & Criminalidade registrada, comparações \\
+Registros estaduais & Boletins de ocorrência       & Estadual/municipal   & Análises locais, policiamento \\
+DEPEN/SISDEPEN      & População carcerária         & Nacional             & Sistema prisional, encarceramento \\
+Vitimização PNAD    & Crimes sofridos (declarado)  & Nacional (amostral)  & Cifra oculta, acesso à Justiça \\
+VIVA/SINAN          & Atendimentos por violência   & Serviços de saúde    & Violência doméstica, sexual \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+Os pontos centrais do capítulo são:
+
+\begin{itemize}
+  \item A segurança pública é a área com \textbf{maior heterogeneidade} de dados entre estados brasileiros: comparações diretas entre UFs exigem cautela metodológica redobrada;
+  \item O \textbf{Atlas da Violência}, baseado no SIM, é a fonte mais confiável para análises de violência letal nacional porque contorna o problema da cifra oculta e da heterogeneidade dos registros policiais;
+  \item O \textbf{Anuário FBSP} consolida dados de ocorrências policiais estaduais, mas as limitações de comparabilidade entre estados são estruturais;
+  \item Os \textbf{registros estaduais} --- especialmente SP, RJ e MG --- são as fontes mais ricas para avaliações de políticas de segurança no nível local, mas sua disponibilidade e qualidade variam;
+  \item As \textbf{pesquisas de vitimização} são indispensáveis para estimar a cifra oculta e para capturar dimensões da violência que os registros policiais sistematicamente subestimam;
+  \item A \textbf{triangulação} entre fontes --- registros policiais, mortalidade (SIM) e vitimização --- é a abordagem mais robusta para qualquer análise séria de segurança pública.
+\end{itemize}
+
+A violência é profundamente territorial: concentra-se em bairros específicos, em certos municípios, ao longo de determinadas rodovias. Compreender esses padrões exige uma camada de análise que vai além do evento criminal em si --- exige enxergar o território onde ele ocorre, a infraestrutura disponível, as distâncias que separam os moradores dos serviços públicos. O próximo capítulo apresenta as fontes que permitem essa leitura espacial: malhas territoriais do IBGE, SNIS, dados de agências reguladoras e informações ambientais do INPE.

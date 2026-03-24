@@ -1,0 +1,389 @@
+% ============================================================
+%  cap03_pesquisas_amostrais.tex  [REVISADO]
+%  Capítulo 3: Pesquisas Amostrais e Censos Demográficos
+% ============================================================
+
+% ════════════════════════════════════════════════════════════
+\chapter{Pesquisas Amostrais e Censos Demográficos}
+% ════════════════════════════════════════════════════════════
+
+\begin{boxdestaque}{Neste capítulo}
+Este capítulo apresenta as principais pesquisas amostrais domiciliares e os censos demográficos disponíveis para o Brasil. Para cada fonte, descrevemos seu histórico, estrutura, cobertura, principais variáveis, forma de acesso aos microdados e aplicações típicas em avaliação de políticas públicas. O capítulo cobre o Censo Demográfico, a PNAD Contínua, as edições anteriores da PNAD, a Pesquisa Mensal de Emprego, a Pesquisa de Orçamentos Familiares e o Censo Agropecuário.
+\end{boxdestaque}
+
+% ────────────────────────────────────────────────────────────
+\section{Censo Demográfico}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Censo Demográfico}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html}
+  {Brasil, Grandes Regiões, Unidades da Federação, municípios, distritos, subdistritos e setores censitários}
+  {Decenal: 1872, 1890, 1900, 1920, 1940, 1950, 1960, 1970, 1980, 1991, 2000, 2010, 2022}
+  {Domicílio e pessoa}
+
+\subsection{O que é e por que importa}
+
+O Censo Demográfico é o mais abrangente levantamento de informações sobre a população brasileira. Realizado pelo IBGE desde 1940 com periodicidade decenal --- com exceção do intervalo de onze anos entre 2010 e 2022, provocado pela pandemia de COVID-19 ---, o Censo visita \textit{todos} os domicílios do território nacional, tornando-o a única fonte capaz de produzir informações confiáveis para municípios pequenos, áreas rurais remotas, comunidades indígenas e quilombolas, e qualquer outro recorte territorial ou demográfico para o qual pesquisas amostrais não têm representatividade.
+
+Para a avaliação de políticas públicas, o Censo tem um papel insubstituível como fonte de \textbf{linha de base} --- especialmente quando a política foi implementada entre dois censos --- e como base para a \textbf{construção de contrafactuais} em métodos como o pareamento por escore de propensão. Dados censitários também são amplamente utilizados para calcular taxas populacionais (mortalidade infantil, analfabetismo, cobertura de saneamento) que exigem denominadores populacionais precisos.
+
+\subsection{Estrutura da coleta: questionário básico e amostral}
+
+Desde 1960, o Censo utiliza dois instrumentos de coleta com abrangências distintas:
+
+\begin{itemize}
+  \item \textbf{Questionário básico}: aplicado a todos os domicílios do país. Coleta informações elementares sobre os moradores --- nome, sexo, idade, relação com o responsável pelo domicílio e rendimento nominal mensal.
+
+  \item \textbf{Questionário amostral}: aplicado a uma fração dos domicílios (aproximadamente 10\% a 20\%, dependendo do porte do município). Contém um conjunto muito mais amplo de variáveis, incluindo:
+  \begin{itemize}
+    \item Características sociodemográficas: escolaridade, raça/cor, religião, migração, fecundidade, nupcialidade;
+    \item Características do domicílio: material das paredes, tipo de piso, existência de água encanada, esgotamento sanitário, coleta de lixo, energia elétrica;
+    \item Posse de bens: geladeira, automóvel, computador, acesso à internet;
+    \item Trabalho e rendimento: ocupação, setor de atividade, renda de todas as fontes.
+  \end{itemize}
+\end{itemize}
+
+\begin{boxatencao}{Atenção --- Censo 2022: o que mudou}
+O Censo 2022 trouxe mudanças metodológicas relevantes em relação a 2010. A coleta passou a ser realizada em dispositivos móveis (tablets), com questionários digitais. Foram incluídas novas perguntas sobre identidade de gênero e orientação sexual, pessoas com deficiência (seguindo o modelo do Washington Group) e uso de internet. A variável de renda passou por revisão conceitual. Ao comparar dados de 2022 com edições anteriores, verifique as notas metodológicas do IBGE para cada variável de interesse.
+\end{boxatencao}
+
+\subsection{Microdados: estrutura e acesso}
+
+Os microdados do Censo são disponibilizados publicamente pelo IBGE em duas bases separadas:
+
+\begin{itemize}
+  \item \textbf{Base de domicílios}: cada linha é um domicílio; contém variáveis sobre características físicas e de infraestrutura.
+  \item \textbf{Base de pessoas}: cada linha é um morador; contém variáveis sociodemográficas e econômicas individuais.
+\end{itemize}
+
+As duas bases são linkáveis pelo código do domicílio, permitindo análises que combinam características individuais e domiciliares. Os microdados do questionário amostral estão disponíveis separados por Unidade da Federação, o que exige concatenação para análises nacionais.
+
+O acesso é gratuito e não requer cadastro. Os arquivos estão em formato fixo (FWD) ou CSV nas edições mais recentes, acompanhados de dicionário de variáveis e documentação metodológica.
+
+\begin{boxdica}{Dica --- Pacotes para trabalhar com microdados do Censo}
+\begin{itemize}
+  \item \textbf{R}: o pacote \texttt{censobr} (disponível no CRAN) facilita o download e a leitura dos microdados do Censo 2022 diretamente no ambiente R.
+  \item \textbf{Python}: a biblioteca \texttt{censobrapi} e o pacote \texttt{pandas} permitem manipular os arquivos CSV.
+  \item \textbf{Stata}: os microdados podem ser importados com \texttt{infix} (formato fixo) ou \texttt{import delimited} (CSV), usando o dicionário de variáveis como referência.
+\end{itemize}
+\end{boxdica}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item Construção de \textbf{indicadores de linha de base} para políticas implementadas no período intercensitário;
+  \item \textbf{Caracterização do público-alvo} de políticas focalizadas;
+  \item \textbf{Denominadores populacionais} para calcular taxas e coberturas;
+  \item \textbf{Variáveis de controle} em modelos de avaliação de impacto;
+  \item \textbf{Construção de grupos de comparação} em análises de pareamento;
+  \item \textbf{Análises territoriais} com desagregação por setor censitário.
+\end{itemize}
+
+\subsection{Limitações e cuidados}
+
+A principal limitação do Censo para avaliação de políticas é sua \textbf{periodicidade decenal}: entre dois censos, não há atualização das informações coletadas no questionário amostral.
+
+Outra limitação é o \textbf{subregistro em populações de difícil acesso}: áreas de conflito, comunidades indígenas isoladas, pessoas em situação de rua e moradores de favelas densas tendem a ser sub-representados.
+
+Por fim, \textbf{mudanças metodológicas entre edições} podem comprometer comparações diretas de certas variáveis ao longo do tempo. A documentação metodológica do IBGE deve ser consultada antes de construir qualquer série histórica com dados censitários.
+
+% ────────────────────────────────────────────────────────────
+\section{Pesquisa Nacional por Amostra de Domicílios Contínua
+         (PNAD Contínua)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {PNAD Contínua (PNADC)}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/trabalho/17270-pnad-continua.html}
+  {Brasil, Grandes Regiões, Unidades da Federação, Regiões Metropolitanas com capitais e capitais}
+  {Trimestral (desde 2012); anual (desde 2016)}
+  {Domicílio e morador}
+
+\subsection{O que é e por que importa}
+
+A Pesquisa Nacional por Amostra de Domicílios Contínua (PNAD Contínua ou PNADC) é, atualmente, a principal pesquisa domiciliar de acompanhamento contínuo da população brasileira. Iniciada em 2012, ela substituiu a PNAD anual e a Pesquisa Mensal de Emprego (PME) a partir de 2016, reunindo em uma única plataforma amostral informações sobre mercado de trabalho, educação, habitação e acesso a serviços.
+
+O diferencial da PNAD Contínua em relação às pesquisas que substituiu é a \textbf{continuidade e frequência}: enquanto a PNAD era realizada uma vez por ano e a PME em seis regiões metropolitanas, a PNADC produz estimativas trimestrais para o Brasil inteiro e para todas as unidades da federação, além de estimativas mensais para indicadores selecionados do mercado de trabalho.
+
+\subsection{Desenho amostral: painel rotativo e amostra complexa}
+
+O desenho amostral da PNAD Contínua combina duas características que o analista precisa compreender antes de usar os dados.
+
+A primeira é o \textbf{painel rotativo}: cada domicílio selecionado para a pesquisa é entrevistado em cinco ocasiões ao longo de cinco trimestres consecutivos. Após a quinta entrevista, o domicílio é substituído por outro. Esse formato permite análises longitudinais de trajetória no mercado de trabalho que seriam impossíveis em pesquisas puramente transversais.
+
+A segunda --- e frequentemente subestimada --- é a \textbf{amostra complexa}. A PNADC utiliza um desenho de amostragem em dois estágios com estratificação e conglomeração: no primeiro estágio, são selecionados municípios (unidades primárias de amostragem, ou PSUs); no segundo, setores censitários dentro dos municípios selecionados. Isso tem consequências diretas e não triviais para a análise:
+
+\begin{itemize}
+  \item \textbf{Os pesos amostrais devem ser sempre aplicados} para produzir estimativas representativas da população. A variável de peso para o trimestre de referência é \texttt{V1028}. Análises sem pesos produzem estimativas incorretas;
+
+  \item \textbf{O desenho amostral completo --- estratos e PSUs --- deve ser declarado} para o cálculo correto dos erros padrão. Ignorar a estrutura de conglomeração produz erros padrão sistematicamente \textit{subestimados}, o que infla artificialmente a significância estatística das estimativas. Em R, use o pacote \texttt{survey} com \texttt{svydesign()}; em Stata, use \texttt{svyset} antes de qualquer estimação; em Python, use \texttt{statsmodels.stats.survey};
+
+  \item \textbf{A PNAD Contínua não deve ser usada para inferências no nível municipal}. O desenho amostral foi planejado para produzir estimativas representativas para o Brasil, grandes regiões, unidades da federação, regiões metropolitanas com capitais e capitais. Estimativas para municípios individuais --- exceto os que compõem as regiões metropolitanas com capitais, e mesmo assim com cautela --- não têm respaldo no desenho amostral da pesquisa e produzem resultados sem precisão estatística adequada;
+
+  \item \textbf{Recortes populacionais muito finos exigem cautela}. Estimativas para subgrupos pequenos (como mulheres negras de 60 a 69 anos em uma UF específica) podem ter coeficientes de variação elevados que tornam as estimativas pouco confiáveis. Sempre reporte os erros padrão ou intervalos de confiança, e verifique o coeficiente de variação (CV) das estimativas antes de interpretá-las. O IBGE recomenda cautela para CVs acima de 15\% e não divulga estimativas com CV acima de 50\%;
+
+  \item \textbf{A agregação temporal pode melhorar a precisão} para recortes finos. Para subgrupos com amostras pequenas, a combinação de múltiplos trimestres pode reduzir o CV das estimativas --- mas exige atenção ao painel rotativo para evitar dupla contagem de domicílios.
+\end{itemize}
+
+A documentação metodológica completa da PNADC está disponível em \url{ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Notas_metodologicas/notas_metodologicas.pdf} e deve ser consultada antes de qualquer análise que envolva domínios de estimação não convencionais.
+
+\begin{boxatencao}{Atenção --- PNAD Contínua não é base de inferência municipal}
+Um erro frequente em avaliações de políticas públicas é usar a PNAD Contínua para calcular indicadores de mercado de trabalho ou renda no nível municipal, muitas vezes por ausência de alternativa mais conveniente. Esse uso não é metodologicamente válido: a amostra da PNADC não foi desenhada para representar municípios individuais, e as estimativas produzidas para esse nível têm precisão estatística inadequada. Para análises que exijam indicadores no nível municipal, as alternativas são o Censo Demográfico (para variáveis cobertas pelo questionário amostral) ou registros administrativos (para indicadores de mercado de trabalho formal, como CAGED e RAIS).
+\end{boxatencao}
+
+\subsection{Estrutura de divulgação: mensal, trimestral e anual}
+
+A PNAD Contínua produz resultados em três periodicidades distintas, cada uma com um escopo temático diferente:
+
+\begin{itemize}
+  \item \textbf{Mensal}: conjunto restrito de indicadores do mercado de trabalho apenas para o Brasil como um todo. Serve principalmente para acompanhamento conjuntural;
+
+  \item \textbf{Trimestral}: conjunto ampliado de indicadores do mercado de trabalho para todos os níveis de divulgação da pesquisa. É a divulgação de referência para análises do mercado de trabalho;
+
+  \item \textbf{Anual}: inclui os temas permanentes adicionais --- educação (2º trimestre), acesso à internet e posse de telefone celular (4º trimestre) --- e outros temas variáveis. É a divulgação mais relevante para análises além do mercado de trabalho.
+\end{itemize}
+
+\subsection{Principais temas cobertos}
+
+\begin{itemize}
+  \item \textbf{Mercado de trabalho}: condição de ocupação, tipo de vínculo empregatício (formal/informal), setor de atividade, ocupação (ISCO/CBO), jornada de trabalho, rendimento do trabalho;
+  \item \textbf{Educação}: nível de instrução, frequência escolar, alfabetização (2º trimestre);
+  \item \textbf{Habitação}: características do domicílio, acesso a serviços básicos;
+  \item \textbf{Tecnologia}: acesso à internet, posse de telefone celular e computador (4º trimestre);
+  \item \textbf{Rendimento}: rendimento de todas as fontes, incluindo trabalho, aposentadoria e transferências.
+\end{itemize}
+
+\begin{boxatencao}{Atenção --- Quebra metodológica nos dados de rendimento}
+A partir do 4º trimestre de 2019, o IBGE implementou mudanças na metodologia de captação do rendimento na PNAD Contínua, alterando a forma de coleta de rendimentos de algumas fontes. Isso introduziu uma \textbf{quebra na série histórica} que impede comparações diretas entre o rendimento médio antes e depois dessa data sem os devidos ajustes. O IBGE disponibiliza notas técnicas explicando a mudança; qualquer análise de tendência do rendimento que cruze essa quebra deve ser feita com cautela e devidamente documentada.
+\end{boxatencao}
+
+\subsection{Microdados: acesso e estrutura}
+
+Os microdados trimestrais e anuais da PNAD Contínua são disponibilizados gratuitamente no site do IBGE. As variáveis de peso amostral (\texttt{V1028}) e as variáveis de estratificação e PSU devem ser sempre utilizadas nas análises.
+
+\begin{boxdica}{Dica --- Pacotes para trabalhar com a PNAD Contínua}
+\begin{itemize}
+  \item \textbf{R}: o pacote \texttt{PNADcIBGE} automatiza o download e a preparação dos microdados já com o objeto de desenho amostral (\texttt{survey design}) corretamente especificado --- com estratos, PSUs e pesos. É a forma mais segura de garantir que o desenho amostral complexo está sendo tratado corretamente;
+  \item \textbf{Python}: a biblioteca \texttt{basedosdados} oferece acesso aos microdados da PNADC via BigQuery, com tratamento prévio das variáveis;
+  \item \textbf{Stata}: use \texttt{svyset [psu] [strata] [pweight]} para declarar o desenho amostral completo antes de qualquer análise estatística. Não use apenas o peso; declare também os estratos e as PSUs.
+\end{itemize}
+\end{boxdica}
+
+\subsection{Aplicações típicas em avaliação}
+
+\begin{itemize}
+  \item Acompanhamento de indicadores do \textbf{mercado de trabalho} ao longo do tempo para o Brasil, regiões e UFs;
+  \item Análises de \textbf{educação}: evolução da escolaridade, acesso à escola por faixa etária;
+  \item Estimação de \textbf{indicadores de pobreza e desigualdade};
+  \item \textbf{Avaliação de resultados} de políticas de emprego, educação e habitação;
+  \item Construção de \textbf{variáveis de contexto} para estados e regiões em estudos de impacto.
+\end{itemize}
+
+% ────────────────────────────────────────────────────────────
+\section{PNAD --- Pesquisa Nacional por Amostra de Domicílios
+         (edições anteriores)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {PNAD (edições 1967--2015)}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/trabalho/9127-pesquisa-nacional-por-amostra-de-domicilios.html}
+  {Brasil, Grandes Regiões, Unidades da Federação e nove Regiões Metropolitanas}
+  {Anual (1967--2015); não realizada em anos de Censo Demográfico}
+  {Domicílio e morador}
+
+\subsection{O que é e por que ainda importa}
+
+A PNAD em sua versão original foi realizada entre 1967 e 2015, tornando-se a principal fonte de dados sobre condições de vida da população brasileira por quase cinco décadas. Embora tenha sido substituída pela PNAD Contínua, as edições anteriores continuam sendo amplamente utilizadas em pesquisas que precisam de séries históricas longas --- especialmente para o período anterior a 2012.
+
+A PNAD cobria anualmente um conjunto fixo de temas (características gerais da população, educação, trabalho, rendimento e habitação) e, em determinados anos, incluía \textbf{suplementos temáticos} com questionários adicionais sobre assuntos específicos.
+
+\textbf{O alerta sobre amostra complexa se aplica igualmente à PNAD anterior}: o desenho amostral também era estratificado e por conglomerados, com pesos e PSUs que devem ser declarados para produzir estimativas válidas e erros padrão corretos. O mesmo limite de representatividade estadual --- sem capacidade de inferência municipal na maior parte dos casos --- se aplicava à PNAD original.
+
+\subsection{Suplementos temáticos relevantes para avaliação de políticas}
+
+Os suplementos temáticos da PNAD são de grande valor para avaliadores, pois oferecem informações sobre dimensões raramente cobertas por outras fontes nacionais. Os principais suplementos incluem:
+
+\begin{table}[H]
+\centering
+\caption{Principais suplementos temáticos da PNAD por ano}
+\label{tab:pnad_suplementos}
+\begin{tabularx}{\textwidth}{@{} p{1.5cm} X @{}}
+\toprule
+\textbf{Ano} & \textbf{Temas do suplemento} \\
+\midrule
+2015 & Acesso à internet e televisão; relações de trabalho; cuidados de crianças menores de 4 anos; práticas de esporte e atividade física \\
+2014 & Acesso ao Cadastro Único e programas de inclusão produtiva; educação e qualificação profissional; mobilidade socioocupacional \\
+2013 & Segurança alimentar; acesso à internet e televisão \\
+2011 & Acesso à internet e posse de telefone celular \\
+2009 & Segurança alimentar; vitimização e acesso à justiça \\
+2008 & Aspectos complementares de educação e trabalho infantil \\
+2005 & Tabagismo \\
+2004 & Aspectos complementares de educação e trabalho infantil \\
+1998 & Saúde e acesso a serviços de saúde \\
+1995 & Trabalho infantil e contrato de trabalho \\
+\bottomrule
+\end{tabularx}
+\fonte{IBGE, organização FGV CLEAR.}
+\end{table}
+
+\begin{boxexemplo}{Exemplo prático --- Usando o suplemento de vitimização da PNAD 2009}
+O suplemento ``Características da vitimização e do acesso à Justiça no Brasil'' da PNAD 2009 é uma das poucas fontes nacionais com dados sobre vitimização criminal autoreferida. Pesquisadores utilizaram esses dados para comparar a vitimização declarada com os registros policiais estaduais, evidenciando que apenas uma fração dos crimes chega ao conhecimento da polícia. Para avaliações de políticas de segurança pública, esse suplemento é uma referência metodológica importante sobre os limites dos dados administrativos.
+
+\textit{Fonte: FGV CLEAR, elaboração própria.}
+\end{boxexemplo}
+
+\subsection{Cuidados na comparação com a PNAD Contínua}
+
+A transição da PNAD para a PNAD Contínua não foi metodologicamente neutra. As principais diferenças que afetam a comparabilidade das séries incluem:
+
+\begin{itemize}
+  \item \textbf{Definição de desocupação}: a PNAD Contínua adota a definição da OIT mais recente;
+  \item \textbf{Período de referência}: a PNAD era coletada em setembro/outubro de cada ano; a PNADC é contínua;
+  \item \textbf{Cobertura geográfica}: a PNADC cobre a área rural da região Norte, que a PNAD antiga não cobria adequadamente;
+  \item \textbf{Metodologia de rendimento}: há diferenças na captação de rendimentos não laborais.
+\end{itemize}
+
+Para análises de longo prazo que precisem cruzar as duas pesquisas, recomenda-se consultar os estudos de harmonização produzidos pelo IBGE e as notas técnicas sobre a transição metodológica.
+
+% ────────────────────────────────────────────────────────────
+\section{Pesquisa Mensal de Emprego (PME)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Pesquisa Mensal de Emprego (PME)}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/trabalho/9180-pesquisa-mensal-de-emprego.html}
+  {Seis Regiões Metropolitanas: Recife, Salvador, Belo Horizonte, Rio de Janeiro, São Paulo e Porto Alegre}
+  {Mensal (1980--março de 2016)}
+  {Domicílio e morador}
+
+\subsection{O que é e aplicações}
+
+A PME foi a principal fonte de dados mensais sobre o mercado de trabalho nas seis maiores regiões metropolitanas do Brasil entre 1980 e 2016. Sua relevância atual é principalmente \textbf{histórica}: para análises do mercado de trabalho metropolitano nas décadas de 1980, 1990 e 2000, continua sendo insubstituível.
+
+O formato de painel rotativo da PME --- cada domicílio entrevistado por quatro meses consecutivos, ausente por oito meses e retornando por mais quatro --- permitia análises de transição no mercado de trabalho que influenciaram a metodologia da PNAD Contínua.
+
+\subsection{Cuidados}
+
+A PME cobre apenas seis regiões metropolitanas, o que limita qualquer generalização para o Brasil como um todo ou para cidades médias e pequenas. Como nas demais pesquisas amostrais do IBGE, o uso correto exige declaração do desenho amostral complexo --- não apenas a aplicação dos pesos.
+
+% ────────────────────────────────────────────────────────────
+\section{Pesquisa de Orçamentos Familiares (POF)}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Pesquisa de Orçamentos Familiares (POF)}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/sociais/saude/24786-pesquisa-de-orcamentos-familiares-2.html}
+  {Brasil, Grandes Regiões, Unidades da Federação e situação do domicílio (urbano/rural)}
+  {Irregular: 1987/88, 1995/96, 2002/03, 2008/09, 2017/18}
+  {Domicílio e morador}
+
+\subsection{O que é e por que importa}
+
+A Pesquisa de Orçamentos Familiares (POF) é o levantamento mais detalhado sobre consumo, despesas, rendimentos e condições de vida das famílias brasileiras. Diferentemente da PNAD Contínua, que captura o rendimento de forma agregada, a POF registra \textit{todas} as despesas e aquisições do domicílio durante um período de referência, permitindo análises de padrões de consumo, estrutura orçamentária e bem-estar que nenhuma outra fonte viabiliza.
+
+Para a avaliação de políticas públicas, a POF é especialmente relevante para:
+
+\begin{itemize}
+  \item \textbf{Definição e atualização de linhas de pobreza}: a estrutura de consumo captada pela POF é a base metodológica para o cálculo de linhas de pobreza absolutas no Brasil;
+  \item \textbf{Análise de políticas de transferência de renda}: ao capturar o orçamento completo das famílias, permite avaliar como transferências afetam o padrão de consumo;
+  \item \textbf{Políticas de alimentação e nutrição}: a edição 2017/18 incluiu módulo detalhado sobre consumo alimentar individual.
+\end{itemize}
+
+\subsection{Amostra complexa na POF}
+
+Assim como a PNAD Contínua, a POF utiliza desenho amostral estratificado por conglomerados. O mesmo cuidado se aplica: pesos amostrais e estrutura de estratos e PSUs devem ser declarados antes de qualquer análise estatística. A POF tem domínios de representatividade definidos --- Brasil, grandes regiões, UFs e situação do domicílio (urbano/rural) --- e estimativas para recortes mais finos têm precisão estatística reduzida.
+
+\subsection{Principais módulos}
+
+A POF coleta dados por meio de múltiplos cadernos de registro preenchidos pelos próprios moradores ao longo de vários dias. Os principais módulos incluem:
+
+\begin{itemize}
+  \item Despesas coletivas do domicílio (aluguel, contas de serviços, alimentação no domicílio);
+  \item Despesas individuais de cada morador (vestuário, transporte, lazer, saúde);
+  \item Rendimentos de todas as fontes;
+  \item Avaliação das condições de vida (percepção subjetiva de bem-estar);
+  \item Consumo alimentar individual (edição 2017/18).
+\end{itemize}
+
+\subsection{Limitações}
+
+A principal limitação da POF para avaliação é sua \textbf{periodicidade irregular}: as edições têm ocorrido a cada seis ou sete anos. Além disso, o custo e a complexidade da coleta tornam a POF uma das pesquisas mais caras do sistema estatístico nacional, com amostras menores do que a PNAD Contínua e, portanto, menor capacidade de desagregação.
+
+% ────────────────────────────────────────────────────────────
+\section{Censo Agropecuário}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {Censo Agropecuário}
+  {Instituto Brasileiro de Geografia e Estatística (IBGE)}
+  {https://www.ibge.gov.br/estatisticas/economicas/agricultura-e-pecuaria/21814-2017-censo-agropecuario.html}
+  {Brasil, Grandes Regiões, Unidades da Federação e municípios}
+  {Irregular: 1920, 1940, 1950, 1960, 1970, 1975, 1980, 1985, 1995/96, 2006, 2017}
+  {Estabelecimento agropecuário}
+
+\subsection{O que é e aplicações}
+
+O Censo Agropecuário é o levantamento mais completo sobre a estrutura produtiva do campo brasileiro. Cobre todos os estabelecimentos agropecuários do país --- propriedades rurais que desenvolvem atividades de lavoura, pecuária, horticultura, aquicultura ou agroindústria --- independentemente de seu tamanho ou regime de posse da terra.
+
+Para a avaliação de políticas públicas, é a principal referência para:
+
+\begin{itemize}
+  \item \textbf{Políticas de reforma agrária e regularização fundiária}: dados sobre estrutura da posse da terra, tamanho dos estabelecimentos e condição do produtor;
+  \item \textbf{Políticas de agricultura familiar}: identificação dos estabelecimentos por tipo (familiar vs. não familiar), acesso a crédito, assistência técnica e mercados;
+  \item \textbf{Políticas ambientais}: uso do solo, áreas de preservação, práticas de manejo;
+  \item \textbf{Segurança alimentar}: produção de alimentos por tipo e região.
+\end{itemize}
+
+\subsection{Limitações}
+
+A periodicidade irregular é a principal limitação. Para o acompanhamento anual da produção agrícola, as alternativas são a Pesquisa Agrícola Municipal (PAM) e a Pesquisa Pecuária Municipal (PPM), também do IBGE, que produzem dados anuais mas com menor riqueza de variáveis.
+
+% ────────────────────────────────────────────────────────────
+\section{Síntese do capítulo}
+% ────────────────────────────────────────────────────────────
+
+Este capítulo apresentou as principais pesquisas amostrais e censos demográficos disponíveis para o Brasil. A Tabela~\ref{tab:sintese_cap3} resume as características essenciais de cada fonte.
+
+\begin{table}[H]
+\centering
+\caption{Síntese das pesquisas amostrais e censos demográficos}
+\label{tab:sintese_cap3}
+\small
+\begin{tabularx}{\textwidth}{@{} p{2.8cm} p{2.2cm} p{2cm} X @{}}
+\toprule
+\textbf{Fonte} & \textbf{Período} & \textbf{Periodicidade} & \textbf{Principal uso em avaliação} \\
+\midrule
+Censo Demográfico    & 1940--2022  & Decenal      & Linha de base, denominadores populacionais, contrafactuais \\
+PNAD Contínua        & 2012--atual & Trimestral/anual & Mercado de trabalho, educação, habitação, pobreza (Brasil, regiões, UFs) \\
+PNAD (anterior)      & 1967--2015  & Anual        & Séries históricas longas, suplementos temáticos \\
+PME                  & 1980--2016  & Mensal       & Mercado de trabalho metropolitano histórico \\
+POF                  & 1987--2018  & Irregular    & Consumo, linhas de pobreza, transferências de renda \\
+Censo Agropecuário   & 1920--2017  & Irregular    & Políticas rurais, fundiárias e ambientais \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+Os pontos centrais do capítulo são:
+
+\begin{itemize}
+  \item O \textbf{Censo Demográfico} é insubstituível para desagregações territoriais finas e para construção de linha de base, mas sua periodicidade decenal limita seu uso em análises recentes;
+
+  \item A \textbf{PNAD Contínua} é a principal fonte nacional de acompanhamento do mercado de trabalho, educação e condições de vida para o Brasil, regiões e UFs. Seu uso correto exige a declaração do \textbf{desenho amostral complexo} (estratos, PSUs e pesos) --- não apenas a aplicação dos pesos. A pesquisa \textbf{não deve ser usada para inferências no nível municipal};
+
+  \item Todas as pesquisas amostrais do IBGE discutidas neste capítulo --- PNAD Contínua, PNAD anterior, PME e POF --- utilizam desenhos amostrais complexos com estratificação e conglomeração. Recortes muito finos devem ser acompanhados de verificação dos coeficientes de variação e, quando necessário, de agregação temporal;
+
+  \item As edições anteriores da PNAD mantêm relevância para séries históricas e pelos suplementos temáticos que cobrem dimensões raramente disponíveis em outras fontes;
+
+  \item A POF é a referência para análises de consumo e definição de linhas de pobreza, mas tem periodicidade irregular;
+
+  \item A comparação de séries entre pesquisas exige atenção às quebras metodológicas documentadas pelo IBGE.
+\end{itemize}
+
+O próximo capítulo aborda as fontes de dados sobre mercado de trabalho e renda, com foco nos registros administrativos --- CAGED, RAIS, eSocial e Cadastro Único.
