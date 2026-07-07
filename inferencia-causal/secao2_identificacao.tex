@@ -1,0 +1,456 @@
+% =============================================================================
+% Seção 2 — Identificação
+% Guia Clear de Introdução à Inferência Causal — FGV EESP Clear
+% =============================================================================
+
+\chapter{Identificação}
+\label{cap:identificacao}
+\label{sec:identificacao}
+
+Toda análise causal começa com uma pergunta da teoria econômica e termina com um número calculado em uma amostra finita. O caminho entre os dois é mais longo do que parece. Ele atravessa quatro espaços conceituais distintos: o \textbf{parâmetro econômico} (definido pela teoria, vivendo no espaço do modelo), o \textbf{estimando} (um funcional da distribuição populacional observável), o \textbf{estimador} (uma função dos dados amostrais) e a \textbf{inferência} (a quantificação da incerteza amostral). Esta seção trata exclusivamente do segundo elo dessa cadeia: a passagem do parâmetro para o estimando. Esse elo se chama \textit{identificação}.
+
+Considere um modelo teórico genérico em que uma variável de interesse $Y$ é função de uma variável de tratamento $X$ e de fatores não observados $\varepsilon$:
+\begin{equation}
+Y = f(X, \varepsilon).
+\label{eq:modelo-generico}
+\end{equation}
+A teoria econômica nos diz que o objeto relevante para responder à pergunta de política é, tipicamente, o efeito de mudar $X$ sobre $Y$. Em termos potenciais, definimos $Y_i(x)$ como o resultado que o indivíduo $i$ \textit{teria} se recebesse o valor $x$ do tratamento. O efeito causal individual de mover $X$ de $0$ para $1$ é:
+\begin{equation}
+\delta_i = Y_i(1) - Y_i(0).
+\label{eq:efeito-individual}
+\end{equation}
+Note que $\delta_i$ é definido pela diferença entre dois mundos contrafactuais: o mundo em que $i$ recebe o tratamento e o mundo em que $i$ não o recebe. Para cada indivíduo, observamos apenas \textit{um} desses mundos. Esse é o \textbf{problema fundamental da inferência causal}: o contrafactual nunca é observado.
+
+Como, então, podemos aprender alguma coisa sobre objetos como o ATE (\textit{Average Treatment Effect} --- Efeito Médio do Tratamento), definido por
+\begin{equation}
+\text{ATE} = E[Y_i(1) - Y_i(0)],
+\label{eq:ate}
+\end{equation}
+ou o ATT (\textit{Average Treatment Effect on the Treated} --- Efeito Médio do Tratamento sobre os Tratados),
+\begin{equation}
+\text{ATT} = E[Y_i(1) - Y_i(0) \mid D_i = 1]?
+\label{eq:att}
+\end{equation}
+Esses parâmetros vivem no espaço do modelo econômico. Eles são funções de objetos --- os resultados potenciais $Y_i(1)$ e $Y_i(0)$ --- que nunca aparecem juntos nos dados. O que efetivamente observamos, em uma amostra de $n$ indivíduos, é o trio $(Y_i, D_i, W_i)$, onde $D_i \in \{0,1\}$ indica se $i$ recebeu o tratamento e $Y_i = D_i \cdot Y_i(1) + (1 - D_i) \cdot Y_i(0)$ é o resultado realizado. A distribuição populacional desses três objetos --- chame-a de $F(Y, D, W)$ --- é, em princípio, aprendível. Funcionais dessa distribuição --- como $E[Y \mid D=1] - E[Y \mid D=0]$ --- são \textit{estimandos}. \textbf{Identificação é o conjunto de hipóteses sobre o processo gerador dos dados que estabelece uma equivalência entre o parâmetro econômico e algum estimando observável.}
+
+Antes de prosseguir, precisamos isolar uma hipótese frequentemente tratada como invisível: a SUTVA (\textit{Stable Unit Treatment Value Assumption} --- Hipótese de Estabilidade do Valor do Tratamento). A SUTVA tem duas componentes. Primeiro, ela exige \textit{ausência de interferência}: o resultado potencial de $i$ depende apenas do tratamento de $i$, não do tratamento dos demais. Formalmente, escrever $Y_i(d_i)$ em vez de $Y_i(d_1, \dots, d_n)$ pressupõe que o vetor completo de tratamentos colapsa em uma única coordenada. Segundo, ela exige \textit{ausência de versões múltiplas do tratamento}: $D_i = 1$ tem o mesmo significado para todos os indivíduos. Sem SUTVA, os próprios resultados potenciais não estão bem definidos como funções de uma única variável $D_i$, e a discussão sobre identificação precisa ser refeita. Iremos voltar a esse ponto na Subseção~\ref{subsec:interferencia}.
+
+Estabelecida essa cláusula, o restante desta seção desenvolve a identificação em um modelo linear simples (Subseção~\ref{subsec:linear-binario}), estende o argumento para painel (Subseção~\ref{subsec:painel}), discute o que muda quando o tratamento não é binário (Subseção~\ref{subsec:nao-binario}) e fecha com um panorama dos métodos quasi-experimentais que substituem a hipótese de exogeneidade (Subseção~\ref{subsec:alem-rct}). Em cada caso, seguimos a mesma ordem: o parâmetro econômico, a hipótese de identificação, o estimando, o argumento substantivo de plausibilidade.
+
+% =============================================================================
+\section{Modelo Linear com Tratamento Binário}
+\label{subsec:linear-binario}
+
+Para introduzir as ideias com o mínimo de fricção algébrica, começamos por um caso quase trivial: $X$ é binário e não há covariadas. Postulamos que a função $f$ em \eqref{eq:modelo-generico} é \textit{linear} em $X$:
+\begin{equation}
+Y_i = \alpha + \beta \cdot D_i + \varepsilon_i.
+\label{eq:modelo-linear-binario}
+\end{equation}
+É importante notar que assumir linearidade já é uma hipótese sobre o mundo. Em geral, a relação entre $Y$ e $X$ pode ser não linear, e o efeito do tratamento pode variar entre indivíduos. No caso particular em que $D_i \in \{0, 1\}$ \textit{e} não há covariadas, contudo, a linearidade é praticamente uma identidade: dois pontos --- a média de $Y$ entre tratados e a média entre controles --- definem uma reta. Os parâmetros $\alpha$ e $\beta$ apenas reorganizam a informação que já existe nessas duas médias. O termo $\varepsilon_i$ recolhe tudo o que afeta $Y_i$ além de $D_i$.
+
+Comparando \eqref{eq:modelo-linear-binario} com a definição de resultados potenciais, vemos que
+\begin{equation}
+Y_i(0) = \alpha + \varepsilon_i, \qquad Y_i(1) = \alpha + \beta + \varepsilon_i,
+\label{eq:potenciais-linear}
+\end{equation}
+o que implica $\delta_i = Y_i(1) - Y_i(0) = \beta$. \textit{Neste modelo}, o efeito individual é constante e igual a $\beta$. Esta é uma segunda hipótese, ainda mais forte do que a linearidade --- ela exclui efeitos heterogêneos por construção. Iremos relaxá-la nas Subseções~\ref{subsubsec:covariadas} e~\ref{subsec:nao-binario}. Por ora, $\beta$ é, simultaneamente, o ATE, o ATT e o efeito individual de qualquer pessoa na população.
+
+A pergunta de identificação se reduz, portanto, a: \textit{sob quais hipóteses o parâmetro $\beta$ é igual a algum funcional da distribuição observável de $(Y, D)$?} As próximas subseções respondem a essa pergunta sob diferentes premissas.
+
+% -----------------------------------------------------------------------------
+\subsection{Hipótese de Exogeneidade}
+\label{subsubsec:exogeneidade}
+
+A passagem do parâmetro econômico para o estimando depende, no modelo linear, de uma única hipótese central: a hipótese de \textbf{exogeneidade}. Ela diz que o tratamento e o erro são independentes em média:
+\begin{equation}
+E[\varepsilon_i \mid D_i] = 0.
+\label{eq:exogeneidade}
+\end{equation}
+Em palavras, a expectativa condicional de tudo o que afeta $Y_i$ além de $D_i$ não muda quando $D_i$ muda. Quem é tratado e quem não é tratado têm, em média, os mesmos $\varepsilon_i$.
+
+Antes da álgebra, vale a intuição. Suponha que estamos avaliando o efeito de um curso de qualificação profissional --- o PRONATEC (Programa Nacional de Acesso ao Ensino Técnico e Emprego), por exemplo --- sobre a renda futura. O termo $\varepsilon_i$ contém motivação, conexões familiares, habilidade cognitiva, condições do mercado local. Exogeneidade exige que tratados e controles tenham, na média, o mesmo nível dessas variáveis. Quando o tratamento é resultado de uma escolha do próprio indivíduo --- como inscrever-se voluntariamente no curso ---, essa hipótese é fortíssima: os mais motivados podem se autosselecionar para o tratamento, violando \eqref{eq:exogeneidade}.
+
+\textbf{Exemplo numérico hipotético.} Considere uma população de seis indivíduos, três tratados (A, B, C) e três controles (1, 2, 3), com resultados observados conforme a Tabela~\ref{tab:exemplo-binario}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Indivíduo & $D_i$ & $Y_i$ \\
+\midrule
+A & 1 & 12 \\
+B & 1 & 14 \\
+C & 1 & 13 \\
+1 & 0 & 8 \\
+2 & 0 & 10 \\
+3 & 0 & 9 \\
+\bottomrule
+\end{tabular}
+\caption{Dados hipotéticos: três tratados e três controles.}
+\label{tab:exemplo-binario}
+\end{table}
+
+A média entre tratados é $\bar{Y}_1 = 13$; entre controles, $\bar{Y}_0 = 9$. A diferença $\bar{Y}_1 - \bar{Y}_0 = 4$ é o estimador empírico (a versão amostral) do estimando $E[Y \mid D=1] - E[Y \mid D=0]$. \textit{Sob a hipótese de exogeneidade}, esse estimando é igual ao ATE.
+
+A derivação algébrica torna esse argumento explícito. Aplicando a esperança condicional em \eqref{eq:modelo-linear-binario}:
+\begin{align}
+E[Y_i \mid D_i = 1] &= \alpha + \beta + E[\varepsilon_i \mid D_i = 1], \label{eq:cond-tratados}\\
+E[Y_i \mid D_i = 0] &= \alpha + E[\varepsilon_i \mid D_i = 0]. \label{eq:cond-controles}
+\end{align}
+Subtraindo \eqref{eq:cond-controles} de \eqref{eq:cond-tratados}:
+\begin{equation}
+E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0] = \beta + \big( E[\varepsilon_i \mid D_i = 1] - E[\varepsilon_i \mid D_i = 0] \big).
+\label{eq:dec-bruta}
+\end{equation}
+Sob \eqref{eq:exogeneidade}, ambos os termos $E[\varepsilon_i \mid D_i = 1]$ e $E[\varepsilon_i \mid D_i = 0]$ são iguais a zero, e, portanto:
+\begin{equation}
+\beta = \underbrace{E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0]}_{\text{estimando observável}}.
+\label{eq:identificacao-rct}
+\end{equation}
+A equivalência entre o parâmetro econômico $\beta$ e o estimando $E[Y \mid D=1] - E[Y \mid D=0]$ está estabelecida. O lado esquerdo vive no modelo; o lado direito vive na distribuição observável de $(Y, D)$. A hipótese \eqref{eq:exogeneidade} é a \textit{ponte}.
+
+A pergunta natural é: quando podemos defender que essa ponte é sólida? A resposta canônica é o RCT (\textit{Randomized Controlled Trial} --- Experimento Controlado Aleatorizado). Em um RCT, o pesquisador atribui $D_i$ por sorteio. Como o sorteio é independente de qualquer característica do indivíduo, ele é necessariamente independente de $\varepsilon_i$, e \eqref{eq:exogeneidade} vale por construção do desenho. Esse é o sentido em que se diz que o RCT é o \textit{padrão-ouro}: a hipótese de identificação não depende de argumentos substantivos sobre o comportamento dos agentes; ela é garantida pelo procedimento de atribuição.\footnote{Mesmo no RCT, exogeneidade pode falhar empiricamente por causa de \textit{attrition} diferencial, descumprimento do tratamento atribuído ou efeitos de equilíbrio geral. O ``padrão-ouro'' refere-se ao desenho ideal, não à execução perfeita.}
+
+Vimos como, sob exogeneidade, o estimando da diferença de médias condicionais identifica o efeito causal. Mas o que acontece quando essa hipótese falha? É o que examinamos a seguir.
+
+% -----------------------------------------------------------------------------
+\subsection{Viés de Seleção}
+\label{subsubsec:vies-selecao}
+
+A maior parte dos dados de políticas públicas \textit{não} vem de RCTs. O tratamento é tipicamente alocado por algum mecanismo --- elegibilidade administrativa, autosseleção, focalização territorial --- que pode ser correlacionado com características que também afetam $Y$. Quando isso ocorre, $E[\varepsilon_i \mid D_i = 1] \neq E[\varepsilon_i \mid D_i = 0]$, e a equivalência \eqref{eq:identificacao-rct} se desfaz.
+
+Para vermos o que sobra, vamos abrir o estimando observável da diferença de médias \textit{sem} impor exogeneidade. Reescrevendo $Y_i = D_i Y_i(1) + (1 - D_i) Y_i(0)$:
+\begin{align}
+E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0]
+  &= E[Y_i(1) \mid D_i = 1] - E[Y_i(0) \mid D_i = 0] \nonumber \\
+  &= \big[ E[Y_i(1) \mid D_i = 1] - E[Y_i(0) \mid D_i = 1] \big] \nonumber \\
+  &\quad + \big[ E[Y_i(0) \mid D_i = 1] - E[Y_i(0) \mid D_i = 0] \big]. \label{eq:dec-vies}
+\end{align}
+A primeira linha do lado direito é o \textbf{ATT}: o efeito médio do tratamento sobre os tratados. A segunda linha é o \textbf{viés de seleção}: a diferença entre o resultado potencial \textit{sob não-tratamento} de tratados e controles. Em notação compacta:
+\begin{align}
+E[Y_i \mid D_i = 1] - E[Y_i \mid D_i = 0]
+&= \underbrace{E[Y_i(1) - Y_i(0) \mid D_i = 1]}_{\text{ATT}} \nonumber \\ 
+&+ \underbrace{E[Y_i(0) \mid D_i = 1] - E[Y_i(0) \mid D_i = 0]}_{\text{viés de seleção}}.
+\label{eq:ATT-mais-vies}
+\end{align}
+O viés de seleção tem uma interpretação direta. Ele é a diferença que existiria entre tratados e controles \textit{mesmo que o tratamento não tivesse sido aplicado}. Se os tratados são, por características pré-existentes, ``melhores'' em termos de $Y$ --- mais escolarizados, mais saudáveis, mais empregáveis ---, o viés é positivo: a diferença simples de médias superestima o ATT. Se os tratados são pior posicionados --- por exemplo, se o programa foca pessoas em situação de vulnerabilidade ---, o viés é negativo, e a diferença subestima o ATT. \textit{O sinal e a magnitude do viés são uma questão substantiva}, não estatística.
+
+Tome como exemplo o Bolsa Família. Suponha que comparemos o desempenho escolar de crianças cujas famílias recebem o benefício com o de crianças cujas famílias não recebem, usando dados administrativos de larga escala. A diferença bruta tipicamente aparece negativa: crianças em famílias beneficiárias têm pior desempenho escolar. Será que isso significa que o programa \textit{prejudica} a aprendizagem? Quase certamente não. O programa é focalizado em famílias de baixa renda, com pais menos escolarizados, vivendo em municípios com piores escolas. Essas características também reduzem $Y_i(0)$ --- o resultado escolar que a criança teria \textit{na ausência} do programa. O viés de seleção é negativo, e domina o ATT. Vimos que precisão amostral é irrelevante neste caso: por mais grande que seja a amostra, a diferença bruta de médias \textit{não} identifica o efeito causal.
+
+A álgebra de \eqref{eq:ATT-mais-vies} mostra a fonte da confusão entre correlação e causalidade. Sob exogeneidade, o segundo termo zera e a diferença bruta identifica o ATT (que, como $\beta$ é constante neste modelo, coincide com o ATE). Sem exogeneidade, restam duas componentes que somente em casos felizes têm o mesmo sinal. \textit{O trabalho do econometrista, quando o RCT não está disponível, é construir um argumento --- baseado em desenho de pesquisa, não em controles estatísticos arbitrários --- que torne o viés de seleção zero ou desprezível.} Esse é o tema da Subseção~\ref{subsec:alem-rct}.
+
+Antes de chegar lá, ainda precisamos relaxar duas hipóteses que assumimos sem dizer: SUTVA e a ausência de covariadas.
+
+% -----------------------------------------------------------------------------
+\subsection{Interferência (Relaxando SUTVA)}
+\label{subsec:interferencia}
+
+Toda a argumentação anterior pressupôs que o resultado potencial de $i$ depende apenas do tratamento de $i$. Em muitos contextos de política pública, isso é uma simplificação séria. O resultado de uma criança vacinada depende de quantas \textit{outras} crianças foram vacinadas (efeito de imunidade de rebanho). O resultado de um trabalhador qualificado depende de quantos \textit{outros} trabalhadores foram qualificados na mesma cidade (efeito de equilíbrio no mercado de trabalho). O resultado de um aluno em uma turma depende do tratamento dos colegas (efeito de pares). Quando o tratamento de $j$ afeta o resultado de $i$, dizemos que há \textit{interferência} ou \textit{spillovers}.
+
+Sob interferência, o resultado potencial não é mais $Y_i(d_i)$, mas
+\begin{equation}
+Y_i(d_1, d_2, \dots, d_n),
+\label{eq:resultado-vetor}
+\end{equation}
+uma função do vetor completo de tratamentos atribuídos. Isso explode o espaço de resultados potenciais: para cada indivíduo, há $2^n$ contrafactuais possíveis. Sem alguma restrição sobre a forma da interferência, o problema é intratável.
+
+A solução padrão é assumir um \textbf{mapa de exposição} (\textit{exposure mapping}). Postulamos que o vetor $(d_1, \dots, d_n)$ afeta $Y_i$ apenas por meio de uma função resumo $g_i(d_1, \dots, d_n)$ de baixa dimensão:
+\begin{equation}
+Y_i(d_1, \dots, d_n) = Y_i(d_i, g_i(d_1, \dots, d_n)).
+\label{eq:exposure-mapping}
+\end{equation}
+Casos típicos: $g_i$ é a fração de tratados na vizinhança de $i$; $g_i$ é o número de pares tratados; $g_i$ é o tratamento da escola em que $i$ está matriculado.\footnote{A escolha do mapa de exposição é uma hipótese substantiva. Diferentes mapas implicam diferentes parâmetros identificáveis, e a literatura recente (Aronow e Samii 2017, Manski 2013, Sävje 2024) discute extensamente como escolher e validar essas restrições.}
+
+Considere o exemplo da vacinação contra o sarampo no SUS. O resultado de interesse é se a criança $i$ contrai a doença. Mas a probabilidade de contrair sarampo não depende apenas de a criança $i$ estar ou não vacinada --- depende crucialmente da cobertura vacinal na sua comunidade. Se assumirmos um mapa de exposição em que $g_i$ é a taxa de cobertura vacinal no município de $i$, podemos escrever
+\begin{equation}
+Y_i = Y_i(D_i, G_i),
+\label{eq:vacinacao}
+\end{equation}
+onde $G_i$ é a cobertura municipal. O parâmetro de interesse passa a ser o efeito direto $E[Y_i(1, g) - Y_i(0, g)]$ (efeito da vacinação individual mantendo a cobertura fixa) e/ou o efeito indireto $E[Y_i(0, g') - Y_i(0, g)]$ (efeito de aumentar a cobertura sobre quem não foi vacinado). Esses são objetos diferentes, com interpretações de política diferentes.
+
+Sob \eqref{eq:exposure-mapping} e uma versão estendida da hipótese de exogeneidade --- $(Y_i(d, g))_{d, g} \perp (D_i, G_i)$ --- a identificação procede analogamente ao caso anterior:
+\begin{equation}
+E[Y_i(1, g) - Y_i(0, g)] = E[Y_i \mid D_i = 1, G_i = g] - E[Y_i \mid D_i = 0, G_i = g].
+\label{eq:identificacao-spillover}
+\end{equation}
+Note-se que a randomização individual --- que garante exogeneidade no sentido de \eqref{eq:exogeneidade} --- \textit{não} garante exogeneidade no sentido estendido. Quando interferência está presente, o desenho experimental precisa ser repensado. Designs com randomização em dois níveis (saturação variável entre grupos) são uma das soluções padrão.\footnote{Em programas de transferência de renda como o Bolsa Família, há evidência de spillovers no consumo local: famílias não-beneficiárias em municípios com alta cobertura podem ter sua renda alterada por efeitos de equilíbrio no comércio local. Para uma discussão, ver Angelucci e De Giorgi (2009) sobre o caso do PROGRESA mexicano.}
+
+A SUTVA é, portanto, uma hipótese substantiva como qualquer outra. Iremos manter SUTVA implícita no restante da seção, mas o leitor deve manter em mente que ela está sendo assumida e que a sua violação altera os parâmetros identificáveis.
+
+% -----------------------------------------------------------------------------
+\subsection{Covariadas}
+\label{subsubsec:covariadas}
+
+O modelo \eqref{eq:modelo-linear-binario} ignorou a existência de variáveis observáveis adicionais. Em aplicações reais, dispomos de um vetor $W_i$ de covariadas --- gênero, idade, escolaridade, características municipais. Há duas razões para incorporá-las. A primeira é \textit{eficiência}: condicionar em $W_i$ reduz a variância residual e estreita os intervalos de confiança. A segunda é \textit{identificação}: quando exogeneidade marginal falha, exogeneidade \textit{condicional} pode ainda ser plausível.
+
+Postulamos um modelo com efeitos potencialmente heterogêneos por valores de $W$:
+\begin{equation}
+Y_i(x, w) = Y_i(0, w) + \beta(w) \cdot x.
+\label{eq:modelo-cov}
+\end{equation}
+O efeito do tratamento depende de $w$: pode ser maior para mulheres do que para homens, maior em municípios pobres do que em ricos. A versão escalar do modelo é:
+\begin{equation}
+Y_i = \alpha(W_i) + \beta(W_i) \cdot D_i + \varepsilon_i,
+\label{eq:modelo-cov-escalar}
+\end{equation}
+com a hipótese de exogeneidade adaptada para condicionalidade:
+\begin{equation}
+E[\varepsilon_i \mid D_i, W_i] = 0.
+\label{eq:exog-condicional}
+\end{equation}
+A intuição é que, dentro de cada estrato definido por $W_i = w$, tratados e controles são comparáveis em $\varepsilon$. Se sortearmos quem recebe o curso PRONATEC \textit{dentro de} cada combinação de gênero, idade e escolaridade prévia, a comparação interna é válida mesmo que essas características predigam quem se inscreve.
+
+Sob \eqref{eq:exog-condicional}, repete-se o argumento da Subseção~\ref{subsubsec:exogeneidade} \textit{dentro de cada $w$}:
+\begin{equation}
+\beta(w) = E[Y_i \mid D_i = 1, W_i = w] - E[Y_i \mid D_i = 0, W_i = w].
+\label{eq:beta-w}
+\end{equation}
+O efeito médio do tratamento na população é, portanto, identificado como uma média ponderada dos efeitos condicionais:
+\begin{equation}
+\text{ATE} = E[\beta(W_i)] = \int \beta(w) \, dF_W(w).
+\label{eq:ate-medio}
+\end{equation}
+
+Quando assumimos a forma mais forte $\beta(w) = \beta$ para todo $w$ --- isto é, efeitos \textit{constantes} no estrato ---, a identificação se simplifica drasticamente: basta uma única regressão de $Y$ em $D$ e $W$. Mas essa hipótese é restritiva. Considere o efeito do Bolsa Família sobre a frequência escolar. Estudos sugerem que o efeito é maior para meninas do que para meninos, e maior em municípios com pior infraestrutura escolar. Se rodarmos uma regressão linear simples assumindo $\beta(w) = \beta$, estamos forçando todas essas heterogeneidades a colapsarem em um único número --- e esse número é uma média ponderada que depende da composição da amostra, não do valor de política em populações específicas.
+
+Para entender o que a regressão linear de $Y$ em $D$ controlando por $W$ identifica, sob \eqref{eq:exog-condicional} e a hipótese adicional $\beta(w) = \beta$, é útil invocar a versão populacional do teorema FWL (Frisch-Waugh-Lovell):
+\begin{equation}
+\beta = \frac{E\big[(D_i - E[D_i \mid W_i])(Y_i - E[Y_i \mid W_i])\big]}{E\big[(D_i - E[D_i \mid W_i])^2\big]}.
+\label{eq:fwl-populacional}
+\end{equation}
+A leitura é a seguinte: $\beta$ é a covariância entre $D$ e $Y$, depois que ambos foram \textit{purgados} de sua componente previsível por $W$, normalizada pela variância de $D$ purgado de $W$. Em outras palavras, $\beta$ usa apenas a variação em $D$ que \textit{não} é explicada por $W$. Esse procedimento de ``parcializar'' as covariadas (\textit{partialling out}) é a base intuitiva da regressão múltipla.
+
+Quando $\beta(w)$ varia com $w$, a fórmula \eqref{eq:fwl-populacional} ainda dá um número, mas esse número é uma \textit{média ponderada} dos $\beta(w)$ com pesos proporcionais à variância condicional de $D$ dado $W$:
+\begin{equation}
+\beta_{OLS} = \frac{E\big[\,\text{Var}(D_i \mid W_i) \cdot \beta(W_i)\,\big]}{E\big[\,\text{Var}(D_i \mid W_i)\,\big]}.
+\label{eq:beta-ponderado}
+\end{equation}
+Os pesos são $\text{Var}(D_i \mid W_i) = p(W_i)(1 - p(W_i))$, onde $p(w) = P(D_i = 1 \mid W_i = w)$ é o \textit{propensity score}. Estratos com $p$ próximo de $0{,}5$ recebem mais peso; estratos quase puros (todos tratados ou todos controles) recebem peso quase nulo. Esses pesos não correspondem necessariamente à composição da população alvo da política. Esse é um ponto a que retornamos na Subseção~\ref{subsec:nao-binario}.
+
+Vimos como a hipótese de exogeneidade pode ser adaptada para o caso com covariadas. A próxima fronteira é o tempo: o que muda quando observamos os mesmos indivíduos em mais de um período?
+
+% =============================================================================
+\section{Mais de um Período}
+\label{subsec:painel}
+
+Dados em painel --- observações repetidas dos mesmos indivíduos ao longo do tempo --- abrem possibilidades novas de identificação, mas também introduzem complicações. Para fixar ideias, considere um modelo com $T$ períodos, indivíduo $i$, sem efeitos dinâmicos do tratamento (isto é, o efeito do tratamento em $t$ depende apenas de $D_{it}$, não de $D_{i, t-1}$):
+\begin{equation}
+Y_{it} = \alpha_t + \beta_t \cdot D_{it} + \varepsilon_{it}.
+\label{eq:modelo-painel}
+\end{equation}
+O parâmetro $\beta_t$ varia com $t$: o efeito do PRONATEC em 2015 pode ser diferente do efeito em 2020. Os interceptos $\alpha_t$ capturam tendências comuns na evolução de $Y$ não atribuíveis ao tratamento --- ciclo econômico, inflação, mudanças demográficas. Por simplicidade, mantemos por enquanto a ausência de covariadas individuais.
+
+% -----------------------------------------------------------------------------
+\subsection{Identificação em Painel}
+\label{subsubsec:identificacao-painel}
+
+A hipótese de exogeneidade adaptada para painel exige que o erro seja independente do tratamento dentro de cada período:
+\begin{equation}
+E[\varepsilon_{it} \mid D_{it}] = 0, \qquad t = 1, \dots, T.
+\label{eq:exog-painel}
+\end{equation}
+Sob essa hipótese, $\beta_t$ é identificado período a período pela diferença de médias:
+\begin{equation}
+\beta_t = E[Y_{it} \mid D_{it} = 1] - E[Y_{it} \mid D_{it} = 0].
+\label{eq:beta-t}
+\end{equation}
+A pergunta interessante é: o que acontece se, em vez de estimar $\beta_t$ período a período, agruparmos os dados e rodarmos uma única regressão?
+
+\textbf{(A) Modelo \textit{pooled} com dummies de tempo.} Especificamos
+\begin{equation}
+Y_{it} = \alpha_t + \beta \cdot D_{it} + u_{it},
+\label{eq:pooled}
+\end{equation}
+onde $\beta$ é forçado a ser constante. Aplicando FWL populacional, $\beta$ é o coeficiente da regressão de $Y_{it}$ em $D_{it}$ depois que ambos foram parcializados pelas dummies de tempo. Parcializar por dummies de tempo equivale a tirar a média de cada período: $\tilde{Y}_{it} = Y_{it} - \bar{Y}_{\cdot t}$ e $\tilde{D}_{it} = D_{it} - \bar{D}_{\cdot t}$. Logo:
+\begin{equation}
+\beta_{pooled} = \frac{\sum_t E\big[\,(D_{it} - \bar{D}_{\cdot t})(Y_{it} - \bar{Y}_{\cdot t})\,\big]}{\sum_t E\big[\,(D_{it} - \bar{D}_{\cdot t})^2\,\big]}
+= \sum_t \omega_t^{P} \cdot \beta_t,
+\label{eq:pooled-pesos}
+\end{equation}
+com pesos
+\begin{equation}
+\omega_t^{P} = \frac{p_t (1 - p_t)}{\sum_s p_s (1 - p_s)},
+\label{eq:pesos-pooled}
+\end{equation}
+onde $p_t = P(D_{it} = 1)$ é a fração de tratados no período $t$. Os pesos somam $1$ e são maiores em períodos com $p_t$ próximo de $0{,}5$.
+
+\textbf{(B) Modelo de efeitos fixos.} Adicionamos efeitos fixos individuais $\mu_i$:
+\begin{equation}
+Y_{it} = \mu_i + \alpha_t + \beta \cdot D_{it} + u_{it},
+\label{eq:efeitos-fixos}
+\end{equation}
+e estimamos por \textit{within transformation}, isto é, subtraindo as médias \textit{por indivíduo} (e, simetricamente, por tempo). Após a dupla parcialização, obtemos $\ddot{Y}_{it}$ e $\ddot{D}_{it}$, e
+\begin{equation}
+\beta_{FE} = \frac{\sum_{i,t} E[\ddot{D}_{it} \ddot{Y}_{it}]}{\sum_{i,t} E[\ddot{D}_{it}^2]}
+= \sum_t \omega_t^{FE} \cdot \beta_t.
+\label{eq:fe-pesos}
+\end{equation}
+Os pesos $\omega_t^{FE}$ são proporcionais à variância \textit{within} de $D_{it}$ no período $t$: períodos em que muitos indivíduos mudam de status de tratamento contribuem mais. Se um indivíduo nunca muda de status (sempre tratado ou nunca tratado), ele contribui zero para a estimativa.
+
+\textbf{Comparação.} Os pesos $\omega_t^P$ e $\omega_t^{FE}$ \textit{diferem}. O modelo \textit{pooled} pondera períodos pela variância \textit{cross-section} do tratamento; o modelo de efeitos fixos pondera pela variância \textit{within} do tratamento. Em desenhos com adoção escalonada (\textit{staggered adoption}) --- por exemplo, um programa que entra em municípios em ondas distintas ao longo de anos ---, essas duas ponderações dão pesos muito diferentes aos efeitos de cada coorte de adoção. A literatura recente sobre DiD com adoção escalonada (de Chaisemartin e D'Haultfœuille 2020, Goodman-Bacon 2021) mostra que $\beta_{FE}$ pode atribuir pesos \textit{negativos} a alguns $\beta_t$, o que dificulta a interpretação econômica do estimando.
+
+A leitura é importante: \textit{nem o pooled nem o FE identificam o ATE médio simples $\frac{1}{T}\sum_t \beta_t$.} Eles identificam médias ponderadas, com pesos definidos pela mecânica do estimador. Quando os $\beta_t$ são iguais entre períodos (efeito constante), as três quantidades coincidem. Quando há heterogeneidade temporal, os números podem divergir substancialmente.
+
+% -----------------------------------------------------------------------------
+\subsection{Covariadas em Painel}
+\label{subsubsec:covariadas-painel}
+
+Voltamos agora à inclusão de covariadas $W_i$ (por simplicidade, invariantes no tempo --- o caso com $W_{it}$ variável é uma extensão direta). Há duas especificações naturais:
+
+\textbf{(A) \textit{Pooled} sem interação $W \times D$:}
+\begin{equation}
+Y_{it} = \alpha_t + \beta \cdot D_{it} + \gamma \cdot W_i + u_{it}.
+\label{eq:pooled-w}
+\end{equation}
+A pergunta é: o que essa regressão identifica? Aplicando FWL populacional, $\beta$ é o coeficiente da regressão de $Y_{it}$ em $D_{it}$ depois que ambos foram parcializados por $(\alpha_t, W_i)$. O ponto é que $W_i$ \textit{não varia com $t$}, mas o seu coeficiente $\gamma$ é forçado a ser constante --- e, portanto, parcializar por $W_i$ remove apenas uma única projeção em $W$, não uma para cada período.
+
+Para ver o viés explicitamente, suponha que o modelo verdadeiro tem coeficiente de $W$ que varia com $t$:
+\begin{equation}
+Y_{it} = \alpha_t + \beta \cdot D_{it} + \gamma_t \cdot W_i + \varepsilon_{it}.
+\label{eq:modelo-verdadeiro-w}
+\end{equation}
+A regressão \eqref{eq:pooled-w} impõe $\gamma_t = \gamma$ constante. Aplicando FWL e fazendo a álgebra (omitimos os passos detalhados, que envolvem álgebra padrão de regressão), o estimando da regressão restrita pode ser decomposto como:
+\begin{equation}
+\beta_{pooled}^{(A)} = \beta + \underbrace{\frac{\sum_t \text{Cov}(D_{it}, W_i) \cdot (\gamma_t - \bar{\gamma})}{\sum_t \text{Var}(\tilde{D}_{it} \mid W_i)}}_{\text{viés}},
+\label{eq:vies-painel}
+\end{equation}
+onde $\bar{\gamma} = \frac{1}{T}\sum_t \gamma_t$ e $\tilde{D}_{it}$ denota $D_{it}$ parcializado pelas dummies de tempo. O viés tem origem clara: se $W_i$ está correlacionado com $D_{it}$ no período $t$ (por exemplo, mulheres tendem a entrar mais no programa em alguns períodos), \textit{e} o efeito de $W_i$ sobre $Y_{it}$ varia com $t$ (por exemplo, o gap salarial de gênero muda ao longo do tempo), então parcializar por uma única projeção média de $W_i$ não é suficiente. O viés captura essa diferença.
+
+\textbf{(B) \textit{Pooled} com interação $W \times D$ e $W \times t$:}
+\begin{equation}
+Y_{it} = \alpha_t + \beta \cdot D_{it} + \sum_t \gamma_t \cdot (W_i \cdot \mathbb{1}\{T = t\}) + u_{it}.
+\label{eq:pooled-w-int}
+\end{equation}
+Agora permitimos que o coeficiente de $W_i$ varie com $t$. Aplicando FWL com $D_{it}$ sendo parcializado por todas as $T$ projeções $W_i \cdot \mathbb{1}\{T=t\}$, recuperamos o caso em que cada período é tratado simetricamente. Algebricamente, a soma sobre $t$ no numerador de \eqref{eq:vies-painel} se torna $\sum_t \text{Cov}(D_{it}, W_i)(\gamma_t - \gamma_t) = 0$, e o viés desaparece:
+\begin{equation}
+\beta_{pooled}^{(B)} = \beta.
+\label{eq:beta-pooled-b}
+\end{equation}
+
+A intuição empírica é direta. Suponha que avaliamos o efeito do PRONATEC sobre renda em painel. As covariadas $W_i$ incluem gênero. Se rodarmos a especificação (A), forçamos o efeito de gênero sobre renda a ser constante ao longo dos anos. Se, na realidade, o gap salarial de gênero diminuiu ao longo do período observado (uma característica empírica documentada do mercado de trabalho brasileiro), e se o PRONATEC atendeu mais mulheres em períodos posteriores, a regressão (A) atribui parte da redução do gap ao efeito do programa, viesando a estimativa de $\beta$. A especificação (B), ao permitir que o coeficiente de gênero varie por ano, isola corretamente o efeito do programa.
+
+A lição geral é a mesma da Subseção~\ref{subsubsec:covariadas}: \textit{a forma funcional importa para o que o estimador calcula}. Identificação não é apenas uma questão de hipóteses sobre o erro; ela inclui hipóteses sobre como as covariadas entram no modelo. Restrições funcionais incorretas podem introduzir viés mesmo quando a hipótese de exogeneidade é válida.
+
+Vimos como o tempo enriquece e complica a identificação. Resta examinar o que muda quando o tratamento não é binário.
+
+% =============================================================================
+\section{Modelo com Tratamento Não-Binário}
+\label{subsec:nao-binario}
+
+Até aqui, $D_i \in \{0, 1\}$. Em muitas aplicações, o tratamento é um número real --- horas de capacitação, valor de subsídio, dose de vacina, anos de escolaridade. Quando $X$ é binário, postular linearidade não é restritivo: dois pontos definem uma reta. Quando $X$ é contínuo ou tem múltiplos valores, linearidade é uma hipótese substantiva sobre a forma da relação $Y = f(X, \varepsilon)$.
+
+Considere um modelo linear com efeitos heterogêneos:
+\begin{equation}
+Y_i = \alpha + \beta_i \cdot X_i + \varepsilon_i,
+\label{eq:linear-heterogeneo}
+\end{equation}
+onde $\beta_i$ é o efeito marginal do tratamento para o indivíduo $i$ --- uma variável aleatória. Sob exogeneidade $E[\varepsilon_i \mid X_i] = 0$ \textit{e} a hipótese adicional $E[\beta_i \mid X_i] = E[\beta_i]$ (independência entre $\beta_i$ e $X_i$), a regressão linear identifica
+\begin{equation}
+\beta_{OLS} = E[\beta_i].
+\label{eq:beta-medio}
+\end{equation}
+Ou seja, OLS recupera o efeito \textit{médio} dos efeitos individuais. Se a independência entre $\beta_i$ e $X_i$ falhar --- por exemplo, se quem escolhe níveis altos de tratamento é justamente quem tem efeito mais alto ---, o estimando de OLS é uma média ponderada dos $\beta_i$ com pesos que refletem a covariância entre $\beta_i$ e $X_i$. O número que sai da regressão pode não ter interpretação econômica simples.
+
+% -----------------------------------------------------------------------------
+\subsection{Modelo Estrutural Não-Linear}
+\label{subsubsec:nao-linear}
+
+Vamos um passo além. Postulamos um modelo estrutural geral:
+\begin{equation}
+Y_i = h(X_i, \varepsilon_i),
+\label{eq:estrutural}
+\end{equation}
+sem assumir linearidade em $X$ nem aditividade em $\varepsilon$. O parâmetro causal de interesse depende da natureza de $X$:
+
+\textbf{Caso $X$ contínuo.} O parâmetro relevante é a derivada parcial:
+\begin{equation}
+\frac{\partial h}{\partial x}(x, \varepsilon_i),
+\label{eq:derivada-parcial}
+\end{equation}
+isto é, o efeito marginal de uma mudança em $X$ sobre $Y$, mantendo $\varepsilon_i$ fixo. Como $\varepsilon_i$ não é observado, esse objeto também varia entre indivíduos.
+
+\textbf{Caso $X$ discreto.} O parâmetro é a diferença:
+\begin{equation}
+h(x+1, \varepsilon_i) - h(x, \varepsilon_i),
+\label{eq:diferenca-discreta}
+\end{equation}
+o efeito de aumentar $X$ em uma unidade.
+
+Em ambos os casos, ao impormos a especificação linear $Y_i = \alpha + \beta X_i + \varepsilon_i$ a um modelo estrutural não linear, OLS identifica uma média ponderada da derivada/diferença, com pesos que dependem da distribuição marginal de $X$ \textit{e} da curvatura de $h$. Esse estimando \textit{não} coincide, em geral, com a Average Derivative,
+\begin{equation}
+\theta_{AD} = E\left[\frac{\partial h}{\partial x}(X_i, \varepsilon_i)\right],
+\label{eq:average-derivative}
+\end{equation}
+que é o objeto de política mais natural --- o efeito marginal médio na população.
+
+Para enxergar a diferença, considere um exemplo simples: o efeito de horas de capacitação sobre renda, com retornos decrescentes (a função $h$ é côncava em $X$). A Average Derivative dá peso uniforme a todos os indivíduos. OLS dá mais peso àqueles cujo $X_i$ está próximo da média de $X$ \textit{e} em regiões da função onde a inclinação é maior. Em uma função côncava, isso significa peso desproporcional em níveis baixos de tratamento, onde a curva é mais íngreme. O coeficiente OLS pode, portanto, superestimar substancialmente o efeito marginal médio na população.
+
+Imbens e Newey (2009) mostraram como, em modelos triangulares com variáveis instrumentais, é possível identificar a Average Derivative usando funções de controle. Garzon e Possebom (2025) generalizam essa identificação para o caso de tratamento exógeno com pesos amostrais explícitos, comparando os estimandos de OLS e da Average Derivative em uma classe ampla de aplicações empíricas.
+
+Pode-se ir ainda mais longe: identificar efeitos heterogêneos condicionando em valores específicos de $X$. Sob hipóteses adicionais sobre a monotonicidade da função $h$ em $\varepsilon$ e a continuidade da distribuição condicional, é possível recuperar quantis dos efeitos individuais (Chesher 2003). A discussão técnica desses resultados foge ao escopo deste guia introdutório, mas o ponto a registrar é o seguinte: \textit{o que OLS identifica em modelos estruturais não lineares não é necessariamente o que a teoria econômica nos pediu para identificar}. A escolha entre estimadores deve refletir uma escolha consciente sobre qual média ponderada de efeitos individuais é relevante para a pergunta de política --- e essa escolha precede, logicamente, qualquer discussão sobre eficiência ou erros-padrão.
+
+Todos os argumentos desta subseção pressupõem que $X$ é exógeno. Quando essa hipótese falha, voltamos ao problema do viés de seleção, agora com complicações adicionais devidas à não linearidade.
+
+% =============================================================================
+\section{Além do RCT}
+\label{subsec:alem-rct}
+
+A maior parte da literatura aplicada de avaliação de políticas \textit{não} dispõe de RCTs. Quando o tratamento não é atribuído por sorteio, a hipótese de exogeneidade marginal $E[\varepsilon_i \mid D_i] = 0$ não é defensável diretamente. O que se faz, então, é substituí-la por uma hipótese de identificação \textit{alternativa} --- tipicamente mais fraca em algum sentido, mas defensável a partir do desenho da pesquisa e do conhecimento institucional. Cada uma dessas hipóteses dá origem a uma \textit{estratégia de identificação} distinta.
+
+Esta subseção apresenta, em nível introdutório, quatro das estratégias mais usadas em econometria aplicada. O objetivo aqui é mapear o terreno, não desenvolver cada método em detalhe --- cada estratégia é tratada em profundidade em um Guia Clear próprio.
+
+% -----------------------------------------------------------------------------
+\subsection{Matching}
+\label{subsubsec:matching}
+
+Quando a exogeneidade marginal falha, mas é plausível que ela valha \textit{condicionalmente} a um conjunto de observáveis, recorremos à hipótese de \textbf{independência condicional} (CIA, \textit{Conditional Independence Assumption}):
+\begin{equation}
+\big(Y_i(1), Y_i(0)\big) \perp D_i \mid W_i.
+\label{eq:cia}
+\end{equation}
+A CIA diz que, \textit{dentro de} estratos definidos por $W_i$, o tratamento é como se aleatório. Quem é tratado e quem não é são comparáveis, controladas as diferenças observáveis.
+
+A intuição do \textit{matching} é reconstruir o contrafactual de cada tratado a partir dos controles que mais se parecem com ele em $W_i$. Se um beneficiário do PRONATEC tem $35$ anos, ensino médio completo e mora em município de porte médio, busca-se nos dados um não-beneficiário com características similares e usa-se o seu $Y$ como aproximação para $Y_i(0)$. A diferença entre os $Y$ observados, agregada na população de tratados, identifica o ATT sob CIA.
+
+O ponto delicado é que a CIA é uma hipótese substantiva. Ela exige que \textit{todas} as variáveis relevantes para a seleção e para o resultado estejam em $W_i$ --- não basta uma lista longa, é preciso que ela seja \textit{suficiente}. Diferentemente da ortogonalidade no RCT, a CIA não pode ser garantida por desenho; ela depende inteiramente de argumentos institucionais sobre quais fatores governam a entrada no programa. Para um tratamento aprofundado da estratégia, ver o Guia Clear de Matching.
+
+% -----------------------------------------------------------------------------
+\subsection{Regressão Descontínua (RDD)}
+\label{subsubsec:rdd}
+
+Em muitas políticas, a elegibilidade é determinada por uma regra administrativa baseada em uma variável contínua --- renda per capita, nota em uma prova, idade. O Bolsa Família, por exemplo, usa a renda per capita familiar para determinar quem é elegível. Quem está logo abaixo do limiar recebe; quem está logo acima, não.
+
+A intuição da RDD (\textit{Regression Discontinuity Design} --- Desenho de Regressão Descontínua) é que indivíduos imediatamente abaixo e imediatamente acima do limiar tendem a ser \textit{essencialmente comparáveis} em todas as características relevantes --- exceto pelo tratamento. A hipótese de identificação é \textit{exogeneidade local}: na vizinhança do cutoff, a atribuição do tratamento é como se aleatória. Formalmente, exige-se continuidade das esperanças condicionais $E[Y_i(0) \mid R_i]$ e $E[Y_i(1) \mid R_i]$ no ponto de corte, onde $R_i$ é a variável de \textit{running}.
+
+O parâmetro identificado é local: o efeito do tratamento \textit{para indivíduos no cutoff}. Esse é, simultaneamente, o ponto forte e a limitação do método. Forte, porque a hipótese de identificação é defensável por desenho institucional --- não exige argumentos sobre seleção comportamental, apenas sobre a impossibilidade de manipulação precisa do \textit{running}. Limitado, porque o parâmetro tem validade externa restrita: ele não diz nada sobre o efeito do programa em populações longe do cutoff. Para um tratamento aprofundado, ver o Guia Clear de Regressão Descontínua.
+
+% -----------------------------------------------------------------------------
+\subsection{Diferenças em Diferenças (DiD)}
+\label{subsubsec:did}
+
+Quando dispomos de dados em dois ou mais períodos e o tratamento muda de status para alguns indivíduos entre períodos, podemos substituir a hipótese de exogeneidade pela hipótese de \textbf{tendências paralelas}:
+\begin{equation}
+E[Y_{it}(0) - Y_{i, t-1}(0) \mid D_i = 1] = E[Y_{it}(0) - Y_{i, t-1}(0) \mid D_i = 0].
+\label{eq:tendencias-paralelas}
+\end{equation}
+Em palavras: \textit{na ausência do tratamento}, os grupos tratado e controle teriam evoluído em paralelo. Note que isso é mais fraco do que exogeneidade marginal --- não exige que tratados e controles sejam comparáveis em nível, apenas que sua \textit{tendência} contrafactual seja a mesma.
+
+A intuição da DiD (\textit{Difference-in-Differences} --- Diferenças em Diferenças) é que a diferença \textit{temporal} dentro do grupo de controle serve como proxy para a tendência contrafactual do grupo tratado. A diferença das diferenças --- (tratado pós - tratado pré) menos (controle pós - controle pré) --- isola o efeito do tratamento sob a hipótese \eqref{eq:tendencias-paralelas}.
+
+Uma aplicação canônica no Brasil é o estudo do programa Mais Médicos. A entrada do programa em municípios em momentos distintos permite construir comparações DiD entre municípios que receberam o programa cedo, tarde ou nunca. A literatura recente sobre DiD com adoção escalonada (ver discussão na Subseção~\ref{subsubsec:identificacao-painel}) mostra que a aplicação ingênua de regressões com efeitos fixos pode produzir estimandos com pesos negativos sobre alguns efeitos de coorte --- um cuidado importante na aplicação. Para um tratamento aprofundado, ver o Guia Clear de Diferenças em Diferenças.
+
+% -----------------------------------------------------------------------------
+\subsection{Controle Sintético}
+\label{subsubsec:controle-sintetico}
+
+Em alguns contextos, a unidade tratada é única ou rara --- um estado que adotou uma política específica, uma cidade que recebeu um choque único. Não há, nesses casos, um grupo de controle natural comparável em nível e tendência. A alternativa proposta pela literatura de \textbf{controle sintético} (Abadie e Gardeazabal 2003, Abadie, Diamond e Hainmueller 2010) é construir um controle artificial como combinação ponderada de unidades não tratadas, de modo que a unidade sintética replique a unidade tratada nas variáveis pré-tratamento.
+
+A intuição é que, se um estado tratado pode ser bem aproximado --- nas covariadas e nos resultados pré-tratamento --- por uma média ponderada de outros estados, então essa mesma combinação ponderada serve como contrafactual no período pós-tratamento. O parâmetro identificado é, novamente, um ATT ---- agora sobre a unidade tratada específica, não sobre uma população. Para um tratamento aprofundado, ver o Guia Clear de Controle Sintético.
+
+\bigskip
+
+As quatro estratégias descritas nesta subseção são respostas a diferentes formas de falha da exogeneidade marginal. Em todas elas, a estrutura lógica permanece a mesma: parte-se do parâmetro econômico de interesse, formula-se uma hipótese de identificação plausível à luz do contexto institucional e do desenho da pesquisa, deriva-se o estimando que essa hipótese permite identificar e, somente então, escolhe-se um estimador alinhado a esse estimando. Essa ordem é a espinha dorsal de toda análise causal séria. Ela será revisitada, em diferentes formas, ao longo de todos os guias da série Clear.
+
+% =============================================================================
+% Fim da Seção 2
+% =============================================================================

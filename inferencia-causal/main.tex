@@ -1,0 +1,395 @@
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Introdução à Inferência Causal
+%% ============================================================
+
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt, a4paper, openany]{book}
+
+%% ── Codificação e Idioma ────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+%% ── Fonte ───────────────────────────────────────────────────
+\usepackage{tgpagella}
+
+%% ── Matemática ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e Tabelas ───────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
+\usepackage{longtable}
+\usepackage{tabularx}
+
+%% ── Layout ──────────────────────────────────────────────────
+\usepackage{geometry}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{enumitem}
+
+%% ── TikZ e PGF ──────────────────────────────────────────────
+\usepackage{csquotes}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, positioning, decorations.pathreplacing}
+
+%% ── Cores (paleta CLEAR) ────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
+\definecolor{salmonbg}{RGB}{252,235,230}
+\definecolor{salmonframe}{RGB}{230,160,140}
+\definecolor{bluebg}{RGB}{235,245,251}
+\definecolor{blueframe}{RGB}{58,125,181}
+\definecolor{orangebg}{RGB}{254,245,231}
+\definecolor{orangeframe}{RGB}{230,126,34}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeframe}{RGB}{200,200,200}
+\definecolor{codegray}{rgb}{0.45,0.45,0.45}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{greenbg}{RGB}{225,242,225}
+\definecolor{greenframe}{RGB}{60,140,80}
+
+%% ── Hyperlinks e Bibliografia ───────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = clearlightblue,
+  urlcolor   = clearlightblue,
+  citecolor  = clearlightblue,
+  pdftitle   = {Introdução à Inferência Causal},
+  pdfauthor  = {FGV CLEAR}
+}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+%% ── TColorbox ───────────────────────────────────────────────
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{breakable, skins}
+
+%% ── Código ──────────────────────────────────────────────────
+\usepackage{listings}
+
+%% ── Cabeçalhos e Rodapés ────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ Introdu\c{c}\~ao \`a Infer\^encia Causal}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
+
+%% ── Títulos de Seção ────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{clearblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{cleardarkblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{cleardarkblue}}{\thesubsubsection}{1em}{}
+
+%% ── Numeração ───────────────────────────────────────────────
+\numberwithin{equation}{chapter}
+\numberwithin{table}{chapter}
+\numberwithin{figure}{chapter}
+
+%% ── Caixas Temáticas ────────────────────────────────────────
+\newtcolorbox{destaquebox}[1][Destaque]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{notabox}[1][Nota]{
+  enhanced, breakable,
+  colback=bluebg, colframe=blueframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{conexaobox}[1][Conex\~ao com a s\'erie]{
+  enhanced, breakable,
+  colback=orangebg, colframe=orangeframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{exemplobox}[1][Exemplo]{
+  enhanced, breakable,
+  colback=greenbg, colframe=greenframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{hipotesebox}[1][Hip\'otese]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{atencaobox}[1][Aten\c{c}\~ao]{
+  enhanced, breakable,
+  colback=redbg, colframe=redframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+%% ── Estilo de Listings ──────────────────────────────────────
+\lstdefinestyle{Rstyle}{
+  language         = R,
+  commentstyle     = \color{codegray}\itshape,
+  keywordstyle     = \color{clearblue}\bfseries,
+  numberstyle      = \tiny\color{codegray},
+  stringstyle      = \color{clearlightblue},
+  basicstyle       = \ttfamily\small,
+  breakatwhitespace= false,
+  breaklines       = true,
+  captionpos       = b,
+  keepspaces       = true,
+  numbers          = left,
+  numbersep        = 8pt,
+  showspaces       = false,
+  showstringspaces = false,
+  showtabs         = false,
+  tabsize          = 2,
+  frame            = single,
+  rulecolor        = \color{codeframe},
+  backgroundcolor  = \color{codebg},
+  inputencoding    = utf8,
+  extendedchars    = true,
+  literate =
+    {á}{{\'{a}}}1 {à}{{\`{a}}}1 {â}{{\^{a}}}1 {ã}{{\~{a}}}1
+    {é}{{\'{e}}}1 {ê}{{\^{e}}}1
+    {í}{{\'{i}}}1
+    {ó}{{\'{o}}}1 {ô}{{\^{o}}}1 {õ}{{\~{o}}}1
+    {ú}{{\'{u}}}1
+    {ç}{{\c{c}}}1
+    {Á}{{\'{A}}}1 {Â}{{\^{A}}}1 {Ã}{{\~{A}}}1
+    {É}{{\'{E}}}1 {Ê}{{\^{E}}}1
+    {Í}{{\'{I}}}1
+    {Ó}{{\'{O}}}1 {Ô}{{\^{O}}}1 {Õ}{{\~{O}}}1
+    {Ú}{{\'{U}}}1
+    {Ç}{{\c{C}}}1
+}
+\lstset{style=Rstyle}
+
+%% ── Teoremas ────────────────────────────────────────────────
+\newtheorem{definition}{Defini\c{c}\~ao}[chapter]
+\newtheorem{proposition}{Proposi\c{c}\~ao}[chapter]
+\newtheorem{remark}{Observa\c{c}\~ao}[chapter]
+
+%% ── Atalhos Matemáticos ─────────────────────────────────────
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+
+%% ── Metadados de Figuras/Quadros ────────────────────────────
+\newcommand{\figmeta}[3]{%
+  \par\vspace{4pt}%
+  \begin{minipage}{\linewidth}%
+  \footnotesize%
+  \textbf{Fonte:} #1%
+  \ifx&#2&\else\\\textbf{Elabora\c{c}\~ao:} #2\fi%
+  \ifx&#3&\else\\\textbf{Nota:} #3\fi%
+  \end{minipage}%
+  \vspace{6pt}%
+}
+
+%% ── Profundidade de numera\c{c}\~ao ─────────────────────────
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+% ============================================================
+\begin{document}
+
+\frontmatter
+
+% ============================================================
+% CAPA
+% ============================================================
+\thispagestyle{empty}
+\begin{center}
+\vspace*{3cm}
+
+{\Large\bfseries\color{clearlightblue} S\'ERIE: AVALIA\c{C}\~AO NA PR\'ATICA}
+
+\vspace{1.8cm}
+
+{\Huge\bfseries\color{clearblue} Como ir de correlação para causalidade }
+
+\vspace{2.2cm}
+
+{\large FGV CLEAR $|$ FGV EESP}
+
+\vspace{0.5cm}
+
+{\large Maio de 2026}
+
+\vfill
+\end{center}
+\newpage
+
+% ============================================================
+% FICHA TÉCNICA
+% ============================================================
+\thispagestyle{empty}
+\vspace*{1.5cm}
+
+{\Large\bfseries\color{clearblue} Ficha T\'ecnica}
+
+\bigskip
+
+\noindent\textbf{Equipe t\'ecnica:} Caio de Souza Castro, Luigi Garzon.
+
+\bigskip
+
+\noindent\textbf{Apresenta\c{c}\~ao.} Este guia integra a s\'erie de publica\c{c}\~oes \textit{Avalia\c{c}\~ao na Pr\'atica}, desenvolvida pelo FGV CLEAR com o objetivo de ampliar o acesso a conhecimentos sobre monitoramento e avalia\c{c}\~ao com foco em pol\'iticas p\'ublicas.
+
+\medskip
+
+\noindent Fundado em 2015, o FGV CLEAR tem se dedicado ao fortalecimento da cultura de gest\~ao orientada por evid\^encias no Brasil e em pa\'ises lus\'ofonos. Com sede na Escola de Economia de S\~ao Paulo da Funda\c{c}\~ao Getulio Vargas (FGV EESP), o FGV CLEAR atua como centro regional da Iniciativa CLEAR (\textit{Centers for Learning on Evaluation and Results}).
+
+\medskip
+
+\noindent Saiba mais sobre o FGV CLEAR e acesse outras publica\c{c}\~oes em: \textbf{www.fgvclear.org}
+
+\vfill
+
+\noindent{\small\color{cleargray}%
+\textbf{Cita\c{c}\~ao recomendada:} FGV CLEAR. (\the\year). \textit{Introdu\c{c}\~ao \`a Infer\^encia Causal}. S\'erie Avalia\c{c}\~ao na Pr\'atica. S\~ao Paulo: FGV CLEAR.
+
+\medskip
+
+\noindent Os textos desta publica\c{c}\~ao s\~ao de responsabilidade exclusiva dos autores. As opini\~oes expressas n\~ao refletem necessariamente a posi\c{c}\~ao das institui\c{c}\~oes parceiras.}
+
+\newpage
+
+% ============================================================
+% SUMÁRIO
+% ============================================================
+% ─── SOBRE ESTE GUIA ─────────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Sobre este guia}
+O cigarro causa câncer ou são as pessoas que fumam que já tinham mais
+propensão a adoecer? Quando o Bolsa Família foi associado a queda na
+pobreza, foi o programa que reduziu a pobreza ou o crescimento econômico
+do mesmo período que ajudou? Crianças que frequentam creche têm
+desempenho escolar melhor depois porque a creche desenvolve habilidades
+cognitivas ou porque famílias que matriculam os filhos em creche são,
+sistematicamente, famílias que investem mais nos filhos de outras formas
+que não medimos? Cada uma dessas perguntas tem a mesma estrutura: uma
+correlação observada nos dados, e uma dúvida razoável sobre se ela
+reflete causa ou outra coisa. Distinguir essas duas possibilidades está no
+centro de praticamente toda decisão de política pública. E quase nunca é
+trivial.
+
+A literatura contemporânea trata o problema com um arcabouço conceitual
+chamado resultados potenciais. A ideia é a seguinte: para cada indivíduo
+da população, imagine que existem dois mundos possíveis. No mundo em que
+ele recebeu o tratamento, observa-se um certo resultado. No mundo em que
+ele não recebeu, outro. O efeito causal do tratamento, para aquele
+indivíduo, é a diferença entre os dois resultados. O problema é que cada
+pessoa vive apenas um dos dois mundos. Quem fumou não pode ser observado
+como se não tivesse fumado, e vice-versa. Os dois resultados potenciais
+existem como construção teórica, mas só um deles é realizado e
+observável. Por isso, o efeito causal individual é, em última instância,
+inobservável.
+
+A engenharia inteira da inferência causal moderna é a tentativa de
+recuperar médias desses efeitos comparando pessoas diferentes que vivem
+cada qual um dos dois mundos. A pergunta deixa de ser ``o que teria
+acontecido com este indivíduo no outro mundo?'' e passa a ser ``no
+agregado, qual é a diferença entre o que de fato aconteceu com quem foi
+tratado e o que aconteceu com pessoas comparáveis que não foram?''. Essa
+transição parece pequena mas tem implicação grande: a comparação só é
+válida sob hipóteses específicas, e diferentes hipóteses sustentam
+diferentes métodos.
+
+O arcabouço separa três etapas que costumam ser confundidas. Identificação
+é a pergunta de quando o parâmetro de interesse pode ser recuperado dos
+dados observados, e sob quais suposições. Esse é o passo onde se decide
+se a pergunta tem resposta, antes mesmo de pensar em estimação. Estimação
+é como calcular o parâmetro numa amostra finita, com decisões sobre forma
+funcional, ponderação, controles, especificação. Inferência é como
+quantificar a incerteza em torno do que foi estimado, levando em conta
+que com outra amostra teríamos outro número. Cada uma dessas etapas tem
+armadilhas próprias, e tratá-las como uma só coisa (como em ``rodar uma
+regressão'') esconde decisões importantes e propaga erros.
+
+Este guia é a base conceitual da série. Os demais guias (RDD, controle
+sintético, pareamento, diferenças-em-diferenças) aplicam essas etapas a
+contextos específicos, com hipóteses adaptadas a cada situação. Quem
+domina a estrutura aqui apresentada lê os outros guias com mais clareza
+sobre o que cada método assume, o que cada estimativa significa, e por
+que duas estimativas aparentemente da mesma coisa, vindas de métodos
+diferentes, podem dar respostas diferentes sem que nenhuma das duas
+esteja errada.
+\newpage
+
+% ─── COMO LER ESTE GUIA ──────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Como ler este guia}
+Três tipos de caixa estruturam a leitura, identificados por cor:
+\vspace{0.3cm}
+\begin{notabox}[Caixa azul --- pontos-chave]
+Aparece ao fim de cada capítulo, com sínteses e recomendações para quem
+precisa decidir.
+\end{notabox}
+\begin{exemplobox}[Caixa verde --- exemplo aplicado]
+Mostra como as ideias do capítulo se traduzem em situações de política
+pública. Os casos são fictícios, mas calibrados por padrões recorrentes
+na literatura e na prática de gestão.
+\end{exemplobox}
+\begin{atencaobox}[Caixa vermelha --- cuidados essenciais]
+Sinaliza armadilhas comuns --- pontos em que uma escolha mal fundamentada
+compromete toda a análise.
+\end{atencaobox}
+\vspace{0.5cm}
+\noindent O guia faz referência recorrente ao \textit{Guia CLEAR de
+Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}
+\citep{Lima2025} --- doravante \textbf{Guia CLEAR de M\&A} ---, que trata
+em profundidade as etapas do ciclo da política pública adotado na série.
+Quando o texto menciona Teoria da Mudança, plano de monitoramento ou
+tipologia de avaliações, é nesse guia que o leitor encontra o
+desenvolvimento completo.
+\newpage
+
+\tableofcontents
+\newpage
+
+% ============================================================
+% CONTEÚDO
+% ============================================================
+
+\mainmatter
+
+\input{secao1_introducao}
+\input{secao2_identificacao}
+\input{secao3_estimacao}
+\input{secao4_inferencia}
+\input{secao5_aplicacao}
+\input{secao6_conclusao}
+
+% ============================================================
+% REFERÊNCIAS
+% ============================================================
+\backmatter
+\bibliography{ref}
+
+\end{document}

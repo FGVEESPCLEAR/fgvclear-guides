@@ -1,0 +1,151 @@
+\chapter{Introdução}
+\label{cap:introducao}
+
+A avaliação quantitativa de políticas públicas enfrenta uma tensão permanente
+entre duas perguntas aparentemente semelhantes, mas fundamentalmente distintas.
+A primeira é descritiva: \textit{programas sociais estão associados a melhores
+resultados?} A segunda é causal: \textit{esses programas causam melhores
+resultados?} A diferença entre as duas não é apenas filosófica. Ela determina
+se uma política deve ser expandida, reformulada ou descontinuada --- e,
+portanto, como recursos públicos escassos são alocados.
+
+Este guia é sobre a segunda pergunta. Seu objetivo é oferecer ao leitor as
+ferramentas conceituais e práticas para estimar efeitos causais a partir de
+dados observacionais e experimentais. Para isso, seguimos a estrutura que a
+econometria moderna consagrou como o caminho rigoroso entre uma pergunta de
+política e um número calculado em dados: \textbf{identificação},
+\textbf{estimação} e \textbf{inferência}.
+
+
+\section{O Problema e a Solução}
+
+Toda análise causal começa com o \textbf{problema fundamental da inferência
+causal}: para cada unidade de observação --- seja ela uma pessoa, um município
+ou uma escola ---, só é possível observar o resultado sob \textit{um} dos
+tratamentos possíveis. O salário de quem foi para a faculdade não pode ser
+observado simultaneamente no mundo contrafactual em que a mesma pessoa não foi.
+A nota de um aluno em turma pequena não pode ser comparada, para o mesmo aluno,
+à nota que teria tirado em turma regular.
+
+Essa limitação é estrutural, não uma falha dos dados. Ela implica que efeitos
+causais individuais são intrinsecamente não-observáveis, e que a inferência
+causal é, por natureza, um exercício de raciocínio sobre o que
+\textit{não} foi observado.
+
+A solução desenvolvida pela econometria moderna não elimina esse problema ---
+ela o contorna por meio de hipóteses sobre o processo que gerou os dados. Se
+indivíduos similares foram expostos a tratamentos distintos por razões que não
+se relacionam com seus resultados potenciais, a comparação entre eles é
+informativa sobre o efeito causal. Experimentos aleatórios garantem essa
+condição por design. Métodos quasi-experimentais --- regressão com
+descontinuidade, diferenças em diferenças, pareamento, variáveis instrumentais
+--- procuram encontrá-la nos dados observacionais.
+
+
+\section{A Revolução da Credibilidade}
+
+A formação da econometria aplicada moderna foi marcada por uma virada
+metodológica que ficou conhecida como \textbf{revolução da credibilidade}
+\citep{Angrist2010}. Até os anos 1980, a estimação de efeitos causais dependia
+amplamente de modelos estruturais com fortes restrições derivadas da teoria
+econômica. Esses modelos produziam estimativas, mas sua credibilidade dependia
+de hipóteses que raramente podiam ser verificadas nos dados.
+
+A partir do trabalho seminal de pesquisadores como David Card, Joshua Angrist e
+Guido Imbens, a prática econométrica mudou de direção: em vez de depender de
+restrições teóricas implausíveis, passou-se a buscar \textit{variação exógena}
+nos dados --- situações em que o tratamento é atribuído de forma suficientemente
+aleatória para permitir identificação causal. A formalização do arcabouço de
+resultados potenciais \citep{Rubin1974, Rubin1978, Neyman1923} forneceu o
+vocabulário teórico unificado para essa abordagem.
+
+Em 2021, o Prêmio Nobel de Ciências Econômicas reconheceu essa contribuição.
+Card foi premiado pela aplicação de métodos quasi-experimentais a questões do
+mercado de trabalho; Angrist e Imbens, pelas contribuições metodológicas à
+análise de relações causais com dados observacionais. A Série Avaliação na
+Prática, da qual este guia faz parte, é uma expressão direta desse legado.
+
+
+\section{A Cadeia de Análise Causal}
+
+O caminho que este guia percorre pode ser descrito como uma cadeia com
+três elos:
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}]
+  \item \textbf{Identificação} — Definir o parâmetro de interesse, derivar as
+    hipóteses sobre o processo gerador dos dados que o tornam identificável, e
+    especificar o estimando: a quantidade dos dados que, sob essas hipóteses,
+    coincide com o parâmetro.
+
+  \item \textbf{Estimação} — Construir um estimador que calcule o estimando a
+    partir de uma amostra finita. Discutir suas propriedades (consistência,
+    viés, eficiência) e as hipóteses funcionais adicionais que ele impõe.
+
+  \item \textbf{Inferência} — Quantificar a incerteza amostral em torno da
+    estimativa. Escolher estimadores de variância adequados à estrutura dos
+    dados, realizar testes de hipótese, construir intervalos de confiança e
+    verificar a plausibilidade das hipóteses de identificação por meio de
+    testes de falsificação.
+\end{enumerate}
+
+Os três elos respondem a perguntas distintas e se articulam sequencialmente:
+a inferência pressupõe a estimação, que pressupõe a identificação. Um erro
+num dos elos não é corrigido pelos demais.
+
+\begin{atencaobox}[Erro-padrão pequeno não é garantia de causalidade]
+Um resultado com erro-padrão muito pequeno e p-valor minúsculo pode ser
+completamente destituído de interpretação causal se a identificação for
+inválida. A precisão estatística mede quão bem estimamos o estimando ---
+não se o estimando corresponde ao parâmetro econômico de interesse.
+Esta distinção percorre todo o guia.
+\end{atencaobox}
+
+
+\section{Exemplos Condutores}
+
+Ao longo do guia, utilizamos dois exemplos para ilustrar os conceitos.
+
+O primeiro é a questão dos \textbf{retornos à educação}: qual é o efeito
+causal de um ano adicional de escolaridade sobre o salário? O viés de seleção
+é imediato e intuitivo --- pessoas com mais educação tendem a ter maior
+habilidade inata e condições socioeconômicas mais favorecidas, o que elevaria
+seus salários mesmo sem o diploma. O exemplo tem longa tradição na literatura
+\citep{Mincer1974, Card1994, Card1995} e dados abundantes no Brasil por meio
+da PNAD Contínua.
+
+O segundo exemplo, apresentado em detalhe no Capítulo~\ref{sec:star}, é o
+\textbf{Experimento STAR} --- um experimento aleatório conduzido no Tennessee
+entre 1985 e 1989, que avaliou o efeito do tamanho da turma sobre o desempenho
+escolar \citep{Finn1990, Krueger1999}. O STAR serve como laboratório empírico
+ideal para ilustrar identificação por aleatorização, estimação com efeitos
+fixos, erros-padrão clusterizados, bootstrap, múltiplos testes, inferência
+por permutação e testes de falsificação.
+
+
+\section{Estrutura do Guia}
+
+O Capítulo~\ref{sec:identificacao} apresenta o problema de identificação
+causal: o arcabouço de resultados potenciais, os parâmetros de interesse
+(ATE, ATT, ATU), o viés de seleção e as hipóteses de identificação.
+
+O Capítulo~\ref{sec:estimacao} trata da passagem do estimando ao estimador:
+o princípio plug-in, as propriedades dos estimadores, o papel da forma
+funcional, o IPW, os estimadores de painel e o estimador de Lin.
+
+O Capítulo~\ref{sec:inferencia} cobre inferência estatística: erros-padrão,
+testes de hipótese, intervalos de confiança, clustering, bootstrap e
+inferência por permutação, encerrando com os principais testes de
+falsificação.
+
+O Capítulo~\ref{sec:star} aplica todos esses elementos ao Experimento STAR.
+
+O Capítulo~\ref{cap:conclusao} sintetiza as principais lições e conecta
+este guia aos demais da Série Avaliação na Prática.
+
+\begin{notabox}[Pré-requisitos]
+Este guia pressupõe familiaridade com estatística básica (esperança,
+variância, distribuição normal, testes de hipótese) e com o modelo de
+regressão linear simples. Conhecimentos de cálculo são úteis mas não
+indispensáveis. O código em R requer conhecimento básico da linguagem;
+os pacotes utilizados são apresentados com exemplos autocontidos.
+\end{notabox}

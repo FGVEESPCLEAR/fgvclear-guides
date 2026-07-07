@@ -1,0 +1,120 @@
+\chapter{Conclusão}
+\label{cap:conclusao}
+
+Este guia percorreu a cadeia completa de uma análise causal quantitativa:
+da pergunta de política ao número numa tabela. Cada escolha metodológica ao longo desse caminho reflete uma hipótese sobre o mundo, e cada hipótese carrega um custo que precisa ser explicitado e defendido.
+
+O argumento central pode ser enunciado de forma direta: \textbf{causalidade não é uma propriedade dos dados, mas das hipóteses que fazemos sobre como os dados foram gerados}. Dados observacionais não ``falam por si''; eles precisam ser lidos à luz de um argumento de identificação. Esse argumento determina o que é estimado, e a estimação determina com que precisão. Sem o primeiro elo, os outros dois não produzem nada interpretável.
+
+
+\section{A Cadeia de Análise: Um Balanço}
+
+\subsection*{Identificação}
+
+O Capítulo~\ref{cap:identificacao} mostrou que o problema fundamental da
+inferência causal --- a impossibilidade de observar o contrafactual --- não
+pode ser eliminado, apenas contornado. O contorno exige hipóteses sobre o
+processo de seleção ao tratamento. A exogeneidade incondicional (satisfeita
+por randomização) elimina o viés de seleção por construção. A independência
+condicional (CIA) exige que todas as variáveis que simultaneamente afetam
+tratamento e resultado estejam disponíveis nos dados --- uma hipótese
+substantiva, não testável diretamente.
+
+A lição prática: antes de estimar qualquer coisa, o pesquisador precisa
+responder à pergunta ``por que comparar esses dois grupos é informativo sobre
+o efeito causal?'' A resposta a essa pergunta é o argumento de identificação.
+Sem ele, nenhum refinamento econométrico subsequente produz interpretação
+causal.
+
+\subsection*{Estimação}
+
+O Capítulo~\ref{cap:estimacao} mostrou que identificação e estimação são
+problemas distintos. Mesmo quando um estimando é identificado, o estimador
+precisa efetivamente calculá-lo. A forma funcional importa: OLS com controles
+lineares pode calcular uma média ponderada adversa dos efeitos locais quando
+os pesos implícitos diferem dos pesos de interesse. O IPW oferece robustez à
+forma funcional de $\mathbb{E}[Y \mid D, X]$ ao custo de depender do
+propensity score. Estimadores duplamente robustos combinam os dois modelos
+e são consistentes se pelo menos um estiver correto.
+
+\subsection*{Inferência}
+
+O Capítulo~\ref{cap:inferencia} mostrou que a escolha do estimador de
+variância é tão substantiva quanto a escolha do estimador do parâmetro.
+Erros-padrão clássicos supõem independência e homoscedasticidade ---
+hipóteses raramente plausíveis em dados de políticas públicas. O clustering
+é obrigatório quando o tratamento é atribuído em grupo. Com poucos clusters,
+o wild cluster bootstrap é a solução preferida.
+
+O p-valor mede uma coisa específica: a probabilidade de observar dados tão
+extremos quanto os observados, se a hipótese nula fosse verdadeira. Ele não
+mede o tamanho do efeito e não substitui o intervalo de confiança. Reportar
+o tamanho do efeito com seu intervalo de confiança é sempre mais informativo
+do que reportar apenas o p-valor.
+
+
+\section{O Experimento STAR como Laboratório}
+
+O Capítulo~\ref{cap:star} demonstrou todos esses princípios em um único
+exemplo empírico. O STAR mostra que:
+
+\begin{itemize}[leftmargin=*]
+  \item A randomização resolve o problema de identificação dentro dos blocos
+    experimentais --- mas não elimina a necessidade de explicitar as hipóteses
+    (SUTVA pode ser questionado; a qualidade da implementação importa).
+  \item A especificação com efeitos fixos de escola alinha a estimação ao
+    design experimental, melhorando precisão sem comprometer validade.
+  \item A escolha entre erros clássicos, HC e clusterizados produz diferenças
+    substanciais nos erros-padrão --- diferenças com consequências reais para
+    as conclusões.
+  \item Testar quatro disciplinas sem correção para múltiplos testes infla a
+    taxa de falsos positivos. Os ajustes de Bonferroni e BH-FDR revelam quais
+    resultados são robustos.
+  \item A inferência por permutação usa diretamente o processo de aleatorização
+    e produz p-valores exatos em amostras finitas.
+  \item Os testes de falsificação fornecem evidência circunstancial sobre a
+    qualidade do desenho, mas não provam identificação válida.
+\end{itemize}
+
+
+\section{O Que Este Guia Não Cobre}
+
+Este guia apresentou os fundamentos da inferência causal em contextos
+experimentais e observacionais com seleção em observáveis. Os casos em que
+a CIA não pode ser mantida exigem estratégias quasi-experimentais que exploram
+variação exógena de outras naturezas. Esses métodos são o objeto dos demais
+guias da Série Avaliação na Prática:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Regressão com Descontinuidade (RDD)}: explora pontos de corte
+    em regras de elegibilidade para comparações localmente aleatórias.
+  \item \textbf{Diferenças em Diferenças (DiD)}: utiliza variação temporal no
+    tratamento para controlar por diferenças fixas não observadas entre grupos.
+  \item \textbf{Pareamento (\textit{Matching})}: constrói um grupo de controle
+    sintético com covariadas similares às do grupo tratado.
+  \item \textbf{Controle Sintético (SCM)}: combina unidades de controle para
+    replicar a trajetória pré-tratamento da unidade tratada.
+  \item \textbf{Variáveis Instrumentais (IV)}: utiliza uma variável que afeta
+    o tratamento mas não afeta diretamente o resultado.
+\end{itemize}
+
+\begin{conexaobox}[Série Avaliação na Prática]
+Os guias de RDD, DiD (dois volumes), Pareamento, SCM, Variáveis Instrumentais,
+Poder Estatístico e Fontes de Dados estão disponíveis na Série Avaliação na
+Prática do FGV CLEAR. Cada guia pode ser lido de forma independente, mas os
+conceitos de identificação, estimação e inferência desenvolvidos aqui são
+pressupostos em todos eles.
+\end{conexaobox}
+
+
+\section{Uma Nota Final}
+
+A econometria causal não é uma caixa de ferramentas que, aplicada
+corretamente, produz respostas definitivas. É um conjunto de disciplinas
+intelectuais para raciocinar com rigor sobre o que podemos e o que não podemos
+aprender a partir de dados. Mesmo o experimento mais bem controlado carrega
+hipóteses que precisam ser defendidas, não apenas assumidas.
+
+O hábito que este guia procura cultivar é uma pergunta, repetida a cada estimativa: \textit{o que exatamente estou estimando? Sob que hipóteses esse número tem interpretação causal? Quão plausíveis são essas hipóteses neste contexto?} Um pesquisador que faz essas perguntas sistematicamente produz avaliações mais informativas do que aquele que domina ferramentas sofisticadas sem questionar o que elas calculam.
+
+Quando essas perguntas são levadas a sério --- e as hipóteses são explicitadas e debatidas em vez de varridas para baixo do tapete ---, a inferência causal oferece a melhor base disponível para decisões de política pública informadas por evidência.

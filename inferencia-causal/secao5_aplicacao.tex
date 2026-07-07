@@ -1,0 +1,722 @@
+%% ─────────────────────────────────────────────────────────────────
+%%  Seção 5 — Aplicação Empírica: O Experimento STAR
+%%  Arquivo: secao5_aplicacao.tex
+%%  Inserir no projeto com: \input{secao5_aplicacao}
+%%
+%%  Dados: AER::STAR (pacote AER do R)
+%%  Referência principal: Krueger (1999)
+%% ─────────────────────────────────────────────────────────────────
+
+\chapter{Aplicação Empírica: O Experimento STAR}
+\label{sec:star}
+\label{cap:star}
+
+As seções anteriores construíram o arcabouço conceitual da inferência causal: resultados potenciais, identificação, estimação, erros-padrão, testes de hipótese, bootstrap e falsificação. O objetivo desta seção é usar um experimento clássico como laboratório empírico para ver esses conceitos funcionando juntos. O Experimento STAR --- \textit{Student/Teacher Achievement Ratio} --- oferece um dos melhores exemplos disponíveis de avaliação experimental em políticas educacionais. Ele é suficientemente limpo para ilustrar a lógica da identificação por aleatorização, mas suficientemente rico para revelar as complexidades práticas de inferência, múltiplos testes e falsificação.
+
+O experimento foi conduzido no estado americano do Tennessee entre 1985 e 1989 \citep{Finn1990, Krueger1999}. A pergunta central é direta: turmas menores melhoram o desempenho escolar? Para respondê-la com rigor causal, o estado financiou um experimento em larga escala em que estudantes e professoras foram aleatoriamente designados a três tipos de turma: \textbf{turma pequena} (13--17 alunos), \textbf{turma regular} (22--26 alunos) e \textbf{turma regular com auxiliar} (22--26 alunos com uma professora auxiliar). O acompanhamento ocorreu ao longo de quatro anos, do jardim de infância (pré-escola, \textit{kindergarten}) ao terceiro ano do ensino fundamental (K--3).
+
+O STAR é um caso de referência na literatura de avaliação de impacto por três razões. Primeira, é um dos poucos experimentos aleatórios de grande escala realizados em educação --- campo em que, por razões éticas e logísticas, experimentos são raros. Segunda, sua metodologia está bem documentada, o que permite verificar e replicar cada escolha empírica. Terceira, os dados tornaram-se públicos e foram explorados por dezenas de pesquisadores, criando uma literatura acumulada que serve de referência para discussão metodológica \citep{Chetty2011}. Neste guia, não temos o objetivo de contribuir com nova pesquisa sobre educação: usamos o STAR como plataforma para ilustrar, com um exemplo concreto, os métodos discutidos nas seções anteriores.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Dados e Desenho Experimental}
+\label{sec:star_dados}
+
+\subsection*{Estrutura da amostra}
+
+O experimento acompanhou aproximadamente 11.600 alunos distribuídos em cerca de 300 turmas em 79 escolas do Tennessee. As 79 escolas foram selecionadas de forma a representar áreas rurais, suburbanas e urbanas do estado. Dentro de cada escola, alunos e professoras foram aleatoriamente designados a um dos três tipos de turma.
+
+É importante distinguir três unidades de análise que coexistem nos dados:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Aluno ($i$)}: unidade de observação. Os dados contêm, para cada aluno, notas em diferentes disciplinas, características demográficas e indicadores de situação socioeconômica.
+  \item \textbf{Turma ($c$)}: unidade de tratamento. O tratamento --- tipo de turma --- é atribuído no nível da turma, não do aluno individualmente. Todos os alunos de uma mesma turma recebem exatamente o mesmo tratamento.
+  \item \textbf{Escola ($s$)}: unidade de randomização. A aleatorização foi feita \textit{dentro} de cada escola: dentro da escola $s$, alunos foram sorteados para turmas pequenas ou regulares. A composição das turmas \textit{entre} escolas não foi randomizada.
+\end{itemize}
+
+Essa estrutura hierárquica --- alunos dentro de turmas dentro de escolas --- tem implicações diretas para a estimação e para a inferência, como veremos ao longo desta seção.
+
+\subsection*{Variáveis disponíveis}
+
+O conjunto de dados contém as seguintes informações por aluno:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Notas}: pontuação em leitura e matemática para cada ano (jardim de infância ao terceiro ano). São as variáveis de resultado.
+  \item \textbf{Tipo de turma designado}: indicador do braço do experimento ao qual o aluno foi alocado (\texttt{small}, \texttt{regular}, \texttt{regular+aide}).
+  \item \textbf{Características do aluno}: raça/etnia, gênero, elegibilidade para merenda gratuita (proxy de renda familiar). Essas são covariadas pré-tratamento.
+  \item \textbf{Identificadores}: código da escola e da turma.
+  \item \textbf{Características da professora}: anos de experiência e titulação, quando disponíveis. Usadas nos testes de falsificação.
+\end{itemize}
+
+\subsection*{Rotina de análise em R}
+
+O script de análise carrega os dados do pacote \texttt{AER} do R \citep{Zeileis2008}, que distribui uma versão dos dados do STAR em formato pronto para análise. O script:
+
+\begin{enumerate}[leftmargin=*, label=(\roman*)]
+  \item Carrega os dados e seleciona a amostra analítica do jardim de infância, eliminando observações com informação faltante nas variáveis de interesse.
+  \item Cria o indicador binário de tratamento $D_i = \mathds{1}[\texttt{stark} = \texttt{\textquotedbl small\textquotedbl}]$, separando turma pequena das duas condições de controle agrupadas.
+  \item Padroniza as notas de leitura e matemática (média zero, desvio-padrão um) para facilitar a interpretação dos coeficientes em desvios-padrão.
+  \item Define covariadas pré-tratamento: gênero, raça e elegibilidade para merenda gratuita.
+  \item Constrói os objetos usados nas estimações e tabelas das subseções seguintes.
+\end{enumerate}
+
+\begin{lstlisting}[style=Rstyle, caption={Carregamento e preparação dos dados STAR}]
+# -----------------------------
+# 1) Configuração inicial
+# -----------------------------
+rm(list = ls())
+
+library(AER)       # dados STAR
+library(dplyr)     # manipulação
+library(fixest)    # efeitos fixos (feols)
+library(estimatr)  # lm_robust / erros clusterizados
+library(sandwich)  # vcovCL
+library(lmtest)    # coeftest
+
+# -----------------------------
+# 2) Carregar e filtrar dados
+# Foco no jardim de infância (ano k)
+# -----------------------------
+data("STAR", package = "AER")
+
+dados_k <- STAR %>%
+  filter(!is.na(stark), !is.na(readk), !is.na(mathk)) %>%
+  mutate(
+    # Tratamento binário: turma pequena vs. demais
+    D       = as.integer(stark == "small"),
+    # Notas padronizadas (desvio-padrão = 1)
+    read_z  = scale(readk)[, 1],
+    math_z  = scale(mathk)[, 1],
+    # Covariadas pré-tratamento
+    feminino    = as.integer(gender == "female"),
+    nao_branco  = as.integer(ethnicity != "cauc"),
+    merenda     = as.integer(lunchk == "free"),
+    # Identificadores
+    escola  = as.factor(schoolk)
+  )
+
+cat("Observações na amostra analítica:", nrow(dados_k), "\n")
+cat("Escolas:                         ", n_distinct(dados_k$escola), "\n")
+cat("Tratados (turma pequena):        ", sum(dados_k$D), "\n")
+cat("Controle:                        ", sum(1 - dados_k$D), "\n")
+\end{lstlisting}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Identificação: Por que a Aleatorização Resolve o Problema}
+\label{sec:star_identificacao}
+
+\subsection*{O estimando e a estratégia de identificação}
+
+Para cada aluno $i$, definimos dois resultados potenciais:
+\begin{align}
+  Y_i(1) &\equiv \text{nota de } i \text{ se designado para turma pequena,} \\
+  Y_i(0) &\equiv \text{nota de } i \text{ se designado para turma regular.}
+\end{align}
+
+Seja $s(i)$ a escola do aluno $i$ e $D_i \in \{0,1\}$ o indicador de designação para turma pequena. O estimando de interesse é o \textbf{efeito médio da designação para turma pequena} --- um ITT (\textit{Intent-to-Treat}):
+\begin{equation}
+  \text{ITT} = \mathbb{E}[Y_i(1) - Y_i(0)].
+  \label{eq:itt_star}
+\end{equation}
+
+Como a randomização foi realizada \textit{dentro} de cada escola, a hipótese de identificação relevante é a independência condicional na escola:
+\begin{equation}
+  \bigl(Y_i(1),\, Y_i(0)\bigr) \perp\!\!\!\perp D_i \;\big|\; s(i).
+  \label{eq:cia_escola}
+\end{equation}
+
+Em linguagem intuitiva: dentro de uma mesma escola, alunos designados para turmas pequenas e alunos designados para turmas regulares são comparáveis em média, porque o sorteio foi conduzido apenas entre os alunos matriculados naquela escola. Portanto, diferenças sistemáticas de desempenho entre esses grupos, após condicionar na escola, podem ser interpretadas como efeito causal da designação para turma menor.
+
+A hipótese \eqref{eq:cia_escola} implica imediatamente que:
+\begin{equation}
+  \mathbb{E}[\varepsilon_i \mid D_i, s(i)] = 0,
+  \label{eq:exog_escola}
+\end{equation}
+onde $\varepsilon_i = Y_i - \mathbb{E}[Y_i \mid D_i, s(i)]$ é o erro residual após condicionar em escola e tratamento. Não há viés de seleção dentro de escola.
+
+\subsection*{ITT vs.\ LATE}
+
+O ITT mede o efeito da \textit{designação} para turma pequena, não necessariamente o efeito de \textit{frequentar} uma turma pequena. Os dois coincidem se todos os alunos designados para turma pequena efetivamente frequentam uma turma pequena --- o que pode não ser o caso em presença de não-cumprimento (\textit{non-compliance}): alunos podem mudar de turma, abandonar o experimento ou ingressar em turmas diferentes da designada.
+
+Quando há não-cumprimento parcial, e se aceitarmos a designação original como instrumento válido para a turma efetivamente frequentada, o LATE (\textit{Local Average Treatment Effect}) mede o efeito sobre os \textit{cumpridores} --- aqueles que frequentaram a turma pequena justamente porque foram para ela designados. Neste guia, trabalhamos com o ITT como estimando principal por ser mais diretamente identificado pela aleatorização original.
+
+\begin{exemplobox}[ITT e LATE no STAR]
+Suponha que 5\% dos alunos designados para turmas pequenas tenham migrado para turmas regulares ao longo do ano. O ITT estima o efeito médio sobre \textit{todos} os designados para turma pequena --- incluindo os que na prática não ficaram em turma pequena. O LATE estimaria o efeito sobre o subgrupo que cumpriu a designação. Como o não-cumprimento no STAR foi relativamente baixo, os dois tendem a ser numericamente próximos, mas conceitualmente distintos.
+\end{exemplobox}
+
+\subsection*{SUTVA: uma hipótese que merece atenção}
+
+A hipótese SUTVA (\textit{Stable Unit Treatment Value Assumption}) afirma que o resultado potencial de um aluno depende apenas do seu próprio tipo de turma, e não do tipo de turma dos outros alunos. No STAR, isso é potencialmente questionável: turmas pequenas e regulares coexistem \textit{dentro} da mesma escola.
+
+Alguns canais potenciais de interferência merecem atenção:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Realocação de professoras}: se as melhores professoras da escola são sistematicamente alocadas a turmas pequenas, o efeito estimado captura tanto o tamanho da turma quanto a qualidade docente.
+  \item \textbf{Efeitos de pares}: alunos em turmas regulares podem ser afetados por terem colegas que, em outro desenho, estariam em turmas pequenas.
+  \item \textbf{Recursos compartilhados}: espaço físico, materiais e tempo dos coordenadores pedagógicos são divididos entre turmas dentro da mesma escola.
+  \item \textbf{Composição das turmas}: se alunos com maior desempenho prévio forem sistematicamente alocados a certos tipos de turma, a comparação entre turmas dentro da escola pode ser contaminada.
+\end{itemize}
+
+Este exemplo serve para reforçar um ponto metodológico central: mesmo em experimentos aleatórios, é necessário explicitar as hipóteses de identificação e avaliar sua plausibilidade no contexto específico do estudo. A aleatorização resolve o problema de seleção entre grupos, mas não elimina automaticamente todas as ameaças à validade interna.
+
+\begin{atencaobox}[SUTVA não é automática]
+O fato de um experimento ter sido aleatorizado não garante que o SUTVA seja satisfeito. Sempre que turmas, indivíduos ou unidades do mesmo grupo de randomização interagem --- o que é comum em experimentos educacionais e comunitários ---, a hipótese de ausência de interferência precisa ser defendida com argumentos substantivos, não apenas assumida.
+\end{atencaobox}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Estimação: Da Diferença de Médias à Regressão com Efeitos Fixos}
+\label{sec:star_estimacao}
+
+\subsection*{Especificação 1 — Diferença de médias simples}
+
+A estimativa mais direta é a diferença de médias entre alunos designados para turmas pequenas e demais alunos:
+\begin{equation}
+  Y_i = \alpha + \beta\, D_i + u_i.
+  \label{eq:spec1}
+\end{equation}
+
+O coeficiente $\hat{\beta}$ compara a nota média dos alunos em turmas pequenas com a nota média dos demais, sem qualquer condicionamento adicional. Sob randomização incondicional, esse estimador seria não-viesado para o ITT. No STAR, porém, a randomização foi feita \textit{dentro} de escola --- o que significa que comparar alunos de escolas diferentes pode introduzir diferenças pré-existentes entre escolas, não controladas pelo experimento.
+
+\subsection*{Especificação 2 — Efeitos fixos de escola}
+
+A especificação mais alinhada ao desenho experimental inclui efeitos fixos de escola $\lambda_{s(i)}$:
+\begin{equation}
+  Y_i = \alpha + \beta\, D_i + \lambda_{s(i)} + u_i.
+  \label{eq:spec2}
+\end{equation}
+
+Ao incluir uma dummy para cada escola, a comparação passa a ser feita \textit{dentro} de escola --- exatamente como a randomização foi conduzida. O coeficiente $\hat{\beta}$ agora compara alunos designados para turma pequena com alunos designados para turma regular \textit{na mesma escola}, eliminando qualquer diferença entre escolas que pudesse confundir a estimativa.
+
+\subsection*{Especificação 3 — Efeitos fixos de escola e covariadas}
+
+A terceira especificação adiciona covariadas pré-tratamento $X_i$ (gênero, raça, elegibilidade para merenda):
+\begin{equation}
+  Y_i = \alpha + \beta\, D_i + \lambda_{s(i)} + X_i'\gamma + u_i.
+  \label{eq:spec3}
+\end{equation}
+
+As covariadas têm aqui um papel específico. Em um RCT bem implementado, $D_i$ é independente de $X_i$ por construção (dentro de escola), de modo que $\gamma \neq 0$ não implica que omitir $X_i$ causaria viés. O benefício dos controles aqui é outro: ao capturar parte da variação nos resultados $Y_i$, as covariadas reduzem a variância residual $\hat{u}_i$, tornando o estimador $\hat{\beta}$ mais preciso sem sacrificar a validade causal. \citet{Lin2013} formaliza esse argumento e mostra que, em RCTs, a especificação preferida inclui covariadas centradas e interações com o tratamento, garantindo eficiência assintótica.
+
+\begin{notabox}[{Controles em RCTs --- precisão sem causalidade}]
+Em estudos observacionais, adicionamos controles para tentar satisfazer a CIA e eliminar viés. Em RCTs, adicionamos controles para ganhar precisão. A distinção é fundamental: no primeiro caso, a validade causal depende dos controles incluídos; no segundo, a validade já está garantida pela randomização, e os controles apenas melhoram a eficiência.
+\end{notabox}
+
+\begin{lstlisting}[style=Rstyle, caption={Três especificações progressivas no STAR}]
+# -----------------------------
+# 1) Especificação 1: diferença de médias simples
+# -----------------------------
+spec1 <- lm_robust(read_z ~ D, data = dados_k, se_type = "HC2")
+
+# -----------------------------
+# 2) Especificação 2: efeitos fixos de escola
+# -----------------------------
+spec2 <- feols(read_z ~ D | escola, data = dados_k,
+               vcov = "HC1")
+
+# -----------------------------
+# 3) Especificação 3: EF de escola + covariadas pré-tratamento
+# -----------------------------
+spec3 <- feols(read_z ~ D + feminino + nao_branco + merenda | escola,
+               data = dados_k, vcov = "HC1")
+
+# Sumário das três especificações
+etable(spec1, spec2, spec3,
+       keep    = "D",
+       headers = c("(1) Sem EF", "(2) EF escola", "(3) EF + covariadas"),
+       title   = "Efeito de turma pequena sobre notas de leitura (STAR, K)")
+\end{lstlisting}
+
+% ──────────────────────────────────────────────────────────────────
+% TABELA 5.1 — Três especificações: efeito de turma pequena sobre notas
+% Executar o script R para obter os coeficientes, erros-padrão e
+% estatísticas de diagnóstico (R², N, número de escolas).
+% ──────────────────────────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Efeito de turma pequena sobre nota de leitura: três especificações}
+\label{tab:spec_comparacao}
+\begin{tabular}{lccc}
+\toprule
+ & (1) Sem EF & (2) EF Escola & (3) EF + Cov. \\
+\midrule
+Turma pequena ($D_i$)
+  & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+  & \textit{[inserir SE]} & \textit{[inserir SE]} & \textit{[inserir SE]} \\[4pt]
+Efeitos fixos de escola & Não & Sim & Sim \\
+Covariadas pré-tratamento & Não & Não & Sim \\
+$R^2$ & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Observações & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Dados: \citet{Krueger1999}, via pacote \texttt{AER}}{Elaboração dos autores}{Variável dependente: nota de leitura padronizada (média = 0, DP = 1). Covariadas: gênero, raça e elegibilidade para merenda gratuita. Erros-padrão HC robustos entre parênteses. * $p < 0{,}05$; ** $p < 0{,}01$; *** $p < 0{,}001$.}
+\end{table}
+
+A comparação entre as três colunas da Tabela~\ref{tab:spec_comparacao} ilustra um resultado esperado: em um RCT bem implementado, as estimativas nas três especificações devem ser numericamente similares. Eventuais diferenças entre a coluna (1) e as colunas (2) e (3) indicam diferenças pré-existentes entre escolas, que a aleatorização dentro de escola não controla. A redução nos erros-padrão entre (1) e (3) reflete o ganho de precisão proveniente dos controles.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Inferência I: Qual Erro-Padrão Usar?}
+\label{sec:star_ep}
+
+A escolha do estimador de variância não é um detalhe técnico --- é parte da análise substantiva. No STAR, há uma razão estrutural clara para não usar erros-padrão clássicos: alunos dentro da mesma turma compartilham professora, rotina pedagógica, material didático e dinâmica de sala. Seus resultados não são observações independentes. Ignorar essa correlação intraclasse leva a erros-padrão artificialmente pequenos e a testes com taxa de falsos positivos acima do nível nominal.
+
+\subsection*{Correlação intraclasse}
+
+A dependência dentro de grupos pode ser quantificada pela \textbf{correlação intraclasse} (ICC):
+\begin{equation}
+  \rho = \frac{\sigma^2_c}{\sigma^2_c + \sigma^2_i},
+  \label{eq:icc}
+\end{equation}
+onde $\sigma^2_c$ é a variância entre turmas e $\sigma^2_i$ é a variância dentro de turmas. O \textbf{efeito de desenho} (\textit{design effect}) indica o quanto o erro-padrão efetivo supera o erro-padrão clássico em uma amostra com $\bar{n}$ observações por turma:
+\begin{equation}
+  \text{DEFF} = 1 + (\bar{n} - 1)\,\rho.
+  \label{eq:deff}
+\end{equation}
+
+Com $\rho = 0{,}20$ e turmas de tamanho médio $\bar{n} = 20$, o DEFF seria $1 + 19 \times 0{,}20 = 4{,}80$ --- o que significa que os erros-padrão clássicos subestimariam a incerteza por um fator de $\sqrt{4{,}80} \approx 2{,}19$. Estatísticas-$t$ baseadas nesses erros estariam infladas em mais de 100\%.
+
+\subsection*{Quatro abordagens}
+
+Comparamos quatro estimadores de variância:
+
+\begin{enumerate}[leftmargin=*, label=(\roman*)]
+  \item \textbf{Clássico}: assume homoscedasticidade e independência entre todas as observações.
+  \item \textbf{HC robusto}: corrige heteroscedasticidade, mas ainda trata observações como independentes.
+  \item \textbf{Clusterizado por turma}: agrupa observações dentro da mesma turma, reconhecendo a dependência intraclasse. É a escolha natural dado que o tratamento é atribuído no nível da turma.
+  \item \textbf{Clusterizado por escola}: agrupa por escola. Mais conservador, com número menor de clusters (79 escolas vs.\ $\sim$300 turmas).
+\end{enumerate}
+
+\begin{lstlisting}[style=Rstyle, caption={Comparação de quatro estimadores de variância no STAR}]
+# -----------------------------
+# 1) Modelo base: EF de escola, sem outras covariadas
+# -----------------------------
+mod_base <- lm(read_z ~ D + escola, data = dados_k)
+
+# -----------------------------
+# 2) Quatro variantes de erro-padrão
+# -----------------------------
+# (i) Clássico
+se_classico <- sqrt(diag(vcov(mod_base)))["D"]
+
+# (ii) HC2 robusto
+se_hc2 <- sqrt(vcovHC(mod_base, type = "HC2"))["D", "D"]
+
+# (iii) Clusterizado por turma
+dados_k <- dados_k %>%
+  mutate(turma_id = paste(schoolk, stark, sep = "_"))
+
+se_turma <- sqrt(vcovCL(mod_base, cluster = ~turma_id,
+                        data = dados_k))["D", "D"]
+
+# (iv) Clusterizado por escola
+se_escola <- sqrt(vcovCL(mod_base, cluster = ~escola,
+                         data = dados_k))["D", "D"]
+
+# Apresentação
+resultados_ep <- data.frame(
+  Metodo   = c("Clássico", "HC2", "Cluster turma", "Cluster escola"),
+  SE       = round(c(se_classico, se_hc2, se_turma, se_escola), 4),
+  t_stat   = round(coef(mod_base)["D"] /
+             c(se_classico, se_hc2, se_turma, se_escola), 2)
+)
+print(resultados_ep)
+\end{lstlisting}
+
+% ──────────────────────────────────────────────────────────────────
+% TABELA 5.2 — Comparação de erros-padrão
+% Executar o script R para obter SE, estatística t e p-valor
+% sob as quatro abordagens.
+% ──────────────────────────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Estimativa do efeito de turma pequena sob diferentes estimadores de variância}
+\label{tab:erros_padrao}
+\begin{tabular}{lcccc}
+\toprule
+Abordagem & Estimativa & Erro-padrão & Estatística $t$ & Valor-$p$ \\
+\midrule
+Clássico              & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+HC2 robusto           & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Cluster por turma     & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Cluster por escola    & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Dados: \citet{Krueger1999}}{Elaboração dos autores}{Especificação com efeitos fixos de escola. Variável dependente: nota de leitura padronizada. A estimativa pontual é a mesma nas quatro linhas; apenas o estimador de variância varia.}
+\end{table}
+
+O padrão esperado na Tabela~\ref{tab:erros_padrao} é que os erros-padrão clusterizados sejam maiores que os clássicos e robustos. A comparação entre clusterização por turma e por escola ilustra o \textit{trade-off} entre adequação ao processo gerador de dados e estabilidade do estimador: com 79 escolas, o estimador sandwich clusterizado por escola opera próximo ao limite inferior recomendado ($G \approx 30$--50), enquanto as turmas oferecem maior número de clusters.
+
+\begin{notabox}[Regra prática de clustering no STAR]
+Como o tratamento foi atribuído no nível da \textit{turma}, a clusterização por turma é a escolha teoricamente correta. Se os dados contiverem identificadores de turma confiáveis, devem ser usados. A clusterização por escola é mais conservadora e pode ser reportada como verificação de robustez.
+\end{notabox}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Inferência II: Bootstrap}
+\label{sec:star_bootstrap}
+
+A Seção~\ref{sec:clustering} mostrou que, com número razoável de clusters, o estimador sandwich clusterizado tende a ter bom desempenho assintótico. Com cerca de 300 turmas, o STAR está bem acima do limiar mínimo --- o que sugere que os intervalos de confiança assintóticos clusterizados devem ser confiáveis. O \textit{bootstrap} é útil aqui como verificação independente e como método para estatísticas cuja distribuição assintótica é menos direta.
+
+\subsection*{Por que reamostrar turmas, não alunos}
+
+Um erro frequente é aplicar o bootstrap padrão --- reamostrar observações individuais com reposição --- em dados com estrutura de clustering. Ao sortear alunos individualmente, o bootstrap padrão quebra a dependência dentro de turmas: uma amostra bootstrap poderia conter cinco cópias do mesmo aluno e nenhuma cópia de sua turma original, destruindo exatamente a estrutura que torna a clusterização necessária. A solução é o \textbf{\textit{cluster bootstrap}}: reamostrar \textit{turmas inteiras} com reposição, mantendo todos os alunos de cada turma sorteada.
+
+\begin{lstlisting}[style=Rstyle, caption={Cluster bootstrap por turma no STAR}]
+# -----------------------------
+# 1) Cluster bootstrap: reamostrar turmas inteiras
+# -----------------------------
+rm(list = ls())
+# (assumindo que dados_k e turma_id foram criados anteriormente)
+
+set.seed(42)
+B       <- 1999
+turmas  <- unique(dados_k$turma_id)
+G       <- length(turmas)
+
+boot_coefs <- numeric(B)
+
+for (b in 1:B) {
+  # Sortear turmas com reposição
+  turmas_b  <- sample(turmas, size = G, replace = TRUE)
+
+  # Reconstruir base com todas as observações das turmas sorteadas
+  amostra_b <- bind_rows(
+    lapply(turmas_b, function(t) dados_k[dados_k$turma_id == t, ])
+  )
+
+  # Estimar modelo com EF de escola
+  mod_b <- lm(read_z ~ D + escola, data = amostra_b)
+  boot_coefs[b] <- coef(mod_b)["D"]
+}
+
+# IC bootstrap percentil (95%)
+ic_boot <- quantile(boot_coefs, c(0.025, 0.975))
+cat("IC bootstrap 95% (percentil): [",
+    round(ic_boot[1], 3), ";", round(ic_boot[2], 3), "]\n")
+
+# Comparar com IC assintótico clusterizado
+se_assintotico <- sqrt(vcovCL(lm(read_z ~ D + escola, data = dados_k),
+                              cluster = ~turma_id)["D", "D"])
+est_pont <- coef(lm(read_z ~ D + escola, data = dados_k))["D"]
+ic_assint <- est_pont + c(-1, 1) * 1.96 * se_assintotico
+
+cat("IC assintótico 95% (cluster): [",
+    round(ic_assint[1], 3), ";", round(ic_assint[2], 3), "]\n")
+\end{lstlisting}
+
+A mensagem didática desta subseção é a seguinte: quando há número razoável de clusters e o desenho é bem comportado, os ICs bootstrap e assintóticos clusterizados devem ser numericamente próximos. Uma divergência grande entre os dois seria um sinal de alerta --- sugerindo que alguma hipótese subjacente (número suficiente de clusters, distribuição simétrica do estimador, ausência de observações influentes) pode não estar sendo satisfeita. No STAR, com cerca de 300 turmas, a convergência entre os dois é esperada.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Inferência III: Quatro Disciplinas, Um Problema --- Múltiplos Testes}
+\label{sec:star_multiplos}
+
+O STAR oferece resultados de desempenho em mais de uma disciplina: leitura e matemática, ao menos. Quando testamos o efeito de turmas pequenas em todas as disciplinas disponíveis, deparamo-nos com o problema de múltiplos testes discutido na Seção~\ref{sec:multiplos_testes}: quanto maior o número de testes, maior a probabilidade de encontrar ao menos um resultado estatisticamente significativo por acaso, mesmo que o efeito verdadeiro seja nulo em todos os desfechos.
+
+Suponha que testemos o efeito em quatro resultados (por exemplo, leitura e matemática no jardim de infância e no primeiro ano). Ao nível $\alpha = 0{,}05$ com quatro testes independentes, a probabilidade de ao menos uma rejeição espúria é $1 - 0{,}95^4 \approx 18{,}5\%$ --- quase quatro vezes o nível nominal.
+
+\begin{lstlisting}[style=Rstyle, caption={Múltiplos testes: quatro resultados com correção de Bonferroni e BH-FDR}]
+# -----------------------------
+# 1) Estimar o efeito nas quatro variáveis de resultado
+# Leitura (K), Matemática (K), Leitura (1o ano), Matemática (1o ano)
+# -----------------------------
+dados_multi <- STAR %>%
+  filter(!is.na(stark)) %>%
+  mutate(
+    D      = as.integer(stark == "small"),
+    escola = as.factor(schoolk),
+    read_k_z  = scale(readk)[, 1],
+    math_k_z  = scale(mathk)[, 1],
+    read_1_z  = scale(read1)[, 1],
+    math_1_z  = scale(math1)[, 1]
+  )
+
+resultados <- c("read_k_z", "math_k_z", "read_1_z", "math_1_z")
+nomes      <- c("Leitura (K)", "Matemática (K)",
+                "Leitura (1o ano)", "Matemática (1o ano)")
+
+pvalores    <- numeric(length(resultados))
+estimativas <- numeric(length(resultados))
+
+for (j in seq_along(resultados)) {
+  df_j  <- dados_multi[!is.na(dados_multi[[resultados[j]]]), ]
+  mod_j <- lm(as.formula(paste(resultados[j], "~ D + escola")),
+              data = df_j)
+  se_j  <- sqrt(vcovCL(mod_j, cluster = ~schoolk, data = df_j)["D", "D"])
+  estimativas[j] <- coef(mod_j)["D"]
+  pvalores[j]    <- 2 * pt(-abs(coef(mod_j)["D"] / se_j),
+                            df = df_j$escola %>% n_distinct() - 2)
+}
+
+# -----------------------------
+# 2) Ajuste por Bonferroni e BH-FDR
+# -----------------------------
+pv_bonf <- p.adjust(pvalores, method = "bonferroni")
+pv_bh   <- p.adjust(pvalores, method = "BH")
+
+tabela_multi <- data.frame(
+  Resultado    = nomes,
+  Estimativa   = round(estimativas, 3),
+  P_bruto      = round(pvalores, 3),
+  P_Bonferroni = round(pv_bonf, 3),
+  P_BH_FDR     = round(pv_bh, 3)
+)
+print(tabela_multi)
+\end{lstlisting}
+
+% ──────────────────────────────────────────────────────────────────
+% TABELA 5.3 — Múltiplos testes: quatro resultados
+% Executar o script R para obter estimativas, p-valores brutos
+% e p-valores ajustados por Bonferroni e BH-FDR.
+% ──────────────────────────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Efeito de turma pequena: quatro resultados com ajuste para múltiplos testes}
+\label{tab:multiplos_testes_star}
+\begin{tabular}{lcccc}
+\toprule
+Resultado & Estimativa & $p$ bruto & $p$ Bonferroni & $p$ BH-FDR \\
+\midrule
+Leitura (K)          & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Matemática (K)       & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Leitura (1.º ano)    & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Matemática (1.º ano) & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Dados: \citet{Krueger1999}}{Elaboração dos autores}{Especificação com efeitos fixos de escola. Erros-padrão clusterizados por escola. Bonferroni: nível ajustado $= 0{,}05/4 = 0{,}0125$. BH-FDR: controla proporção esperada de falsas descobertas a 5\%.}
+\end{table}
+
+A leitura da Tabela~\ref{tab:multiplos_testes_star} deve responder a três perguntas: (i) quais efeitos são significativos sem qualquer ajuste? (ii) quais sobrevivem ao ajuste de Bonferroni? (iii) o padrão é consistente entre disciplinas e anos, ou concentrado em um único resultado? Uma estimativa que se mantém significativa após Bonferroni sugere evidência mais sólida do que aquela que só resiste ao p-valor bruto. Quando os efeitos são positivos e de magnitude similar em todas as disciplinas, a credibilidade aumenta: seria improvável que o mesmo viés produzisse o mesmo sinal em quatro desfechos distintos.
+
+\begin{notabox}[Bonferroni vs.\ BH-FDR]
+Bonferroni controla a probabilidade de \textit{ao menos} um falso positivo no conjunto de testes (FWER), tornando cada teste individual muito conservador. BH-FDR controla a proporção esperada de falsas descobertas entre as rejeições, sendo menos conservador quando $m$ é grande. Para quatro desfechos, a diferença entre os dois é pequena --- Bonferroni com $\alpha^* = 0{,}0125$ vs.\ BH com limiar adaptativo. Com dezenas ou centenas de desfechos, a diferença torna-se mais relevante.
+\end{notabox}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Inferência IV: Inferência por Permutação}
+\label{sec:star_permutacao}
+
+A inferência por permutação, apresentada na Seção~\ref{sec:design_based}, tem uma propriedade especial no STAR: como o processo de aleatorização está documentado (randomização dentro de escola), a distribuição de referência pode ser construída a partir desse mesmo processo, sem qualquer hipótese distribucional sobre os erros.
+
+\subsection*{Respeitando o desenho na permutação}
+
+Como a aleatorização ocorreu \textit{dentro} de escola, a permutação deve respeitar esse bloco: permutamos os rótulos de tratamento ($D_i$) apenas entre alunos da mesma escola, preservando o número de tratados por escola. Permutar globalmente ignoraria a estrutura por blocos e produziria distribuições de referência inadequadas.
+
+\begin{lstlisting}[style=Rstyle, caption={Inferência por permutação com aleatorização em bloco (escola)}]
+# -----------------------------
+# 1) Estatística observada
+# -----------------------------
+mod_obs  <- lm(read_z ~ D + escola, data = dados_k)
+t_obs    <- coef(mod_obs)["D"] /
+            sqrt(vcovCL(mod_obs, cluster = ~turma_id,
+                        data = dados_k)["D", "D"])
+
+cat("Estatística t observada:", round(t_obs, 3), "\n")
+
+# -----------------------------
+# 2) Distribuição de permutação
+# Permutar D dentro de escola (respeitar o bloco de randomização)
+# -----------------------------
+set.seed(42)
+P <- 4999
+t_perm <- numeric(P)
+
+for (p in 1:P) {
+  dados_perm <- dados_k %>%
+    group_by(escola) %>%
+    mutate(D_perm = sample(D)) %>%   # permuta D dentro de escola
+    ungroup()
+
+  mod_p   <- lm(read_z ~ D_perm + escola, data = dados_perm)
+  se_p    <- sqrt(vcovCL(mod_p, cluster = ~turma_id,
+                          data = dados_perm)["D_perm", "D_perm"])
+  t_perm[p] <- coef(mod_p)["D_perm"] / se_p
+}
+
+# -----------------------------
+# 3) P-valor de permutação (bilateral)
+# -----------------------------
+p_perm    <- mean(abs(t_perm) >= abs(t_obs))
+p_assint  <- 2 * pnorm(-abs(t_obs))
+
+cat("P-valor de permutação (bilateral): ", round(p_perm, 4), "\n")
+cat("P-valor assintótico (normal):      ", round(p_assint, 4), "\n")
+\end{lstlisting}
+
+A comparação entre o p-valor de permutação e o p-valor assintótico clusterizado ilustra um resultado típico de experimentos com amostras grandes: os dois tendem a ser numericamente próximos. A inferência por permutação é particularmente atraente porque usa diretamente o processo de aleatorização descrito no protocolo experimental --- não há necessidade de aproximações assintóticas nem hipóteses sobre a distribuição dos erros. Em amostras menores, com poucos clusters ou distribuições assimétricas, a inferência por permutação pode diferir substancialmente dos métodos assintóticos e, nesse caso, oferece garantias de validade mais robustas.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Testes de Falsificação}
+\label{sec:star_falsificacao}
+
+Os testes de falsificação não ``provam'' que o STAR tem identificação válida, mas ajudam a detectar problemas que comprometeriam a interpretação causal. Apresentamos três verificações: balanceamento de covariadas pré-tratamento, atrito diferencial e balanceamento das características das professoras.
+
+\subsection*{Balanceamento de covariadas pré-tratamento}
+
+Em um experimento bem implementado, características pré-tratamento dos alunos não devem prever sistematicamente a designação para turma pequena. Para testar isso, regredimos $D_i$ (indicador de turma pequena) nas covariadas pré-tratamento disponíveis e realizamos um F-teste conjunto de significância:
+\begin{equation}
+  D_i = \alpha + \lambda_{s(i)} + \delta_1\,\text{feminino}_i + \delta_2\,\text{nao\_branco}_i + \delta_3\,\text{merenda}_i + v_i.
+  \label{eq:teste_balanceamento}
+\end{equation}
+
+A hipótese nula é $H_0: \delta_1 = \delta_2 = \delta_3 = 0$, ou seja, nenhuma covariada prediz o tratamento dentro de escola. Sob aleatorização bem conduzida, esperamos não rejeitar essa hipótese.
+
+\begin{lstlisting}[style=Rstyle, caption={F-teste de balanceamento de covariadas}]
+# -----------------------------
+# 1) Regredir tratamento em covariadas pré-tratamento + EF escola
+# -----------------------------
+mod_bal <- lm(D ~ escola + feminino + nao_branco + merenda,
+              data = dados_k)
+
+# F-teste conjunto: apenas para as covariadas (excluindo EF de escola)
+library(car)
+ftest_bal <- linearHypothesis(mod_bal,
+  c("feminino = 0", "nao_branco = 0", "merenda = 0"),
+  vcov. = vcovCL(mod_bal, cluster = ~turma_id, data = dados_k))
+
+cat("=== Teste F conjunto de balanceamento ===\n")
+print(ftest_bal)
+
+# -----------------------------
+# 2) Tabela de médias por grupo (dentro de escola)
+# -----------------------------
+dados_k %>%
+  group_by(D) %>%
+  summarise(
+    pct_feminino   = mean(feminino, na.rm = TRUE),
+    pct_nao_branco = mean(nao_branco, na.rm = TRUE),
+    pct_merenda    = mean(merenda, na.rm = TRUE),
+    n              = n()
+  ) %>%
+  print()
+\end{lstlisting}
+
+% ──────────────────────────────────────────────────────────────────
+% TABELA 5.4 — Teste de balanceamento: covariadas pré-tratamento
+% Executar o script R para obter as médias por grupo e a estatística F.
+% ──────────────────────────────────────────────────────────────────
+\begin{table}[H]
+\centering
+\caption{Verificação de balanceamento: covariadas pré-tratamento por condição experimental}
+\label{tab:balanceamento}
+\begin{tabular}{lccc}
+\toprule
+Covariada & Turma pequena ($D=1$) & Controle ($D=0$) & Dif. padronizada \\
+\midrule
+Feminino (\%)         & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Não-branco (\%)       & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+Merenda gratuita (\%) & \textit{[inserir]} & \textit{[inserir]} & \textit{[inserir]} \\
+\midrule
+\multicolumn{3}{l}{F-teste conjunto ($H_0$: todas as diferenças = 0)}
+  & $F = $ \textit{[inserir]} \\
+\multicolumn{3}{l}{Valor-$p$}
+  & \textit{[inserir]} \\
+\midrule
+Observações           & \textit{[inserir]} & \textit{[inserir]} & \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Dados: \citet{Krueger1999}}{Elaboração dos autores}{Comparação feita dentro de escola (efeitos fixos de escola incluídos na regressão). Dif. padronizada $= (\bar{X}_1 - \bar{X}_0)/\sqrt{(s_1^2 + s_0^2)/2}$.}
+\end{table}
+
+\subsection*{Atrito diferencial}
+
+A aleatorização garante comparabilidade no momento inicial do experimento. Ao longo dos quatro anos, no entanto, alunos podem sair do experimento --- por mudança de escola, ausência prolongada ou dados faltantes. Se a \textit{probabilidade de permanecer na amostra} for diferente entre turmas pequenas e regulares, a comparação ao final do período pode estar contaminada: estaríamos comparando grupos sistematicamente diferentes dos originalmente sorteados.
+
+Para verificar atrito diferencial, testamos se $D_i$ prediz a probabilidade de o aluno ter notas disponíveis no ano de interesse:
+\begin{equation}
+  \mathds{1}[Y_i \text{ observado}] = \alpha + \beta_{\text{atrito}}\, D_i + \lambda_{s(i)} + u_i.
+  \label{eq:atrito}
+\end{equation}
+
+Um coeficiente $\hat{\beta}_{\text{atrito}}$ significativamente diferente de zero indica que tratados e controles têm taxas de atrito distintas --- o que comprometeria a validade interna mesmo com aleatorização original correta.
+
+\begin{lstlisting}[style=Rstyle, caption={Verificação de atrito diferencial}]
+# -----------------------------
+# Indicador de permanência na amostra para cada ano
+# Testamos se D prediz estar na amostra no 1o ano
+# -----------------------------
+dados_atrito <- STAR %>%
+  filter(!is.na(stark)) %>%
+  mutate(
+    D              = as.integer(stark == "small"),
+    escola         = as.factor(schoolk),
+    presente_ano1  = as.integer(!is.na(read1))
+  )
+
+mod_atrito <- lm_robust(presente_ano1 ~ D,
+                        fixed_effects = ~escola,
+                        clusters      = schoolk,
+                        data          = dados_atrito,
+                        se_type       = "CR2")
+
+cat("=== Teste de atrito diferencial (1o ano) ===\n")
+cat("Coeficiente D:  ", round(coef(mod_atrito)["D"], 4), "\n")
+se_atrito <- summary(mod_atrito)$coefficients["D", 2]
+pv_atrito <- summary(mod_atrito)$coefficients["D", 4]
+cat("Erro-padrão:    ", round(se_atrito, 4), "\n")
+cat("Valor-p:        ", round(pv_atrito, 3), "\n")
+\end{lstlisting}
+
+\subsection*{Placebo de professora: características docentes como teste de implementação}
+
+Um aspecto do STAR que merece atenção é a qualidade da implementação. Se as professoras mais experientes ou mais tituladas foram sistematicamente alocadas a turmas pequenas, o efeito estimado confundiria o tamanho da turma com a qualidade docente. Testamos isso verificando o balanceamento das características das professoras entre condições experimentais:
+
+\begin{equation}
+  \text{experiência}_{c} = \alpha + \beta_{\text{prof}}\, D_c + \lambda_{s(c)} + w_c,
+  \label{eq:placebo_prof}
+\end{equation}
+
+onde $c$ indexa turmas e $D_c$ é o indicador de turma pequena. Se $\hat{\beta}_{\text{prof}}$ for significativamente diferente de zero, há evidência de que turmas pequenas e regulares foram atribuídas a professoras sistematicamente diferentes.
+
+\begin{lstlisting}[style=Rstyle, caption={Balanceamento de características das professoras entre condições}]
+# -----------------------------
+# Agregar para o nível de turma (cada turma tem uma professora)
+# -----------------------------
+dados_prof <- STAR %>%
+  filter(!is.na(stark), !is.na(experiencek)) %>%
+  mutate(D = as.integer(stark == "small")) %>%
+  group_by(schoolk, stark) %>%
+  summarise(
+    experiencia = first(experiencek),
+    D           = first(D),
+    .groups = "drop"
+  ) %>%
+  mutate(escola = as.factor(schoolk))
+
+mod_prof <- lm_robust(experiencia ~ D,
+                      fixed_effects = ~escola,
+                      clusters      = schoolk,
+                      data          = dados_prof,
+                      se_type       = "CR2")
+
+cat("=== Placebo de professora: experiência docente ===\n")
+cat("Coeficiente D:  ", round(coef(mod_prof)["D"], 3), "\n")
+se_prof <- summary(mod_prof)$coefficients["D", 2]
+pv_prof <- summary(mod_prof)$coefficients["D", 4]
+cat("Erro-padrão:    ", round(se_prof, 3), "\n")
+cat("Valor-p:        ", round(pv_prof, 3), "\n")
+\end{lstlisting}
+
+\begin{atencaobox}[Testes de falsificação: limites e interpretação]
+Passar em todos os testes de falsificação é evidência circunstancial favorável à validade do desenho, mas não é prova de causalidade. Uma estratégia pode superar todos os placebos disponíveis e ainda ter identificação inválida por razões não testáveis --- por exemplo, um canal de interferência entre turmas que não deixa rastro nas covariadas observadas. Os testes de falsificação devem ser lidos em conjunto com o argumento teórico sobre o mecanismo de identificação, não como substitutos a ele.
+\end{atencaobox}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\subsection*{Fechamento: o que o STAR ensinou neste guia}
+
+O Experimento STAR percorreu, em um único exemplo empírico, toda a cadeia metodológica discutida neste guia. A \textbf{aleatorização dentro de escola} resolveu o problema de identificação: dentro de cada escola, tratados e controles são comparáveis em média, eliminando o viés de seleção. A \textbf{regressão com efeitos fixos de escola} alinhou a estimação ao desenho experimental, melhorando precisão sem comprometer validade. A discussão sobre \textbf{erros-padrão} revelou que a escolha do estimador de variância é uma decisão substantiva: ignorar a correlação intraclasse leva a inferências enganosas. O \textbf{bootstrap} por cluster confirmou os resultados assintóticos quando o número de grupos é suficiente, e mostrou quando os dois tendem a divergir. A análise de \textbf{múltiplos testes} forçou uma resposta honesta sobre quais resultados são robustos: um efeito que sobrevive a Bonferroni em quatro disciplinas é mais convincente do que um único p-valor favorável. A \textbf{inferência por permutação} usou diretamente o processo de aleatorização para construir distribuições de referência exatas, sem aproximações assintóticas. Por fim, os \textbf{testes de falsificação} --- balanceamento de covariadas, atrito diferencial e placebo de professora --- forneceram evidência circunstancial sobre a qualidade da implementação experimental.
+
+O ponto que conecta todos esses elementos é o seguinte: cada ferramenta responde a uma pergunta diferente. Identificação pergunta \textit{o que estamos estimando?} Estimação pergunta \textit{como calculamos isso?} Inferência pergunta \textit{quanta incerteza há?} Bootstrap e permutação perguntam \textit{essa incerteza é bem caracterizada pelas aproximações assintóticas?} Múltiplos testes perguntam \textit{o resultado sobrevive a buscas seletivas?} Falsificação pergunta \textit{as hipóteses por trás da estimação são plausíveis?} Nenhuma dessas perguntas é dispensável, e a resposta a qualquer uma delas pressupõe que as anteriores tenham sido respondidas com rigor.

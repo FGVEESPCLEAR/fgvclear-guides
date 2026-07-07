@@ -1,0 +1,99 @@
+% =============================================================================
+% Capítulo 1 — Introdução
+% Guia CLEAR de Variáveis Instrumentais — FGV EESP CLEAR
+% =============================================================================
+
+\chapter{Por que precisamos de instrumentos?}
+\label{cap:introducao}
+
+Imagine que você trabalha numa secretaria de educação e quer saber se o programa de tutoria que seu estado implantou realmente melhorou as notas dos alunos. Você pega os dados, compara as notas de quem participou da tutoria com as de quem não participou, e encontra uma diferença grande e positiva. Ótima notícia, mas será que o programa causou essa diferença?
+
+O problema é que a participação na tutoria não foi aleatória. Provavelmente foram os pais mais engajados que inscreveram seus filhos. Ou os professores que encaminharam os alunos com mais dificuldade. Ou simplesmente os estudantes mais motivados que se apresentaram voluntariamente. Em qualquer um desses casos, os alunos que participaram já eram, antes do programa, sistematicamente diferentes dos que não participaram. A diferença nas notas que você observou pode refletir essa diferença inicial, e não o efeito do programa.
+
+Esse é o problema da endogeneidade, e ele aparece em praticamente todo lugar onde você quiser medir o efeito causal de algo que as pessoas escolhem fazer (ou não fazer). Este capítulo desenvolve a intuição por trás do problema e apresenta a lógica da variável instrumental como solução.
+
+% =============================================================================
+\section{O problema da endogeneidade}
+\label{sec:endogeneidade}
+
+O Guia de Inferência Causal estabeleceu o problema fundamental: para medir o efeito causal de um tratamento, precisaríamos comparar o mesmo indivíduo em dois mundos ao mesmo tempo (com e sem o tratamento). Como isso é impossível, comparamos pessoas diferentes. E a comparação só funciona se as pessoas que receberam o tratamento e as que não receberam forem, em média, iguais em tudo o mais que afeta o resultado.
+
+Quando esse ``em média, iguais'' não se sustenta, temos endogeneidade. O tratamento $X$ está correlacionado com fatores não observados que também afetam o resultado $Y$, e o estimador de mínimos quadrados ordinários (MQO) não consegue separar o efeito de $X$ sobre $Y$ do efeito desses outros fatores.
+
+Há três fontes clássicas de endogeneidade, e vale conhecer cada uma delas porque a forma como o instrumento resolve o problema é sempre a mesma, mas o argumento de validade muda conforme a fonte.
+
+A primeira fonte é a \textbf{variável omitida}. Existe um fator que afeta simultaneamente o tratamento e o resultado, mas que não está nos dados. No exemplo da tutoria: o engajamento dos pais afeta tanto a probabilidade de a criança participar do programa quanto o desempenho escolar dela por inúmeros outros canais. Se não medimos o engajamento dos pais, ele fica escondido no termo de erro da regressão. E como esse termo de erro está correlacionado com a participação no programa (variável de tratamento), o coeficiente estimado pelo MQO fica contaminado.
+
+A segunda fonte é a \textbf{causalidade reversa}. Às vezes o resultado afeta o tratamento, e não apenas o contrário. Um exemplo clássico: municípios com mais criminalidade recebem mais policiais. Uma regressão ingênua de criminalidade sobre número de policiais pode encontrar correlação positiva, não porque policiais causem crime, mas porque o crime causa mais contratação de policiais. A causalidade vai nos dois sentidos, e a regressão simples não consegue separar as duas direções.
+
+A terceira fonte é a \textbf{seleção}. As pessoas (ou firmas, municípios, escolas) não entram em programas aleatoriamente: elas se selecionam com base em características que também afetam o resultado. Quem acessa crédito tende a ser mais empreendedor. Quem migra para a cidade grande tende a ter mais ambição. Quem busca tratamento médico tende a estar mais doente (ou, dependendo do contexto, mais preocupado com saúde). Essa seleção cria uma correlação espúria entre participação e resultado.
+
+Em todos esses casos, o MQO produz um coeficiente que mistura o efeito causal com o efeito dos fatores confundidores. E muitas vezes nem sabemos ao certo se o coeficiente está superestimado ou subestimado: o sinal do viés depende da direção da correlação entre o tratamento e os fatores omitidos, o que nem sempre é óbvio.
+
+\begin{atencaobox}[O viés do MQO pode ir em qualquer direção]
+É tentador assumir que a correlação positiva entre tutoria e notas ``no mínimo confirma que o programa não fez mal''. Mas o MQO pode estar tanto superestimando quanto subestimando o efeito real. Se os alunos com mais dificuldade foram indicados para a tutoria, e esses alunos teriam melhorado de qualquer forma por regressão à média, o efeito estimado pode estar inflado. Se a seleção é positiva (os melhores alunos buscam o programa), o efeito estimado pode estar inflado na direção oposta. Sem controlar o viés de seleção, não sabemos nem o sinal do erro.
+\end{atencaobox}
+
+% =============================================================================
+\section{A lógica do instrumento}
+\label{sec:logica_instrumento}
+
+A ideia da variável instrumental é encontrar um fator $Z$ que resolva exatamente o problema que descrevemos. Esse fator precisa fazer duas coisas ao mesmo tempo: afeta o tratamento $X$, mas não afeta o resultado $Y$ por nenhum canal além do tratamento.
+
+Para ver por que isso funciona, pense no que está errado com o MQO. O problema é que a variação em $X$ que observamos nos dados é uma mistura de dois componentes. Uma parte da variação em $X$ está relacionada com os fatores omitidos que afetam $Y$: essa é a parte contaminada, que cria o viés. A outra parte é genuinamente exógena, aleatória em relação a esses fatores. Se conseguíssemos isolar apenas essa segunda parte, poderíamos estimar o efeito causal de forma limpa.
+
+É exatamente isso que o instrumento faz. Quando $Z$ move $X$, ele cria variação em $X$ que é exógena por construção, porque $Z$ em si é exógeno. Ao usar apenas essa variação induzida por $Z$ para estimar o efeito de $X$ sobre $Y$, nos livramos da parte contaminada da variação em $X$.
+
+\begin{exemplobox}[A loteria de vagas]
+Imagine um programa de requalificação profissional que distribui vagas por sorteio entre os candidatos inscritos. O instrumento $Z$ é o resultado do sorteio (ganhou ou não ganhou a vaga). O tratamento $X$ é frequentar o curso de fato. O resultado $Y$ é o salário dois anos depois.
+
+Por que o sorteio funciona como instrumento? Porque ele é genuinamente aleatório: quem ganhou e quem não ganhou a vaga são, na média, idênticos em motivação, habilidade, histórico de emprego e qualquer outra característica relevante. A única diferença entre eles é o resultado do sorteio. Ao comparar os dois grupos no resultado, qualquer diferença que encontrarmos deve refletir o efeito de \textit{ter ganhado a vaga}, e não de características prévias dos participantes.
+
+Mas espera: nem todo mundo que ganha a vaga frequenta o curso, e algumas pessoas encontram outras formas de participar mesmo sem ganhar. Por isso, a comparação direta de quem ganhou com quem não ganhou mede o efeito de \textit{ganhar a vaga}, não de \textit{frequentar o curso}. A variável instrumental vai um passo além, usando o sorteio para isolar o efeito do curso em si, mas apenas para quem efetivamente mudou seu comportamento por causa do sorteio.
+\end{exemplobox}
+
+Para que $Z$ funcione como instrumento válido, três condições precisam ser satisfeitas. Elas serão desenvolvidas em detalhe no Capítulo~\ref{cap:iv_binario}, mas vale apresentá-las aqui em termos intuitivos:
+
+\textbf{Relevância}: $Z$ precisa de fato mover $X$. Se o sorteio não influencia a participação no curso, ele é inútil como instrumento. Essa condição é testável nos dados: basta verificar se os sorteados participam mais do curso do que os não sorteados.
+
+\textbf{Exogeneidade}: $Z$ precisa ser independente dos fatores não observados que afetam $Y$. No caso do sorteio aleatório, isso é garantido por construção. Em outros casos (distância geográfica, variação institucional, choques de mercado), precisa ser defendido com argumentos econômicos e institucionais.
+
+\textbf{Exclusão}: $Z$ só pode afetar $Y$ através de $X$. Ganhar a loteria não pode influenciar o salário futuro por nenhum canal além de frequentar o curso, por exemplo, o fato de ter ``sido escolhido'' não pode funcionar como sinal positivo para empregadores.
+
+Quando as três condições são satisfeitas, o instrumento resolve o problema de seleção de forma elegante. Mas é importante entender desde já: IV não estima o efeito do tratamento para todo mundo. Estima o efeito para as pessoas cujo comportamento foi alterado pelo instrumento, nem mais, nem menos. Quem teria feito o curso de qualquer jeito (com ou sem loteria) e quem não faria de jeito nenhum não contribuem para a estimativa. Ela é, nesse sentido, \textit{local}. O próximo capítulo explica com precisão quem são essas pessoas e por que esse detalhe importa muito.
+
+% =============================================================================
+\section{Onde aparecem instrumentos na prática?}
+\label{sec:exemplos_instrumentos}
+
+Encontrar um instrumento válido exige criatividade e conhecimento do contexto institucional. Não existe um algoritmo para isso: é preciso conhecer o setor, entender como as decisões são tomadas, e identificar fatores que criem variação exógena no tratamento de interesse. A seguir, descrevemos os tipos mais comuns de instrumentos que aparecem na avaliação de políticas públicas.
+
+\textbf{Loterias e sorteios.} Quando vagas, benefícios ou recursos são distribuídos por sorteio, o resultado do sorteio é um instrumento quase perfeito. Programas de vouchers educacionais, sorteios de vagas em creches públicas, loterias de habitação social e alocação aleatória de bolsas de pesquisa são exemplos em que o instrumento é válido por design. A única ressalva é verificar que o sorteio foi implementado corretamente e que não houve manipulação posterior.
+
+\textbf{Regras de elegibilidade e limiares.} Muitas políticas seguem regras rígidas: quem tem renda abaixo de certo limite recebe o benefício; quem está acima, não. Municípios com população abaixo de certo tamanho recebem uma transferência federal; municípios maiores, não. Essas descontinuidades criam situações em que unidades muito parecidas recebem tratamentos diferentes por conta de uma diferença mínima na variável que define a elegibilidade. Esse é o fundamento da Regressão com Descontinuidade (RDD), mas a lógica também pode ser explorada como instrumento.
+
+\textbf{Distância e custo de acesso.} Quando a distância até um serviço, escola ou hospital afeta a probabilidade de uso, ela pode ser usada como instrumento. \citet{Card1995} usou a distância até a faculdade mais próxima como instrumento para anos de educação: morar perto de uma universidade reduz o custo de acesso ao ensino superior e, por isso, aumenta a probabilidade de cursá-lo, sem afetar diretamente o salário futuro por outras vias. A plausibilidade desse argumento depende do contexto, e discutimos suas limitações adiante.
+
+\textbf{Variação institucional e legal.} Diferenças em leis, regulações ou estruturas institucionais entre municípios, estados ou países podem criar variação exógena no tratamento. A variação no horário de funcionamento de serviços públicos entre municípios pode ser usada para estimar o efeito do acesso ao serviço. A data de implantação de um programa em diferentes regiões pode ser explorada para comparar expostos e não expostos em momentos distintos.
+
+\textbf{Choques externos e instrumentos shift-share.} Quando regiões têm composições setoriais diferentes, um choque nacional ou internacional num setor específico afeta de forma diferente cada região. Municípios com mais emprego em manufatura são mais afetados pela concorrência de importações do que municípios especializados em serviços. Essa variação na exposição ao choque (que depende da composição setorial histórica e não de escolhas recentes) pode ser usada como instrumento. Esses são os chamados instrumentos Bartik ou \textit{shift-share}, que discutimos em detalhe no Capítulo~\ref{cap:iv_continuo}.
+
+% =============================================================================
+\section{O que este guia cobre}
+\label{sec:estrutura}
+
+Este guia avança de forma linear, do mais simples para o mais complexo.
+
+O Capítulo~\ref{cap:iv_binario} trata do caso em que tanto o tratamento quanto o instrumento são binários. É o caso mais transparente, onde podemos ver com clareza o que o instrumento identifica e por quê. Introduzimos os conceitos de \textit{compliers}, \textit{always-takers}, \textit{never-takers} e o Efeito Médio de Tratamento Local (LATE), e mostramos como estimá-lo com uma operação simples chamada razão de Wald.
+
+O Capítulo~\ref{cap:mte} considera o que acontece quando o instrumento é contínuo mas o tratamento ainda é binário. Nesse caso, o instrumento não move todo mundo da mesma forma: diferentes valores do instrumento ``convencem'' diferentes pessoas a tratar. Isso nos leva ao conceito de Efeito de Tratamento Marginal (MTE), que permite entender como o efeito do tratamento varia ao longo de diferentes margens de seleção.
+
+O Capítulo~\ref{cap:iv_continuo} trata do caso em que tanto o tratamento quanto o instrumento são contínuos. Esse é o cenário de muitas aplicações econômicas importantes: anos de educação, volume de crédito, nível de exposição a uma política. Mostramos por que o estimador 2SLS padrão funciona bem quando o efeito do tratamento é constante, mas pode ter interpretação problemática quando os efeitos são heterogêneos. Dedicamos uma seção especial aos instrumentos shift-share.
+
+O Capítulo~\ref{cap:iv_painel} trata de IV em dados de painel. Quando observamos as mesmas unidades ao longo do tempo, surgem questões sobre como o efeito do tratamento pode mudar entre períodos e sobre instrumentos com efeitos que se propagam no tempo.
+
+O Capítulo~\ref{cap:conclusao} sintetiza as mensagens centrais e apresenta um checklist prático para quem vai usar ou interpretar uma estimativa de IV.
+
+\begin{notabox}[O argumento de validade é econômico, não estatístico]
+A validade de um instrumento nunca pode ser provada pelos dados: ela precisa ser \textit{argumentada}. Testes estatísticos de relevância (primeiro estágio) e de sobreidentificação são auxiliares úteis, mas não substituem um argumento econômico e institucional sólido sobre por que $Z$ é exógeno e por que a restrição de exclusão é plausível. Esse argumento é sempre o coração de qualquer aplicação de IV.
+\end{notabox}

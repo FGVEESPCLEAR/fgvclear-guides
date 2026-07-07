@@ -1,0 +1,125 @@
+% =============================================================================
+% Capítulo 5 — IV em painel e IV dinâmico
+% Guia CLEAR de Variáveis Instrumentais — FGV EESP CLEAR
+% =============================================================================
+
+\chapter{IV em dados de painel}
+\label{cap:iv_painel}
+
+Até agora tratamos IV como se cada unidade de análise fosse observada uma única vez. Na prática, muitas aplicações usam dados de painel: os mesmos municípios, firmas, estados ou indivíduos são observados ao longo de vários anos. Painel cria oportunidades valiosas: a comparação de uma unidade consigo mesma ao longo do tempo é muito mais limpa do que comparar unidades diferentes. Mas também cria complicações que afetam diretamente o que um estimador 2SLS está estimando.
+
+Este capítulo discute como IV funciona em painel, o que acontece quando o efeito do tratamento muda entre períodos, e como pensar em efeitos que se propagam no tempo.
+
+% =============================================================================
+\section{O que painel acrescenta ao IV}
+\label{sec:painel_vantagens}
+
+A vantagem central do painel é a possibilidade de usar \textit{efeitos fixos}: controlamos por tudo que é constante dentro de uma unidade ao longo do tempo. Se um município tem características permanentes (localização geográfica, composição demográfica histórica, cultura econômica) que afetam tanto o tratamento quanto o resultado, os efeitos fixos eliminam essa confusão ao focar apenas na variação temporal dentro do município.
+
+Quando combinamos efeitos fixos com IV, obtemos o estimador FE-IV (ou FEIV), que usa variação \textit{dentro} de cada unidade ao longo do tempo, instrumentada por um instrumento que também varia dentro da unidade. Por exemplo: se queremos estimar o efeito de transferências federais sobre o investimento municipal, e temos como instrumento uma regra que varia com o tempo e com características predeterminadas dos municípios, o FEIV usa a variação temporal nessa regra para identificar o efeito das transferências.
+
+Efeitos fixos resolvem o problema de variáveis omitidas que são \textit{constantes no tempo}. Eles não resolvem o problema de variáveis que variam tanto no tempo quanto entre unidades e estão correlacionadas com o tratamento. E, crucialmente, eles não resolvem a endogeneidade que vem de variáveis que variam ao longo do tempo dentro de cada unidade: por isso o IV ainda é necessário mesmo com efeitos fixos.
+
+% =============================================================================
+\section{Quando o efeito muda ao longo do tempo}
+\label{sec:heterogeneidade_temporal}
+
+Imagine que você está estimando o efeito de uma política de expansão de creches sobre o trabalho das mães, usando um painel de municípios de 2005 a 2020. O instrumento é a variação na disponibilidade de vagas induzida por uma regra federal que favoreceu municípios com certas características predeterminadas.
+
+Agora suponha que o efeito da disponibilidade de creches sobre o trabalho das mães mudou ao longo do período: foi mais forte nos anos 2010 (quando o mercado de trabalho estava aquecido e havia mais demanda por trabalho feminino) e mais fraco nos anos 2015--2018 (quando a recessão reduziu as oportunidades). O efeito real varia entre períodos.
+
+O que acontece se você rodar um 2SLS \textit{pooled} sobre todo o painel, sem distinguir entre períodos? Você obtém um único coeficiente. Mas esse coeficiente é uma média ponderada dos efeitos período a período, e os pesos dependem de quanto o instrumento varia em cada período. Períodos em que o instrumento tem maior variação e produz um primeiro estágio mais forte recebem mais peso. Períodos com primeiro estágio mais fraco contribuem menos.
+
+Isso pode ser razoável se os pesos são positivos e o efeito é razoavelmente estável. O problema surge quando:
+
+\textbf{Os primeiros estágios têm sinais diferentes em períodos distintos.} Se o instrumento aumenta a probabilidade de tratamento em alguns períodos mas a reduz em outros (talvez porque a política funcionou de formas diferentes em contextos diferentes), o 2SLS pooled pode combinar esses efeitos com pesos de sinais opostos, gerando um coeficiente que está fora do intervalo dos efeitos período-específicos. O resultado pode ser um número que não corresponde ao efeito em nenhum período real.
+
+\textbf{Os pesos são muito concentrados em um único período.} Se o instrumento tem variação relevante apenas num período específico, o coeficiente pooled reflete essencialmente o efeito naquele período, mesmo que o artigo apresente o resultado como um "efeito médio" ao longo do painel.
+
+\begin{exemplobox}[Efeitos que mudam de sinal entre períodos]
+Suponha um painel de municípios com um instrumento shift-share para receber um choque positivo de demanda local. Em períodos de expansão econômica (2010--2013), o choque de demanda aumenta o emprego formal: primeiro estágio positivo, efeito positivo. Em períodos de recessão (2015--2017), o mesmo tipo de choque setorial positivo pode atrair mais migrantes para um município em crise, mas não gerar empregos formais, com primeiro estágio de sinal ambíguo.
+
+Se você roda o 2SLS pooled sobre os dois períodos juntos, pode obter um coeficiente que é uma combinação estranha dos dois contextos muito diferentes. Estimar por período separado e verificar se os coeficientes são consistentes é muito mais informativo.
+\end{exemplobox}
+
+\subsection*{O que fazer na prática}
+
+Antes de confiar em um coeficiente 2SLS pooled de painel, três verificações são importantes.
+
+\textbf{Primeira}: verifique o primeiro estágio em cada período (ou subperíodo). Se o instrumento tem efeitos muito diferentes sobre o tratamento em diferentes momentos do tempo, especialmente se mudam de sinal, o pooled é suspeito.
+
+\textbf{Segunda}: estime o IV separadamente por período (quando a amostra permite) e compare com o pooled. Se os coeficientes por período são parecidos e o pooled está no meio, você tem evidência de que a heterogeneidade temporal não é grave. Se os coeficientes por período variam muito ou têm sinais diferentes, o pooled não é uma boa síntese.
+
+\textbf{Terceira}: seja explícito sobre qual parâmetro o pooled está tentando estimar. Um coeficiente único sobre um painel de 15 anos com efeitos variáveis não é necessariamente inválido, mas precisa ser interpretado como uma média ponderada com pesos específicos, não como um "efeito médio" genérico.
+
+% =============================================================================
+\section{IV dinâmico: quando o efeito se propaga no tempo}
+\label{sec:iv_dinamico}
+
+Uma questão ainda mais fundamental em painel é a do horizonte temporal dos efeitos. Até agora assumimos implicitamente que o efeito do tratamento no período $t$ se manifesta apenas no resultado do período $t$. Mas muitos fenômenos econômicos têm efeitos que se propagam ao longo do tempo.
+
+O efeito de uma política de capacitação profissional sobre a renda não é instantâneo: o trabalhador precisa encontrar um emprego que use suas novas habilidades, adaptar-se ao novo papel, e construir experiência. O efeito do crédito sobre o investimento pode se materializar um ou dois anos depois de o empréstimo ter sido tomado. O efeito de uma política de saneamento sobre saúde infantil pode se acumular ao longo de vários anos antes de aparecer nas estatísticas de mortalidade.
+
+Quando os efeitos são dinâmicos, a pergunta de interesse não é apenas "qual é o efeito de $X_t$ sobre $Y_t$?" mas "qual é o perfil completo de efeitos de $X_t$ sobre $Y_t$, $Y_{t+1}$, $Y_{t+2}$, e assim por diante?"
+
+\subsection*{Projeções locais com IV}
+
+A abordagem mais natural para estimar esse perfil é por meio de \textit{projeções locais}, introduzidas por \citet{Jorda2005}. A ideia é simples: para cada horizonte $h$ de interesse, estima-se uma regressão separada do resultado futuro sobre o tratamento presente:
+\begin{equation}
+Y_{i,t+h} = \alpha_h + \beta_h X_{i,t} + \text{controles} + u_{i,t+h}
+\label{eq:lp}
+\end{equation}
+O coeficiente $\beta_h$ captura o efeito do tratamento no período $t$ sobre o resultado $h$ períodos à frente. Estimando para $h = 0, 1, 2, \ldots, H$, obtemos a curva completa de efeitos dinâmicos.
+
+Quando o tratamento é endógeno, instrumentamos $X_{i,t}$ em cada projeção local usando o instrumento $Z_{i,t}$. Isso é o IV dinâmico em sua forma mais simples: para cada horizonte, um 2SLS separado.
+
+\begin{exemplobox}[IV dinâmico e efeito de crédito]
+Você quer saber não apenas se o crédito aumentou o investimento das firmas, mas se esse efeito é imediato ou cresce ao longo do tempo. Com um painel de firmas e um instrumento para o volume de crédito (por exemplo, choques nas taxas de juros), você estima:
+\begin{itemize}[leftmargin=*]
+  \item Para $h=0$: efeito do crédito sobre o investimento no mesmo ano.
+  \item Para $h=1$: efeito do crédito sobre o investimento no ano seguinte.
+  \item Para $h=2$: efeito do crédito sobre o investimento dois anos depois.
+\end{itemize}
+O resultado pode mostrar, por exemplo, que o efeito é pequeno no ano 0 (as firmas ainda estão usando o crédito), maior no ano 1 (os projetos financiados começam a produzir) e retorna ao zero no ano 2 (efeito transitório). Ou pode mostrar que o efeito se acumula ao longo do tempo (investimento gera mais capacidade produtiva que sustenta mais investimento). O perfil dinâmico é o que conta.
+\end{exemplobox}
+
+\subsection*{Complicações do IV dinâmico}
+
+O IV dinâmico introduz algumas complicações que não existem no caso contemporâneo.
+
+A primeira é a \textbf{persistência do tratamento}. Se o crédito de hoje está correlacionado com o crédito de amanhã (o que é quase certo, pois firmas que tomam crédito tendem a continuar tomando), o efeito de $X_t$ sobre $Y_{t+h}$ captura não apenas o efeito direto de $X_t$, mas também o efeito indireto que passa por $X_{t+1}, X_{t+2}, \ldots$ Por isso é importante definir claramente o experimento mental: estamos estimando o efeito de uma variação temporária em $X_t$ (mantendo os demais períodos constantes), ou o efeito de uma mudança permanente que se propaga para todos os períodos futuros?
+
+A segunda é a \textbf{antecipação}. Se as firmas antecipam que vão receber crédito antes de ele chegar, elas podem começar a investir antes do momento $t$. Nesse caso, o resultado $Y_{t-1}$ já reflete parcialmente o efeito esperado de $X_t$. Incluir "horizontes negativos" no exercício (estimar $\beta_h$ para $h = -1, -2$) é um teste informal de antecipação: se o efeito já aparece antes do tratamento, algo está errado com a identificação.
+
+A terceira é a \textbf{validade do instrumento ao longo dos horizontes}. Um instrumento válido para o efeito contemporâneo de $X_t$ pode não ser válido para o efeito de $X_t$ sobre $Y_{t+h}$ se o instrumento também afeta $Y_{t+h}$ por outros canais além de $X_t$. Por exemplo, uma variação na taxa de juros de hoje afeta o investimento futuro não apenas via crédito hoje, mas também via expectativas sobre crédito futuro. Se esses canais adicionais são relevantes, a exclusão falha para horizontes maiores.
+
+A quarta é a \textbf{inferência}. Os resíduos de projeções locais para diferentes horizontes são correlacionados entre si (um choque em $t$ afeta $Y_{t+h}$ para múltiplos $h$). Os erros padrão precisam levar em conta essa correlação serial, tipicamente usando correções robustas tipo Newey-West ou clusterização por unidade.
+
+\begin{todo}{IV dinâmico: referências de Pedro Picchetti}
+Esta seção precisa ser complementada com as referências dos trabalhos de Pedro Picchetti sobre IV dinâmico. Quando os artigos corretos forem identificados, com títulos, periódicos e anos confirmados, a discussão deve ser atualizada para incorporar os resultados específicos e as soluções propostas, com citações adequadas.
+
+Para leitura complementar sobre IV dinâmico e projeções locais, ver \citet{Jorda2005}, \citet{PlagborgMollerWolf2021}, \citet{StockWatson2018} e \citet{Ramey2016}.
+\end{todo}
+
+\subsection*{Cuidados práticos}
+
+Ao trabalhar com IV dinâmico, cinco pontos merecem atenção especial.
+
+\textbf{Defina o experimento mental com clareza.} Qual variação em $X$ está sendo considerada: uma mudança temporária de um período, ou uma mudança permanente? A resposta afeta como o perfil dinâmico deve ser interpretado.
+
+\textbf{Apresente o perfil completo com incerteza.} O coeficiente em cada horizonte é uma estimativa, e a incerteza cresce com o horizonte. Gráficos com bandas de confiança para cada $h$ são muito mais informativos do que uma tabela com apenas o efeito contemporâneo.
+
+\textbf{Teste antecipação.} Estimar $\beta_h$ para horizontes negativos ($h = -1, -2$) e verificar que eles são estatisticamente indistinguíveis de zero é um teste informal de que o instrumento está capturando variação genuinamente exógena.
+
+\textbf{Cuidado com tratamentos persistentes.} Quando $X$ é muito persistente, é difícil separar o efeito de $X_t$ do efeito de $X_{t+1}$ e $X_{t+2}$. O primeiro estágio precisa ter poder preditivo suficiente para discriminar variações transitórias de permanentes.
+
+\textbf{Use inferência robusta à correlação serial.} Erros padrão que não levam em conta a correlação entre os resíduos de diferentes horizontes são muito pequenos, levando a conclusões enganosas sobre a precisão das estimativas.
+
+\begin{notabox}[Pontos-chave do capítulo]
+\begin{itemize}[leftmargin=*]
+  \item Painel com efeitos fixos elimina confusão por características constantes no tempo, mas não resolve endogeneidade por fatores que variam no tempo. IV continua sendo necessário.
+  \item O 2SLS pooled em painel é uma média ponderada dos efeitos período a período, com pesos determinados pela variação do instrumento em cada período. Quando o efeito muda ao longo do tempo, o pooled pode misturar efeitos de contextos muito diferentes.
+  \item Primeiro estágios com sinais opostos em períodos diferentes são um sinal de alerta: o coeficiente pooled pode estar fora do intervalo dos efeitos período-específicos.
+  \item IV dinâmico mapeia o perfil completo dos efeitos ao longo do tempo usando projeções locais instrumentadas. Persistência do tratamento, antecipação e validade do instrumento em horizontes maiores são as principais complicações.
+\end{itemize}
+\end{notabox}

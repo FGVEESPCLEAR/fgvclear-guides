@@ -1,0 +1,105 @@
+% =============================================================================
+% Capítulo 6 — Conclusão
+% Guia CLEAR de Variáveis Instrumentais — FGV EESP CLEAR
+% =============================================================================
+
+\chapter{Conclusão}
+\label{cap:conclusao}
+
+Variáveis instrumentais são uma das ferramentas mais poderosas da econometria aplicada, e uma das mais exigentes. A promessa é grande: resolver o problema de endogeneidade e recuperar o efeito causal de um tratamento que as pessoas escolhem, usando variação que não depende dessas escolhas. O preço é alto: hipóteses fortes que não podem ser testadas diretamente, uma estimativa que identifica o efeito apenas para um subgrupo específico, e potencialmente uma interpretação difícil quando o efeito é heterogêneo ou quando o painel mistura períodos com dinâmicas diferentes.
+
+Este capítulo retoma as mensagens centrais de cada capítulo e apresenta um checklist prático para quem vai usar ou avaliar uma estimativa de IV.
+
+% =============================================================================
+\section{As mensagens centrais}
+\label{sec:mensagens}
+
+O ponto de partida foi a endogeneidade: o tratamento está correlacionado com os fatores não observados que afetam o resultado. O MQO não consegue separar o efeito causal do tratamento do efeito desses fatores. A variável instrumental resolve isso usando variação exógena no tratamento, variação que não depende das características que criam a endogeneidade.
+
+No caso binário, IV identifica o LATE: o efeito causal para os compliers, as pessoas cujo comportamento em relação ao tratamento foi alterado pelo instrumento. Always-takers e never-takers não contribuem para a estimativa. O LATE não é o ATE. Pode ser maior, menor ou igual ao efeito médio na população, dependendo de como os compliers se diferenciam dos demais. Isso não é um defeito do método: é a consequência inevitável de identificar efeitos a partir de variação local.
+
+Quando o instrumento é contínuo, o MTE generaliza essa lógica. Em vez de um único grupo de compliers, há uma sequência de margens de seleção ao tratamento, e o efeito pode variar ao longo dessas margens. Isso explica por que instrumentos diferentes para o mesmo tratamento podem dar LATEs diferentes: cada instrumento afeta um grupo diferente de pessoas, e o efeito para esses grupos pode ser distinto. Não é contradição; é heterogeneidade.
+
+Com tratamento e instrumento contínuos, o 2SLS funciona bem quando o efeito é constante, mas vira uma média ponderada de efeitos locais quando o efeito é heterogêneo. Os pesos dependem do instrumento e podem ser difíceis de interpretar. Instrumentos shift-share acrescentam uma complexidade a mais: a identificação pode vir dos choques ou das shares, e a inferência padrão costuma ser incorreta.
+
+Em painel, o 2SLS pooled mistura efeitos de diferentes períodos com pesos determinados pela variação do instrumento em cada período. Quando o efeito muda ao longo do tempo, o coeficiente pooled pode não corresponder ao efeito em nenhum período específico. IV dinâmico resolve esse problema estimando o perfil completo dos efeitos ao longo do tempo, mas exige atenção à persistência do tratamento, à antecipação e à validade do instrumento para horizontes maiores.
+
+% =============================================================================
+\section{A validade é um argumento, não um teste}
+\label{sec:argumento}
+
+A mensagem mais transversal de todo este guia é esta: a validade de um instrumento nunca é provada pelos dados, ela precisa ser defendida com argumentos econômicos e institucionais.
+
+O teste de primeiro estágio (estatística F) verifica se o instrumento é relevante. Testes de sobreidentificação verificam, de forma limitada e com muitas ressalvas, se múltiplos instrumentos são consistentes entre si. Testes de falsificação, como efeitos pré-tratamento e outcomes placebo, fornecem evidência circunstancial. Mas nenhum desses testes verifica diretamente se o instrumento é exógeno ou se a restrição de exclusão vale.
+
+Essa defesa é, em última instância, um argumento sobre como o mundo funciona. Por que um sorteio garante a independência? Porque o processo foi genuinamente aleatório e não houve manipulação. Por que a distância até a universidade satisfaz a exclusão? Porque não existe outra razão pela qual morar mais perto de uma universidade afetaria o salário além de aumentar a probabilidade de cursá-la, um argumento que pode ser mais ou menos plausível dependendo do contexto. Por que as shares iniciais de um shift-share são exógenas? Porque a composição setorial de 30 anos atrás não está correlacionada com tendências recentes no resultado, e isso pode ser verificado, ao menos parcialmente, com testes de pré-tendência.
+
+Boas avaliações com IV dedicam tanto espaço ao argumento de identificação quanto ao resultado numérico. O número sem o argumento não tem interpretação causal.
+
+% =============================================================================
+\section{Checklist aplicado}
+\label{sec:checklist}
+
+As perguntas a seguir ajudam a organizar o raciocínio antes de usar (ou ao ler) uma estimativa de IV. Elas não são uma lista para assinalar mecanicamente, mas um roteiro para o argumento que qualquer aplicação séria de IV precisa construir.
+
+\subsection*{Sobre o design}
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}]
+  \item Qual é exatamente o tratamento $X$? Ele é binário, discreto ou contínuo? Como é medido nos dados?
+  \item Qual é exatamente o instrumento $Z$? Qual é sua variação no período e entre unidades?
+  \item Qual é o resultado $Y$ de interesse? Em que horizonte temporal?
+\end{enumerate}
+
+\subsection*{Sobre a relevância}
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}, start=4]
+  \item O instrumento afeta o tratamento? O primeiro estágio é estatisticamente forte (F $>$ 10 como referência, mas prefira F $>$ 100 para muitas aplicações)?
+  \item O primeiro estágio é estável em subamostras, períodos e especificações? Se você estiver em painel: o instrumento tem o mesmo efeito sobre o tratamento em todos os períodos?
+\end{enumerate}
+
+\subsection*{Sobre a exogeneidade e a exclusão}
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}, start=6]
+  \item Por que o instrumento é exógeno? Qual é o mecanismo (aleatorização, predeterminação, variação geográfica, choque externo) que garante que $Z$ não está correlacionado com os fatores não observados que afetam $Y$?
+  \item Por que a restrição de exclusão é plausível? Há algum canal pelo qual $Z$ poderia afetar $Y$ sem passar por $X$? Se sim, esse canal é quantitativamente irrelevante ou pode ser controlado?
+  \item Há testes de falsificação disponíveis? Efeitos pré-tratamento, outcomes que não deveriam ser afetados, grupos de controle alternativos?
+\end{enumerate}
+
+\subsection*{Sobre o estimando}
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}, start=9]
+  \item Quem são os compliers? Que características eles têm? O efeito para eles é provavelmente parecido ou diferente do efeito para a população de interesse?
+  \item O LATE para esses compliers é o parâmetro relevante para a decisão de política que se quer informar? Se o programa fosse expandido para populações diferentes (always-takers, never-takers, novas regiões), o efeito seria parecido?
+  \item Se o tratamento é contínuo: o coeficiente 2SLS pode ser interpretado como um efeito médio razoável? Os pesos implícitos favorecem grupos específicos com efeitos sistematicamente maiores ou menores?
+\end{enumerate}
+
+\subsection*{Em painel}
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}, start=12]
+  \item O primeiro estágio é estável ao longo do tempo? Os coeficientes IV por período são parecidos?
+  \item O efeito se propaga ao longo do tempo? Se sim, o design está capturando o efeito dinâmico de forma adequada?
+  \item Há evidência de antecipação? Os outcomes pré-tratamento são afetados pelo instrumento?
+\end{enumerate}
+
+% =============================================================================
+\section{Conexão com a série}
+\label{sec:conexao}
+
+\begin{conexaobox}[Série Avaliação na Prática]
+Variáveis instrumentais são um dos métodos da Série Avaliação na Prática do FGV CLEAR. Os demais métodos da série abordam situações em que a endogeneidade tem uma estrutura diferente:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Regressão com Descontinuidade (RDD)}: quando a elegibilidade ao tratamento é determinada por um limiar numa variável contínua. Pode ser vista como um instrumento especial em que $Z$ é o indicador de estar acima do cutoff.
+  \item \textbf{Diferenças em Diferenças (DiD)}: quando o tratamento varia entre grupos e ao longo do tempo, e assume-se tendências paralelas na ausência do tratamento.
+  \item \textbf{Controle Sintético}: quando uma única unidade é tratada e o contrafactual é construído como combinação ponderada de unidades não-tratadas.
+  \item \textbf{Pareamento}: quando a seleção ao tratamento é explicada por variáveis observáveis (independência condicional), e construímos grupos comparáveis por ponderação ou emparelhamento.
+\end{itemize}
+
+IV e RDD têm uma relação especialmente próxima: a RDD pode ser formulada como um 2SLS em que o indicador de estar acima do cutoff é o instrumento para o tratamento. Em muitas aplicações, as duas abordagens são intercambiáveis; a escolha depende de como os dados são organizados e de qual argumento de identificação é mais plausível.
+\end{conexaobox}
+
+\section*{Uma nota final}
+
+Instrumentos válidos são raros e valiosos. Encontrá-los exige criatividade, conhecimento institucional e uma disposição para pensar cuidadosamente sobre o processo gerador dos dados. A tentação de usar um instrumento conveniente que não satisfaz as hipóteses necessárias é real, e produzir uma estimativa de IV com um instrumento fraco ou endógeno pode ser pior do que simplesmente reconhecer que a pergunta causal não pode ser respondida com os dados disponíveis.
+
+A econometria causal não é um conjunto de técnicas que, aplicadas corretamente, produzem respostas certas. É um conjunto de disciplinas para raciocinar sobre o que podemos e o que não podemos aprender a partir dos dados. Um pesquisador que domina a lógica de identificação por variáveis instrumentais, que sabe o que o estimador está calculando, para quem, sob quais hipóteses, produz análises mais informativas e mais honestas do que aquele que simplesmente sabe como rodar um 2SLS num software.

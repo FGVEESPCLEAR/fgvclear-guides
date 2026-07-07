@@ -1,0 +1,112 @@
+% =============================================================================
+% Capítulo 3 — X binário e Z contínuo: MTE
+% Guia CLEAR de Variáveis Instrumentais — FGV EESP CLEAR
+% =============================================================================
+
+\chapter{Quando o instrumento é contínuo: quem está na margem?}
+\label{cap:mte}
+
+No capítulo anterior, o instrumento era binário: a pessoa ganhou ou não ganhou a loteria. Isso criou dois grupos bem definidos, sorteados e não sorteados, e a razão de Wald estimou o efeito do tratamento para os compliers de forma direta.
+
+Mas muitos instrumentos relevantes na prática não são binários. A distância até uma universidade não é zero ou um: é uma variável contínua. A intensidade de um incentivo fiscal varia de forma contínua. O custo de transporte para chegar a um centro de saúde assume muitos valores diferentes. Nesses casos, o instrumento cria variação \textit{gradual} na probabilidade de tratamento: quanto maior o incentivo (ou menor o custo), maior a probabilidade de participar.
+
+Quando o instrumento é contínuo e o tratamento é binário, a lógica de identificação se enriquece de forma importante. Em vez de um único grupo de compliers, há algo como uma sequência de grupos: à medida que o instrumento aumenta, ele vai "convencendo" novas pessoas a entrar no tratamento, uma margem de cada vez. O Efeito de Tratamento Marginal (MTE) é justamente o nome para o efeito do tratamento sobre as pessoas que estão exatamente nessa margem.
+
+Este capítulo desenvolve essa ideia de forma intuitiva. A matemática fica em segundo plano; o objetivo é entender \textit{o que} o MTE mede e \textit{por que} ele importa para interpretar estimativas de IV.
+
+% =============================================================================
+\section{Pessoas diferentes respondem ao instrumento de formas diferentes}
+\label{sec:heterogeneidade_selecao}
+
+Vamos mudar o exemplo para tornar a intuição mais clara. Suponha que queremos estimar o efeito de cursar o ensino superior sobre a renda futura. O tratamento $X_i$ é binário: a pessoa cursou ou não a faculdade. O instrumento é a distância da residência até a universidade mais próxima --- quanto maior a distância, maior o custo de cursar a faculdade (transporte, moradia, tempo de deslocamento) e, portanto, menor a probabilidade de cursá-la.
+
+\citet{Card1995} explorou exatamente essa variação. A ideia é que estudantes que por acaso moram perto de uma universidade boa têm uma "vantagem acidental" que aumenta a chance de cursarem o ensino superior, independentemente de suas características pessoais. Essa variação acidental, determinada por onde a família morou, e não por escolha do estudante, é a variação exógena que o instrumento captura.
+
+Mas pense no seguinte: a distância não age de forma idêntica em todo mundo. Para alguém muito motivado, que tinha planos firmes de ir à faculdade de qualquer forma, morar um pouco mais longe não muda nada: ela vai de qualquer jeito. Para alguém que estava na dúvida, que talvez fosse se a logística fosse fácil, mas desistiria diante de qualquer obstáculo a mais: uma distância maior pode ser o fator decisivo. E para alguém que claramente não ia à faculdade independentemente de qualquer obstáculo, a distância também não importa.
+
+Isso significa que à medida que a distância aumenta (ou seja, o instrumento "fica mais adverso"), as pessoas que ``saem'' do tratamento são justamente aquelas que estavam na margem, ou seja, as que precisavam de pouco incentivo extra para desistir. As pessoas com alta determinação continuam cursando a faculdade mesmo com distâncias maiores. Apenas as que estavam em dúvida são afetadas.
+
+O ponto crucial é que esses grupos marginais podem ter efeitos do tratamento sistematicamente diferentes. Pense: quem precisa de muita "pressão" para desistir da faculdade é provavelmente muito motivado e talvez já esperasse colher altos retornos da educação. Quem desiste facilmente talvez tivesse retornos esperados menores. Se isso for verdade, o efeito da faculdade sobre a renda pode ser maior para os mais determinados e menor para os menos determinados.
+
+Essa é a essência da heterogeneidade que o Efeito de Tratamento Marginal captura.
+
+% =============================================================================
+\section{A ideia do Efeito de Tratamento Marginal}
+\label{sec:mte_definicao}
+
+Para formalizar essa intuição, é útil pensar em cada pessoa como tendo uma certa "resistência ao tratamento": um número que resume todos os fatores não observados que determinam se ela vai ou não tratar quando o instrumento tem um dado valor. Chamamos essa resistência de $U_i$.
+
+Pessoas com $U_i$ pequeno têm baixa resistência: entrariam no tratamento mesmo com pouco incentivo. Pessoas com $U_i$ grande têm alta resistência: precisariam de muito incentivo para entrar, ou não entrariam de jeito nenhum.
+
+A probabilidade de tratamento para um dado valor do instrumento, $p(z) = \mathbb{P}(X=1 \mid Z=z)$, funciona como um "limiar": a pessoa entra no tratamento se sua resistência $U_i$ for menor do que $p(z)$. Quando o instrumento fica mais favorável (maior incentivo, menor distância), $p(z)$ aumenta e o limiar sobe, "puxando" para dentro do tratamento as pessoas com resistências um pouco maiores.
+
+O \textbf{Efeito de Tratamento Marginal} (MTE) é definido como o efeito causal do tratamento para as pessoas que estão exatamente na margem, aquelas com resistência igual ao limiar $u$:
+\begin{equation}
+\text{MTE}(u) = \E[Y_i(1) - Y_i(0) \mid U_i = u]
+\label{eq:mte}
+\end{equation}
+
+Ao estimar o MTE para diferentes valores de $u$, traçamos um perfil de como o efeito do tratamento varia ao longo da distribuição de resistência. Se o MTE é decrescente em $u$ (o que acontece quando há seleção positiva para o tratamento), quem entra no tratamento voluntariamente (baixo $U$) tem retornos maiores do que quem só entra quando muito incentivado (alto $U$).
+
+\begin{exemplobox}[MTE e retornos à educação]
+\citet{HeckmanVytlacil2005} estimaram o MTE do ensino superior sobre a renda usando distância até a faculdade como instrumento. Eles encontraram que o MTE tende a ser decrescente na resistência ao tratamento: pessoas que teriam ido à faculdade de qualquer jeito (baixo $U$) têm retornos maiores do que pessoas que só foram convencidas pela proximidade geográfica (alto $U$).
+
+Isso faz sentido econômico. Quem tem retornos esperados altos tem mais incentivo para ir à faculdade independentemente dos obstáculos. Quem precisa de condições excepcionalmente favoráveis (morar do lado da universidade) talvez seja menos confiante nos retornos, e de fato acabe com retornos menores.
+
+A implicação prática: um instrumento que afeta principalmente estudantes que moram longe (e que são convencidos a ir à faculdade quando a distância diminui) vai estimar o efeito da faculdade para um grupo com retornos relativamente baixos. Um experimento que convença aleatoriamente pessoas de alta resistência pode estimar um efeito bem diferente do ATE.
+\end{exemplobox}
+
+% =============================================================================
+\section{Por que diferentes instrumentos dão resultados diferentes}
+\label{sec:mte_late}
+
+Uma das implicações mais importantes do framework de MTE é que instrumentos diferentes identificam médias do MTE em intervalos diferentes e, portanto, podem dar estimativas de IV muito distintas mesmo que todos sejam válidos.
+
+Pense em dois instrumentos para o efeito da faculdade sobre a renda:
+\begin{enumerate}[leftmargin=*]
+  \item Distância até a universidade mais próxima: afeta principalmente pessoas que estavam ``na dúvida'' por razões logísticas. Elas tendem a ter resistência moderada (não muito alta, não muito baixa).
+  \item Existência de uma política de cotas que aumentou o acesso para grupos específicos: afeta pessoas que antes não poderiam acessar o ensino superior por razões estruturais. Elas podem ter alta resistência não por falta de motivação, mas por restrições externas.
+\end{enumerate}
+
+Cada instrumento move um grupo diferente de pessoas para dentro do tratamento. O LATE identificado por cada instrumento é uma média do MTE sobre o intervalo de resistência que o instrumento cobre. Se o MTE varia ao longo desse intervalo, os dois LATEs serão diferentes, não porque um dos instrumentos está errado, mas porque eles identificam efeitos para grupos diferentes.
+
+Isso tem uma implicação importante para a interpretação de resultados. Quando dois estudos usam IV para estimar o mesmo parâmetro e chegam a números diferentes, a primeira pergunta não deveria ser "qual dos dois está errado?", mas sim "o instrumento de cada estudo afeta qual grupo de pessoas?". A diferença nas estimativas pode ser perfeitamente coerente, refletindo heterogeneidade genuína no efeito do tratamento.
+
+\begin{atencaobox}[Dois instrumentos válidos podem dar resultados diferentes]
+Se você usa distância até a universidade como instrumento e encontra um LATE de 15\% de aumento na renda, enquanto outro estudo usa cotas e encontra 8\%, isso não é contradição. Os dois instrumentos podem ser igualmente válidos mas estar identificando efeitos em margens de seleção diferentes. O framework de MTE fornece a linguagem para reconciliar essas diferenças: compare em que trecho da distribuição de resistência cada instrumento está operando.
+\end{atencaobox}
+
+% =============================================================================
+\section{O MTE como unificador de parâmetros}
+\label{sec:mte_unificador}
+
+Uma das contribuições mais elegantes do trabalho de \citet{HeckmanVytlacil2005} é mostrar que os parâmetros que usualmente nos interessam (ATE, ATT e LATE) são todos médias ponderadas do MTE, com pesos diferentes.
+
+O ATE é a média do MTE ao longo de toda a distribuição de resistência, com pesos iguais para todos os valores de $u$. Ele pergunta: qual seria o efeito do tratamento se escolhêssemos aleatoriamente alguém da população?
+
+O ATT é uma média do MTE, mas ponderada pela probabilidade de que uma pessoa com dado $U$ seja tratada. Como pessoas com menor resistência têm mais chance de ser tratadas, o ATT dá mais peso às partes da curva de MTE com $u$ pequeno, onde o efeito tende a ser maior quando há seleção positiva.
+
+O LATE para um instrumento específico é uma média do MTE sobre o intervalo de resistência coberto por aquele instrumento.
+
+Essa estrutura unificada é conceitualmente poderosa porque nos diz que todos esses parâmetros são consistentes entre si: são simplesmente médias do mesmo objeto (o MTE) com pesos diferentes. Quando encontramos que ATT $>$ LATE $>$ ATE (como sugere o padrão típico com seleção positiva), isso reflete os diferentes pesos que cada parâmetro atribui às diferentes partes da curva de MTE.
+
+% =============================================================================
+\section{Estimação e limitações práticas}
+\label{sec:mte_estimacao}
+
+A estimação do MTE é mais exigente do que a do LATE binário. O processo tem duas etapas: primeiro estima-se como o instrumento afeta a propensão ao tratamento ($p(z)$); depois usa-se a variação nessa propensão para recuperar como o resultado varia ao longo das margens de seleção.
+
+Na prática, isso equivale a estimar como $\E[Y \mid p(Z) = p]$ varia com $p$, e a derivada dessa função em relação a $p$ é o MTE avaliado em $u = p$. Para que essa estimação funcione, precisa haver variação suficiente no instrumento em torno de cada ponto de $u$ que se quer estimar: caso contrário, o MTE não é identificado naquele ponto.
+
+A estimação da função completa do MTE geralmente requer métodos não paramétricos ou semiparamétricos, e a inferência precisa levar em conta que a propensão estimada no primeiro estágio carrega incerteza que se propaga para o segundo. Isso torna o MTE um objeto mais exigente computacionalmente do que o simples LATE.
+
+Para a maioria das aplicações aplicadas, o pesquisador não precisa estimar toda a curva de MTE. É suficiente: (i) estar ciente de que o LATE identificado pelo instrumento disponível pode diferir do ATE; (ii) pensar em qual trecho da distribuição de resistência o instrumento opera; e (iii) discutir explicitamente quem são os compliers afetados pelo instrumento e se o efeito para eles é provavelmente maior, menor ou parecido com o efeito médio para a população.
+
+\begin{notabox}[Pontos-chave do capítulo]
+\begin{itemize}[leftmargin=*]
+  \item Quando o instrumento é contínuo, ele "convence" pessoas diferentes em margens diferentes. O MTE captura o efeito do tratamento para as pessoas na margem de indiferença para cada valor do instrumento.
+  \item Diferentes instrumentos identificam médias do MTE em intervalos diferentes de resistência. Estimativas de IV diferentes para o mesmo tratamento podem refletir heterogeneidade real, não contradição.
+  \item ATE, ATT e LATE são todos médias ponderadas do MTE com pesos diferentes. Quando o MTE é decrescente na resistência (seleção positiva), espera-se ATT $>$ LATE $>$ ATE.
+  \item O MTE exige mais para ser estimado do que o LATE binário, mas mesmo sem estimá-lo formalmente, o conceito é útil para interpretar e comparar estimativas de IV produzidas por instrumentos diferentes.
+\end{itemize}
+\end{notabox}

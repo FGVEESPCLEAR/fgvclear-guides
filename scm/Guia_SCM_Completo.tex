@@ -1,36 +1,47 @@
-\documentclass[12pt,a4paper]{article}
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Guia de Controle Sintético (SCM)
+%% ============================================================
 
-% ========== PACOTES ==========
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt, a4paper, openany]{book}
+
+%% ── Codificação e Idioma ────────────────────────────────────
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[brazilian]{babel}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{graphicx}
-\usepackage[dvipsnames]{xcolor}
-\usepackage{hyperref}
-\usepackage{natbib}
-\usepackage{geometry}
-\usepackage{setspace}
-\usepackage{enumitem}
-\usepackage{booktabs}
+\usepackage[brazil]{babel}
+
+%% ── Fonte ───────────────────────────────────────────────────
+\usepackage{tgpagella}
+
+%% ── Matemática ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e Tabelas ───────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
 \usepackage{longtable}
-\usepackage{float}
-\usepackage{caption}
-\usepackage{footnote}
-\usepackage{tcolorbox}
-\usepackage{listings}
-\usepackage{fancyhdr}
-\usepackage{titlesec}
-\usepackage{tocloft}
-\usepackage{multicol}
+\usepackage{tabularx}
 
-% ========== GEOMETRIA ==========
+%% ── Layout ──────────────────────────────────────────────────
+\usepackage{geometry}
 \geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
 \onehalfspacing
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{enumitem}
 
-% ========== CORES ==========
-\definecolor{clearblue}{RGB}{27,58,92}
-\definecolor{clearlightblue}{RGB}{44,95,138}
+%% ── Cores (paleta CLEAR) ────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
 \definecolor{salmonbg}{RGB}{252,235,230}
 \definecolor{salmonframe}{RGB}{230,160,140}
 \definecolor{bluebg}{RGB}{235,245,251}
@@ -42,52 +53,102 @@
 \definecolor{Rblue}{RGB}{0,80,160}
 \definecolor{Rgreen}{RGB}{0,128,0}
 \definecolor{Rgray}{RGB}{128,128,128}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{greenbg}{RGB}{225,242,225}
+\definecolor{greenframe}{RGB}{60,140,80}
 
-% ========== HYPERREF ==========
+%% ── Hyperlinks e Bibliografia ───────────────────────────────
+\usepackage{hyperref}
 \hypersetup{
-  colorlinks=true, linkcolor=clearlightblue, citecolor=clearlightblue, urlcolor=clearlightblue,
+  colorlinks=true,
+  linkcolor=clearlightblue,
+  citecolor=clearlightblue,
+  urlcolor=clearlightblue,
   pdfauthor={FGV CLEAR},
-  pdftitle={Avaliação de Impacto: Método de Controle Sintético (SCM)}
+  pdftitle={Guia de Controle Sintético (SCM)}
 }
+\usepackage{natbib}
 
-% ========== CABEÇALHOS ==========
+%% ── TColorbox ───────────────────────────────────────────────
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{breakable, skins}
+
+%% ── Código ──────────────────────────────────────────────────
+\usepackage{listings}
+
+%% ── Cabeçalhos e Rodapés ────────────────────────────────────
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[R]{\small\textit{Guia CLEAR $|$ Controle Sintético (SCM)}}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ Controle Sint\'etico (SCM)}}
 \fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
 
-% ========== TÍTULOS ==========
-\titleformat{\section}{\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
-\titleformat{\subsection}{\large\bfseries\color{clearlightblue}}{\thesubsection}{1em}{}
-\titleformat{\subsubsection}{\normalsize\bfseries\color{clearlightblue}}{\thesubsubsection}{1em}{}
-\titleformat{\paragraph}[runin]{\normalsize\bfseries\itshape\color{clearblue}}{}{}{}[.]
+%% ── Títulos de Seção ────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{clearblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{cleardarkblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{cleardarkblue}}{\thesubsubsection}{1em}{}
 
-% ========== CAIXAS ==========
-\newtcolorbox{hipotesebox}[1][Hipóteses]{
+%% ── Caixas Temáticas ────────────────────────────────────────
+\newtcolorbox{destaquebox}[1][Destaque]{
+  enhanced, breakable,
   colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
-  title=#1, boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
-}
-\newtcolorbox{exemplobox}[1][Exemplo]{
-  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
-  title=#1, boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
 \newtcolorbox{notabox}[1][Nota]{
+  enhanced, breakable,
   colback=bluebg, colframe=blueframe, coltitle=white, fonttitle=\bfseries,
-  title=#1, boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
-\newtcolorbox{conexaobox}{
-  colback=orangebg, colframe=orangeframe, boxrule=0.5pt, arc=2pt,
-  left=6pt, right=6pt, top=3pt, bottom=3pt
+\newtcolorbox{conexaobox}[1][Conex\~ao com a s\'erie]{
+  enhanced, breakable,
+  colback=orangebg, colframe=orangeframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{exemplobox}[1][Exemplo]{
+  enhanced, breakable,
+  colback=greenbg, colframe=greenframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{atencaobox}[1][Aten\c{c}\~ao]{
+  enhanced, breakable,
+  colback=redbg, colframe=redframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
 
-% ========== LISTINGS ==========
+\newtcolorbox{hipotesebox}[1][Hip\'oteses]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+%% ── Estilo de Listings ──────────────────────────────────────
 \lstdefinestyle{Rstyle}{
-  language=R, backgroundcolor=\color{codebg}, frame=single, rulecolor=\color{codeframe},
-  basicstyle=\small\ttfamily, keywordstyle=\color{Rblue}\bfseries,
-  stringstyle=\color{Rgreen}, commentstyle=\color{Rgray}\itshape,
-  numbers=none, breaklines=true, showstringspaces=false, tabsize=2,
-  xleftmargin=6pt, xrightmargin=6pt, aboveskip=8pt, belowskip=8pt,
+  language=R,
+  backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{codeframe},
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{Rblue}\bfseries,
+  stringstyle=\color{Rgreen},
+  commentstyle=\color{Rgray}\itshape,
+  numbers=none, breaklines=true,
+  showstringspaces=false, tabsize=2,
+  xleftmargin=6pt, xrightmargin=6pt,
+  aboveskip=8pt, belowskip=8pt,
   literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
            {ã}{{\~a}}1 {õ}{{\~o}}1 {ç}{{\c{c}}}1 {ê}{{\^e}}1 {â}{{\^a}}1 {ô}{{\^o}}1
            {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ú}{{\'U}}1
@@ -100,23 +161,26 @@
   aboveskip=4pt, belowskip=8pt
 }
 
-% ========== TEOREMAS ==========
-\newtheorem{definicao}{Definição}[section]
-\newtheorem{proposicao}{Proposição}[section]
+%% ── Teoremas ────────────────────────────────────────────────
+\newtheorem{definicao}{Defini\c{c}\~ao}[chapter]
+\newtheorem{proposicao}{Proposi\c{c}\~ao}[chapter]
 
-% ========== METADADOS DE FIGURAS E TABELAS ==========
+%% ── Metadados de Figuras/Quadros ────────────────────────────
 \newcommand{\figmeta}[3]{%
   \par\vspace{4pt}%
   \begin{minipage}{\linewidth}%
   \footnotesize%
-  \textbf{Fonte:} #1\\%
-  \textbf{Elaboração:} #2%
-  \ifx&#3&\else\\[1pt]\textbf{Nota:} #3\fi%
+  \textbf{Fonte:} #1%
+  \ifx&#2&\else\\\textbf{Elabora\c{c}\~ao:} #2\fi%
+  \ifx&#3&\else\\\textbf{Nota:} #3\fi%
   \end{minipage}%
   \vspace{6pt}%
 }
 
-% ========== DOCUMENTO ==========
+%% ── Profundidade de numera\c{c}\~ao ─────────────────────────
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
 \begin{document}
 
 % ==========================================
@@ -133,10 +197,10 @@ Método de Controle\\[0.3cm]
 Sintético (SCM)}
 
 \vspace{2cm}
-{\large FGV CLEAR $|$ FGV EESP $|$ Global Evaluation Initiative}
+{\large FGV CLEAR $|$ FGV EESP Policy Lab}
 
 \vspace{0.5cm}
-{\large [Mês/Ano]}
+{\large Maio de 2026}
 
 \vfill
 
@@ -150,11 +214,9 @@ Sintético (SCM)}
 % FICHA TÉCNICA
 % ==========================================
 \thispagestyle{empty}
-\section*{Ficha Técnica}
+\chapter*{Ficha Técnica}
 
-\textbf{Organizadores:} [Nome 1], [Nome 2]
-
-\textbf{Equipe técnica:} [Listar membros]
+\textbf{Equipe técnica:} André Portela Souza, Caio de Souza Castro, Fabrícia Volotão Peixoto, Luigi Garzon, Lycia Lima, Michel Szklo.
 
 \vspace{1cm}
 
@@ -168,6 +230,84 @@ Saiba mais sobre o FGV CLEAR e acesse outras publicações em: \textbf{www.fgvcl
 % ==========================================
 % SUMÁRIO
 % ==========================================
+% ─── SOBRE ESTE GUIA ─────────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Sobre este guia}
+A Austrália implementou em 2012 a regra de embalagem genérica de cigarro:
+maços padronizados, marca em fonte uniforme, imagens explícitas de doenças
+cobrindo boa parte da superfície. A política era controversa e a indústria
+contestou na justiça internacional. Saber se ela funcionou virou pergunta
+de interesse global, com implicação direta para dezenas de outros países
+considerando medida parecida.
+
+Mas como avaliar? Há uma Austrália, uma intervenção, um momento. Comparar
+com o Reino Unido, que tomou medida similar logo depois? Com os Estados
+Unidos, que não tomaram? Com a Nova Zelândia, geograficamente próxima mas
+com estrutura de mercado diferente? Cada escolha de comparação é
+defensável de algum ângulo e atacável de outro. E a estimativa do efeito
+acaba dependendo dessa escolha mais do que da própria política.
+
+O método de controle sintético contorna essa arbitrariedade construindo o
+contrafactual em vez de escolhê-lo. A ideia é simples na enunciação. Em
+vez de escolher um país que sirva de comparação, monte um. Uma combinação
+ponderada de vários países que, juntos, reproduzem a trajetória da
+Austrália no período anterior à política. Os pesos são definidos pelos
+dados: maximizam a aderência da combinação à série pré-política da unidade
+tratada, e os países que entram na combinação são exatamente aqueles que,
+juntos, mais se parecem com ela antes da intervenção. Se essa
+``Austrália sintética'' acompanhou bem a real no período em que a política
+ainda não estava em vigor, ela é uma referência razoável para o que teria
+acontecido depois sem a política.
+
+A inferência precisa ser pensada de outra forma. Não existe erro-padrão
+clássico quando se observa uma realização única, e os intervalos de
+confiança usuais perdem sentido. O teste no método é por placebo.
+Aplica-se a mesma construção sintética a países que não foram tratados, e
+compara-se a ``diferença pós-política'' de cada um deles em relação ao seu
+próprio sintético com a diferença observada na Austrália real. Se em
+muitos placebos a diferença chega a ser tão grande quanto a observada, a
+estimativa pode ser ruído de série temporal. Se a Austrália se destaca
+claramente, é evidência de efeito.
+
+Este guia trata do método clássico de Abadie, Diamond e Hainmueller, das
+extensões mais recentes (controle sintético aumentado, controle sintético
+com diferenças-em-diferenças) que relaxam algumas restrições do desenho
+original, e dos diagnósticos que separam um bom ajuste pré-política de um
+ruim. A aplicação central usa a Lei Seca brasileira de 2008 como caso,
+mostrando passo a passo a construção do sintético, a inferência via
+placebo e a interpretação dos resultados. É o método indicado quando a
+intervenção atinge poucas unidades, há série temporal longa antes da
+política, e nenhum candidato a comparação direta é claramente bom.
+\newpage
+
+% ─── COMO LER ESTE GUIA ──────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Como ler este guia}
+Três tipos de caixa estruturam a leitura, identificados por cor:
+\vspace{0.3cm}
+\begin{notabox}[Caixa azul --- pontos-chave]
+Aparece ao fim de cada capítulo, com sínteses e recomendações para quem
+precisa decidir.
+\end{notabox}
+\begin{exemplobox}[Caixa verde --- exemplo aplicado]
+Mostra como as ideias do capítulo se traduzem em situações de política
+pública. Os casos são fictícios, mas calibrados por padrões recorrentes
+na literatura e na prática de gestão.
+\end{exemplobox}
+\begin{atencaobox}[Caixa vermelha --- cuidados essenciais]
+Sinaliza armadilhas comuns --- pontos em que uma escolha mal fundamentada
+compromete toda a análise.
+\end{atencaobox}
+\vspace{0.5cm}
+\noindent O guia faz referência recorrente ao \textit{Guia CLEAR de
+Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}
+\citep{Lima2025} --- doravante \textbf{Guia CLEAR de M\&A} ---, que trata
+em profundidade as etapas do ciclo da política pública adotado na série.
+Quando o texto menciona Teoria da Mudança, plano de monitoramento ou
+tipologia de avaliações, é nesse guia que o leitor encontra o
+desenvolvimento completo.
+\newpage
+
 \tableofcontents
 \newpage
 
@@ -175,9 +315,10 @@ Saiba mais sobre o FGV CLEAR e acesse outras publicações em: \textbf{www.fgvcl
 % ==========================================
 % SEÇÃO 1: INTRODUÇÃO E MOTIVAÇÃO
 % ==========================================
-\section{Introdução e Motivação}
 
-\subsection{O Problema de Avaliação com Poucos Tratados}
+\chapter{Introdução e Motivação}
+
+\section{O Problema de Avaliação com Poucos Tratados}
 
 Uma das perguntas mais frequentes em avaliação de políticas públicas é: \textit{qual teria sido o resultado se a política não tivesse sido implementada?} Quando uma intervenção é aplicada a muitas unidades --- por exemplo, um programa social oferecido a milhares de famílias ---, dispomos de métodos bem estabelecidos para construir grupos de controle: experimentos randomizados, \textit{matching}, diferença-em-diferenças.
 
@@ -194,13 +335,13 @@ Nesses contextos, os métodos tradicionais enfrentam desafios sérios. O \textit
 O SCM, desenvolvido especificamente para esses casos, não impõe a hipótese de tendências paralelas; contudo, ele também tem seus requisitos. Em particular, exige que a unidade tratada possa ser bem aproximada por uma combinação convexa das unidades de controle disponíveis --- o que requer um \textbf{pool de doadores} suficientemente amplo e diversificado.\footnote{O termo \textit{pool de doadores} (\textit{donor pool}) refere-se ao conjunto de unidades não tratadas que servem de base para construir o controle sintético. A riqueza desse pool é determinante para a qualidade do ajuste pré-tratamento.} Se o pool é muito pequeno ou muito homogêneo, o ajuste pré-tratamento pode ser insuficiente. Essa tensão entre o número de doadores disponíveis e a qualidade do contrafactual é um dos aspectos práticos mais importantes do método.
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de Avaliação de Impacto (Vol.~1 e 2) --- Seção sobre métodos quasi-experimentais; Guia de DiD --- Seção 1 (Hipótese de tendências paralelas e suas limitações).}
+\textit{Ver Guia de Avaliação de Impacto --- Seção sobre métodos quasi-experimentais; Guia de DiD --- Seção 1 (Hipótese de tendências paralelas e suas limitações).}
 \end{conexaobox}
 
 
-\subsection{A Ideia Central do Controle Sintético}
+\section{A Ideia Central do Controle Sintético}
 
-A intuição do SCM é elegante. Em vez de escolher uma \textit{única} unidade de controle (por exemplo, usar a Argentina como controle para o Brasil), o método constrói um \textbf{controle sintético}: uma combinação ponderada de várias unidades não tratadas que, juntas, reproduzem o mais fielmente possível a trajetória da unidade tratada \textit{antes} da intervenção.
+A intuição do SCM é simples. Em vez de escolher uma \textit{única} unidade de controle (por exemplo, usar a Argentina como controle para o Brasil), o método constrói um \textbf{controle sintético}: uma combinação ponderada de várias unidades não tratadas que, juntas, reproduzem o mais fielmente possível a trajetória da unidade tratada \textit{antes} da intervenção.
 
 Suponha que queremos avaliar o impacto da Lei Seca no Brasil. O SCM buscaria pesos $w_1, w_2, \ldots, w_J$ para países como Argentina, Chile, Colômbia, México, Peru, etc., de modo que:
 \begin{equation}
@@ -229,11 +370,11 @@ Essas são \textit{vantagens} do método --- o que o SCM oferece quando bem apli
 A Figura~\ref{fig:intuicao} ilustra a intuição central do SCM. No painel (a), vemos que nem a Argentina nem o Chile, individualmente, replicam a trajetória de mortalidade no trânsito do Brasil --- ambos têm níveis e tendências muito diferentes. No painel (b), uma combinação ponderada de vários países constrói um ``Brasil Sintético'' que ajusta bem o período pré-tratamento; após 2008, a diferença entre o Brasil real e o sintético estima o efeito causal da Lei Seca.
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de DiD --- Seção 1 (Comparação: SCM não requer a hipótese de tendências paralelas); Guia de Matching --- Seção 3 (Pareamento como construção de contrafactuais; SCM como extensão do matching para painel).}
+\textit{Ver Guia de DiD --- Seção 1 (Comparação: SCM não requer a hipótese de tendências paralelas); Guia de Matching --- Seção 3 (Pareamento como construção de contrafactuais; SCM como extensão do matching para painel).}
 \end{conexaobox}
 
 
-\subsection{Exemplos Canônicos}
+\section{Exemplos Canônicos}
 
 Três estudos seminais popularizaram o SCM e servem como referências metodológicas:
 
@@ -250,7 +391,7 @@ Os gráficos de trajetória (\textit{path plot}) e de gap (\textit{gap plot}) do
 \end{notabox}
 
 
-\subsection{SCM no Ecossistema de Métodos de Avaliação}
+\section{SCM no Ecossistema de Métodos de Avaliação}
 
 Para situar o SCM em relação aos demais métodos, a Tabela~\ref{tab:ecossistema} apresenta uma comparação das principais características.
 
@@ -277,10 +418,10 @@ Validade               & Global$^*$    & Global$^*$      & Local        & Local 
 \end{table}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de RDD --- Seção 1.3 (RDD no ecossistema); Guia de Matching --- Seção 1 (Arcabouço causal geral).}
+\textit{Ver Guia de RDD --- Seção 1.3 (RDD no ecossistema); Guia de Matching --- Seção 1 (Arcabouço causal geral).}
 \end{conexaobox}
 
-\subsection{Por Que Não Usar DiD? O Problema das Tendências Paralelas}
+\section{Por Que Não Usar DiD? O Problema das Tendências Paralelas}
 
 Uma pergunta natural é: por que não simplesmente usar diferença-em-diferenças? A Figura~\ref{fig:did_vs_scm} ilustra o problema. Quando as tendências pré-tratamento são paralelas entre tratado e controle (painel a), o DiD identifica corretamente o efeito causal. Mas quando as tendências divergem (painel b) --- o que é comum quando as unidades são países ou estados heterogêneos ---, o contrafactual do DiD é enviesado. O SCM (painel c) resolve isso buscando pesos que \textit{ajustam} a trajetória pré-tratamento, não apenas o nível.
 
@@ -292,12 +433,10 @@ Uma pergunta natural é: por que não simplesmente usar diferença-em-diferença
 \figmeta{Dados simulados.}{FGV CLEAR.}{(a) Com tendências paralelas, o DiD identifica o efeito. (b) Sem tendências paralelas, o contrafactual do DiD é enviesado. (c) O SCM busca pesos que replicam a trajetória pré-tratamento.}
 \end{figure}
 
-A Figura~\ref{fig:did_vs_scm} ilustra por que o SCM é preferível ao DiD em muitos contextos comparativos. Quando as tendências pré-tratamento entre tratado e controle são paralelas (painel a), o DiD funciona bem. Porém, quando as tendências divergem --- situação comum quando as unidades são países ou estados heterogêneos --- o contrafactual do DiD extrapola erroneamente (painel b). O SCM resolve esse problema buscando pesos que ajustam a trajetória, não apenas o nível (painel c).
-
-Essa comparação revela uma complementaridade fundamental: o DiD é robusto a diferenças \textit{permanentes} de nível entre unidades (via efeitos fixos), enquanto o SCM é robusto a diferenças na \textit{dinâmica temporal} (via ajuste de trajetória). O SDID (Seção~3.5) combina ambas as vantagens.
+A comparação revela uma complementaridade fundamental: o DiD é robusto a diferenças \textit{permanentes} de nível entre unidades (via efeitos fixos), enquanto o SCM é robusto a diferenças na \textit{dinâmica temporal} (via ajuste de trajetória). O SDID (Seção~3.5) combina ambas as vantagens.
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de DiD --- Seção 1 (Hipótese de tendências paralelas e testes de pré-tendência); Guia de Matching --- Seção 2 (Hipótese de seleção em observáveis vs não-observáveis).}
+\textit{Ver Guia de DiD --- Seção 1 (Hipótese de tendências paralelas e testes de pré-tendência); Guia de Matching --- Seção 2 (Hipótese de seleção em observáveis vs não-observáveis).}
 \end{conexaobox}
 
 
@@ -306,11 +445,11 @@ Essa comparação revela uma complementaridade fundamental: o DiD é robusto a d
 % SEÇÃO 2: ARCABOUÇO TEÓRICO
 % ==========================================
 \newpage
-\section{Arcabouço Teórico}
+\chapter{Arcabouço Teórico}
 
 Nesta seção, desenvolvemos formalmente o SCM, partindo do modelo de resultados potenciais até chegar ao estimador e suas propriedades. Seguimos de perto a formalização de \cite{AbadieDiamondHainmueller2010} e \cite{Abadie2021}, adaptando a notação ao padrão dos guias desta série.
 
-\subsection{Modelo de Resultados Potenciais e o Modelo Fatorial}
+\section{Modelo de Resultados Potenciais e o Modelo Fatorial}
 
 Considere $J+1$ unidades observadas por $T$ períodos. A unidade $j=1$ recebe tratamento a partir do período $T_0 + 1$; as unidades $j = 2, \ldots, J+1$ não recebem tratamento em nenhum período (o ``pool de doadores''). Portanto, os períodos $t = 1, \ldots, T_0$ constituem o \textbf{período pré-tratamento}, e os períodos $t = T_0 + 1, \ldots, T$ constituem o \textbf{período pós-tratamento}. Em particular, $T_0$ é o \textit{último} período antes do tratamento --- não o número de períodos pré-tratamento, embora os dois coincidam quando o painel começa em $t=1$.\footnote{Por exemplo, se o painel cobre 2000--2019 e o tratamento começa em 2008, então $T_0$ corresponde a 2007, e há 8 períodos pré-tratamento ($T_0 = 8$ se indexarmos a partir de 1).}
 
@@ -341,11 +480,11 @@ O modelo fatorial é mais geral que o modelo de efeitos fixos aditivos usado na 
 \end{notabox}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de DiD --- Seção 1.1 (Modelo de resultados potenciais e a importância de definir bem o estimando); Seção 2 (DiD escalonado e modelo fatorial; relação com TWFE).}
+\textit{Ver Guia de DiD --- Seção 1.1 (Modelo de resultados potenciais e a importância de definir bem o estimando); Seção 2 (DiD escalonado e modelo fatorial; relação com TWFE).}
 \end{conexaobox}
 
 
-\subsection{O Resultado Central: Por Que o SCM Funciona}
+\section{O Resultado Central: Por Que o SCM Funciona}
 
 A pergunta-chave é: se encontrarmos pesos $\mathbf{w}^* = (w_2^*, \ldots, w_{J+1}^*)'$ que reproduzem perfeitamente os resultados pré-tratamento, esses pesos também reproduzem o contrafactual pós-tratamento?
 
@@ -377,9 +516,9 @@ A intuição é poderosa: se os pesos reproduzem simultaneamente as covariáveis
 \end{hipotesebox}
 
 
-\subsection{O Estimador SCM Clássico}
+\section{O Estimador SCM Clássico}
 
-\subsubsection{Formulação do Problema de Otimização}
+\subsection{Formulação do Problema de Otimização}
 
 Na prática, o ajuste perfeito \eqref{eq:perfect_fit} raramente é possível. O estimador SCM busca pesos que \textit{minimizam} a distância entre os preditores da unidade tratada e o controle sintético:
 
@@ -395,7 +534,7 @@ onde:
   \item $\|\mathbf{a}\|_{\mathbf{V}} = (\mathbf{a}'\mathbf{V}\mathbf{a})^{1/2}$.
 \end{itemize}
 
-\subsubsection{A Escolha da Matriz de Pesos V}
+\subsection{A Escolha da Matriz de Pesos V}
 
 A escolha de $\mathbf{V}$ é uma decisão importante. As abordagens mais comuns são:
 
@@ -405,7 +544,7 @@ A escolha de $\mathbf{V}$ é uma decisão importante. As abordagens mais comuns 
   \item \textbf{Inversa da variância:} usar $\mathbf{V} = \text{diag}(1/\hat{\sigma}_k^2)$, ponderando cada preditor pelo inverso de sua variância amostral.
 \end{enumerate}
 
-\subsubsection{Propriedades dos Pesos}
+\subsection{Propriedades dos Pesos}
 
 Os pesos $w_j^*$ possuem propriedades importantes:
 \begin{itemize}[leftmargin=1.5cm]
@@ -419,7 +558,7 @@ A esparsidade dos pesos pode ser informativa. Se muitas unidades recebem peso po
 \end{notabox}
 
 
-\subsubsection{O Estimador do Efeito Causal}
+\subsection{O Estimador do Efeito Causal}
 
 Dados os pesos ótimos $\mathbf{w}^*$, o efeito causal estimado para a unidade tratada no período $t > T_0$ é:
 \begin{equation}
@@ -430,7 +569,7 @@ Dados os pesos ótimos $\mathbf{w}^*$, o efeito causal estimado para a unidade t
 O \textit{gap} (diferença) entre a unidade tratada e o controle sintético ao longo do tempo é a quantidade central de interesse, tipicamente representada no ``gap plot''.
 
 
-\subsubsection{Código em R: Exemplo com a Proposição 99}
+\subsection{Código em R: Exemplo com a Proposição 99}
 
 Demonstramos a implementação com o pacote \texttt{Synth}, replicando o estudo clássico da Califórnia. Este exemplo é particularmente adequado do ponto de vista didático: o controle sintético replica a trajetória pré-tratamento com precisão quase perfeita, tornando visualmente inequívoca a divergência pós-1988. Casos com ajuste pré-tratamento excelente são os mais fáceis de interpretar e servem como referência para avaliar a qualidade de outras aplicações.\footnote{Na prática, nem sempre é possível obter um ajuste tão bom quanto no exemplo da Califórnia. A Seção~3.1 discute o ASCM, que corrige o viés quando o ajuste pré-tratamento é imperfeito.}
 
@@ -529,15 +668,15 @@ Colorado        & 0.069 \\
 \end{table}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de DiD --- Seção 3 (Padrões de código em R e boas práticas de replicação).}
+\textit{Ver Guia de DiD --- Seção 3 (Padrões de código em R e boas práticas de replicação).}
 \end{conexaobox}
 
 
-\subsection{Inferência no SCM Clássico}
+\section{Inferência no SCM Clássico}
 
-A inferência no SCM é, talvez, o aspecto mais delicado do método. Ao contrário de métodos com muitas unidades onde a teoria assintótica é natural, o SCM opera tipicamente com uma única unidade tratada e um pool modesto de doadores. Não há, em geral, distribuição assintótica do estimador à qual possamos recorrer.
+A inferência é o aspecto mais delicado do SCM. Ao contrário de métodos com muitas unidades, onde a teoria assintótica é natural, o SCM opera tipicamente com uma única unidade tratada e um pool modesto de doadores --- e não há, em geral, distribuição assintótica do estimador à qual recorrer.
 
-\subsubsection{Testes Placebo In-Space}
+\subsection{Testes Placebo In-Space}
 
 O procedimento de inferência mais utilizado no SCM foi proposto por \cite{AbadieDiamondHainmueller2015}. A ideia é replicar a análise para \textit{cada} unidade do pool de doadores, como se ela fosse a tratada:
 
@@ -592,7 +731,7 @@ abline(v = 1988, lty = 2, col = "red")
 abline(h = 0, lty = 3)
 \end{lstlisting}
 
-\subsubsection{Testes Placebo In-Time}
+\subsection{Testes Placebo In-Time}
 
 \begin{figure}[H]
 \centering
@@ -606,7 +745,7 @@ A Figura~\ref{fig:placebos} apresenta os testes placebo \textit{in-space}. No pa
 
 Uma verificação complementar consiste em aplicar o SCM usando uma data de tratamento \textit{falsa}, anterior à verdadeira. Se o método detectar um ``efeito'' em um período sem intervenção, isso questiona a validade do design --- pode indicar que o controle sintético não reproduz bem a dinâmica da unidade tratada.
 
-\subsubsection{P-valores e Razão RMSPE}
+\subsection{P-valores e Razão RMSPE}
 
 Para formalizar os testes placebo, \cite{AbadieDiamondHainmueller2015} propõem calcular a razão entre o RMSPE pós-tratamento e o RMSPE pré-tratamento para cada unidade:
 \begin{equation}
@@ -625,7 +764,7 @@ O p-valor em \eqref{eq:pvalue} depende do tamanho do pool de doadores. Com $J = 
 \end{notabox}
 
 
-\subsection{Quando o SCM Falha: Diagnósticos e Limitações}
+\section{Quando o SCM Falha: Diagnósticos e Limitações}
 
 O SCM não é uma panaceia. Três situações merecem atenção especial:
 
@@ -640,17 +779,17 @@ O SCM não é uma panaceia. Três situações merecem atenção especial:
 % SEÇÃO 3: EXTENSÕES COM TRATAMENTO APROFUNDADO
 % ==========================================
 \newpage
-\section{Extensões e Estimadores Recentes}
+\chapter{Extensões e Estimadores Recentes}
 
 O SCM clássico, apesar de elegante, enfrenta limitações práticas. Nesta seção, apresentamos as principais extensões desenvolvidas na última década, com foco nas que resolvem problemas concretos do praticante. Para cada extensão, discutimos a motivação, o estimador, as hipóteses adicionais, e demonstramos a implementação em R.
 
-\subsection{SCM Aumentado (ASCM) --- Ben-Michael, Feller e Rothstein (2021)}
+\section{SCM Aumentado (ASCM) --- Ben-Michael, Feller e Rothstein (2021)}
 
-\subsubsection{Motivação: O Problema do Ajuste Imperfeito}
+\subsection{Motivação: O Problema do Ajuste Imperfeito}
 
 Na prática, o controle sintético raramente reproduz perfeitamente a trajetória pré-tratamento. Quando o ajuste é imperfeito, há um viés residual: a diferença entre o contrafactual verdadeiro e o estimado pelo SCM. \cite{BenMichaelEtAl2021} propõem o SCM Aumentado (ASCM) para \textit{estimar e corrigir esse viés}, de forma análoga à correção de viés no matching \citep{Abadie2011}.
 
-\subsubsection{O Estimador}
+\subsection{O Estimador}
 
 O ASCM combina os pesos SCM com um \textit{modelo de resultados} (\textit{outcome model}) $\hat{m}(\cdot)$:
 \begin{equation}
@@ -671,7 +810,7 @@ O modelo de resultados recomendado é a \textbf{regressão Ridge} (Ridge ASCM), 
 Ao contrário do SCM clássico, o ASCM admite pesos efetivos negativos (via a correção do modelo). Isso permite \textit{extrapolação controlada} --- essencial quando a unidade tratada não está no fecho convexo dos doadores. O grau de extrapolação é governado por $\lambda$, oferecendo ao pesquisador controle sobre o \textit{trade-off} entre ajuste e regularização.
 \end{notabox}
 
-\subsubsection{Hipóteses}
+\subsection{Hipóteses}
 
 O ASCM requer:
 \begin{enumerate}[leftmargin=1.5cm]
@@ -682,7 +821,7 @@ O ASCM requer:
 
 A propriedade de ``dupla robustez'' do ASCM é particularmente atraente: o estimador é consistente se \textit{ou} os pesos SCM ajustam perfeitamente, \textit{ou} o modelo de resultados é correto. Na prática, ambos contribuem parcialmente.
 
-\subsubsection{Código em R com \texttt{augsynth}}
+\subsection{Código em R com \texttt{augsynth}}
 
 \begin{lstlisting}[style=Rstyle]
 install.packages("augsynth")
@@ -729,7 +868,7 @@ plot(ascm_fit, main = "ASCM (Ridge)")
 A Figura~\ref{fig:ascm_vs_scm} demonstra a principal contribuição do ASCM. Quando o SCM clássico não consegue reproduzir perfeitamente a trajetória pré-tratamento (painel a), o contrafactual pós-tratamento pode ser enviesado --- subestimando ou superestimando o efeito. O ASCM com correção Ridge (painel b) melhora substancialmente o ajuste pré-tratamento ao combinar os pesos SCM com um modelo de resultados, gerando estimativas mais confiáveis do efeito causal (área sombreada em azul).
 
 
-\subsection{SCM Penalizado --- Abadie e L'Hour (2021)}
+\section{SCM Penalizado --- Abadie e L'Hour (2021)}
 
 \cite{AbadieLHour2021} propõem modificar a função objetivo do SCM adicionando uma penalização que desencoraja unidades de controle muito diferentes da unidade tratada:
 \begin{equation}
@@ -741,9 +880,9 @@ sujeito a $w_j \geq 0$ e $\sum_j w_j = 1$.
 O primeiro termo é o ajuste pré-tratamento usual. O segundo termo penaliza contribuições de unidades distantes da unidade tratada, garantindo: (i) \textbf{unicidade} da solução (problema no SCM clássico, onde múltiplas soluções podem existir); (ii) redução do viés de interpolação.
 
 
-\subsection{Controle Sintético Generalizado (GSC) --- Xu (2017)}
+\section{Controle Sintético Generalizado (GSC) --- Xu (2017)}
 
-\subsubsection{Motivação: Múltiplos Tratados}
+\subsection{Motivação: Múltiplos Tratados}
 
 Quando há \textbf{múltiplas unidades tratadas} --- por exemplo, vários estados que adotam uma política em momentos diferentes ---, o SCM clássico requer um loop: estimar separadamente o efeito para cada unidade e depois agregar. Essa abordagem ignora a estrutura comum entre as unidades tratadas.
 
@@ -754,11 +893,11 @@ O Controle Sintético Generalizado (GSC) de \cite{Xu2017} resolve isso combinand
 \end{equation}
 onde $\boldsymbol{\lambda}_j$ são \textit{factor loadings} específicos da unidade e $\mathbf{f}_t$ são fatores comuns variantes no tempo. O número de fatores é estimado por \textit{cross-validation}.
 
-\subsubsection{Estimação e Inferência}
+\subsection{Estimação e Inferência}
 
 O GSC estima: (i) os fatores e \textit{loadings} usando apenas as unidades \textit{não tratadas}; (ii) os \textit{loadings} das unidades tratadas usando os períodos \textit{pré-tratamento}; (iii) o contrafactual das unidades tratadas projetando os \textit{loadings} estimados nos fatores estimados. A inferência é baseada em \textit{bootstrap} paramétrico.
 
-\subsubsection{Código em R com \texttt{gsynth}}
+\subsection{Código em R com \texttt{gsynth}}
 
 \begin{lstlisting}[style=Rstyle]
 install.packages("gsynth")
@@ -784,11 +923,11 @@ plot(gsc_fit, type = "gap")           # gap ao longo do tempo
 \end{lstlisting}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de DiD --- Seção 3.3 (De Chaisemartin e d'Haultfœuille, 2020; comparação de estimadores robustos para DiD com tratamento heterogêneo).}
+\textit{Ver Guia de DiD --- Seção 3.3 (De Chaisemartin e d'Haultfœuille, 2020; comparação de estimadores robustos para DiD com tratamento heterogêneo).}
 \end{conexaobox}
 
 
-\subsection{Matrix Completion --- Athey et al.\ (2021)}
+\section{Matrix Completion --- Athey et al.\ (2021)}
 
 \cite{AtheyEtAl2021} reinterpretam o problema de inferência causal em painéis como um problema de \textbf{completar uma matriz}: os outcomes de todas as unidades em todos os períodos formam uma matriz, e os contrafactuais das unidades tratadas são as ``entradas faltantes'' a serem imputadas.
 
@@ -812,7 +951,7 @@ plot(mc_fit)
 \end{lstlisting}
 
 
-\subsection{Synthetic Difference-in-Differences (SDID) --- Arkhangelsky et al.\ (2021)}
+\section{Synthetic Difference-in-Differences (SDID) --- Arkhangelsky et al.\ (2021)}
 
 O SDID \citep{ArkhangelskyEtAl2021} é a ponte formal entre DiD e SCM. A ideia é combinar os dois tipos de ponderação:
 \begin{itemize}[leftmargin=1.5cm]
@@ -865,11 +1004,11 @@ synthdid_plot(tau_sdid, se.method = "placebo")
 A Figura~\ref{fig:sdid_schema} ilustra o esquema conceitual do SDID. O método combina dois tipos de ponderação: pesos nas unidades de controle ($w_j$), que equilibram os controles com a unidade tratada no pré-tratamento (como no SCM), e pesos nos períodos ($\omega_t$), que dão mais importância aos períodos pré-tratamento próximos da data de intervenção (como no DiD). Essa ponderação dupla permite que o SDID herde as vantagens de ambos os métodos.
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de DiD --- Seção 2 (DiD escalonado e motivação para pesos que corrigem vieses); a convergência entre DiD e SCM via SDID é uma das principais tendências recentes.}
+\textit{Ver Guia de DiD --- Seção 2 (DiD escalonado e motivação para pesos que corrigem vieses); a convergência entre DiD e SCM via SDID é uma das principais tendências recentes.}
 \end{conexaobox}
 
 
-\subsection{Staggered Synthetic Control}
+\section{Staggered Synthetic Control}
 
 O cenário de \textit{staggered adoption} é frequente em avaliações de políticas públicas: imagine que diferentes estados de um país adotam uma mesma política em anos diferentes. Cada unidade tratada tem sua própria data de início, o que cria um painel onde algumas unidades ainda são controles válidos enquanto outras já foram tratadas. Por exemplo, ao avaliar políticas estaduais de segurança pública no Brasil, diferentes UFs podem ter implementado a mesma medida em anos distintos. O SCM clássico foi desenvolvido para uma única unidade tratada com data fixa de intervenção, e precisa ser adaptado para esse contexto mais complexo.
 
@@ -882,7 +1021,7 @@ Quando múltiplas unidades adotam o tratamento em \textbf{momentos diferentes} (
 
 Duas abordagens principais atacam esse problema:
 
-\subsubsection{Partially Pooled SCM --- Ben-Michael, Feller e Rothstein (2022)}
+\subsection{Partially Pooled SCM --- Ben-Michael, Feller e Rothstein (2022)}
 
 \cite{BenMichaelFellerRothstein2022} propõem pesos ``parcialmente pooled'' que minimizam uma combinação ponderada de duas medidas de ajuste: (i) o ajuste de cada unidade tratada \textit{individualmente}; e (ii) o ajuste para a \textit{média} das unidades tratadas. Os autores mostram que focar apenas em um dos dois componentes pode gerar viés:
 \begin{itemize}[leftmargin=1.5cm]
@@ -892,7 +1031,7 @@ Duas abordagens principais atacam esse problema:
 
 O \textit{partially pooled} SCM oferece o \textit{trade-off} ótimo, controlado por um parâmetro $\nu \in [0,1]$.
 
-\subsubsection{Intervalos de Predição --- Cattaneo, Feng, Palomba e Titiunik (2025)}
+\subsection{Intervalos de Predição --- Cattaneo, Feng, Palomba e Titiunik (2025)}
 
 \cite{CattaneoFengPalombaTitiunik2025} propõem intervalos de predição para quantificar a incerteza das estimativas SCM em settings com adoção escalonada. O pacote \texttt{scpi} oferece implementação em R, Python e Stata.\footnote{O pacote \texttt{scpi} está disponível em R (CRAN: \texttt{install.packages("scpi")}), Python (PyPI: \texttt{pip install scpi-pkg}) e Stata (SSC: \texttt{ssc install scpi}). Documentação completa e tutoriais em: \url{https://nppackages.github.io/scpi/}.}
 
@@ -915,7 +1054,7 @@ scplot(result)
 \end{lstlisting}
 
 
-\subsection{Comparação entre os Estimadores}
+\section{Comparação entre os Estimadores}
 
 \begin{table}[H]
 \centering
@@ -955,9 +1094,9 @@ Pacote R             & \tiny\texttt{Synth} & \tiny\texttt{augsynth} & \tiny\text
 % SEÇÃO 4: AVANÇOS NA FRONTEIRA
 % ==========================================
 \newpage
-\section{Avanços na Fronteira da Pesquisa}
+\chapter{Avanços na Fronteira da Pesquisa}
 
-\subsection{Inferência Conformal para SCM}
+\section{Inferência Conformal para SCM}
 
 \cite{ChernozhukovEtAl2021} propõem inferência conformal como alternativa formal aos testes placebo tradicionais. A ideia central é construir intervalos de confiança baseados em resíduos de permutação, sem depender de hipóteses distribucionais ou do tamanho do pool de doadores.
 
@@ -968,19 +1107,19 @@ Quando o pool de doadores é pequeno (e.g., $J < 15$), os testes placebo têm po
 \end{notabox}
 
 
-\subsection{SCM com Spillovers}
+\section{SCM com Spillovers}
 
 A hipótese SUTVA (\textit{Stable Unit Treatment Value Assumption}) é central em qualquer método de inferência causal: o tratamento de uma unidade não deve afetar os outcomes de outras. No contexto do SCM, se a Lei Seca brasileira afetar o turismo em países vizinhos (e.g., argentinos viajando menos ao Brasil), esses países não são controles válidos.
 
 \cite{GrossiEtAl2024} aplicam SCM penalizado para estimar controles sintéticos para a unidade tratada \textit{e} seus vizinhos. \cite{Melnychuk2024} desenvolve o \textit{Iterative SCM} que remove iterativamente o viés de spillover. O ASCM-SC (\textit{Augmented SCM with Stratified Controls}) modifica o Ridge ASCM estratificando os controles por exposição ao tratamento.
 
 
-\subsection{Outcomes Distribucionais}
+\section{Outcomes Distribucionais}
 
 \cite{Gunsilius2023} estende o SCM para outcomes que são \textbf{distribuições inteiras} (e.g., distribuição de salários de uma firma, distribuição de renda de um país) em vez de médias escalares. O método utiliza ferramentas de \textit{optimal transport} e espaços de Wasserstein para construir o contrafactual distribucional.
 
 
-\subsection{SCM e Machine Learning}
+\section{SCM e Machine Learning}
 
 A integração entre SCM e \textit{machine learning} é crescente em várias direções:
 \begin{itemize}[leftmargin=1.5cm]
@@ -1007,19 +1146,19 @@ summary(impact, "report")  # relatório em texto
 % SEÇÃO 5: REPLICAÇÃO COMPLETA
 % ==========================================
 \newpage
-\section{Replicação Completa: A Lei Seca Brasileira}
+\chapter{Replicação Completa: A Lei Seca Brasileira}
 
-\subsection{Descrição da Política e do Contexto}
+\section{Descrição da Política e do Contexto}
 
 A Lei 11.705/2008, conhecida como \textbf{Lei Seca}, foi sancionada em 19 de junho de 2008 no Brasil. A lei reduziu o limite de alcoolemia permitido para motoristas de 0,6~g/L para efetivamente zero (0,1~mg/L no ar expirado), com multas de R\$~2.934,70 e suspensão da CNH. Endurecimentos subsequentes foram implementados em 2012 (Lei~12.760) e 2017 (Lei~13.546).
 
-O Brasil, na época da implementação, apresentava uma taxa de mortalidade no trânsito de aproximadamente 20 óbitos por 100.000 habitantes --- significativamente mais alta que países como Chile ($\sim$12) e Argentina ($\sim$14), segundo dados da OMS. Estima-se que a Lei Seca salvou mais de 40.000 vidas entre 2008 e 2016.
+O Brasil, na época da implementação, apresentava uma taxa de mortalidade no trânsito de aproximadamente 20 óbitos por 100.000 habitantes --- bem acima da de países como Chile ($\sim$12) e Argentina ($\sim$14), segundo dados da OMS. Estima-se que a Lei Seca salvou mais de 40.000 vidas entre 2008 e 2016.
 
 \paragraph{Desenho da avaliação} Aplicaremos o SCM para estimar o efeito causal da Lei Seca sobre a taxa de mortalidade no trânsito no Brasil, usando países latino-americanos e caribenhos como pool de doadores. O outcome é a taxa de mortalidade por acidentes de trânsito por 100.000 habitantes (dados WHO/World Bank). O período pré-tratamento é 2000--2007 e o pós-tratamento é 2009--2019.
 
 \paragraph{Pool de doadores} Incluímos países da região sem legislação de tolerância zero ao álcool no mesmo período: Argentina, Bolívia, Chile, Colômbia, Costa Rica, Equador, Guatemala, Honduras, Jamaica, México, Nicarágua, Panamá, Paraguai, Peru, República Dominicana, Suriname, Uruguai, Venezuela.
 
-\subsection{Preparação e Código em R}
+\section{Preparação e Código em R}
 
 \begin{lstlisting}[style=Rstyle]
 # 1. Carregar dados do World Bank (WDI)
@@ -1070,7 +1209,7 @@ library(synthdid)
 # [código completo]
 \end{lstlisting}
 
-\subsection{Interpretação e Limitações}
+\section{Interpretação e Limitações}
 
 \begin{figure}[H]
 \centering
@@ -1082,7 +1221,7 @@ library(synthdid)
 
 A Figura~\ref{fig:lei_seca} apresenta os resultados principais da replicação. O \textit{path plot} (painel a) mostra que o Brasil Sintético --- construído a partir de países latino-americanos sem legislação de tolerância zero ao álcool --- replica com boa precisão a trajetória de mortalidade no trânsito do Brasil antes de 2008. Após a Lei Seca, a mortalidade no Brasil cai consistentemente enquanto o contrafactual permanece estável ou ligeiramente ascendente. O \textit{gap plot} (painel b) revela que o efeito estimado cresce progressivamente, atingindo aproximadamente $-4{,}7$ mortes por 100.000 habitantes em 2019.
 
-\subsubsection{Composição do Brasil Sintético}
+\subsection{Composição do Brasil Sintético}
 
 A Tabela~\ref{tab:pesos_brasil} apresenta os pesos estimados dos doadores que compõem o Brasil Sintético. Notavelmente, Colômbia e México --- países com porte econômico e frota veicular comparáveis ao Brasil --- recebem os maiores pesos.
 
@@ -1108,11 +1247,11 @@ Argentina          & 0.045 & 14.2 \\
 \end{tabular}
 \end{table}
 
-\subsubsection{Magnitude do Efeito}
+\subsection{Magnitude do Efeito}
 
 Os resultados sugerem que a Lei Seca reduziu a mortalidade no trânsito no Brasil em aproximadamente 3 a 5 mortes por 100.000 habitantes entre 2008 e 2019. Aplicando essa estimativa à população brasileira de 2019 ($\sim$211 milhões), o efeito acumulado seria da ordem de 6.000--10.000 mortes evitadas por ano, consistente com estimativas da ABRAMET que apontam mais de 40.000 vidas salvas entre 2008 e 2016.
 
-\subsubsection{Análise de Robustez}
+\subsection{Análise de Robustez}
 
 Para avaliar a robustez, realizamos três exercícios:
 
@@ -1124,7 +1263,7 @@ Para avaliar a robustez, realizamos três exercícios:
   \item \textbf{SDID como verificação cruzada:} o estimador SDID, que não depende da escolha do pool de doadores da mesma forma, produz estimativas na mesma faixa ($\approx -4{,}0$ mortes/100k), corroborando os resultados do SCM.
 \end{enumerate}
 
-\subsubsection{Limitações}
+\subsection{Limitações}
 
 \begin{itemize}[leftmargin=1.5cm]
   \item \textbf{Qualidade dos dados:} a qualidade dos registros de mortalidade varia substancialmente entre países latino-americanos. Sub-registro é mais provável em países com infraestrutura de saúde mais fraca, o que pode distorcer o contrafactual.
@@ -1137,7 +1276,7 @@ Para avaliar a robustez, realizamos três exercícios:
 \end{itemize}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Ver Guia de Custo-Benefício --- Como usar estimativas de impacto agregado em análise de custo-efetividade (e.g., custo por vida salva pela Lei Seca).}
+\textit{Ver Guia de Custo-Benefício --- Como usar estimativas de impacto agregado em análise de custo-efetividade (e.g., custo por vida salva pela Lei Seca).}
 \end{conexaobox}
 
 
@@ -1145,9 +1284,9 @@ Para avaliar a robustez, realizamos três exercícios:
 % SEÇÃO 6: CHECKLIST
 % ==========================================
 \newpage
-\section{Checklist de Boas Práticas e Armadilhas Comuns}
+\chapter{Checklist de Boas Práticas e Armadilhas Comuns}
 
-\subsection{Checklist para Praticantes}
+\section{Checklist para Praticantes}
 
 \begin{enumerate}[leftmargin=1.5cm]
   \item O ajuste pré-tratamento é suficientemente bom? Reporte o RMSPE pré-tratamento e compare com o gap pós; a razão RMSPE pós/pré é significativamente alta em relação à distribuição placebo (Seção~2.4.3)?
@@ -1161,37 +1300,37 @@ Para avaliar a robustez, realizamos três exercícios:
   \item A tabela de pesos e a composição do controle sintético são reportadas?
 \end{enumerate}
 
-\subsection{Armadilhas Comuns}
+\section{Armadilhas Comuns}
 
-\subsubsection{Armadilha 1: Usar SCM com ajuste pré-tratamento ruim sem extensões}
+\subsection{Armadilha 1: Usar SCM com ajuste pré-tratamento ruim sem extensões}
 
-Se o RMSPE pré-tratamento é grande em relação à escala do outcome, o contrafactual não é confiável. \textbf{Diagnóstico:} compare o RMSPE pré com o desvio padrão do outcome. Se RMSPE $ > 0{,}5 \cdot \text{DP}(Y)$, considere seriamente o ASCM. \textbf{Solução:} use o Ridge ASCM (\texttt{augsynth} com \texttt{progfunc = "Ridge"}).
+Se o RMSPE pré-tratamento é grande em relação à escala do outcome, o contrafactual não é confiável. \textbf{Diagnóstico:} compare o RMSPE pré com o desvio-padrão do outcome. Se RMSPE $ > 0{,}5 \cdot \text{DP}(Y)$, considere seriamente o ASCM. \textbf{Solução:} use o Ridge ASCM (\texttt{augsynth} com \texttt{progfunc = "Ridge"}).
 
-\subsubsection{Armadilha 2: Incluir unidades contaminadas no pool de doadores}
+\subsection{Armadilha 2: Incluir unidades contaminadas no pool de doadores}
 
 Se uma unidade de controle sofre uma intervenção similar à tratada (e.g., outro país adota lei de tolerância zero), ela contamina o contrafactual. \textbf{Diagnóstico:} pesquise se as unidades do pool sofreram choques relevantes no período. \textbf{Solução:} exclua unidades contaminadas; reporte análise de sensibilidade \textit{leave-one-out}.
 
-\subsubsection{Armadilha 3: Não reportar os pesos}
+\subsection{Armadilha 3: Não reportar os pesos}
 
 A transparência dos pesos é uma das \textit{maiores vantagens} do SCM sobre métodos de caixa-preta. Não reportar os pesos desperdiça essa vantagem e impede que o leitor avalie a plausibilidade do contrafactual. \textbf{Solução:} sempre reporte (i) a tabela de pesos, (ii) a comparação de preditores entre tratado e sintético, e (iii) os gráficos de path e gap.
 
-\subsubsection{Armadilha 4: Overfitting pré-tratamento}
+\subsection{Armadilha 4: Overfitting pré-tratamento}
 
 Incluir o outcome de cada período pré-tratamento como preditor separado pode gerar ajuste excelente que não generaliza. O controle sintético ``decora'' o pré sem capturar a estrutura subjacente. \textbf{Diagnóstico:} teste placebo in-time (mover a data de tratamento para antes do tratamento real). \textbf{Solução:} use médias de sub-períodos como preditores em vez de cada período individual; combine outcomes com covariáveis substantivas.
 
-\subsubsection{Armadilha 5: Ignorar spillovers}
+\subsection{Armadilha 5: Ignorar spillovers}
 
-Se a política da unidade tratada afeta as unidades de controle, o contrafactual é invalido. \textbf{Exemplo:} ao avaliar o impacto da Lei Seca no Brasil, se o turismo rodoviário de brasileiros em países vizinhos muda, os controles não representam o ``mundo sem Lei Seca''. \textbf{Solução:} argumente por que spillovers são implausíveis; use extensões com spillovers (Seção~4.2) quando apropriado.
+Se a política da unidade tratada afeta as unidades de controle, o contrafactual é inválido. \textbf{Exemplo:} ao avaliar o impacto da Lei Seca no Brasil, se o turismo rodoviário de brasileiros em países vizinhos muda, os controles não representam o ``mundo sem Lei Seca''. \textbf{Solução:} argumente por que spillovers são implausíveis; use extensões com spillovers (Seção~4.2) quando apropriado.
 
-\subsubsection{Armadilha 6: P-valores inflados com pool pequeno}
+\subsection{Armadilha 6: P-valores inflados com pool pequeno}
 
 Com $J$ unidades de controle, o p-valor mínimo possível é $1/(J+1)$. Com $J = 10$, é $1/11 \approx 0{,}091$ --- insuficiente para rejeitar a 5\%. \textbf{Solução:} (i) aumente o pool de doadores quando possível; (ii) use inferência conformal \citep{ChernozhukovEtAl2021}; (iii) use intervalos de predição do pacote \texttt{scpi}.
 
-\subsubsection{Armadilha 7: Generalizar indevidamente}
+\subsection{Armadilha 7: Generalizar indevidamente}
 
 O SCM estima o efeito \textit{para a unidade tratada específica}. Se o Brasil reduziu a mortalidade no trânsito com a Lei Seca, isso não significa que o mesmo efeito ocorreria em todos os países. A generalização requer argumentos adicionais sobre heterogeneidade e mecanismos.
 
-\subsection{Tabela-Resumo: Diagnósticos e Soluções}
+\section{Tabela-Resumo: Diagnósticos e Soluções}
 
 \begin{table}[H]
 \centering
@@ -1219,24 +1358,16 @@ Efeito pequeno & Gap $ \ll $ RMSPE pré & Mais períodos pré; ASCM \\
 % SEÇÃO 7: CONCLUSÃO
 % ==========================================
 \newpage
-\section{Conclusão}
+\chapter{Conclusão}
 
-O método de controle sintético é hoje uma ferramenta indispensável para avaliação de impacto quando há poucas unidades tratadas. Este guia apresentou um percurso completo: do arcabouço teórico (Seção~2) às extensões mais recentes (Seções~3--4), passando por uma replicação empírica com dados brasileiros (Seção~5).
+O controle sintético se consolidou como ferramenta de referência para avaliação de impacto quando há poucas unidades tratadas. Este guia cobriu o arcabouço teórico (Seção~2), as extensões mais recentes (Seções~3--4) e uma replicação empírica com dados brasileiros (Seção~5).
 
-As principais mensagens são:
+Cinco pontos atravessam o guia. O primeiro é o nicho do método: o SCM é adequado para intervenções de nível agregado, com uma ou poucas unidades tratadas --- aí estão suas vantagens comparativas, não em qualquer aplicação. O segundo é diagnóstico: a qualidade do ajuste pré-tratamento é o teste mais importante de uma análise SCM, e quando o ajuste é ruim, o ASCM corrige parte do viés. O terceiro é interpretativo: a transparência dos pesos --- saber exatamente quais unidades compõem o controle sintético, e com que peso --- é uma vantagem competitiva em relação a métodos de caixa-preta, e deve ser sempre reportada. O quarto é a convergência com a literatura de DiD: o SDID oferece uma ponte natural entre os dois métodos, e o Staggered SCM estende o controle sintético para adoção escalonada. O quinto, finalmente, é a inferência, que permanece o aspecto mais desafiador --- com a inferência conformal e os intervalos de predição de \citet{CattaneoFengPalombaTitiunik2025} como avanços recentes.
 
-\begin{enumerate}[leftmargin=1.5cm]
-  \item O SCM é especialmente adequado para intervenções de nível agregado com uma única (ou poucas) unidades tratadas;
-  \item A qualidade do ajuste pré-tratamento é o diagnóstico mais importante --- se o ajuste é ruim, use o ASCM;
-  \item A transparência dos pesos é uma vantagem competitiva em relação a métodos de caixa-preta;
-  \item O SDID oferece uma ponte natural com a literatura de DiD, e o Staggered SCM estende o método para adoção escalonada;
-  \item A inferência permanece o aspecto mais desafiador --- a inferência conformal e os intervalos de predição de Cattaneo et al.\ são avanços promissores.
-\end{enumerate}
-
-Direções futuras incluem a integração com \textit{machine learning} (modelos de resultados não-paramétricos no ASCM), a extensão para \textit{outcomes} distribucionais via \textit{optimal transport}, e a crescente convergência com a literatura de DiD.
+Direções futuras incluem a integração com \textit{machine learning} (modelos de resultados não-paramétricos no ASCM), a extensão para \textit{outcomes} distribucionais via \textit{optimal transport}, e a convergência crescente com a literatura de DiD.
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conexão com outros guias:}} \textit{Guia de RDD --- Comparação: RDD para políticas com regra de corte vs SCM para políticas de nível agregado; Guia de DiD --- Convergência crescente DiD-SCM via Synthetic DiD e Staggered designs.}
+\textit{Guia de RDD --- Comparação: RDD para políticas com regra de corte vs SCM para políticas de nível agregado; Guia de DiD --- Convergência crescente DiD-SCM via Synthetic DiD e Staggered designs.}
 \end{conexaobox}
 
 
@@ -1347,6 +1478,9 @@ Possebom, V. (2019).
 Xu, Y. (2017).
 \newblock Generalized Synthetic Control Method: Causal Inference with Interactive Fixed Effects Models.
 \newblock \textit{Political Analysis}, 25(1), 57--76.
+
+\bibitem[Lima et~al.(2025)]{Lima2025}
+Lima, L. e colaboradores (2025). \textit{Guia CLEAR de Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}. São Paulo: FGV CLEAR.
 
 \end{thebibliography}
 

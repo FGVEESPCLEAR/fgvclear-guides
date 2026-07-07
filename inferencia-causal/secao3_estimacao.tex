@@ -1,0 +1,692 @@
+% =============================================================================
+% Seção 3 — Estimação
+% Guia Clear de Introdução à Inferência Causal — FGV EESP Clear
+% =============================================================================
+
+\chapter{Estimação}
+\label{cap:estimacao}
+\label{sec:estimacao}
+
+A Seção~\ref{sec:identificacao} desenvolveu a primeira metade da cadeia que conecta a teoria econômica aos dados. Partindo de um parâmetro econômico de interesse --- o ATE, o ATT, o efeito sobre uma população elegível ---, identificamos hipóteses sobre o processo gerador dos dados que estabelecem uma equivalência entre esse parâmetro e um \textit{estimando}: um funcional da distribuição populacional observável. A diferença de médias condicionais $\E[Y_i \mid D_i = 1] - \E[Y_i \mid D_i = 0]$, o coeficiente da projeção linear de $Y$ em $(D, W)$, o salto da esperança condicional no \textit{cutoff} de uma RDD, a diferença das diferenças sob tendências paralelas: todos esses são estimandos. Eles vivem no espaço populacional. Eles são números fixos, definidos pela distribuição $F(Y, D, W)$.
+
+A questão prática, porém, é que $F$ não é conhecida. Em uma aplicação real, dispomos de uma amostra finita --- $n$ realizações $(Y_i, D_i, W_i)_{i=1}^n$. A pergunta da estimação é direta: \textit{dado que sabemos qual estimando queremos calcular, como o calculamos a partir dos dados que efetivamente temos?}
+
+Essa passagem do estimando para o estimador acrescenta um terceiro espaço à cadeia da Seção~\ref{sec:identificacao}. Vale repetir a distinção, porque é ela que organiza tudo o que vem a seguir:
+
+\begin{itemize}
+  \item O \textbf{estimando} $\theta = \phi(F)$ é uma propriedade da distribuição populacional. É um \textit{número fixo}.
+  \item O \textbf{estimador} $\hat{\theta} = \phi(\hat{F}_n)$ é uma função dos dados amostrais. É uma \textit{variável aleatória}.
+  \item O objetivo da estimação é construir $\hat{\theta}$ tal que ele se aproxime de $\theta$ à medida que $n$ cresce.
+\end{itemize}
+
+A passagem entre os dois é probabilística, não determinística. Mesmo o melhor estimador pode produzir, em uma amostra particular, um número distante do estimando. A quantificação dessa distância --- a incerteza amostral --- é o tema da Seção~\ref{sec:inferencia}. Esta seção concentra-se em outra pergunta: dado o estimando, \textit{qual estimador escolher} e \textit{o que ele efetivamente calcula}?
+
+A seção está organizada em quatro movimentos. Primeiro, formalizamos o que é uma amostra e introduzimos o princípio plug-in, que unifica a maioria dos estimadores práticos sob um único raciocínio (Subseções~\ref{subsec:amostra} e~\ref{subsec:plug-in}). Em seguida, discutimos os critérios pelos quais escolhemos entre estimadores --- consistência, viés, eficiência, robustez --- e o trade-off central entre eficiência e robustez (Subseção~\ref{subsec:propriedades}). O terceiro movimento examina um problema que conecta diretamente esta seção à anterior: identificação não garante que o estimador calcule o estimando, porque a forma funcional importa; daí seguem alternativas mais robustas como o IPW e o duplamente robusto (Subseções~\ref{subsec:forma-funcional} e~\ref{subsec:ipw}). O quarto movimento trata de duas famílias de estimadores específicas e amplamente usadas: estimadores de painel (Subseção~\ref{subsec:painel-estimacao}) e o estimador de Lin para experimentos com covariadas (Subseção~\ref{subsec:lin}).
+
+% =============================================================================
+\section{Amostra}
+\label{subsec:amostra}
+
+A amostra é o material bruto de toda a estimação. Formalmente, é uma coleção de $n$ realizações $(Y_i, D_i, W_i)_{i=1}^n$ geradas pela distribuição populacional verdadeira $F$. Em geral, $F$ é desconhecida --- caso contrário, não haveria nada a estimar. Toda a inferência empírica parte da premissa de que dispomos apenas de uma janela parcial sobre $F$.
+
+Essa janela tem duas características que estruturam o problema da estimação.
+
+A primeira é que ela é \textbf{finita}. A amostra contém informação limitada sobre $F$. Por mais cuidadosa que seja a coleta, há aspectos de $F$ que ficam invisíveis em qualquer amostra de tamanho fixo: caudas raras da distribuição, subgrupos pouco representados, configurações pouco frequentes de $(D, W)$. Quanto maior $n$, mais próxima a amostra está de $F$. Mas, para qualquer $n$ finito, a aproximação é imperfeita.
+
+A segunda é que ela é \textbf{aleatória}. Cada observação $(Y_i, D_i, W_i)$ é um sorteio de $F$ --- e, portanto, qualquer função dos dados é também uma variável aleatória. Se sorteássemos uma nova amostra de tamanho $n$ da mesma população, obteríamos um valor diferente de $\hat{\theta}$. Essa variabilidade entre amostras possíveis, e não a "incerteza sobre o mundo", é a fonte da incerteza amostral. O estimando $\theta$ não muda; o estimador $\hat{\theta}$ flutua entre amostras.
+
+Para tornar concreto o que significa "fazer com a amostra o análogo do que faríamos com a população", é útil introduzir um objeto: a distribuição empírica.
+
+Dada uma amostra de tamanho $n$, a \textbf{distribuição empírica} $\hat{F}_n$ é a distribuição que coloca massa $1/n$ em cada observação. Ela é o análogo amostral de $F$. Pela lei dos grandes números, $\hat{F}_n \to F$ quando $n \to \infty$ --- a amostra "converge" para a distribuição verdadeira à medida que cresce. Essa convergência é a base de toda estimação consistente.
+
+A distribuição empírica substitui o desconhecido ($F$) por algo que conhecemos completamente ($\hat{F}_n$). O estimando $\theta = \phi(F)$ é um funcional aplicado a algo que não temos; o estimador natural é o mesmo funcional aplicado àquilo que temos: $\hat{\theta} = \phi(\hat{F}_n)$. Esse princípio é a espinha dorsal da próxima subseção.
+
+Antes de prosseguir, vale ancorar a discussão. Suponha que queiramos estimar o efeito médio do Bolsa Família sobre a frequência escolar de crianças em idade obrigatória. A distribuição populacional $F$ é a distribuição conjunta de $(Y_i, D_i, W_i)$ --- frequência escolar, recebimento do benefício, vetor de características --- em toda a população brasileira elegível. Essa distribuição existe; ela não é, em princípio, desconhecida em sentido absoluto. Mas, na prática, observamos apenas um subconjunto finito. Se a amostra vem da PNAD Contínua, são algumas dezenas de milhares de observações; se vem de dados administrativos do Cadastro Único cruzados com o Censo Escolar, podem ser milhões. Em qualquer caso, $\hat{F}_n$ é tudo o que temos para aprender sobre $F$. A boa notícia é que, para perguntas razoavelmente simples sobre $F$, $\hat{F}_n$ é uma aproximação excelente --- e melhora à medida que $n$ cresce.
+
+% =============================================================================
+\section{Estimadores Plug-in}
+\label{subsec:plug-in}
+
+Estabelecida a relação entre $F$ e $\hat{F}_n$, há um princípio de construção de estimadores que segue quase imediatamente. Ele é simples, geral e organiza a maior parte da estimação aplicada:
+
+\begin{equation}
+\text{Se } \theta = \phi(F),\text{ então } \hat{\theta} = \phi(\hat{F}_n).
+\label{eq:plug-in}
+\end{equation}
+
+Em palavras: \textit{faça com a amostra exatamente o que você faria com a população}. Esse é o \textbf{princípio plug-in}. Ele é o mais natural dos princípios de estimação --- e, talvez surpreendentemente, é também o mais geral. Como veremos, OLS, diferença de médias, IV, IPW e matching são todos estimadores plug-in de funcionais distintos.
+
+Antes da generalidade, três exemplos concretos. Em cada um, vamos identificar o funcional $\phi$, aplicá-lo a $F$ para obter o estimando, e em seguida aplicá-lo a $\hat{F}_n$ para obter o estimador.
+
+\paragraph{Exemplo 1: a média populacional.} Considere o estimando $\theta = \E[Y]$. Em termos de $F$:
+\[
+\theta = \int y \, dF(y).
+\]
+O estimador plug-in substitui $F$ por $\hat{F}_n$. Como $\hat{F}_n$ coloca massa $1/n$ em cada $Y_i$, a integral se reduz a uma soma:
+\begin{equation}
+\hat{\theta} = \int y \, d\hat{F}_n(y) = \frac{1}{n} \sum_{i=1}^n Y_i = \bar{Y}.
+\label{eq:plug-in-media}
+\end{equation}
+A média amostral é o estimador plug-in da média populacional. Esse resultado, que parece trivial, contém o que há de mais importante: o estimador é definido pela mesma operação aplicada à distribuição empírica.
+
+\paragraph{Exemplo 2: a diferença de médias.} O estimando central da Subseção~\ref{subsubsec:exogeneidade} é $\theta = \E[Y \mid D=1] - \E[Y \mid D=0]$. As duas esperanças condicionais são funcionais de $F$. O estimador plug-in substitui cada esperança condicional pela média amostral correspondente:
+\begin{equation}
+\hat{\theta} = \bar{Y}_1 - \bar{Y}_0 = \frac{1}{n_1} \sum_{i: D_i = 1} Y_i - \frac{1}{n_0} \sum_{i: D_i = 0} Y_i.
+\label{eq:plug-in-dif-medias}
+\end{equation}
+Sob exogeneidade, esse estimador calcula o ATE. A justificativa é a Equação~\eqref{eq:identificacao-rct} aplicada à amostra.
+
+\paragraph{Exemplo 3: o coeficiente de Wald.} Em um IV (\textit{Instrumental Variables} --- Variáveis Instrumentais) com instrumento binário, o estimando é
+\[
+\theta_{\text{Wald}} = \frac{\E[Y \mid Z=1] - \E[Y \mid Z=0]}{\E[D \mid Z=1] - \E[D \mid Z=0]}.
+\]
+Ele é a razão de dois funcionais que já sabemos como estimar. O estimador plug-in é a razão das diferenças de médias amostrais:
+\begin{equation}
+\hat{\theta}_{\text{Wald}} = \frac{\bar{Y}_{Z=1} - \bar{Y}_{Z=0}}{\bar{D}_{Z=1} - \bar{D}_{Z=0}}.
+\label{eq:plug-in-wald}
+\end{equation}
+
+\paragraph{Exemplo 4: OLS.} O estimando populacional do OLS é o coeficiente da projeção linear de $Y$ em um vetor de regressores $X_i$ (que pode incluir $D_i$, $W_i$, e uma constante):
+\[
+\beta = \big(\E[X_i X_i']\big)^{-1} \E[X_i Y_i].
+\]
+Os dois momentos --- a matriz de segundos momentos $\E[X_i X_i']$ e o vetor $\E[X_i Y_i]$ --- são funcionais de $F$. Substituindo cada um pelo análogo amostral:
+\begin{equation}
+\hat{\beta} = \left(\frac{1}{n} X'X\right)^{-1} \left(\frac{1}{n} X'Y\right) = (X'X)^{-1} X'Y.
+\label{eq:plug-in-ols}
+\end{equation}
+O estimador OLS é \textit{exatamente} o plug-in do coeficiente de projeção linear populacional. Esse é um ponto importante: OLS não é um método especial criado para causalidade --- é o estimador plug-in de um funcional bem definido de $F$. O que muda quando interpretamos OLS causalmente são as hipóteses de identificação que ligam esse funcional a um parâmetro econômico (Seção~\ref{sec:identificacao}), não o estimador em si.
+
+\paragraph{Por que o princípio é poderoso.} O plug-in unifica estimadores aparentemente distintos. Mais importante: ele \textit{herda propriedades} da convergência $\hat{F}_n \to F$. Como veremos na próxima subseção, isso dá consistência quase de graça para funcionais contínuos. Ele também torna transparente o que cada estimador está calculando: para entender $\hat{\theta}$, basta perguntar qual $\phi$ ele aplica e a qual estimando $\phi(F)$ esse $\phi$ corresponde.
+
+\paragraph{Ancoragem empírica.} No contexto do PRONATEC, o estimando da diferença de médias salarial entre participantes e não-participantes é $\E[Y \mid D=1] - \E[Y \mid D=0]$. O estimador plug-in é simplesmente a diferença dos salários médios na nossa amostra. Sob exogeneidade --- por exemplo, num desenho experimental em que vagas escassas foram alocadas por sorteio ---, esse estimador calcula o ATE. Sem exogeneidade, o estimador continua a calcular um número bem definido, mas esse número deixa de ser o ATE: ele passa a misturar efeito causal e viés de seleção, como mostrado em~\eqref{eq:ATT-mais-vies}.
+
+O bloco de código abaixo ilustra a construção dos quatro estimadores plug-in em uma amostra simulada.
+
+\begin{lstlisting}[caption={Estimadores plug-in básicos.}, label={lst:plug-in}]
+# -----------------------------
+# 1) Limpeza e pacotes
+# -----------------------------
+rm(list = ls())
+set.seed(2026)
+library(tidyverse)
+
+# -----------------------------
+# 2) Simulação de dados (PGD com efeito = 4)
+# -----------------------------
+n <- 1000
+W <- rnorm(n, mean = 0, sd = 1)         # covariada
+D <- rbinom(n, 1, plogis(0.3 * W))      # tratamento
+Y0 <- 2 + 0.8 * W + rnorm(n, sd = 1)    # potencial sob controle
+Y1 <- Y0 + 4 + 0.5 * W                  # potencial sob tratamento
+Y  <- D * Y1 + (1 - D) * Y0             # observado
+
+dados <- tibble(Y = Y, D = D, W = W)
+
+# -----------------------------
+# 3) Plug-in (1): média populacional
+# -----------------------------
+mu_hat <- mean(dados$Y)
+mu_hat
+
+# -----------------------------
+# 4) Plug-in (2): diferença de médias
+# -----------------------------
+delta_hat <- with(dados, mean(Y[D == 1]) - mean(Y[D == 0]))
+delta_hat
+
+# -----------------------------
+# 5) Plug-in (3): OLS de Y em D
+# -----------------------------
+ols <- lm(Y ~ D, data = dados)
+coef(ols)["D"]
+\end{lstlisting}
+
+Observe que, neste PGD (Processo Gerador de Dados), o efeito médio verdadeiro é $\E[Y_i(1) - Y_i(0)] = 4$. A diferença simples de médias amostrais aproxima esse valor porque a relação entre $D$ e $W$ é fraca (a probabilidade de tratamento varia pouco com $W$). Em contextos com seleção mais forte, a diferença de médias pode estar arbitrariamente longe de $4$ --- e nenhum aumento de $n$ resolve o problema, porque o estimando que ela calcula deixa de ser o ATE.
+
+Vimos como o princípio plug-in unifica a construção de estimadores. Resta perguntar: que critérios usamos para julgar se um estimador é \textit{bom}?
+
+
+% =============================================================================
+\section{Propriedades dos Estimadores}
+\label{subsec:propriedades}
+
+Para escolher entre estimadores --- ou para entender o que estamos perdendo ao escolher um em vez de outro ---, precisamos de critérios. As três propriedades centrais são consistência, viés e eficiência. Cada uma responde a uma pergunta distinta sobre o comportamento de $\hat{\theta}$.
+
+\subsection*{Consistência}
+
+A primeira pergunta é a mais básica: \textit{com amostras grandes, o estimador acerta?} Formalmente, $\hat{\theta}$ é \textbf{consistente} para $\theta$ se
+\begin{equation}
+\hat{\theta} \xrightarrow{p} \theta \quad \text{quando} \quad n \to \infty.
+\label{eq:consistencia}
+\end{equation}
+A notação $\xrightarrow{p}$ indica convergência em probabilidade: a probabilidade de $\hat{\theta}$ se afastar mais do que qualquer $\varepsilon > 0$ de $\theta$ tende a zero conforme $n$ cresce. Em palavras: dados suficientes, o estimador se aproxima do estimando.
+
+A consistência é a propriedade \textit{mínima} exigível. Um estimador inconsistente não melhora com mais dados --- ele converge sistematicamente para um valor diferente do estimando. Aumentar $n$ pode reduzir a variância em torno desse valor errado, mas nunca corrige o desvio. Um intervalo de confiança estreito em torno de um estimando inconsistente é um intervalo de confiança preciso em torno do número errado.
+
+A boa notícia é que, para estimadores plug-in de funcionais contínuos, a consistência é quase automática. Como $\hat{F}_n \to F$ pela lei dos grandes números, e como $\phi$ é contínuo, $\phi(\hat{F}_n) \to \phi(F)$. Esse argumento --- conhecido como teorema da aplicação contínua --- mostra por que tantos estimadores aplicados são consistentes sob hipóteses fracas: eles herdam a convergência da própria distribuição empírica.
+
+\subsection*{Viés}
+
+A consistência diz o que acontece com $n$ infinito. Em qualquer aplicação real, $n$ é finito. Para amostras finitas, importa saber se o estimador é, em média, igual ao estimando:
+\begin{equation}
+\text{Bias}(\hat{\theta}) = \E[\hat{\theta}] - \theta.
+\label{eq:vies}
+\end{equation}
+
+Um estimador é \textbf{não viesado} se $\text{Bias}(\hat{\theta}) = 0$ para todo $n$. Em palavras: se replicássemos o experimento infinitas vezes, a média dos estimadores seria igual ao estimando.
+
+É possível ter um estimador consistente mas viesado em amostras finitas. Exemplo: a variância amostral $\frac{1}{n} \sum (Y_i - \bar{Y})^2$ é consistente para $\Var(Y)$, mas viesada (subestima a variância populacional). A versão corrigida $\frac{1}{n-1} \sum (Y_i - \bar{Y})^2$ é não viesada \textit{e} consistente. Em estimação causal, a maioria dos estimadores semiparamétricos é consistente mas pode ter viés de amostras finitas não desprezível, especialmente com $n$ pequeno ou modelos auxiliares mal especificados.
+
+Para fixar a distinção, considere o seguinte exemplo numérico hipotético. Suponha que $Y_i$ é a renda mensal (em milhares de reais) de um trabalhador, e que o estimando de interesse é $\theta = \E[Y]$. Geramos $200$ amostras de tamanho $n = 30$ de uma população em que $\E[Y] = 3$. Calculamos a média amostral em cada uma. A média das $200$ médias amostrais será aproximadamente $3$ --- a média amostral é não viesada. Calculamos também o estimador alternativo $\tilde{\theta} = \frac{1}{n+1} \sum Y_i$. Este é consistente (à medida que $n \to \infty$, o fator $\frac{1}{n+1}$ converge para $\frac{1}{n}$, e portanto $\tilde{\theta} \to \E[Y]$), mas viesado --- a média das $200$ replicações será aproximadamente $3 \cdot \frac{30}{31} \approx 2{,}90$. Para $n = 30$, o viés é cerca de $-0{,}10$; para $n = 1000$, é cerca de $-0{,}003$. O viés desaparece assintoticamente, mas é real para amostras finitas.
+
+\subsection*{Eficiência}
+
+Dado que dois estimadores são consistentes para o mesmo estimando, qual escolher? A resposta é: o que converge \textit{mais rápido}. Formalmente, o estimador \textbf{mais eficiente} é aquele com menor variância assintótica:
+\[
+\sqrt{n}(\hat{\theta} - \theta) \xrightarrow{d} \mathcal{N}(0, V),
+\]
+onde $V$ é a variância assintótica. Entre estimadores consistentes, preferimos os de $V$ menor, porque eles produzem intervalos de confiança mais estreitos com a mesma quantidade de dados --- ou, equivalentemente, atingem a mesma precisão com menos dados.
+
+Eficiência importa quando a amostra é pequena, quando o efeito a estimar é sutil, ou quando a variância determina o poder estatístico. Em experimentos planejados, a escolha do estimador eficiente pode reduzir substancialmente o tamanho de amostra necessário para detectar um efeito de magnitude pré-definida.
+
+\subsection*{O trade-off central: eficiência vs. robustez}
+
+Eficiência tem um custo: ela é tipicamente obtida ao impor mais estrutura sobre o problema. Quanto mais hipóteses um estimador faz sobre $F$, mais informação ele extrai dos dados --- e mais eficiente é, \textit{quando essas hipóteses são verdadeiras}. Quando as hipóteses falham, o estimador eficiente pode ser inconsistente.
+
+Esse é o trade-off central da estimação aplicada. Para fixar ideias, podemos organizar os estimadores em três famílias:
+
+\begin{itemize}
+  \item \textbf{Paramétricos.} Impõem uma forma funcional completa para $F$ (ex: MLE sob normalidade dos erros). Eficientes quando o modelo está correto; \textit{inconsistentes} quando está errado. Exemplo: máxima verossimilhança em um probit que assume normalidade do termo latente.
+
+  \item \textbf{Semiparamétricos.} Impõem restrições apenas em partes da distribuição --- tipicamente, na esperança condicional ou no propensity score, mas não na distribuição completa dos erros. Robustos a algumas formas de má-especificação. Exemplo: OLS, que impõe linearidade em $\E[Y \mid X]$ mas não exige nada sobre a distribuição dos resíduos.
+
+  \item \textbf{Não-paramétricos.} Deixam $F$ inteiramente livre e estimam funcionais por plug-in puro. Exemplo: a diferença de médias amostrais, ou o matching exato. Mais robustos, mas com convergência mais lenta --- a ``maldição da dimensionalidade'' implica que, com várias covariadas contínuas, a precisão cai rapidamente.
+\end{itemize}
+
+A regra geral é: \textit{quanto mais o estimador se apoia em hipóteses sobre $F$, mais eficiente é se essas hipóteses valem, e mais frágil é se elas falham.}
+
+\paragraph{Ancoragem empírica.} Considere a estimação do efeito do PRONATEC sobre o salário de egressos. A distribuição de salários no Brasil é fortemente assimétrica à direita: a maioria dos trabalhadores ganha pouco, e uma minoria ganha muito. Um modelo paramétrico que assume normalidade dos erros (e, consequentemente, simetria em $Y$ condicional aos regressores) é mais eficiente \textit{se a hipótese for válida}. Mas, como a distribuição empírica de salários claramente não é normal, esse estimador pode ser inconsistente --- ele converge para o melhor ajuste linear gaussiano à distribuição verdadeira, que não é o ATE. Um estimador não-paramétrico --- por exemplo, uma diferença de médias dentro de estratos definidos por $W$ --- é mais robusto, mas exige amostras maiores para atingir a mesma precisão.
+
+A escolha entre estimadores não é, portanto, uma decisão estatística pura. Ela é uma decisão sobre quais hipóteses estamos dispostos a defender. Em geral, é melhor um estimador robusto com erro-padrão maior do que um estimador eficiente que pode estar calculando o objeto errado.
+
+\bigskip
+
+Os critérios discutidos nesta subseção são gerais. A próxima é sobre um problema específico --- e particularmente importante --- que liga as propriedades do estimador às hipóteses que conduzimos da identificação para a estimação: o problema da forma funcional.
+
+% =============================================================================
+\section{Forma Funcional e Alinhamento Estimador-Estimando}
+\label{subsec:forma-funcional}
+
+A Seção~\ref{sec:identificacao} estabeleceu que, sob certas hipóteses sobre o processo gerador de dados, o parâmetro econômico de interesse é igual a um estimando bem definido. A subseção anterior introduziu critérios para escolher entre estimadores de um mesmo estimando. Falta uma pergunta essencial: \textit{o estimador escolhido efetivamente calcula o estimando que a identificação selecionou?}
+
+A resposta nem sempre é ``sim''. Um estimador pode ser plug-in de um funcional bem definido --- e portanto calcular consistentemente \textit{aquele} funcional --- sem que esse funcional coincida com o estimando que a identificação selecionou. O caso mais frequente em econometria aplicada é o do OLS com forma funcional incorreta. Esta subseção examina esse problema em detalhe.
+
+\subsection*{O que OLS efetivamente calcula}
+
+OLS estima o coeficiente da \textit{projeção linear} de $Y$ em $(D, W)$. Esse é o estimando de OLS --- não o ATE, não o ATT, não nenhum efeito causal por si só. A interpretação causal de OLS depende de duas camadas de hipóteses:
+\begin{enumerate}
+  \item \textbf{Identificação:} alguma hipótese sobre $(Y_i(0), Y_i(1), D_i, W_i)$ que faz com que o estimando do OLS coincida com um efeito causal de interesse. Sob CIA, por exemplo, o ATT é identificado como uma média ponderada de diferenças condicionais.
+  \item \textbf{Forma funcional:} a hipótese de que a esperança condicional $\E[Y \mid D, W]$ é \textit{linear} em $(D, W)$. Isso é o que faz OLS calcular o estimando que a identificação selecionou.
+\end{enumerate}
+
+A primeira camada é o tema da Seção~\ref{sec:identificacao}. A segunda --- e este é o ponto desta subseção --- é uma hipótese \textit{adicional}, que nem sempre é discutida com a mesma seriedade.
+
+\subsection*{Quando a linearidade é restritiva e quando não é}
+
+A força da hipótese de linearidade depende da natureza dos regressores. Três casos vale distinguir:
+
+\paragraph{Caso 1: $D$ binário, sem covariadas.} A linearidade é, neste caso, uma identidade. Dois pontos --- a média de $Y$ em $D = 1$ e a média em $D = 0$ --- definem uma reta. OLS de $Y$ em $D$ é \textit{exatamente} a diferença de médias. Não há hipótese funcional implícita.
+
+\paragraph{Caso 2: $D$ binário, com covariadas contínuas.} Aqui a linearidade impõe restrições reais. OLS de $Y$ em $D$ e $W$ assume que $\E[Y \mid D, W] = \alpha + \beta D + \gamma W$. Se a relação entre $W$ e $Y$ for não linear --- por exemplo, retornos decrescentes na escolaridade ---, o estimador é inconsistente para o ATE.
+
+\paragraph{Caso 3: $D$ contínuo.} A linearidade é uma hipótese substantiva. Ela impõe que o efeito marginal de $D$ é constante: $\partial \E[Y \mid D, W] / \partial D = \beta$ para todo valor de $D$. Em modelos com retornos decrescentes ou efeitos de saturação, essa hipótese é fortemente restritiva.
+
+\subsection*{O que acontece quando a forma funcional está errada}
+
+Suponha que vale CIA, $(Y_i(0), Y_i(1)) \indep D_i \mid W_i$. A identificação seleciona como estimando o ATT (ou o ATE, dependendo das ponderações), construído a partir de diferenças condicionais $\E[Y \mid D=1, W=w] - \E[Y \mid D=0, W=w]$. OLS com controle linear em $W$ calcula, em vez disso, uma média ponderada dessas diferenças condicionais, com pesos que dependem da distribuição de $W$ \textit{e} do modelo linear imposto.
+
+\citet{Angrist1998} mostrou que, com tratamento heterogêneo, o estimador OLS pode ser escrito como
+\begin{equation}
+\beta_{OLS} = \frac{\E\big[\,\Var(D_i \mid W_i) \cdot \tau(W_i)\,\big]}{\E\big[\,\Var(D_i \mid W_i)\,\big]},
+\label{eq:angrist-pesos}
+\end{equation}
+onde $\tau(w) = \E[Y_i(1) - Y_i(0) \mid W_i = w]$ é o efeito condicional. Os pesos $\Var(D_i \mid W_i) = p(W_i)(1 - p(W_i))$ são proporcionais à variância do tratamento dentro de cada estrato. Estratos com $p(w)$ próximo de $0{,}5$ recebem mais peso; estratos quase puros (todos tratados ou todos controles) recebem peso quase nulo.
+
+Esses pesos são \textit{mecânicos} --- eles vêm da álgebra do estimador, não de qualquer escolha consciente do pesquisador. Eles não correspondem necessariamente aos pesos da população de interesse para a política. Pior: em desenhos com adoção escalonada (Subseção~\ref{subsec:painel-estimacao}), pesos negativos podem aparecer, atribuindo peso negativo a alguns efeitos condicionais.
+
+\subsection*{Um exemplo numérico do desalinhamento}
+
+Para tornar concreto o que significa ``OLS calcular algo diferente do ATE'', considere uma população dividida em dois estratos definidos por $W \in \{0, 1\}$, conforme a Tabela~\ref{tab:pesos-ols}.
+
+\begin{table}[h]
+\centering
+\caption{População hipotética: dois estratos com diferentes propensões e efeitos.}
+\label{tab:pesos-ols}
+\begin{tabular}{lccc}
+\toprule
+Estrato & Tamanho & $p(w)$ & $\tau(w)$ \\
+\midrule
+$W = 0$ & $50\%$ & $0{,}5$ & $2$ \\
+$W = 1$ & $50\%$ & $0{,}1$ & $8$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+O ATE verdadeiro é $\E[\tau(W)] = 0{,}5 \cdot 2 + 0{,}5 \cdot 8 = 5$. Mas os pesos do OLS são proporcionais a $p(w)(1-p(w))$:
+\[
+p(0)(1-p(0)) = 0{,}25, \qquad p(1)(1-p(1)) = 0{,}09.
+\]
+Normalizando, o estrato $W=0$ recebe peso $0{,}25/(0{,}25+0{,}09) \approx 0{,}735$, e o estrato $W=1$ recebe peso $\approx 0{,}265$. O estimando do OLS é, portanto:
+\[
+\beta_{OLS} \approx 0{,}735 \cdot 2 + 0{,}265 \cdot 8 \approx 3{,}59.
+\]
+A diferença é substantiva: o OLS estima $3{,}59$, enquanto o ATE é $5$. O viés vem do fato de que OLS subponderou o estrato com efeito grande --- e fez isso porque, naquele estrato, há pouca variação no tratamento (pouco se ``aprende'' sobre $\tau$ a partir dele, na lógica do estimador de variância mínima).
+
+O bloco abaixo replica esse cálculo em uma simulação.
+
+\begin{lstlisting}[caption={OLS vs. ATE quando os pesos do estimador não coincidem com os de política.}, label={lst:angrist-pesos}]
+# -----------------------------
+# 1) Configuração
+# -----------------------------
+rm(list = ls())
+set.seed(2026)
+library(tidyverse)
+
+n <- 50000
+W <- rbinom(n, 1, 0.5)                             # estrato (50/50)
+p <- ifelse(W == 1, 0.1, 0.5)                      # propensity score
+D <- rbinom(n, 1, p)
+tau <- ifelse(W == 1, 8, 2)                        # efeito heterogêneo
+Y0 <- rnorm(n)
+Y1 <- Y0 + tau
+Y  <- D * Y1 + (1 - D) * Y0
+dados <- tibble(Y = Y, D = D, W = W)
+
+# -----------------------------
+# 2) ATE verdadeiro (na população)
+# -----------------------------
+ate_verdadeiro <- mean(tau)
+ate_verdadeiro    # ~ 5
+
+# -----------------------------
+# 3) Estimando do OLS com controle linear
+# -----------------------------
+ols <- lm(Y ~ D + W, data = dados)
+coef(ols)["D"]    # ~ 3.59 — não é o ATE
+
+# -----------------------------
+# 4) Estimando alternativo: média de diferenças por estrato
+# -----------------------------
+ate_estratos <- dados %>%
+  group_by(W) %>%
+  summarise(diff = mean(Y[D == 1]) - mean(Y[D == 0])) %>%
+  summarise(ate = mean(diff)) %>%
+  pull(ate)
+ate_estratos     # ~ 5
+\end{lstlisting}
+
+A lição é geral: \textit{identificação não é suficiente para que o estimador acerte o estimando}. Mesmo com CIA válida, OLS pode estimar uma média ponderada que não coincide com o ATE. O leitor pode verificar que, no caso paradigmático em que $\tau(w) = \tau$ é constante ou em que $p(w)$ é constante (como em um RCT bem desenhado), o estimando do OLS coincide com o ATE --- a dificuldade emerge da \textit{combinação} entre heterogeneidade do tratamento e heterogeneidade da propensão.
+
+\subsection*{Ancoragem empírica}
+
+Considere o efeito de anos de escolaridade sobre salário. Postular linearidade --- $\E[\log W \mid \text{anos}] = \alpha + \beta \cdot \text{anos}$ --- impõe que cada ano adicional tem o mesmo efeito percentual, independentemente do nível. Isso pode ser razoável como descrição da média populacional, mas esconde heterogeneidades importantes. O retorno do ensino médio completo (12 anos) versus incompleto (11 anos) costuma ser muito maior do que o retorno de um ano adicional na pós-graduação. Especificações com termos quadráticos, splines, ou efeitos por nível de escolaridade --- em vez de uma única inclinação linear --- conseguem capturar essa heterogeneidade.
+
+A questão não é abandonar OLS. É reconhecer que OLS calcula um funcional bem definido, e que a interpretação causal desse funcional depende não apenas das hipóteses de identificação, mas também da plausibilidade da forma funcional. Quando a linearidade é restritiva, há duas alternativas: (i) flexibilizar o modelo (interações, polinômios, splines) ou (ii) abandonar a abordagem baseada na esperança condicional e usar estimadores que evitam essa hipótese. A próxima subseção explora a segunda rota.
+
+
+% =============================================================================
+\section{IPW: Ponderação pelo Inverso da Probabilidade}
+\label{subsec:ipw}
+
+A subseção anterior identificou um problema: sob CIA, o ATE é identificado, mas OLS com controles lineares pode calcular uma média ponderada distinta do ATE. O problema vem de modelar a relação entre $W$ e $Y$ por uma forma funcional que pode estar errada. O IPW (\textit{Inverse Probability Weighting} --- Ponderação pelo Inverso da Probabilidade) propõe uma rota alternativa: em vez de modelar $\E[Y \mid D, W]$, modela-se a probabilidade de tratamento $P(D = 1 \mid W) = p(W)$ --- o \textit{propensity score} (escore de propensão).
+
+\subsection*{Intuição}
+
+Sob CIA, dentro de cada estrato definido por $W$, tratados e controles são comparáveis. Mas a distribuição de $W$ entre tratados \textit{difere} da distribuição entre controles --- justamente porque tratamento e $W$ são correlacionados. A diferença bruta de médias mistura, portanto, dois efeitos: o efeito do tratamento e a diferença composicional em $W$.
+
+A ideia do IPW é corrigir essa diferença composicional pela reponderação da amostra. Indivíduos com baixa probabilidade de tratamento que \textit{foram} tratados são ``raros'' --- e, se queremos reconstruir a distribuição populacional de $W$ entre os tratados \textit{como se a alocação fosse aleatória}, esses indivíduos devem receber peso alto. Simetricamente, indivíduos com alta probabilidade de tratamento que \textit{não} foram tratados também são raros no grupo de controle --- e também devem receber peso alto.
+
+O resultado da reponderação é uma ``pseudo-população'' em que tratados e controles têm a mesma distribuição de $W$. Nessa pseudo-população, a diferença bruta de médias identifica o ATE.
+
+IPW é uma operação de reponderação. Em vez de modelar como $Y$ depende de $W$ (rota OLS), o IPW modela como $D$ depende de $W$ (rota propensity score) e usa esse modelo para ``consertar'' a composição do grupo tratado e do grupo controle. O ganho é robustez à forma funcional de $\E[Y \mid D, W]$. O custo é dependência da forma funcional do propensity score.
+
+\subsection*{O estimando de Horvitz-Thompson e o estimador IPW}
+
+A formalização passa pelo estimando populacional de Horvitz-Thompson:
+\begin{equation}
+\theta_{HT} = \E\!\left[\frac{D_i Y_i}{p(W_i)} - \frac{(1 - D_i) Y_i}{1 - p(W_i)}\right].
+\label{eq:horvitz-thompson}
+\end{equation}
+
+A álgebra para mostrar que $\theta_{HT} = \E[Y_i(1) - Y_i(0)] = \text{ATE}$ sob CIA e \textit{overlap} ($0 < p(W) < 1$ com probabilidade um) usa apenas a definição de resultados potenciais e a lei das esperanças iteradas. Considere o primeiro termo:
+\begin{align*}
+\E\!\left[\frac{D_i Y_i}{p(W_i)}\right]
+  &= \E\!\left[\frac{D_i Y_i(1)}{p(W_i)}\right] \\
+  &= \E\!\left[\E\!\left[\frac{D_i Y_i(1)}{p(W_i)} \,\Big|\, W_i\right]\right] \\
+  &= \E\!\left[\frac{\E[D_i \mid W_i] \cdot \E[Y_i(1) \mid W_i]}{p(W_i)}\right] \\
+  &= \E[\E[Y_i(1) \mid W_i]] = \E[Y_i(1)],
+\end{align*}
+onde a terceira igualdade usa a CIA (que dá $D_i \indep Y_i(1) \mid W_i$) e a quarta usa $\E[D_i \mid W_i] = p(W_i)$. O argumento simétrico para o segundo termo dá $\E[Y_i(0)]$. A diferença é o ATE.
+
+O estimador IPW é o plug-in de $\theta_{HT}$. Como $p(W_i)$ não é observado, ele é substituído por uma estimativa $\hat{p}(W_i)$ --- tipicamente, um logit de $D$ em $W$:
+\begin{equation}
+\hat{\tau}_{IPW}^{ATE} = \frac{1}{n} \sum_{i=1}^n \!\left[\frac{D_i Y_i}{\hat{p}(W_i)} - \frac{(1 - D_i) Y_i}{1 - \hat{p}(W_i)}\right].
+\label{eq:ipw-ate}
+\end{equation}
+
+Para o ATT, a derivação análoga produz
+\begin{equation}
+\hat{\tau}_{IPW}^{ATT} = \frac{1}{N_1} \sum_{i: D_i = 1} Y_i - \frac{1}{N_1} \sum_{i: D_i = 0} \frac{\hat{p}(W_i)}{1 - \hat{p}(W_i)} \cdot Y_i,
+\label{eq:ipw-att}
+\end{equation}
+onde $N_1$ é o número de tratados. A intuição é a mesma: o grupo controle é reponderado para se parecer com o grupo tratado em $W$.
+
+\subsection*{Vantagens e limitações}
+
+\paragraph{Vantagens em relação ao OLS.}
+\begin{itemize}
+  \item \textbf{Robusto à forma funcional de $\E[Y \mid D, W]$.} IPW não impõe linearidade no resultado --- ele opera diretamente sobre as observações via reponderação.
+  \item \textbf{Transparência.} Os pesos $\hat{p}(W_i)^{-1}$ e $(1 - \hat{p}(W_i))^{-1}$ tornam explícito quais observações estão ``carregando'' o estimador. Isso facilita diagnósticos.
+\end{itemize}
+
+\paragraph{Limitações.}
+\begin{itemize}
+  \item \textbf{Sensibilidade à má-especificação do propensity score.} Se o modelo para $p(W)$ está errado, o estimador é inconsistente. Trocamos uma hipótese funcional (sobre $Y$) por outra (sobre $D$).
+  \item \textbf{Pesos extremos.} Quando $\hat{p}(W_i) \approx 0$ ou $\hat{p}(W_i) \approx 1$, os pesos explodem e a variância do estimador se torna enorme. Em amostras finitas, uma única observação com peso muito alto pode dominar a estimativa.
+\end{itemize}
+
+\paragraph{Trimming.} A solução prática para o problema dos pesos extremos é o \textit{trimming}: descartar observações com $\hat{p}(W_i)$ fora de um intervalo (tipicamente $[0{,}05; 0{,}95]$). Isso restringe a estimação a uma sub-população em que há \textit{overlap} adequado --- isto é, em que tanto tratados quanto controles têm representatividade não-trivial. O custo é redefinir a população de inferência: o estimando deixa de ser o ATE em toda a população e passa a ser o ATE na região de \textit{overlap}.
+
+\subsection*{Doubly Robust}
+
+Há uma terceira rota que combina o melhor das duas: estimadores \textit{doubly robust} (duplamente robustos), como o AIPW (\textit{Augmented IPW}):
+\begin{equation}
+\hat{\tau}_{AIPW} = \frac{1}{n} \sum_i \!\left[ \hat{m}_1(W_i) - \hat{m}_0(W_i) + \frac{D_i (Y_i - \hat{m}_1(W_i))}{\hat{p}(W_i)} - \frac{(1 - D_i)(Y_i - \hat{m}_0(W_i))}{1 - \hat{p}(W_i)} \right],
+\label{eq:aipw}
+\end{equation}
+onde $\hat{m}_d(W_i)$ é uma estimativa de $\E[Y \mid D = d, W]$. A propriedade central do AIPW é que ele é consistente para o ATE se \textit{pelo menos um} dos dois modelos --- o de resultado ($m_d$) ou o de propensão ($p$) --- estiver correto. Erros em um modelo são corrigidos pelo outro. Por isso o nome ``duplamente robusto''.
+
+Estimadores duplamente robustos são uma direção natural quando há incerteza sobre qual modelo auxiliar é mais confiável. O custo é maior complexidade computacional e a necessidade de ajustar dois modelos em vez de um. A discussão técnica detalhada está fora do escopo deste guia introdutório, mas a referência é o artigo seminal de \citet{robins1994}.
+
+\subsection*{Implementação}
+
+\begin{lstlisting}[caption={Estimação por IPW e comparação com OLS.}, label={lst:ipw}]
+# -----------------------------
+# 1) Configuração
+# -----------------------------
+rm(list = ls())
+set.seed(2026)
+library(tidyverse)
+
+n <- 5000
+W <- rnorm(n)
+p_real <- plogis(0.8 * W)                     # propensity score verdadeiro
+D <- rbinom(n, 1, p_real)
+Y0 <- exp(W) + rnorm(n)                       # E[Y|W] não-linear (exponencial)
+Y1 <- Y0 + 4
+Y  <- D * Y1 + (1 - D) * Y0
+dados <- tibble(Y = Y, D = D, W = W)
+
+# -----------------------------
+# 2) OLS com controle linear (forma funcional errada)
+# -----------------------------
+ols <- lm(Y ~ D + W, data = dados)
+coef(ols)["D"]    # provavelmente longe de 4
+
+# -----------------------------
+# 3) IPW: estimar propensity score via logit
+# -----------------------------
+modelo_ps <- glm(D ~ W, data = dados, family = binomial)
+dados$ps <- predict(modelo_ps, type = "response")
+
+# -----------------------------
+# 4) Trimming: descartar pesos extremos
+# -----------------------------
+dados_trim <- dados %>% filter(ps > 0.05, ps < 0.95)
+
+# -----------------------------
+# 5) Estimador IPW para o ATE
+# -----------------------------
+ipw_ate <- with(dados_trim,
+  mean(D * Y / ps - (1 - D) * Y / (1 - ps))
+)
+ipw_ate           # mais próximo de 4
+\end{lstlisting}
+
+\paragraph{Conexão com a Seção~\ref{sec:identificacao}.} IPW é o estimador mais diretamente motivado pela CIA. Se a identificação via CIA é válida, o IPW é uma alternativa natural ao OLS --- mais robusto à forma funcional do resultado, mais transparente sobre quais observações estão identificando o efeito. Sua escolha entre OLS, IPW e AIPW depende do que é mais fácil de defender no contexto: a forma funcional de $\E[Y \mid D, W]$, a forma funcional de $p(W)$, ou nenhuma das duas com certeza --- caso em que a robustez dupla do AIPW é particularmente atraente.
+
+% =============================================================================
+\section{Estimação em Painel}
+\label{subsec:painel-estimacao}
+
+Os estimadores discutidos até aqui assumem que as observações são independentes. Em muitas aplicações, dispomos de algo mais rico: dados em \textbf{painel}, isto é, observações repetidas das mesmas unidades $i$ em múltiplos períodos $t$. A estrutura adicional permite estimadores que controlam por características fixas não observadas das unidades --- em troca de hipóteses adicionais sobre como o tempo entra no modelo.
+
+Considere o modelo geral
+\begin{equation}
+Y_{it} = \alpha_i + \lambda_t + \beta D_{it} + \varepsilon_{it},
+\label{eq:painel-geral}
+\end{equation}
+onde $\alpha_i$ são \textit{efeitos fixos de unidade} (capturam características invariantes no tempo da unidade $i$ --- história, geografia, cultura) e $\lambda_t$ são \textit{efeitos fixos de tempo} (capturam choques agregados comuns a todas as unidades em $t$ --- ciclo econômico, mudanças nacionais de política, eventos macro).
+
+A pergunta de estimação é: como recuperamos $\beta$ a partir dos dados, dado que $\alpha_i$ e $\lambda_t$ não são observados? Há duas estratégias principais: o estimador TWFE e o estimador FD.
+
+\subsection{TWFE: Two-Way Fixed Effects}
+\label{subsubsec:twfe}
+
+O estimador TWFE (\textit{Two-Way Fixed Effects} --- Efeitos Fixos de Dois Sentidos) é o OLS aplicado ao modelo~\eqref{eq:painel-geral}, tratando $\alpha_i$ e $\lambda_t$ como parâmetros a estimar. Há duas implementações algebricamente equivalentes.
+
+\paragraph{Implementação A: regressão com dummies.} Inclui-se uma dummy para cada unidade e cada período no modelo:
+\[
+Y_{it} = \sum_i \alpha_i \mathds{1}\{i\} + \sum_t \lambda_t \mathds{1}\{t\} + \beta D_{it} + \varepsilon_{it},
+\]
+e estima-se por OLS. Com $N$ unidades e $T$ períodos, isso significa $N + T - 1$ dummies (omite-se uma para evitar colinearidade). Em painéis grandes, a abordagem é computacionalmente custosa, embora pacotes modernos (\texttt{fixest} em R) implementem a fatoração de forma eficiente.
+
+\paragraph{Implementação B: \textit{within transformation}.} Define-se a transformação \textit{within} (de duplo desvio):
+\begin{equation}
+\ddot{Y}_{it} = Y_{it} - \bar{Y}_{i\cdot} - \bar{Y}_{\cdot t} + \bar{Y}_{\cdot\cdot},
+\label{eq:within}
+\end{equation}
+onde $\bar{Y}_{i\cdot} = \frac{1}{T} \sum_t Y_{it}$ é a média da unidade $i$ ao longo do tempo, $\bar{Y}_{\cdot t} = \frac{1}{N} \sum_i Y_{it}$ é a média do período $t$ entre unidades, e $\bar{Y}_{\cdot\cdot}$ é a grande média. Aplica-se a mesma transformação a $D_{it}$, obtendo $\ddot{D}_{it}$. O estimador TWFE é então o OLS de $\ddot{Y}_{it}$ em $\ddot{D}_{it}$:
+\begin{equation}
+\hat{\beta}_{TWFE} = \frac{\sum_{i,t} \ddot{D}_{it} \ddot{Y}_{it}}{\sum_{i,t} \ddot{D}_{it}^2}.
+\label{eq:twfe}
+\end{equation}
+
+A equivalência entre as duas implementações é uma consequência do teorema FWL (\textit{Frisch-Waugh-Lovell}): o coeficiente de $D_{it}$ na regressão completa é idêntico ao coeficiente de $\ddot{D}_{it}$ na regressão simples sobre os resíduos das dummies. A transformação within ``limpa'' $D_{it}$ de toda a variação explicada por $\alpha_i$ e $\lambda_t$, deixando apenas a variação que sobra após controlar por unidade e tempo.
+
+\subsection*{Os pesos do TWFE}
+
+A Equação~\eqref{eq:twfe} torna explícito o que o TWFE calcula: ele é o OLS aplicado à variação \textit{within} de $D_{it}$. Em particular, unidades que nunca mudam de status de tratamento (sempre tratadas ou nunca tratadas) contribuem zero para a estimativa, porque $\ddot{D}_{it} = 0$ para elas. A identificação vem inteiramente das unidades que \textit{mudam} de status.
+
+Quando $\beta$ é constante (efeito homogêneo), o TWFE estima esse $\beta$ comum. Quando $\beta$ varia entre unidades ou entre períodos --- por exemplo, $\beta_{it}$ ---, o TWFE estima uma média ponderada com pesos que dependem da variância \textit{within} de $D_{it}$ em cada combinação $(i, t)$. Essa ponderação é mecânica: ela vem da álgebra do OLS, não de uma escolha do pesquisador.
+
+A literatura recente sobre DiD mostra que, em desenhos com adoção escalonada (unidades entrando no tratamento em períodos diferentes), o TWFE pode atribuir \textit{pesos negativos} a alguns efeitos $\beta_{it}$. Isso ocorre porque unidades já tratadas funcionam, em períodos posteriores, como ``controles'' para unidades recém-tratadas --- e a comparação resultante pode produzir contribuições negativas. \citet{dechaisemartin2020} e \citet{goodmanbacon2021} fornecem decomposições explícitas. O Guia Clear de Diferenças em Diferenças trata o problema em profundidade; aqui, o ponto é registrar que o estimando do TWFE pode não ser o que se espera intuitivamente.
+
+\paragraph{Ancoragem empírica.} Considere a estimação do efeito do programa Mais Médicos sobre indicadores de saúde municipal usando dados de painel da Atenção Primária. O TWFE controla por características fixas dos municípios ($\alpha_i$: estrutura demográfica histórica, capacidade administrativa, densidade populacional pré-existente) e por choques anuais comuns ($\lambda_t$: mudanças no SUS, ciclo econômico nacional, pandemias). A identificação vem da comparação entre municípios que receberam o programa em momentos distintos --- e essa comparação carrega as armadilhas dos pesos do TWFE quando o efeito é heterogêneo entre coortes de adoção.
+
+\subsection{FD: First Differences}
+\label{subsubsec:fd}
+
+Uma alternativa ao TWFE é o estimador FD (\textit{First Differences} --- Primeiras Diferenças). Em vez de remover $\alpha_i$ pela transformação within, removemos pela diferenciação temporal. Subtraindo $Y_{i, t-1}$ de $Y_{it}$ no modelo~\eqref{eq:painel-geral}:
+\begin{equation}
+\Delta Y_{it} = \Delta \lambda_t + \beta \Delta D_{it} + \Delta \varepsilon_{it},
+\label{eq:fd}
+\end{equation}
+onde $\Delta Y_{it} = Y_{it} - Y_{i, t-1}$. O efeito fixo $\alpha_i$ desaparece por construção: $\alpha_i - \alpha_i = 0$. O estimador FD é o OLS aplicado à equação~\eqref{eq:fd}.
+
+Tanto o TWFE quanto o FD eliminam $\alpha_i$, mas usam variação \textit{diferente} dos dados para identificar $\beta$. O TWFE usa toda a variação within de $D_{it}$ ao longo dos $T$ períodos. O FD usa apenas a variação \textit{entre períodos adjacentes}.
+
+\subsection*{Comparação: TWFE vs. FD}
+
+\paragraph{Caso $T = 2$: equivalência.} Com apenas dois períodos, TWFE e FD são algebricamente idênticos. A demonstração é direta: com $T = 2$, $\bar{Y}_{i\cdot} = (Y_{i1} + Y_{i2})/2$, e a variação within é simplesmente $\pm \Delta Y_{it}/2$. O OLS within é o mesmo que o OLS na primeira diferença. Esse caso recupera o estimador DiD padrão.
+
+\paragraph{Caso $T > 2$: divergência.} Com mais períodos, os dois estimadores diferem porque usam ponderações diferentes da variação temporal. A escolha entre eles depende da estrutura de correlação serial dos erros:
+\begin{itemize}
+  \item Se $\varepsilon_{it}$ é i.i.d. (sem correlação serial), o TWFE é mais eficiente. A transformação within não introduz correlação espúria, e usa toda a variação within.
+  \item Se $\varepsilon_{it}$ segue um \textit{random walk} (passeio aleatório), $\Delta \varepsilon_{it}$ é i.i.d. --- e, portanto, o FD é mais eficiente. A diferenciação ``estabiliza'' os erros.
+\end{itemize}
+
+Essa diferença pode ser explorada como diagnóstico. Se TWFE e FD produzem estimativas substantivamente diferentes em uma aplicação, vale investigar duas possibilidades: (i) o modelo está mal especificado (forma funcional errada, tendências paralelas violadas, efeitos heterogêneos no tempo); ou (ii) a estrutura de correlação serial dos erros é tal que um dos dois estimadores é mais apropriado. A divergência não é, por si, evidência de problema --- mas é um sinal que merece investigação.
+
+\begin{lstlisting}[caption={Estimadores TWFE e FD em painel.}, label={lst:painel}]
+# -----------------------------
+# 1) Configuração
+# -----------------------------
+rm(list = ls())
+set.seed(2026)
+library(tidyverse)
+library(fixest)
+
+# -----------------------------
+# 2) Simulação de painel (N = 200, T = 5)
+# -----------------------------
+N <- 200; T <- 5
+painel <- expand_grid(i = 1:N, t = 1:T) %>%
+  mutate(alpha_i = rep(rnorm(N, sd = 1), each = T),
+         lambda_t = rep(0.2 * (1:T), times = N),
+         D_it = ifelse(t >= 3 & i <= 100, 1, 0),
+         eps  = rnorm(N * T, sd = 1),
+         Y    = alpha_i + lambda_t + 3 * D_it + eps)  # efeito = 3
+
+# -----------------------------
+# 3) TWFE via fixest
+# -----------------------------
+twfe <- feols(Y ~ D_it | i + t, data = painel)
+coef(twfe)         # ~ 3
+
+# -----------------------------
+# 4) FD: primeira diferença
+# -----------------------------
+painel_fd <- painel %>%
+  arrange(i, t) %>%
+  group_by(i) %>%
+  mutate(dY = Y - lag(Y),
+         dD = D_it - lag(D_it),
+         dt = t) %>%
+  ungroup() %>%
+  filter(!is.na(dY))
+
+fd <- feols(dY ~ dD | dt, data = painel_fd)
+coef(fd)           # ~ 3
+\end{lstlisting}
+
+Em painéis com adoção homogênea e efeito constante --- como neste exemplo --- TWFE e FD entregam estimativas similares. Em desenhos escalonados com efeitos heterogêneos, a divergência pode ser substancial e indicativa de problemas no estimando. O Guia Clear de DiD é a referência para esse diagnóstico.
+
+
+% =============================================================================
+\section{Estimador de Lin}
+\label{subsec:lin}
+
+A discussão até aqui abordou três contextos: estimação por plug-in em geral, alternativas ao OLS quando a forma funcional importa (IPW), e estimação em painel. A última subseção desta seção trata de um problema mais específico, mas extremamente comum na avaliação experimental: em um RCT, como incorporar covariadas pré-tratamento para ganhar precisão sem introduzir viés?
+
+\subsection*{O problema}
+
+Em um experimento aleatorizado, a hipótese de exogeneidade $E[\varepsilon_i \mid D_i] = 0$ é garantida por desenho. Em particular, a regressão simples $Y_i = \alpha + \tau D_i + \varepsilon_i$ identifica o ATE sem qualquer hipótese funcional adicional --- a aleatorização cuida de tudo. O estimador OLS sem covariadas é não viesado para o ATE em amostras finitas (sob aleatorização) e consistente.
+
+Mas há, tipicamente, covariadas $W_i$ medidas \textit{antes} do tratamento --- características demográficas, valores pré-experimentais do resultado, indicadores de qualidade institucional. Incluir $W_i$ na regressão pode reduzir a variância residual e estreitar os intervalos de confiança, aumentando o poder estatístico. A pergunta é: \textit{qual é a forma certa de incluir $W$?}
+
+A resposta intuitiva é a regressão linear:
+\begin{equation}
+Y_i = \alpha + \tau D_i + \gamma' W_i + \varepsilon_i.
+\label{eq:ols-com-w}
+\end{equation}
+Essa especificação tem um problema sutil. Ela impõe que o coeficiente de $W_i$ é o \textit{mesmo} para tratados e controles. Em amostras finitas, isso pode introduzir um pequeno viés se a relação verdadeira entre $W$ e $Y$ diferir entre os dois grupos (ainda que a aleatorização garanta que $W$ tenha a mesma distribuição entre tratados e controles em expectativa). \citet{freedman2008} demonstrou esse viés analiticamente e mostrou que, em alguns casos, a inclusão ``ingênua'' de covariadas pode \textit{piorar} a precisão em vez de melhorá-la.
+
+\subsection*{A solução de Lin}
+
+\citet{Lin2013} propôs uma correção simples: incluir as covariadas \textit{centradas} (subtraídas da média amostral) e também a interação dessas covariadas centradas com o tratamento:
+\begin{equation}
+Y_i = \alpha + \tau D_i + \gamma' (W_i - \bar{W}) + \delta' D_i (W_i - \bar{W}) + \varepsilon_i.
+\label{eq:lin}
+\end{equation}
+
+O coeficiente $\tau$ desta regressão é o estimador de Lin do ATE. A inclusão da interação $D_i \cdot (W_i - \bar{W})$ permite que o coeficiente das covariadas seja \textit{diferente} para tratados e controles. A centragem de $W$ na média amostral garante que o coeficiente $\tau$ tenha interpretação direta como o efeito médio do tratamento.
+
+\paragraph{Equivalência com OLS por grupo.} O estimador de Lin é algebricamente equivalente a estimar separadamente um modelo linear de $Y$ em $W$ no grupo tratado e no grupo controle, e em seguida tomar a diferença das predições na média da amostra. Essa equivalência é uma aplicação direta do FWL: a interação faz com que cada grupo ``decida'' sua própria relação entre $W$ e $Y$, sem ser forçado a uma inclinação comum.
+
+\subsection*{Propriedades}
+
+O estimador de Lin tem três propriedades que o tornam atraente em RCTs:
+
+\begin{enumerate}
+  \item \textbf{Não viesado em amostras finitas} (sob aleatorização). A centragem de $W$ na média amostral garante que o viés introduzido pela inclusão de covariadas em amostras finitas seja eliminado.
+
+  \item \textbf{Assintoticamente ao menos tão eficiente quanto OLS sem covariadas.} Lin mostrou que a variância assintótica de $\hat{\tau}_{Lin}$ é menor ou igual à de $\hat{\tau}_{OLS\text{-sem-}W}$, com igualdade quando $W$ é não-correlacionado com $Y$.
+
+  \item \textbf{Assintoticamente ao menos tão eficiente quanto OLS com covariadas sem interação.} Quando a relação entre $W$ e $Y$ difere entre tratados e controles, Lin é estritamente mais eficiente. Quando não difere, as duas variâncias coincidem.
+\end{enumerate}
+
+A combinação dessas propriedades é poderosa: \textit{em RCTs, o estimador de Lin nunca piora em relação ao OLS simples, e tipicamente melhora}. O custo computacional adicional é trivial.
+
+\subsection*{Quando usar Lin vs. OLS simples}
+
+A recomendação prática é direta:
+\begin{itemize}
+  \item \textbf{Sempre que houver covariadas pré-tratamento medidas em um RCT}, considere Lin como padrão.
+  \item O ganho de precisão é maior quando as covariadas têm \textit{alta correlação} com $Y$. Se as covariadas explicam pouco da variação no resultado, o ganho é marginal --- mas o custo continua sendo zero.
+  \item Em desenhos quase-experimentais (DiD, RDD, IV), a lógica de Lin não se aplica diretamente, porque a aleatorização não garante a propriedade de não-viesamento em amostras finitas. Lin é uma ferramenta \textit{para experimentos}.
+\end{itemize}
+
+\paragraph{Ancoragem empírica.} Suponha que avaliamos uma intervenção experimental na rede pública de educação --- um piloto de aulas suplementares de matemática alocado por sorteio entre $300$ escolas. O resultado $Y$ é a nota média da escola na Prova Brasil. As covariadas pré-tratamento $W$ incluem o NSE (Nível Socioeconômico) médio dos alunos, a infraestrutura da escola (índice INEP), e a nota da escola na Prova Brasil do ciclo anterior. Essa última, em particular, costuma ter altíssima correlação com a nota futura --- tipicamente $\rho > 0{,}8$. Incorporando-a via Lin (em vez de OLS sem covariadas), o erro-padrão do efeito do programa pode cair em ordens substanciais, sem qualquer ameaça à validade causal.
+
+\begin{lstlisting}[caption={Estimador de Lin em um RCT.}, label={lst:lin}]
+# -----------------------------
+# 1) Configuração
+# -----------------------------
+rm(list = ls())
+set.seed(2026)
+library(tidyverse)
+library(estimatr)
+
+# -----------------------------
+# 2) Simulação de RCT (n = 500, efeito = 5)
+# -----------------------------
+n <- 500
+W <- rnorm(n, mean = 50, sd = 10)
+D <- rbinom(n, 1, 0.5)                          # aleatorização
+Y0 <- 0.7 * W + rnorm(n, sd = 5)                # alta correlação entre W e Y
+Y1 <- Y0 + 5 + 0.3 * (W - mean(W))              # efeito heterogêneo em W
+Y  <- D * Y1 + (1 - D) * Y0
+dados <- tibble(Y = Y, D = D, W = W)
+
+# -----------------------------
+# 3) OLS sem covariadas
+# -----------------------------
+ols_sem_w <- lm_robust(Y ~ D, data = dados)
+coef(ols_sem_w)["D"]
+ols_sem_w$std.error[2]
+
+# -----------------------------
+# 4) OLS com covariada (sem interação)
+# -----------------------------
+ols_com_w <- lm_robust(Y ~ D + W, data = dados)
+coef(ols_com_w)["D"]
+ols_com_w$std.error[2]
+
+# -----------------------------
+# 5) Estimador de Lin: covariada centrada + interação
+# -----------------------------
+dados$Wc <- dados$W - mean(dados$W)
+lin <- lm_robust(Y ~ D + Wc + D:Wc, data = dados)
+coef(lin)["D"]
+lin$std.error[2]
+\end{lstlisting}
+
+Em uma execução típica deste código, o erro-padrão de $\hat{\tau}_{Lin}$ é substancialmente menor do que o de $\hat{\tau}_{OLS\text{-sem-}W}$ --- frequentemente em $40\%$ a $60\%$, dado o alto $\rho$ entre $W$ e $Y$. O estimador é tão simples quanto o OLS, e a única diferença operacional é a centragem da covariada e a inclusão do termo de interação.
+
+% =============================================================================
+\section*{Encerramento da Seção}
+\addcontentsline{toc}{section}{Encerramento da Seção}
+
+Esta seção tratou da passagem do estimando para o estimador. Começamos pela definição da amostra e pelo princípio plug-in, que unifica OLS, diferença de médias, IV e IPW sob um único raciocínio: substituir a distribuição populacional pela distribuição empírica. Em seguida, organizamos os critérios de escolha entre estimadores --- consistência, viés, eficiência --- e identificamos o trade-off central entre eficiência e robustez.
+
+A discussão sobre forma funcional mostrou que identificação não é suficiente para garantir que o estimador acerte o estimando. Mesmo com CIA válida, OLS pode calcular uma média ponderada com pesos que não correspondem aos da população alvo da política. O IPW oferece uma alternativa baseada em modelar a probabilidade de tratamento em vez do resultado, com vantagens em robustez funcional e custos em sensibilidade ao propensity score. O AIPW combina os dois e oferece dupla robustez.
+
+A estimação em painel introduziu a possibilidade de controlar por características fixas não observadas das unidades. O TWFE e o FD são duas implementações que diferem na forma como exploram a variação temporal, com propriedades distintas em amostras finitas e em desenhos com adoção escalonada. O estimador de Lin, por fim, ofereceu uma resposta específica para o problema da incorporação de covariadas em RCTs: uma modificação simples ao OLS que preserva o não-viesamento da aleatorização e tipicamente melhora a precisão.
+
+A próxima seção --- Inferência --- aborda o último elo da cadeia: dado que temos um estimador $\hat{\theta}$, como quantificar a incerteza amostral em torno dele? Erros-padrão, intervalos de confiança, testes de hipótese e cuidados com clustering e correlação serial são os temas dessa discussão. A linha que percorre todas as seções é a mesma: parâmetro econômico $\to$ estimando $\to$ estimador $\to$ incerteza. Cada etapa exige hipóteses distintas e cada hipótese precisa ser defendida.
+
+% =============================================================================
+% Fim da Seção 3
+% =============================================================================

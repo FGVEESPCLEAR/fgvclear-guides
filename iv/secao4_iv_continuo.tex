@@ -1,0 +1,128 @@
+% =============================================================================
+% Capítulo 4 — X e Z contínuos: 2SLS e shift-share
+% Guia CLEAR de Variáveis Instrumentais — FGV EESP CLEAR
+% =============================================================================
+
+\chapter{Tratamento e instrumento contínuos}
+\label{cap:iv_continuo}
+
+Nos capítulos anteriores, o tratamento era binário: a pessoa participava ou não do programa. Mas muitas das perguntas mais importantes em economia aplicada envolvem tratamentos contínuos. Quanto crédito uma firma recebeu? Quantos anos de escolaridade uma pessoa tem? Qual é o nível de poluição em um município? Qual foi o valor das transferências federais para uma prefeitura? Nesses casos, tanto o tratamento $X$ quanto o instrumento $Z$ são variáveis contínuas, e o estimador natural é o 2SLS (\textit{two-stage least squares}, mínimos quadrados em dois estágios).
+
+O 2SLS é um método poderoso e amplamente usado. Mas ele carrega uma limitação que é fácil de ignorar: quando os efeitos do tratamento são heterogêneos (e eles quase sempre são), o coeficiente estimado pelo 2SLS não tem necessariamente a interpretação causal simples que gostaríamos. Este capítulo explica quando o 2SLS funciona bem, quando ele pode dar um resultado difícil de interpretar, e como pensar em uma classe importante de instrumentos contínuos: os instrumentos \textit{shift-share}.
+
+% =============================================================================
+\section{O 2SLS: intuição e lógica}
+\label{sec:2sls}
+
+A intuição do 2SLS é a mesma do estimador de Wald, generalizada para o caso contínuo. O problema com o MQO é que a variação em $X$ que observamos nos dados mistura uma parte "contaminada" (correlacionada com os fatores não observados que afetam $Y$) com uma parte "limpa" (genuinamente exógena). O 2SLS isola a parte limpa usando o instrumento.
+
+O procedimento tem dois estágios. No \textbf{primeiro estágio}, estima-se como o instrumento $Z$ afeta o tratamento $X$: regride-se $X$ sobre $Z$ (e controles), obtendo os valores ajustados $\widehat{X}$, a parte de $X$ que é explicada pelo instrumento. No \textbf{segundo estágio}, estima-se o efeito de $X$ sobre $Y$, mas usando $\widehat{X}$ no lugar de $X$: como $\widehat{X}$ é construído apenas a partir de $Z$ (que é exógeno), ele não está correlacionado com os erros não observados.
+
+\begin{exemplobox}[O 2SLS com crédito e investimento]
+Suponha que você quer estimar o efeito do volume de crédito ($X$) sobre o investimento das firmas ($Y$). O problema é que firmas mais dinâmicas tomam mais crédito \textit{e} investem mais, o que é endogeneidade clássica. Como instrumento, você usa a variação na oferta de crédito induzida por choques na política monetária ($Z$): quando o Banco Central reduz os juros, o crédito fica mais barato e as firmas tomam mais emprestado.
+
+Primeiro estágio: regride volume de crédito sobre a variação nos juros. Obtém $\widehat{X}$, a parte do crédito que variou por causa da política monetária e não por causa das características próprias das firmas.
+
+Segundo estágio: regride investimento sobre $\widehat{X}$. O coeficiente estima o efeito de um real adicional de crédito (induzido pela política monetária) sobre o investimento.
+\end{exemplobox}
+
+No modelo em que o efeito de $X$ sobre $Y$ é o mesmo para todo mundo (efeito constante $\beta$), o 2SLS estima $\beta$ de forma consistente. A lógica é exatamente análoga ao caso binário: o instrumento cria variação exógena em $X$, e usamos essa variação para identificar o efeito causal.
+
+% =============================================================================
+\section{O problema com efeitos heterogêneos}
+\label{sec:heterogeneidade_continuo}
+
+Na prática, o efeito do tratamento raramente é constante. O efeito de um real adicional de crédito sobre o investimento provavelmente é diferente para uma microempresa com projetos altamente rentáveis e para uma grande empresa que já tem acesso fácil a outras fontes de financiamento. O efeito de um ano adicional de escolaridade sobre o salário varia com a habilidade do estudante, o setor em que vai trabalhar e as condições do mercado. O efeito de poluição sobre saúde varia com o nível inicial de exposição e a vulnerabilidade da população.
+
+Quando os efeitos são heterogêneos, o coeficiente 2SLS deixa de ser uma média simples dos efeitos individuais. Ele se torna uma \textit{média ponderada} dos efeitos locais, onde os pesos dependem de como o instrumento move o tratamento para diferentes subgrupos. Indivíduos (ou firmas, municípios) que respondem mais ao instrumento, cuja variação em $X$ é mais sensível ao instrumento, recebem mais peso.
+
+Isso pode parecer razoável à primeira vista: dar mais peso a quem responde mais ao instrumento parece natural. O problema é que esses pesos não são necessariamente positivos, e podem variar de formas que tornam a interpretação do coeficiente muito difícil.
+
+\citet{MogstadTorgovitskyWalters2021} formalizam esse ponto: com múltiplos instrumentos ou um instrumento contínuo, o coeficiente 2SLS pode ser uma combinação de efeitos com pesos que não somam a um e que podem até ser negativos para alguns grupos. Em casos extremos, o coeficiente estimado pode estar fora do intervalo dos efeitos individuais plausíveis, ou seja, é um número que não corresponde ao efeito para nenhum grupo específico de indivíduos.
+
+\begin{atencaobox}[Instrumento válido não é suficiente quando os efeitos são heterogêneos]
+Ter um instrumento válido (exógeno, relevante, com exclusão satisfeita) é necessário mas não suficiente para garantir que o coeficiente 2SLS tem uma interpretação causal clara. Quando o efeito do tratamento varia entre indivíduos e o instrumento afeta grupos diferentes de forma diferente, o coeficiente 2SLS pode ser uma média ponderada com pesos difíceis de interpretar. O pesquisador precisa ser explícito sobre quem são os grupos afetados pelo instrumento e se a média ponderada que o 2SLS computa é economicamente significativa.
+\end{atencaobox}
+
+% =============================================================================
+\section{Instrumentos shift-share}
+\label{sec:shiftshare}
+
+Entre os instrumentos contínuos mais amplamente utilizados na economia aplicada estão os chamados instrumentos \textit{shift-share}, ou instrumentos Bartik. Eles apareceram inicialmente no trabalho de \citet{Bartik1991} para estimar o efeito de choques de demanda de trabalho sobre salários e emprego locais, e desde então foram adaptados para dezenas de aplicações: efeito de importações sobre emprego, efeito de migração sobre salários, efeito de crédito sobre investimento municipal, efeito de gastos públicos sobre crescimento local, entre muitos outros.
+
+A intuição do shift-share é simples e poderosa: diferentes regiões têm diferentes composições setoriais, e portanto são afetadas de formas diferentes por choques econômicos que ocorrem no nível nacional ou global. Uma região especializada em manufatura é mais afetada por uma recessão no setor industrial do que uma região especializada em serviços. Uma região exportadora de commodities agrícolas é mais afetada por uma variação nos preços internacionais de alimentos do que uma região industrial. Essa variação na exposição ao choque (que depende da composição histórica da região e não de suas escolhas recentes) é o que o instrumento shift-share captura.
+
+\subsection*{Como se constrói um shift-share}
+
+O instrumento é construído como uma soma ponderada de choques setoriais, usando as participações (\textit{shares}) de cada setor na economia local como pesos:
+\begin{equation}
+Z_i = \sum_{k} s_{ik} \cdot g_k
+\label{eq:shiftshare}
+\end{equation}
+onde $s_{ik}$ é a participação do setor $k$ na economia da região $i$ em um período base (tipicamente anterior ao período de análise), e $g_k$ é o crescimento nacional (ou global) do setor $k$ durante o período de análise.
+
+O resultado é um índice que prediz como a economia da região $i$ teria crescido se cada setor crescesse à taxa nacional, dado o mix setorial inicial da região. Regiões com alta participação em setores que cresceram recebem um "choque positivo"; regiões com alta participação em setores que encolheram recebem um "choque negativo".
+
+\begin{exemplobox}[O China Shock]
+\citet{AutorDornHanson2013} usaram um instrumento shift-share para estimar o efeito da concorrência de importações chinesas sobre o mercado de trabalho americano. Para cada commuting zone (área metropolitana) $i$:
+
+\begin{itemize}[leftmargin=*]
+  \item $s_{ik}$: participação do setor de manufatura $k$ no emprego inicial da região (medida em 1990, antes do período de análise).
+  \item $g_k$: crescimento das importações americanas provenientes da China no setor $k$ entre 1990 e 2007.
+\end{itemize}
+
+O instrumento $Z_i = \sum_k s_{ik} \cdot g_k$ mede a "exposição" de cada região ao choque chinês dado seu mix industrial inicial. Regiões especializadas em setores como têxtil, calçados e eletrônicos foram muito mais expostas do que regiões especializadas em outros setores.
+
+Para garantir que o instrumento é exógeno, ou seja, que os choques setoriais são exógenos às regiões americanas, os autores usaram como $g_k$ as importações de outros países desenvolvidos (não dos EUA) provenientes da China. O argumento é que o crescimento das importações de outros países do mesmo setor reflete mudanças na competitividade chinesa global, e não demanda ou condições específicas das regiões americanas.
+\end{exemplobox}
+
+\subsection*{De onde vem a identificação?}
+
+Uma pergunta fundamental sobre shift-share é: a variação que identifica o efeito vem dos choques $g_k$ ou das shares $s_{ik}$?
+
+Essa questão foi aprofundada por dois papers importantes que chegaram a perspectivas complementares. \citet{GoldsmithPinkhamSorkinSwift2020} mostraram que, do ponto de vista das shares, o instrumento shift-share pode ser decomposto em um conjunto de instrumentos individuais, um para cada setor. O coeficiente 2SLS é uma média ponderada dos coeficientes IV setor a setor, onde o peso de cada setor depende de quão variável é sua share entre regiões. Setores com maior variância nas shares têm mais peso. A hipótese de identificação, nessa perspectiva, é que as shares iniciais são exógenas, ou seja, a composição setorial histórica não está correlacionada com as tendências futuras nos resultados.
+
+\citet{BorusyakHullJaravel2022} adotaram uma perspectiva diferente, focando na exogeneidade dos choques. Nessa visão, as shares são apenas pesos fixos que determinam como o choque se transmite para cada região. O que precisa ser exógeno são os choques setoriais $g_k$, ou seja, o crescimento nacional em cada setor não pode ser correlacionado com tendências específicas das regiões que têm alta participação nesse setor.
+
+Na prática, a distinção importa porque gera estratégias de robustez diferentes. Se a identificação vem das shares, você deve verificar que a composição setorial histórica não prediz tendências nos resultados na ausência dos choques. Se vem dos choques, você deve verificar que os choques setoriais não estão correlacionados com outras variáveis que afetam o resultado das regiões mais expostas.
+
+\subsection*{Um problema de interpretação}
+
+Como discutimos na seção anterior, quando o efeito do tratamento é heterogêneo, o coeficiente 2SLS é uma média ponderada de efeitos locais. No contexto shift-share, essa heterogeneidade tem uma dimensão adicional: os pesos dependem de quais setores têm maior variância nas shares e de quais choques são maiores.
+
+Num instrumento shift-share com 20 setores, a estimativa pode ser dominada por 2 ou 3 setores que têm shares muito variáveis entre regiões (como mineração e têxtil). O coeficiente 2SLS então reflete principalmente o que acontece em regiões muito expostas a esses setores específicos, que podem ter características bem distintas das demais. O "efeito médio" estimado pode não ser representativo de regiões com composição setorial mais diversificada.
+
+\subsection*{Inferência em shift-share}
+
+Há outro problema prático com shift-share: a inferência padrão costuma estar errada. Como muitas regiões compartilham os mesmos choques $g_k$, os erros nas regressões de diferentes regiões são correlacionados entre si de uma forma que não é capturada por erros padrão simples nem mesmo por clusterização no nível da região.
+
+\citet{AdaoKolesarMorales2019} desenvolveram procedimentos de inferência específicos para shift-share que levam em conta essa estrutura de correlação. Erros padrão calculados sem esses procedimentos podem ser muito menores do que deveriam, levando a falsas conclusões sobre a precisão das estimativas.
+
+\begin{atencaobox}[Erros padrão em shift-share precisam de tratamento especial]
+Clusterizar pelo setor ou pela região não resolve o problema de inferência em instrumentos shift-share. Os procedimentos de \citet{AdaoKolesarMorales2019} ou os de \citet{BorusyakHullJaravel2022} devem ser usados. Artigos que apresentam resultados com shift-share mas sem discutir a inferência adequada merecem ceticismo extra sobre os valores-p reportados.
+\end{atencaobox}
+
+\subsection*{Perguntas para avaliar um shift-share}
+
+Ao encontrar (ou construir) um instrumento shift-share, seis perguntas ajudam a avaliar sua validade e a interpretação do coeficiente estimado:
+
+\textbf{1. De onde vem a variação exógena?} A identificação vem principalmente dos choques ou das shares? O argumento deve ser explícito sobre qual dos dois é o veículo de exogeneidade.
+
+\textbf{2. Os choques são exógenos às regiões?} Um choque nacional em manufatura é exógeno a uma única cidade, mas pode não ser exógeno a regiões que são grandes o suficiente para influenciar o mercado nacional. Quanto maior a unidade, mais difícil é defender a exogeneidade dos choques.
+
+\textbf{3. As shares iniciais são pré-determinadas?} A composição setorial medida em 1990 não deve ser correlacionada com tendências nos resultados que ocorrem nos anos 2000. Regiões que já apresentavam crescimento diferencial em 1990 (por razões que persistem) criariam um problema de endogeneidade nas shares.
+
+\textbf{4. Existe algum canal além do tratamento?} A restrição de exclusão exige que os choques setoriais afetem o resultado apenas através do canal de tratamento que está sendo instrumentado. Se o choque de importações chinesas afeta o resultado via emprego \textit{e} via renda dos consumidores, o instrumento está violando a exclusão se você só controlar pelo emprego.
+
+\textbf{5. Que regiões (ou setores) estão dominando os pesos?} O coeficiente 2SLS é dominado pelas regiões com maior variação no instrumento. Identificar essas regiões ajuda a entender para quem o efeito está sendo estimado.
+
+\textbf{6. A inferência usa os procedimentos corretos?} Verificar se os erros padrão levam em conta a correlação induzida pelos choques compartilhados.
+
+\begin{notabox}[Pontos-chave do capítulo]
+\begin{itemize}[leftmargin=*]
+  \item No modelo com efeito constante, o 2SLS estima o efeito causal de forma consistente. Com efeitos heterogêneos, o coeficiente é uma média ponderada de efeitos locais, com pesos que dependem do instrumento.
+  \item Instrumentos shift-share constroem uma medida de exposição local a choques exógenos com base na composição setorial histórica. A identificação pode vir dos choques (exogeneidade dos $g_k$) ou das shares (exogeneidade das $s_{ik}$): as hipóteses são diferentes e levam a estratégias de robustez diferentes.
+  \item O coeficiente 2SLS com shift-share é uma média ponderada de efeitos setor a setor, com maior peso para setores com shares mais variáveis. O resultado pode não ser representativo de todos os setores ou regiões.
+  \item Inferência em shift-share requer procedimentos específicos. Erros padrão convencionais são geralmente muito pequenos.
+\end{itemize}
+\end{notabox}

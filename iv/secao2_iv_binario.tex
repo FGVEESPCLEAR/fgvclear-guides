@@ -1,0 +1,211 @@
+% =============================================================================
+% Capítulo 2 — IV com tratamento e instrumento binários
+% Guia CLEAR de Variáveis Instrumentais — FGV EESP CLEAR
+% =============================================================================
+
+\chapter{Quando tudo é binário: o caso mais simples}
+\label{cap:iv_binario}
+
+O melhor ponto de partida para entender variáveis instrumentais é o caso em que tanto o tratamento quanto o instrumento são binários: cada um assume apenas os valores zero e um. Esse caso não é artificial: ele descreve situações muito comuns. Um estudante frequenta ou não um programa de reforço escolar. Uma família recebe ou não uma transferência de renda. Uma empresa acessa ou não uma linha de crédito subsidiado. E o instrumento pode ser: ganhou ou não ganhou a loteria; mora ou não mora no município-piloto; nasceu antes ou depois do corte que define a elegibilidade.
+
+Quando tratamento e instrumento são ambos binários, conseguimos ver com clareza o que IV identifica e por quê, sem precisar de nenhuma matemática sofisticada. A lógica inteira pode ser entendida a partir de quatro grupos de pessoas e uma divisão simples.
+
+Vamos usar o mesmo exemplo ao longo de todo este capítulo: um programa de qualificação profissional cujas vagas são distribuídas por sorteio. O instrumento $Z$ vale 1 se a pessoa ganhou a loteria e 0 se não ganhou. O tratamento $X$ vale 1 se a pessoa efetivamente frequentou o curso e 0 se não frequentou. O resultado $Y$ é o salário mensal dois anos após o sorteio.
+
+% =============================================================================
+\section{Resultados potenciais: o que queremos medir}
+\label{sec:potenciais_binario}
+
+O Guia de Inferência Causal introduziu a linguagem dos \textit{resultados potenciais}. A ideia é que cada pessoa tem dois resultados possíveis: $Y_i(1)$, o salário que ela teria se frequentasse o curso, e $Y_i(0)$, o salário que ela teria se não frequentasse. O efeito causal do curso para a pessoa $i$ é simplesmente $Y_i(1) - Y_i(0)$. O problema é que observamos apenas um dos dois, o que corresponde ao que ela de fato fez.
+
+Com o instrumento, precisamos acrescentar mais uma camada de resultados potenciais: agora temos também dois \textit{comportamentos potenciais de tratamento}. $X_i(1)$ é a decisão que a pessoa tomaria em relação ao curso \textit{se tivesse ganhado a loteria}, e $X_i(0)$ é a decisão que tomaria \textit{se não tivesse ganhado}. A lógica é análoga: observamos apenas o comportamento correspondente ao resultado real da loteria.
+
+Essa notação parece complicada mas captura algo simples. Para a maioria das pessoas, podemos imaginar:
+
+\begin{itemize}[leftmargin=*]
+  \item Há quem frequentaria o curso independentemente de ter ganhado a vaga ou não, talvez por ter encontrado outra forma de entrar, ou por ter determinação suficiente. Para essas pessoas, $X_i(1) = 1$ e $X_i(0) = 1$.
+  \item Há quem não frequentaria o curso de jeito nenhum, nem com a vaga, nem sem ela. Para essas pessoas, $X_i(1) = 0$ e $X_i(0) = 0$.
+  \item E há quem frequentaria \textit{apenas} se tivesse ganhado a vaga. Para essas pessoas, $X_i(1) = 1$ e $X_i(0) = 0$.
+\end{itemize}
+
+Esses três grupos têm nomes na literatura, e identificá-los é fundamental para entender o que IV estima.
+
+% =============================================================================
+\section{Os quatro tipos de pessoas}
+\label{sec:tipos}
+
+Com base no comportamento potencial de cada indivíduo em relação ao instrumento, podemos classificar toda a população em quatro grupos.
+
+Os \textbf{compliers} são as pessoas para quem $X_i(1) = 1$ e $X_i(0) = 0$: frequentariam o curso se ganhassem a vaga, mas não frequentariam sem ela. O instrumento muda o comportamento delas. São elas que criam a variação exógena em $X$ que o estimador de IV vai explorar.
+
+Os \textbf{always-takers} são as pessoas com $X_i(1) = 1$ e $X_i(0) = 1$: frequentariam o curso independentemente do sorteio. Talvez tenham encontrado outra vaga, conhecem alguém no programa, ou têm determinação suficiente para buscar alternativas. Como o sorteio não muda o comportamento delas, elas não contribuem para a estimativa de IV.
+
+Os \textbf{never-takers} são as pessoas com $X_i(1) = 0$ e $X_i(0) = 0$: não frequentariam o curso de jeito nenhum. Talvez tenham um emprego que não podem deixar, tenham problemas de transporte, ou simplesmente não estejam interessadas. Mesmo ganhando a vaga, não iriam. Como o sorteio também não muda o comportamento delas, elas igualmente não contribuem para a estimativa de IV.
+
+Os \textbf{defiers} seriam pessoas com $X_i(1) = 0$ e $X_i(0) = 1$: frequentariam o curso se \textit{não} ganhassem a vaga, mas desistiriam se ganhassem. Isso parece paradoxal, e na maioria dos contextos práticos é de fato implausível. A hipótese de \textit{monotonicidade}, que discutimos a seguir, assume que defiers não existem.
+
+\begin{exemplobox}[Quem é quem na loteria de capacitação]
+Num programa de requalificação com 1.000 candidatos que participaram do sorteio, uma distribuição típica poderia ser:
+
+\begin{center}
+\resizebox{0.8\textwidth}{!}{%
+\begin{tabular}{lcc}
+\toprule
+Grupo & Comportamento & Fração aproximada \\
+\midrule
+Always-takers & Vão ao curso com ou sem vaga & 10\% \\
+Compliers     & Vão apenas se ganharem a vaga & 45\% \\
+Never-takers  & Não vão de jeito nenhum       & 45\% \\
+Defiers       & (excluídos pela monotonicidade) & 0\% \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+Nesse exemplo, 55\% dos sorteados frequentariam o curso (always-takers + compliers), e 10\% dos não sorteados também frequentariam (apenas always-takers). A diferença, 45\%, é a proporção de compliers na amostra.
+\end{exemplobox}
+
+% =============================================================================
+\section{As hipóteses de identificação}
+\label{sec:hipoteses_binario}
+
+Para que o instrumento identifique um efeito causal interpretável, quatro hipóteses precisam ser satisfeitas. Apresentamos cada uma com sua intuição e uma discussão de quando ela pode falhar.
+
+\begin{hipotesebox}[Hipótese 1: Independência do instrumento]
+O instrumento $Z$ é independente dos resultados potenciais e dos comportamentos potenciais de tratamento. Em símbolo: $(Y(0), Y(1), X(0), X(1)) \indep Z$.
+
+\textbf{Intuição.} Quem ganhou e quem não ganhou a loteria são, em média, idênticos em todas as características que afetam salário e participação no curso. O sorteio não "sabe" quem é mais motivado, quem tem mais habilidade ou quem tem família mais rica.
+
+\textbf{Quando pode falhar.} Se o sorteio não foi genuinamente aleatório, ou se houve manipulação posterior dos resultados. Também falha se a loteria foi feita após alguma triagem que selecionou os candidatos de forma não aleatória, e a comparação que importa é entre candidatos sorteados e não-sorteados dentro de grupos diferentes.
+\end{hipotesebox}
+
+\begin{hipotesebox}[Hipótese 2: Relevância do instrumento]
+O instrumento precisa afetar o tratamento. Formalmente, $\E[X_i(1)] \neq \E[X_i(0)]$: a taxa de participação no curso é diferente entre quem ganhou e quem não ganhou a vaga.
+
+\textbf{Intuição.} Se o sorteio não mudasse a decisão de ninguém, não haveria variação exógena em $X$ para explorar. O instrumento seria inútil. Essa condição é facilmente testável: basta verificar se a taxa de frequência ao curso é maior entre os sorteados.
+
+\textbf{Quando pode falhar.} Se o programa tem alternativas abundantes e fáceis de acessar, as pessoas que não ganharam a vaga encontram outros caminhos e a taxa de frequência acaba sendo parecida nos dois grupos. Um primeiro estágio muito fraco é quase tão ruim quanto nenhum primeiro estágio.
+\end{hipotesebox}
+
+\begin{hipotesebox}[Hipótese 3: Restrição de exclusão]
+O instrumento afeta o resultado $Y$ apenas através do tratamento $X$. Ganhar a loteria só afeta o salário futuro na medida em que aumenta a probabilidade de frequentar o curso.
+
+\textbf{Intuição.} Se o simples fato de ter sido sorteado sinalizasse algo para o mercado de trabalho, digamos, que a pessoa "é do tipo que se candidatou a um programa de capacitação", então ganhar a loteria afetaria o salário independentemente de frequentar o curso. Isso violaria a exclusão.
+
+\textbf{Quando pode falhar.} A restrição de exclusão é a hipótese mais difícil de defender, porque não é testável diretamente. Em muitos contextos, o instrumento pode afetar $Y$ por múltiplos canais além do tratamento de interesse. Por exemplo, distância até uma faculdade pode afetar renda futura não apenas pela educação, mas também porque regiões com faculdades têm mercados de trabalho mais densos.
+\end{hipotesebox}
+
+\begin{hipotesebox}[Hipótese 4: Monotonicidade]
+O instrumento move o tratamento na mesma direção para todos os indivíduos. No nosso caso: ganhar a vaga nunca \textit{reduz} a probabilidade de frequentar o curso para ninguém. Formalmente, $X_i(1) \geq X_i(0)$ para todos $i$.
+
+\textbf{Intuição.} Não existe ninguém que frequentaria o curso se não tivesse ganhado a vaga, mas desistiria se ganhasse. Isso é quase certamente razoável em contextos em que o instrumento é um benefício claro (ganhar uma vaga, receber um subsídio). Seria mais problemático em contextos em que o instrumento pode ter efeitos opostos em subgrupos diferentes.
+
+\textbf{Por que a monotonicidade importa.} Sem ela, os efeitos de compliers e defiers se cancelam, e a estimativa de IV pode ser zero mesmo que o tratamento tenha efeito real em ambos os grupos. A monotonicidade garante que há apenas um tipo de "indivíduo que muda de comportamento": o complier.
+\end{hipotesebox}
+
+% =============================================================================
+\section{O que IV identifica: o LATE}
+\label{sec:late}
+
+Com essas quatro hipóteses satisfeitas, o que exatamente estamos estimando quando usamos IV?
+
+A resposta, estabelecida por \citet{ImbensAngrist1994}, é o \textbf{Efeito Médio de Tratamento Local}, o LATE (\textit{Local Average Treatment Effect}):
+
+\begin{equation}
+\text{LATE} = \E[Y_i(1) - Y_i(0) \mid \text{complier}]
+\label{eq:late}
+\end{equation}
+
+Em palavras: o LATE é o efeito médio do curso sobre o salário \textit{para os compliers}, as pessoas cujo comportamento foi alterado pelo instrumento. Não é o efeito para toda a população que se candidatou ao programa. Não é o efeito para os always-takers (que foram de qualquer jeito) nem para os never-takers (que não foram de jeito nenhum). É especificamente o efeito para quem foi ao curso porque ganhou a vaga, e que não teria ido sem ela.
+
+Por que apenas os compliers? Porque são eles os únicos que aparecem em grupos diferentes em função do instrumento. Always-takers aparecem tanto no grupo dos sorteados quanto no dos não sorteados: eles foram ao curso nos dois cenários. Never-takers também não mudam entre os grupos. Só os compliers criam uma diferença sistemática em $X$ entre os dois grupos, e é essa diferença que o estimador de IV usa.
+
+\begin{atencaobox}[LATE não é ATE]
+O LATE é o efeito para os compliers, não para toda a população. Essa distinção importa. Se os compliers são sistematicamente diferentes da população em geral (têm menor escolaridade prévia, ou são mais responsivos ao treinamento, ou têm retornos maiores à qualificação), então o LATE pode ser bem diferente do efeito médio que seria obtido se o programa fosse obrigatório para todos.
+
+Isso não significa que o LATE é inútil. Significa que ele responde a uma pergunta específica: qual é o efeito do programa para as pessoas que efetivamente respondem a esse tipo de incentivo? Para políticas que funcionam através do mesmo mecanismo (um incentivo que muda o comportamento de algumas pessoas mas não de outras), o LATE é exatamente o parâmetro relevante.
+\end{atencaobox}
+
+Há também um ponto prático importante: os compliers são um grupo \textit{latente}. Com um instrumento binário, não conseguimos identificar quem é um complier em cada observação individual: só sabemos que eles existem e quantos são (como proporção da amostra). Em princípio, é possível aprender características médias dos compliers (por exemplo, qual é a composição de gênero ou faixa etária dos compliers), mas individualmente eles permanecem invisíveis.
+
+% =============================================================================
+\section{Estimação: da identificação ao estimador de Wald}
+\label{sec:wald}
+
+A beleza do caso binário é que a estimação é extremamente simples. Não precisamos de nenhum método sofisticado: apenas de quatro médias amostrais e uma divisão.
+
+\subsection*{Os estimandos populacionais}
+
+O primeiro ingrediente é o \textbf{efeito do instrumento sobre o resultado} (ITT, de \textit{Intention to Treat}). Este é um \textit{estimando}, ou seja, uma quantidade populacional definida em termos de expectativas:
+\begin{equation}
+\text{ITT}_Y = \E[Y \mid Z=1] - \E[Y \mid Z=0]
+\end{equation}
+Essa é a diferença no salário médio entre quem ganhou a loteria e quem não ganhou, independentemente de ter frequentado o curso ou não. É o efeito de \textit{ganhar a vaga} sobre o salário.
+
+O segundo ingrediente é o \textbf{efeito do instrumento sobre o tratamento} (o primeiro estágio), também um estimando populacional:
+\begin{equation}
+\text{ITT}_X = \E[X \mid Z=1] - \E[X \mid Z=0]
+\end{equation}
+Essa é a diferença na taxa de frequência ao curso entre sorteados e não sorteados. É a proporção de compliers na população.
+
+O resultado de identificação central é que, sob as quatro hipóteses, o LATE pode ser recuperado a partir desses dois estimandos pela razão:
+\begin{equation}
+\text{LATE} = \frac{\text{ITT}_Y}{\text{ITT}_X} = \frac{\E[Y \mid Z=1] - \E[Y \mid Z=0]}{\E[X \mid Z=1] - \E[X \mid Z=0]}
+\label{eq:late_identificacao}
+\end{equation}
+
+Esta é uma relação ao nível \textit{populacional}: o LATE (sem chapéu) é identificado pela razão de dois objetos populacionais definidos com $\E[\cdot]$.
+
+\subsection*{O estimador de Wald}
+
+Na prática, as expectativas populacionais não são observadas; precisamos substituí-las por médias amostrais. O \textbf{estimador de Wald} é o análogo amostral da razão acima:
+\begin{equation}
+\widehat{\text{LATE}} = \frac{\bar{Y}_{Z=1} - \bar{Y}_{Z=0}}{\bar{X}_{Z=1} - \bar{X}_{Z=0}}
+\label{eq:wald}
+\end{equation}
+onde $\bar{Y}_{Z=1}$ denota a média amostral de $Y$ entre os sorteados, e analogamente para os demais termos. Enquanto $\text{ITT}_Y$ e $\text{ITT}_X$ são estimandos (quantidades populacionais fixas), $\widehat{\text{LATE}}$ é um \textit{estimador}: uma função dos dados, sujeita a variação amostral.
+
+A intuição é direta. O sorteio gerou um certo efeito sobre o salário (o $\text{ITT}_Y$). Mas esse efeito foi "diluído" pelo fato de que nem todos os sorteados foram ao curso, e alguns não-sorteados encontraram outras formas de participar. O denominador nos diz qual fração da população teve seu comportamento alterado pelo instrumento. Dividir o efeito sobre o resultado pelo efeito sobre o tratamento "desfaz" essa diluição, dando o efeito por unidade de tratamento efetivo, que é o efeito para os compliers.
+
+\begin{exemplobox}[Calculando o LATE com a razão de Wald]
+Com os dados do exemplo anterior (1.000 participantes, metade sorteada):
+
+\begin{center}
+\resizebox{0.8\textwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+ & Não sorteados ($Z=0$) & Sorteados ($Z=1$) & Diferença \\
+\midrule
+Taxa de frequência ($\bar{X}$) & 10\% & 55\% & 45 p.p. \\
+Salário médio ($\bar{Y}$, R\$ mil/mês) & 2{,}80 & 3{,}08 & 0{,}28 \\
+\bottomrule
+\end{tabular}%
+}
+\end{center}
+
+O efeito do sorteio sobre o salário é R\$~280 por mês. O efeito do sorteio sobre a participação é de 45 pontos percentuais. O LATE estimado é:
+\[
+\widehat{\text{LATE}} = \frac{0{,}28}{0{,}45} \approx 0{,}62 \text{ mil reais} = \text{R\$ 620 por mês}
+\]
+Interpretação: frequentar o curso de qualificação aumentou o salário mensal dos compliers em aproximadamente R\$~620, em média.
+
+Note que o LATE (R\$~620) é maior do que o ITT (R\$~280). Isso sempre acontece quando nem todo mundo que ganhou a loteria foi ao curso: o ITT é diluído pelos always-takers e never-takers, e a razão de Wald "corrige" essa diluição.
+\end{exemplobox}
+
+\subsection*{Inferência}
+
+Na prática, as quatro médias amostrais que entram no estimador de Wald são calculadas com erro amostral. O estimador é uma razão de duas quantidades aleatórias, e sua distribuição exata é mais difícil de calcular do que a de uma média simples. Na prática, dois caminhos são usados:
+
+\textbf{Bootstrap}: reamostrar a amostra com reposição muitas vezes, calcular o estimador de Wald em cada reamostragem, e usar a distribuição dos valores obtidos para construir intervalos de confiança. É simples de implementar e válido em amostras grandes.
+
+\textbf{2SLS com softwares padrão}: quando o instrumento binário é combinado com um único tratamento binário, o estimador de mínimos quadrados em dois estágios (2SLS) converge para o estimador de Wald em amostras grandes. Softwares econométricos como R, Stata ou Python produzem automaticamente erros padrão corretos para o 2SLS. Em amostras razoavelmente grandes, essa é a forma mais prática de calcular.
+
+\begin{notabox}[Pontos-chave do capítulo]
+\begin{itemize}[leftmargin=*]
+  \item IV com tratamento e instrumento binários identifica o LATE: o efeito causal do tratamento \textit{para os compliers}, as pessoas que mudam de comportamento em resposta ao instrumento.
+  \item Always-takers e never-takers não contribuem para a estimativa: o instrumento não muda o comportamento deles.
+  \item $\text{ITT}_Y$ e $\text{ITT}_X$ são estimandos populacionais; a razão $\text{LATE} = \text{ITT}_Y / \text{ITT}_X$ é o resultado de identificação. O estimador de Wald $\widehat{\text{LATE}}$ é o análogo amostral, com médias no lugar de expectativas.
+  \item O LATE não é o ATE. Ele pode ser maior, menor ou igual ao efeito médio na população, dependendo de como os compliers se diferenciam dos demais grupos.
+  \item Quatro hipóteses precisam ser satisfeitas: independência do instrumento, relevância, exclusão e monotonicidade. Apenas a relevância pode ser testada diretamente nos dados. As demais precisam ser defendidas com argumentos econômicos e institucionais.
+\end{itemize}
+\end{notabox}

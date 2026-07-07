@@ -1,0 +1,914 @@
+%% ─────────────────────────────────────────────────────────────────
+%%  Seção 4 — Inferência
+%%  Arquivo: secao4_inferencia.tex
+%%  Inserir no projeto com: \input{secao4_inferencia}
+%%
+%%  Pacotes adicionais necessários no preâmbulo principal:
+%%    \usepackage{pgfplots}
+%%    \pgfplotsset{compat=1.18}
+%% ─────────────────────────────────────────────────────────────────
+
+\chapter{Inferência}
+\label{cap:inferencia}
+\label{sec:inferencia}
+
+Nas seções anteriores construímos uma cadeia que vai da teoria ao dado: definimos o parâmetro de interesse, derivamos as hipóteses de identificação que o tornam observável e escolhemos um estimador $\hat{\theta}$ que converge para o estimando à medida que o tamanho da amostra cresce. Mas obter um número $\hat{\theta}$ não é o fim do trabalho. Se sorteássemos uma nova amostra da mesma população e aplicássemos exatamente o mesmo procedimento, obteríamos um valor diferente. A \textbf{inferência estatística} é o conjunto de ferramentas para raciocinar sobre essa variabilidade amostral e fazer afirmações sobre o parâmetro verdadeiro $\theta$ com base em uma única amostra observada.
+
+É importante distinguir desde o início duas fontes de aleatoriedade que coexistem em econometria aplicada. A \textbf{aleatoriedade de amostragem} (\textit{sampling-based}) trata as observações como realizações independentes e identicamente distribuídas (i.i.d.) de uma população maior: a amostra é um sorteio, e a variabilidade de $\hat{\theta}$ reflete quantas amostras diferentes poderiam ter sido coletadas. Já a \textbf{aleatoriedade de atribuição} (\textit{design-based}) fixa a população de unidades observadas e trata como fonte de incerteza apenas o sorteio de quem recebeu o tratamento. Em experimentos aleatórios com um cadastro fixo de participantes, por exemplo, não há uma ``população maior'' de quem sortear: o que se repete hipoteticamente é a atribuição do tratamento. As duas perspectivas conduzem a fórmulas de erro-padrão distintas, e usar a fórmula errada — mesmo que matematicamente válida em outro contexto — gera inferências incorretas.
+
+O ponto central desta seção: \textbf{um erro-padrão pequeno não implica identificação válida}. O erro-padrão mede com que precisão estimamos o estimando — a quantidade que definimos como objeto de interesse dado os dados. Ele não diz nada sobre se o estimando é igual ao parâmetro econômico que nos importa. Uma estimativa extremamente precisa de uma quantidade sem interpretação causal é, em todos os sentidos relevantes, pior do que uma estimativa imprecisa de algo bem identificado. Essa distinção, aparentemente óbvia, é sistematicamente ignorada na prática.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Erros-Padrão}
+\label{sec:erros_padrao}
+
+O \textbf{erro-padrão} de um estimador $\hat{\theta}$ é o desvio-padrão da sua distribuição amostral:
+\begin{equation}
+  SE(\hat{\theta}) = \sqrt{\text{Var}(\hat{\theta})}.
+  \label{eq:se_definicao}
+\end{equation}
+
+Em termos práticos, $SE(\hat{\theta})$ quantifica o quanto $\hat{\theta}$ varia de amostra para amostra. Quanto menor o erro-padrão, mais concentrada é a distribuição do estimador em torno do seu valor esperado — e, se o estimador é não-viesado, em torno do parâmetro verdadeiro $\theta$.
+
+\subsection*{Variância do estimador de MQO sob hipóteses clássicas}
+
+No modelo de regressão linear $Y_i = \boldsymbol{x}_i'\boldsymbol{\beta} + \varepsilon_i$, o estimador MQO $\hat{\boldsymbol{\beta}} = (X'X)^{-1}X'Y$ tem variância:
+\begin{equation}
+  \text{Var}(\hat{\boldsymbol{\beta}} \mid X) = \sigma^2 (X'X)^{-1},
+  \label{eq:var_ols_classica}
+\end{equation}
+onde $\sigma^2 = \text{Var}(\varepsilon_i \mid X)$. Esse resultado requer duas hipóteses fortes: (i) \textbf{homoscedasticidade} — a variância dos erros é constante para todos os valores de $X$ — e (ii) \textbf{independência} dos erros entre observações. Em dados de corte transversal representativos de populações heterogêneas, a homoscedasticidade é frequentemente violada: a variância do salário, por exemplo, tende a crescer com os anos de escolaridade. Quando \eqref{eq:var_ols_classica} é usada nesse contexto, os erros-padrão reportados são inconsistentes.
+
+\subsection*{Erros-padrão robustos à heteroscedasticidade}
+
+A solução padrão para dados de corte transversal são os \textbf{erros-padrão robustos} de Huber-White \citep{Huber1967, White1980}, também chamados de estimador \textit{sandwich}:
+\begin{equation}
+  \widehat{\text{Var}}_{\text{HC}}(\hat{\boldsymbol{\beta}}) =
+    \underbrace{(X'X)^{-1}}_{\text{pão}}
+    \underbrace{\left(\sum_{i=1}^{N} x_i x_i' \hat{\varepsilon}_i^2\right)}_{\text{recheio}}
+    \underbrace{(X'X)^{-1}}_{\text{pão}},
+  \label{eq:sandwich}
+\end{equation}
+onde $\hat{\varepsilon}_i = Y_i - \boldsymbol{x}_i'\hat{\boldsymbol{\beta}}$ são os resíduos da regressão. O estimador \eqref{eq:sandwich} é consistente independentemente da forma da heteroscedasticidade, sem exigir nenhuma hipótese sobre $\text{Var}(\varepsilon_i \mid X_i)$. Na prática, utiliza-se a versão com correção de amostras finitas HC2 ou HC3, que melhoram o desempenho em amostras pequenas.
+
+\begin{notabox}[Erros robustos como padrão]
+Em econometria aplicada moderna, erros-padrão robustos à heteroscedasticidade são o padrão mínimo para dados de corte transversal. A pergunta não é mais ``devo usar erros robustos?'', mas ``que tipo de robustez é necessária?'' (heteroscedasticidade apenas, ou também clustering?). Em R, a função \texttt{estimatr::lm\_robust()} calcula erros HC2 por padrão; o pacote \texttt{sandwich} oferece controle total sobre o tipo de correção.
+\end{notabox}
+
+\begin{lstlisting}[style=Rstyle, caption={Erros-padrão clássicos vs.\ robustos em R}]
+# -----------------------------
+# 1) Configuração inicial
+# -----------------------------
+rm(list = ls())
+
+library(estimatr)   # lm_robust
+library(sandwich)   # vcovHC
+library(lmtest)     # coeftest
+
+set.seed(42)
+n <- 500
+
+# Simular dados com heteroscedasticidade
+edu   <- runif(n, 4, 18)
+sigma <- 0.5 * edu          # variância cresce com escolaridade
+salario <- 800 + 120 * edu + rnorm(n, sd = sigma * 300)
+
+dados <- data.frame(salario, edu)
+
+# -----------------------------
+# 2) MQO com erros clássicos
+# -----------------------------
+mod_classico <- lm(salario ~ edu, data = dados)
+cat("=== Erros clássicos ===\n")
+print(coeftest(mod_classico)[, 1:2])
+
+# -----------------------------
+# 3) MQO com erros HC2 (robustos)
+# -----------------------------
+mod_robusto <- lm_robust(salario ~ edu, data = dados, se_type = "HC2")
+cat("\n=== Erros HC2 robustos ===\n")
+print(summary(mod_robusto)$coefficients[, 1:2])
+
+# -----------------------------
+# 4) Comparação direta
+# -----------------------------
+se_classico <- sqrt(diag(vcov(mod_classico)))["edu"]
+se_robusto  <- sqrt(diag(vcovHC(mod_classico, type = "HC2")))["edu"]
+
+cat("\nSE clássico (edu): ", round(se_classico, 3), "\n")
+cat("SE HC2 robusto (edu):", round(se_robusto, 3), "\n")
+cat("Razão HC2/clássico:  ", round(se_robusto / se_classico, 2), "\n")
+\end{lstlisting}
+
+\subsection*{O que o erro-padrão captura — e o que não captura}
+
+Há uma confusão recorrente na literatura aplicada: tratar um erro-padrão pequeno como evidência de que ``a estimativa está correta''. A Tabela~\ref{tab:se_captura} sintetiza o que o erro-padrão realmente mede.
+
+\begin{table}[H]
+\centering
+\caption{O que o erro-padrão captura e o que ele não captura}
+\label{tab:se_captura}
+\begin{tabular}{ll}
+\toprule
+\textbf{O SE captura} & \textbf{O SE não captura} \\
+\midrule
+Variabilidade amostral de $\hat{\theta}$ & Viés de identificação \\
+Incerteza sobre a estimativa do estimando & Viés de estimação em amostras finitas \\
+Reduz com aumento de $n$ & Erro de forma funcional \\
+Melhora com amostragem mais eficiente & Viés por variável omitida \\
+& Violação do SUTVA ou da CIA \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Elaboração dos autores}{}{SE: erro-padrão; CIA: hipótese de independência condicional; SUTVA: Stable Unit Treatment Value Assumption.}
+\end{table}
+
+Será que um erro-padrão pequeno garante que nossa estimativa está correta? Claramente não. Com uma amostra suficientemente grande, podemos estimar com extrema precisão a diferença de salários entre graduados e não-graduados — mas se essa diferença refletir diferenças de habilidade inata (viés de seleção), estimamos com precisão a coisa errada. Um SE pequeno com identificação fraca não apenas não impressiona: é potencialmente mais enganoso do que um SE grande com identificação sólida.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Teste de Hipótese}
+\label{sec:teste_hipotese}
+
+Dado um estimador $\hat{\theta}$ com erro-padrão $SE(\hat{\theta})$, a segunda pergunta natural é: os dados são compatíveis com a hipótese de que $\theta$ assume um valor particular $\theta_0$? O \textbf{teste de hipótese} oferece um procedimento formal para responder a essa pergunta. Apresentamos a lógica em cinco passos.
+
+\medskip
+\noindent\textbf{Passo 1 — Hipótese nula.} Definimos a hipótese nula $H_0: \theta = \theta_0$. Na maioria das aplicações em avaliação de impacto, $\theta_0 = 0$ (``o tratamento não tem efeito''), mas qualquer valor é válido.
+
+\noindent\textbf{Passo 2 — Hipótese alternativa.} A hipótese alternativa $H_1: \theta \neq \theta_0$ especifica o que acreditamos ser verdadeiro caso $H_0$ seja falsa. Testes bicaudais são padrão; testes unicaudais ($H_1: \theta > \theta_0$) são admissíveis quando há razão teórica clara para a direção do efeito.
+
+\noindent\textbf{Passo 3 — Estatística de teste.} Construímos a estatística:
+\begin{equation}
+  t = \frac{\hat{\theta} - \theta_0}{SE(\hat{\theta})},
+  \label{eq:estatistica_t}
+\end{equation}
+que mede em quantos erros-padrão $\hat{\theta}$ se distancia de $\theta_0$. Sob $H_0$ e condições de regularidade, $t$ tem distribuição assintótica $\mathcal{N}(0,1)$ (ou $t_{N-K}$ exata se os erros forem normais).
+
+\noindent\textbf{Passo 4 — P-valor.} O p-valor é a probabilidade de observar, sob $H_0$, uma estatística de teste tão ou mais extrema do que a observada:
+\begin{equation}
+  \text{p-valor} = P\!\left(|T| \geq |t_{\text{obs}}| \mid H_0\right),
+  \label{eq:pvalor}
+\end{equation}
+onde $T$ é uma variável aleatória com a distribuição de $t$ sob $H_0$.
+
+\noindent\textbf{Passo 5 — Regra de decisão.} Rejeitamos $H_0$ ao nível de significância $\alpha$ se p-valor $< \alpha$. O nível $\alpha = 0{,}05$ é convencional, mas arbitrário — corresponde a aceitar uma taxa de 5\% de falsos positivos quando $H_0$ é verdadeira.
+
+\medskip
+A Figura~\ref{fig:dist_h0} ilustra a lógica graficamente.
+
+% FIGURA 4.1: Distribuição da estatística de teste sob H0
+% Curva normal centrada em zero, regiões de rejeição sombreadas em cada cauda (|t| > 1,96),
+% seta indicando t_obs = 2,35. Eixo x: estatística de teste. Eixo y: densidade.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  height  = 5.5cm,
+  width   = 11cm,
+  xmin    = -4.2, xmax = 4.2,
+  ymin    = 0,    ymax = 0.46,
+  xlabel  = {Estatística de teste $t$},
+  ylabel  = {Densidade},
+  axis lines = left,
+  xtick  = {-1.96, 0, 1.96},
+  xticklabels = {$-1{,}96$, $0$, $1{,}96$},
+  ytick  = \empty,
+  tick label style = {font=\small},
+  label style      = {font=\small},
+  clip   = false,
+]
+  %% Região de rejeição esquerda
+  \addplot[fill=clearred!35, draw=none, domain=-4.2:-1.96, samples=80]
+    {exp(-x^2/2)/sqrt(2*3.14159)} \closedcycle;
+  %% Região de rejeição direita
+  \addplot[fill=clearred!35, draw=none, domain=1.96:4.2, samples=80]
+    {exp(-x^2/2)/sqrt(2*3.14159)} \closedcycle;
+  %% Curva principal
+  \addplot[thick, clearblue, domain=-4.2:4.2, samples=120]
+    {exp(-x^2/2)/sqrt(2*3.14159)};
+  %% Linhas verticais nos valores críticos
+  \draw[dashed, gray!60] (axis cs:-1.96, 0) -- (axis cs:-1.96, 0.062);
+  \draw[dashed, gray!60] (axis cs:1.96,  0) -- (axis cs:1.96,  0.062);
+  %% Seta para t_obs
+  \draw[-{Stealth}, thick, clearred]
+    (axis cs:2.35, 0.10) -- (axis cs:2.35, 0.015);
+  \node[above, font=\small, clearred] at (axis cs:2.35, 0.10)
+    {$t_{\text{obs}} = 2{,}35$};
+  %% Rótulos das caudas
+  \node[font=\scriptsize] at (axis cs:-2.85, 0.018) {$\alpha/2$};
+  \node[font=\scriptsize] at (axis cs: 2.85, 0.018) {$\alpha/2$};
+  %% Rótulo da região central
+  \node[font=\small, gray!60] at (axis cs:0, 0.20) {$H_0$ não rejeitada};
+\end{axis}
+\end{tikzpicture}
+\caption{Distribuição da estatística de teste sob $H_0$. As regiões sombreadas em vermelho
+  correspondem à região de rejeição ao nível $\alpha = 0{,}05$ (cada cauda com $\alpha/2 = 2{,}5\%$).
+  O valor observado $t_{\text{obs}} = 2{,}35$ cai na região de rejeição ($|t| > 1{,}96$), levando à
+  rejeição de $H_0$.}
+\label{fig:dist_h0}
+\end{figure}
+
+A Figura~\ref{fig:poder} ilustra a relação entre a distribuição sob $H_0$, a distribuição sob uma hipótese alternativa específica com efeito $\delta$, e o conceito de poder do teste.
+
+% FIGURA 4.2: Distribuição sob H0 (cinza) e H1 (azul).
+% H0 ~ N(0,1); H1 ~ N(delta, 1) com delta = 2.
+% Área azul à direita do valor crítico = poder do teste.
+% Área azul à esquerda do valor crítico = erro Tipo II (beta).
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  height  = 5.5cm,
+  width   = 11cm,
+  xmin    = -4.0, xmax = 5.5,
+  ymin    = 0,    ymax = 0.46,
+  xlabel  = {Estatística de teste $t$},
+  ylabel  = {Densidade},
+  axis lines = left,
+  xtick  = {0, 1.96},
+  xticklabels = {$0$, $t_c{=}1{,}96$},
+  ytick  = \empty,
+  tick label style = {font=\small},
+  label style      = {font=\small},
+  clip   = false,
+  legend style = {at={(0.97,0.97)}, anchor=north east,
+                  font=\small, draw=gray!50},
+]
+  %% Curva H0 (cinza preenchido)
+  \addplot[fill=gray!20, draw=none, domain=-4:5.5, samples=100]
+    {exp(-x^2/2)/sqrt(2*3.14159)} \closedcycle;
+  \addplot[thick, gray!70, domain=-4:5.5, samples=100]
+    {exp(-x^2/2)/sqrt(2*3.14159)};
+
+  %% Poder = área sob H1 à direita de t_c
+  \addplot[fill=clearblue!35, draw=none, domain=1.96:5.5, samples=80]
+    {exp(-(x-2)^2/2)/sqrt(2*3.14159)} \closedcycle;
+
+  %% Erro Tipo II = área sob H1 à esquerda de t_c
+  \addplot[fill=clearteal!25, draw=none, domain=-1:1.96, samples=80]
+    {exp(-(x-2)^2/2)/sqrt(2*3.14159)} \closedcycle;
+
+  %% Curva H1
+  \addplot[thick, clearblue, domain=-1:5.5, samples=100]
+    {exp(-(x-2)^2/2)/sqrt(2*3.14159)};
+
+  %% Linha vertical no valor crítico
+  \draw[dashed, gray] (axis cs:1.96, 0) -- (axis cs:1.96, 0.40);
+
+  %% Rótulos
+  \node[font=\small, gray!80] at (axis cs:-0.7, 0.20) {$H_0$};
+  \node[font=\small, clearblue] at (axis cs:3.4, 0.20) {$H_1$};
+  \node[font=\small, clearblue] at (axis cs:2.0, -0.025) {$\delta$};
+  \node[font=\scriptsize, clearblue!80] at (axis cs:2.9, 0.06)
+    {\textbf{Poder}};
+  \node[font=\scriptsize, clearteal!80] at (axis cs:1.0, 0.06)
+    {Erro Tipo II ($\beta$)};
+
+  \addlegendentry{$H_0: \theta = 0$}
+  \addlegendentry{$H_1: \theta = \delta$}
+\end{axis}
+\end{tikzpicture}
+\caption{Distribuição da estatística de teste sob $H_0$ (cinza) e sob $H_1$ com efeito $\delta = 2$
+  (azul). A área azul à direita do valor crítico $t_c = 1{,}96$ representa o \textbf{poder do teste}
+  — probabilidade de rejeitar $H_0$ quando $H_1$ é verdadeira. A área azul-esverdeada à esquerda
+  é a probabilidade de erro Tipo~II ($\beta = 1 - \text{poder}$). Para referência sobre o cálculo
+  do poder e do tamanho mínimo de amostra, ver o \textit{Guia de Cálculo de Poder Estatístico}
+  da Série Avaliação na Prática.}
+\label{fig:poder}
+\end{figure}
+
+\subsection*{O que o p-valor diz — e o que não diz}
+
+O p-valor é um dos objetos mais mal interpretados em toda a estatística aplicada. Vale ser rigoroso. O p-valor \textbf{é} a probabilidade de observar, em um mundo em que $H_0$ é verdadeira, uma estatística tão ou mais extrema quanto a que observamos. Ele \textbf{não é}:
+
+\begin{itemize}[leftmargin=*]
+  \item A probabilidade de que $H_0$ seja verdadeira.
+  \item A probabilidade de que o resultado seja ``devido ao acaso''.
+  \item Uma medida do tamanho do efeito ou de sua relevância econômica.
+\end{itemize}
+
+Um ponto frequentemente ignorado em avaliações com amostras grandes: com $N$ suficientemente grande, \textit{qualquer} efeito não-nulo, por menor que seja, produz um p-valor arbitrariamente próximo de zero. Um programa que aumenta a renda em R\$\,2 por mês será ``altamente significativo'' ($p < 0{,}001$) com dados de um milhão de pessoas — e ainda assim economicamente irrelevante. Significância estatística não implica significância econômica.
+
+\begin{atencaobox}[Reporte sempre o tamanho do efeito]
+Nunca reporte apenas o p-valor. Reporte sempre: (i) a estimativa pontual $\hat{\theta}$, (ii) o erro-padrão ou o intervalo de confiança, e (iii) uma discussão da relevância econômica do efeito estimado, incluindo comparação com benchmarks relevantes (efeito de políticas similares, custo do programa, magnitude esperada pela teoria). Um p-valor sozinho não permite avaliar se o resultado importa.
+\end{atencaobox}
+
+\subsection*{Estatística $F$ para hipóteses conjuntas}
+
+Quando $H_0$ envolve múltiplas restrições simultâneas — por exemplo, $H_0: \beta_1 = \beta_2 = \cdots = \beta_k = 0$ —, testar cada coeficiente individualmente com estatísticas-$t$ separadas infla a taxa de falsos positivos. A solução é a \textbf{estatística $F$}:
+\begin{equation}
+  F = \frac{(R\hat{\boldsymbol{\beta}} - r)'[R(X'X)^{-1}R']^{-1}(R\hat{\boldsymbol{\beta}} - r)/q}%
+           {\hat{\sigma}^2},
+  \label{eq:estatistica_F}
+\end{equation}
+onde $R\boldsymbol{\beta} = r$ codifica as $q$ restrições da hipótese nula. Sob $H_0$ e erros normais, $F \sim F(q, N-K)$.
+
+A estatística $F$ aparece em três contextos recorrentes em avaliação de impacto:
+
+\begin{enumerate}[leftmargin=*, label=(\roman*)]
+  \item \textbf{Significância conjunta dos controles}: testar $H_0: \boldsymbol{\gamma} = \mathbf{0}$
+    no modelo $Y_i = \alpha + \beta D_i + \boldsymbol{\gamma}' X_i + \varepsilon_i$.
+  \item \textbf{Força do instrumento em IV}: a estatística $F$ do primeiro estágio mede a relevância do instrumento. A regra de bolso clássica é $F < 10$ como sinal de instrumento fraco \citep{StockYogo2005}; limiares mais rígidos são discutidos em trabalhos recentes.
+  \item \textbf{Verificação de equilíbrio em experimentos}: $H_0$ de que as covariadas pré-tratamento não predizem o tratamento. Rejeição é evidência de falha na randomização.
+\end{enumerate}
+
+
+%% ─── 4.2.1 Múltiplos Testes ──────────────────────────────────────
+\subsection{Múltiplos Testes}
+\label{sec:multiplos_testes}
+
+Um corolário muitas vezes subestimado do raciocínio da seção anterior: quando realizamos múltiplos testes simultaneamente, a probabilidade de ao menos um falso positivo cresce rapidamente, mesmo que cada teste individual seja conduzido corretamente ao nível $\alpha$. Se realizamos $m$ testes independentes, a probabilidade de ao menos uma rejeição espúria sob $H_0$ é:
+\begin{equation}
+  P(\text{ao menos um falso positivo}) = 1 - (1 - \alpha)^m.
+  \label{eq:multiplos_testes}
+\end{equation}
+
+Com $m = 20$ testes ao nível $\alpha = 0{,}05$, essa probabilidade já atinge $1 - 0{,}95^{20} \approx 64\%$. A Tabela~\ref{tab:multiplos_testes} ilustra como ela cresce com $m$.
+
+\begin{table}[H]
+\centering
+\caption{Probabilidade de ao menos um falso positivo em função do número de testes ($\alpha = 0{,}05$)}
+\label{tab:multiplos_testes}
+\begin{tabular}{rr}
+\toprule
+Número de testes ($m$) & $P(\text{ao menos um falso positivo})$ \\
+\midrule
+ 1  & 5{,}0\% \\
+ 5  & 22{,}6\% \\
+10  & 40{,}1\% \\
+20  & 64{,}2\% \\
+50  & 92{,}3\% \\
+100 & 99{,}4\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Elaboração dos autores}{}{Calculado pela equação~\eqref{eq:multiplos_testes} com testes independentes.}
+\end{table}
+
+Dois procedimentos de correção são amplamente utilizados:
+
+\medskip
+\noindent\textbf{Correção de Bonferroni.} Para controlar a \textit{taxa de erro familiar} (FWER — probabilidade de ao menos um falso positivo), substitui-se o limiar $\alpha$ por $\alpha/m$. É conservadora — garante controle da FWER mesmo com dependência entre os testes —, mas perde poder quando $m$ é grande, pois cada teste exige evidência muito forte para ser rejeitado.
+
+\medskip
+\noindent\textbf{Taxa de Falsas Descobertas (FDR).} O procedimento de Benjamini-Hochberg \citep{BenjaminiHochberg1995} controla a proporção esperada de falsas descobertas entre as rejeições ($FDR = E[\text{falsos positivos}/\text{rejeições}]$), e não o número absoluto. É menos conservador que Bonferroni e preferível quando $m$ é grande e se aceita alguma proporção de erros. O procedimento ordena os $m$ p-valores em ordem crescente $p_{(1)} \leq p_{(2)} \leq \cdots \leq p_{(m)}$ e rejeita todas as hipóteses $H_{(j)}$ em que $p_{(j)} \leq j \cdot \alpha / m$.
+
+\begin{lstlisting}[style=Rstyle, caption={Correção para múltiplos testes em R}]
+# -----------------------------
+# 1) Simulação: 20 testes sob H0 (todos nulos)
+# -----------------------------
+rm(list = ls())
+set.seed(100)
+
+m  <- 20
+n  <- 200
+
+# Gerar 20 p-valores sob H0 verdadeira
+pvalores <- replicate(m, {
+  Y <- rnorm(n)
+  D <- rbinom(n, 1, 0.5)
+  coef(summary(lm(Y ~ D)))[2, 4]  # p-valor do tratamento
+})
+
+cat("Sem correção:    rejeições =", sum(pvalores < 0.05), "de", m, "\n")
+
+# -----------------------------
+# 2) Correção de Bonferroni
+# -----------------------------
+pvalores_bonf <- p.adjust(pvalores, method = "bonferroni")
+cat("Bonferroni:      rejeições =", sum(pvalores_bonf < 0.05), "\n")
+
+# -----------------------------
+# 3) Benjamini-Hochberg (FDR)
+# -----------------------------
+pvalores_bh <- p.adjust(pvalores, method = "BH")
+cat("Benjamini-Hochberg: rejeições =", sum(pvalores_bh < 0.05), "\n")
+
+# -----------------------------
+# 4) Probabilidade teórica vs. simulada
+# -----------------------------
+set.seed(1)
+sim_prob <- mean(replicate(10000, any(runif(m) < 0.05)))
+cat("\nP(ao menos 1 falso positivo) — simulada: ", round(sim_prob, 3), "\n")
+cat("P(ao menos 1 falso positivo) — teórica:  ",
+    round(1 - 0.95^m, 3), "\n")
+\end{lstlisting}
+
+No entanto, correções estatísticas apenas não resolvem o problema estrutural do \textit{p-hacking}: quando o pesquisador realiza muitos testes e reporta apenas os ``significativos'', os p-valores não têm mais a cobertura nominal. A melhor prática é o \textbf{pré-registro}: declarar previamente, em repositório público (e.g., AEA RCT Registry, OSF), quais testes serão realizados, qual é o resultado primário da avaliação e quais são secundários. Independentemente do procedimento de correção utilizado, o relato deve sempre indicar quantos testes foram realizados.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Intervalos de Confiança}
+\label{sec:intervalos}
+
+O teste de hipótese responde a uma pergunta binária: os dados são compatíveis com $\theta = \theta_0$? O \textbf{intervalo de confiança} é mais informativo: ele identifica o conjunto de todos os valores $\theta_0$ que \textit{não seriam} rejeitados por um teste ao nível $\alpha$. Para estimadores assintoticamente normais, o intervalo de confiança de nível $1-\alpha$ é:
+
+\begin{equation}
+  IC_{1-\alpha} = \left[
+    \hat{\theta} - z_{\alpha/2} \cdot SE(\hat{\theta}),\;\;
+    \hat{\theta} + z_{\alpha/2} \cdot SE(\hat{\theta})
+  \right],
+  \label{eq:ic}
+\end{equation}
+
+onde $z_{\alpha/2}$ é o quantil $(1-\alpha/2)$ da distribuição normal padrão. Para $\alpha = 0{,}05$: $z_{0{,}025} = 1{,}96$.
+
+\subsection*{Interpretação frequentista correta}
+
+A interpretação do intervalo de confiança merece atenção especial, pois é uma das fontes mais comuns de confusão em estatística aplicada. O intervalo de confiança \textit{não} é uma afirmação sobre a probabilidade de $\theta$ estar em um intervalo específico: $\theta$ é um número fixo (desconhecido), e portanto não tem distribuição. A interpretação correta é frequentista: se o mesmo procedimento de construção do intervalo fosse repetido em muitas amostras independentes da mesma população, 95\% dos intervalos resultantes conteriam o valor verdadeiro $\theta$.
+
+Em outras palavras, a aleatoriedade está no intervalo, não no parâmetro. A frase ``existe 95\% de probabilidade de que $\theta$ esteja entre $a$ e $b$'' está formalmente errada; o que é correto é ``o intervalo $[a, b]$ foi produzido por um procedimento que acerta em 95\% das amostras''.
+
+\subsection*{Dualidade com o teste de hipótese}
+
+Há uma correspondência exata entre intervalos de confiança e testes de hipótese: \textbf{rejeitar $H_0: \theta = \theta_0$ ao nível $\alpha$ é equivalente a $\theta_0$ não pertencer ao IC de nível $1-\alpha$}. Essa dualidade não é apenas uma curiosidade matemática — ela tem implicação prática direta.
+
+O intervalo de confiança carrega estritamente mais informação do que o p-valor: ele diz não apenas se $\theta_0 = 0$ é rejeitado, mas quais outros valores são compatíveis com os dados. Um IC de $[{-0{,}5},\; 12{,}3]$ diz que efeitos nulos \textit{e} efeitos moderados são igualmente compatíveis com a evidência — informação que o p-valor não transmite. Reportar intervalos de confiança deve ser padrão; reportar apenas p-valores é uma prática a ser evitada.
+
+\begin{lstlisting}[style=Rstyle, caption={Intervalos de confiança: construção e simulação da cobertura}]
+# -----------------------------
+# 1) IC padrão
+# -----------------------------
+rm(list = ls())
+library(estimatr)
+
+set.seed(42)
+n <- 400
+D <- rbinom(n, 1, 0.5)
+Y <- 2 + 0.8 * D + rnorm(n)
+
+mod <- lm_robust(Y ~ D, se_type = "HC2")
+cat("Estimativa: ", round(coef(mod)["D"], 3), "\n")
+cat("IC 95%:    [", round(confint(mod)["D", 1], 3),
+               ";", round(confint(mod)["D", 2], 3), "]\n")
+
+# -----------------------------
+# 2) Verificar cobertura empírica do IC
+# Deveria ser ~95% se o procedimento está correto
+# -----------------------------
+set.seed(99)
+theta_verdadeiro <- 0.8
+B <- 5000
+
+cobertura <- replicate(B, {
+  D_s <- rbinom(n, 1, 0.5)
+  Y_s <- 2 + theta_verdadeiro * D_s + rnorm(n)
+  m_s <- lm_robust(Y_s ~ D_s, se_type = "HC2")
+  ic  <- confint(m_s)["D_s", ]
+  ic[1] <= theta_verdadeiro & theta_verdadeiro <= ic[2]
+})
+
+cat("\nCobertura empírica do IC 95%:", round(mean(cobertura) * 100, 1), "%\n")
+cat("(Esperado: 95%)\n")
+\end{lstlisting}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Clustering}
+\label{sec:clustering}
+
+Na seção anterior, os erros-padrão robustos de Huber-White corrigem a heteroscedasticidade, mas ainda assumem independência entre as observações. Em muitas aplicações em políticas públicas essa hipótese é violada: estudantes de uma mesma escola enfrentam o mesmo professor e a mesma infraestrutura; municípios de um mesmo estado compartilham choques econômicos e políticas estaduais. Ignorar essa dependência dentro de grupos faz com que os erros-padrão clássicos \textit{subestimem} a variabilidade real de $\hat{\beta}$, inflando artificialmente a significância das estimativas.
+
+O problema pode ser descrito com precisão. Suponha que as observações sejam agrupadas em $G$ clusters $g = 1, \ldots, G$, com $n_g$ observações no cluster $g$ ($N = \sum_g n_g$). O modelo é:
+\begin{equation}
+  Y_{ig} = \boldsymbol{x}_{ig}'\boldsymbol{\beta} + \varepsilon_{ig},
+  \label{eq:modelo_cluster}
+\end{equation}
+onde $\varepsilon_{ig}$ e $\varepsilon_{jg}$ podem ser correlacionados (mesmo cluster $g$), mas $\varepsilon_{ig}$ e $\varepsilon_{jh}$ são independentes para $g \neq h$. O estimador MQO $\hat{\boldsymbol{\beta}}$ permanece não-viesado e consistente sob \eqref{eq:modelo_cluster}, mas a variância clássica $(X'X)^{-1}\hat{\sigma}^2$ é inconsistente. A alternativa consistente é o \textbf{estimador \textit{sandwich} clusterizado}:
+\begin{equation}
+  \widehat{\text{Var}}_{\text{CL}}(\hat{\boldsymbol{\beta}}) =
+    (X'X)^{-1}
+    \underbrace{\left(\sum_{g=1}^{G} B_g B_g'\right)}_{\text{``carne'' clusterizada}}
+    (X'X)^{-1},
+  \quad
+  B_g = \sum_{i \in g} \boldsymbol{x}_{ig}\, \hat{\varepsilon}_{ig}.
+  \label{eq:sandwich_cl}
+\end{equation}
+
+A correção de amostras finitas multiplica \eqref{eq:sandwich_cl} por $\frac{G}{G-1} \cdot \frac{N-1}{N-K}$, análoga à divisão por $N-K$ (e não $N$) nos erros clássicos.
+
+\subsection*{A regra central: clusterizar no nível de atribuição do tratamento}
+
+A regra mais importante do \textit{clustering} é independente dos dados e da forma do modelo: \textbf{o cluster deve ser definido no nível em que o tratamento foi atribuído}. Se uma política é implementada no nível do município e os dados são individuais (pessoas dentro de municípios), deve-se clusterizar por município — independentemente de quantas observações individuais existam. Usar erros robustos sem cluster nessa situação é equivalente a agir como se os 50.000 moradores de um município fossem 50.000 informações independentes sobre o efeito da política, quando na realidade todos compartilham exatamente a mesma exposição ao tratamento.
+
+\begin{table}[H]
+\centering
+\caption{Quando clusterizar: critérios práticos}
+\label{tab:quando_clusterizar}
+\begin{tabular}{p{6.2cm} p{6.0cm}}
+\toprule
+\textbf{Situação} & \textbf{Nível de cluster} \\
+\midrule
+Política atribuída por escola, dados por aluno    & Escola \\
+Política atribuída por município, dados individuais & Município \\
+Dados de painel com tratamento variando no tempo  & Unidade (+ período, se bidirecional) \\
+Dados de PNAD com estrato de amostragem           & PSU/UPA \\
+Experimento com randomização por grupo            & Grupo (mesmo que $G$ seja pequeno) \\
+Corte transversal puro sem estrutura de grupo     & Desnecessário (HC suficiente) \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Elaboração dos autores}{}{PSU: \textit{Primary Sampling Unit}; UPA: Unidade Primária de Amostragem.}
+\end{table}
+
+\begin{lstlisting}[style=Rstyle, caption={Erros clusterizados com sandwich e estimatr}]
+# -----------------------------
+# 1) Dados com estrutura de cluster
+# Política municipal; observações individuais
+# -----------------------------
+rm(list = ls())
+
+library(estimatr)
+library(sandwich)
+library(lmtest)
+
+set.seed(77)
+G  <- 50   # municípios
+ng <- 100  # indivíduos por município
+
+municipio  <- rep(1:G, each = ng)
+tratamento <- rep(rbinom(G, 1, 0.5), each = ng)  # atribuição por município
+erro_mun   <- rep(rnorm(G, sd = 2), each = ng)   # choque comum ao município
+erro_ind   <- rnorm(G * ng, sd = 1)              # choque individual
+
+Y <- 5 + 1.5 * tratamento + erro_mun + erro_ind
+
+dados_cl <- data.frame(Y, tratamento, municipio)
+
+# -----------------------------
+# 2) Comparação de erros-padrão
+# -----------------------------
+mod_base <- lm(Y ~ tratamento, data = dados_cl)
+
+se_classico <- sqrt(diag(vcov(mod_base)))["tratamento"]
+se_hc2      <- sqrt(vcovHC(mod_base, type = "HC2"))["tratamento", "tratamento"]
+se_cluster  <- sqrt(
+  vcovCL(mod_base, cluster = ~municipio)
+)["tratamento", "tratamento"]
+
+cat("SE clássico:   ", round(se_classico, 4), "\n")
+cat("SE HC2:        ", round(se_hc2, 4), "\n")
+cat("SE clusterizado:", round(se_cluster, 4), "\n")
+
+# Com estimatr (mais direto)
+mod_cl <- lm_robust(Y ~ tratamento, clusters = municipio, data = dados_cl,
+                    se_type = "CR2")
+se_cr2 <- summary(mod_cl)$coefficients["tratamento", "Std. Error"]
+cat("\nSE CR2 (estimatr):", round(se_cr2, 4), "\n")
+\end{lstlisting}
+
+\subsection*{Problema de poucos clusters}
+
+O estimador sandwich clusterizado é válido assintoticamente em $G \to \infty$, mas tem desempenho pobre em amostras finitas quando $G$ é pequeno. Com $G < 30$--50, ele tende a \textit{subestimar} a variância real, produzindo p-valores espúrios. Algumas alternativas:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Distribuição $t(G-1)$}: usar a distribuição $t$ com $G-1$ graus de liberdade em vez da normal assintótica. Solução simples e conservadora, adequada quando $G \geq 10$--15.
+  \item \textbf{Correção Bell-McCaffrey}: ajuste de amostras finitas mais sofisticado, implementado em \texttt{estimatr} com \texttt{se\_type = \textquotedbl CR2\textquotedbl}.
+  \item \textbf{\textit{Wild cluster bootstrap}}: descrito na próxima seção. Solução preferida quando $G < 20$.
+\end{itemize}
+
+\subsection*{Clustering bidirecional}
+
+Em dados de painel, pode haver correlação tanto dentro de unidades ao longo do tempo (dependência serial) quanto dentro de períodos entre unidades (dependência transversal, por exemplo, por choques setoriais). O \textbf{clustering bidirecional} \citep{Cameron2011} clusteriza simultaneamente por unidade $i$ e por período $t$:
+\begin{equation}
+  \widehat{\text{Var}}_{\text{2D}} = \widehat{\text{Var}}_{i} + \widehat{\text{Var}}_{t} - \widehat{\text{Var}}_{it},
+  \label{eq:cluster_2d}
+\end{equation}
+onde cada componente é o estimador sandwich clusterizado no respectivo nível. Requer número suficiente de clusters em ambas as dimensões.
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Bootstrap}
+\label{sec:bootstrap}
+
+O \textit{bootstrap} é um método computacional para estimar a distribuição amostral de um estimador sem depender de fórmulas analíticas. A ideia, devida a \citet{Efron1979}, é simples: como a distribuição empírica $\hat{F}_n$ é nossa melhor estimativa da distribuição verdadeira $F$, podemos simular a variabilidade amostral reamostrado os dados observados.
+
+O algoritmo básico tem quatro passos:
+
+\begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}]
+  \item Reamostrar com reposição: sortear $n$ observações da amostra original para formar uma amostra \textit{bootstrap} $\{(Y_i^*, X_i^*)\}_{i=1}^n$.
+  \item Calcular o estimador nessa amostra: $\hat{\theta}^* = \hat{\theta}(\{Y_i^*, X_i^*\})$.
+  \item Repetir os passos 1--2 por $B$ vezes, obtendo $\{\hat{\theta}^*_b\}_{b=1}^B$.
+  \item Usar a distribuição empírica de $\{\hat{\theta}^*_b\}$ como aproximação da distribuição amostral de $\hat{\theta}$.
+\end{enumerate}
+
+$B = 999$ ou $B = 1{.}999$ repetições são tipicamente suficientes para ICs e p-valores práticos. O \textbf{IC percentil} de nível $1-\alpha$ é:
+\begin{equation}
+  IC^{\text{perc}}_{1-\alpha} = \left[\hat{\theta}^*_{(\alpha/2)},\;\; \hat{\theta}^*_{(1-\alpha/2)}\right],
+  \label{eq:ic_bootstrap}
+\end{equation}
+onde $\hat{\theta}^*_{(q)}$ denota o quantil $q$ da distribuição bootstrap. O \textbf{IC \textit{bias-corrected}} (BC) ajusta adicionalmente pelo viés $\hat{\theta}^*_{(0{,}5)} - \hat{\theta}$, melhorando a cobertura quando o estimador é enviesado em amostras finitas.
+
+\subsection*{\textit{Cluster bootstrap} e \textit{wild cluster bootstrap}}
+
+O bootstrap padrão (reamostrar observações individuais) não preserva a estrutura de cluster: ao reamostrar observações aleatoriamente, destroem-se as correlações dentro de grupos. A solução é o \textbf{\textit{cluster bootstrap}}: reamostrar clusters inteiros, não observações individuais. Com $G$ clusters, sorteia-se com reposição $G$ clusters da coleção original, mantendo todas as observações de cada cluster sorteado.
+
+Quando $G$ é muito pequeno (digamos, $G < 20$), mesmo o cluster bootstrap pode ter cobertura insatisfatória. Nesses casos, o \textbf{\textit{wild cluster bootstrap}} \citep{Cameron2008} é a solução preferida. Em vez de reamostrar clusters, ele mantém as observações originais e perturba os resíduos de cada cluster por um fator aleatório $w_g \in \{-1, +1\}$ com igual probabilidade (distribuição de Rademacher):
+\begin{equation}
+  Y_{ig}^* = \boldsymbol{x}_{ig}'\hat{\boldsymbol{\beta}} + w_g\, \hat{\varepsilon}_{ig},
+  \label{eq:wild_bootstrap}
+\end{equation}
+e então reestima o modelo na amostra assim construída. Com $G$ clusters, existem $2^G$ permutações possíveis dos fatores $w_g$, produzindo uma distribuição de permutação exata quando $G$ é muito pequeno.
+
+\begin{lstlisting}[style=Rstyle, caption={Bootstrap e wild cluster bootstrap em R}]
+# -----------------------------
+# 1) Bootstrap padrão (sem cluster)
+# -----------------------------
+rm(list = ls())
+set.seed(42)
+
+n     <- 300
+D     <- rbinom(n, 1, 0.5)
+Y     <- 2 + 1.0 * D + rnorm(n)
+dados <- data.frame(Y, D)
+
+B         <- 1999
+boot_est  <- numeric(B)
+
+for (b in 1:B) {
+  idx          <- sample(n, replace = TRUE)
+  boot_est[b]  <- coef(lm(Y ~ D, data = dados[idx, ]))["D"]
+}
+
+ic_boot <- quantile(boot_est, c(0.025, 0.975))
+cat("IC bootstrap 95%: [", round(ic_boot[1], 3),
+                      ";", round(ic_boot[2], 3), "]\n")
+
+# -----------------------------
+# 2) Wild cluster bootstrap com fewclusterboot
+# -----------------------------
+library(fwildclusterboot)  # instalar se necessário
+
+G  <- 20
+ng <- 50
+municipio  <- rep(1:G, each = ng)
+trat_g     <- rep(rbinom(G, 1, 0.5), each = ng)
+Y2 <- 3 + 0.8 * trat_g + rep(rnorm(G, sd = 1.5), each = ng) + rnorm(G*ng)
+dados2 <- data.frame(Y = Y2, trat = trat_g, mun = factor(municipio))
+
+mod2 <- lm(Y ~ trat, data = dados2)
+boot_res <- boottest(
+  mod2,
+  clustid   = "mun",
+  param     = "trat",
+  B         = 1999,
+  seed      = 7
+)
+summary(boot_res)
+\end{lstlisting}
+
+\begin{atencaobox}[{\textit{Bootstrap} não substitui identificação}]
+O bootstrap reduz a dependência de aproximações assintóticas e pode melhorar substancialmente a cobertura dos intervalos de confiança, especialmente com clusters pequenos. No entanto, ele não corrige um estimador inconsistente nem valida uma estratégia de identificação fraca. Se $\hat{\theta}$ converge para um valor diferente de $\theta$ (por viés de seleção, variável omitida etc.), reamostrar os dados produzirá uma distribuição bootstrap concentrada em torno do valor errado — com erros-padrão menores e intervalos de confiança que não cobrem $\theta$.
+\end{atencaobox}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Inferência Baseada em Design}
+\label{sec:design_based}
+
+Todas as abordagens discutidas até aqui assumem, implicitamente, que as observações são sorteios de uma superpopulação maior. A incerteza vem de podermos ter obtido uma amostra diferente. Há, no entanto, situações em que essa perspectiva não faz sentido: quando utilizamos dados de \textit{todos} os municípios brasileiros, de \textit{todas} as escolas de uma rede, ou dos \textit{todos} os participantes de um experimento em que a lista de participantes foi fixada antes da randomização, não há população maior de que amostramos.
+
+Na \textbf{inferência baseada em \textit{design}} (\textit{design-based inference}), a população de unidades é tratada como \textbf{fixa}. A única fonte de aleatoriedade é o \textbf{processo de atribuição do tratamento} — o sorteio de quem entre as unidades observadas recebeu o tratamento. Em vez de perguntar ``o que aconteceria se sorteássemos outra amostra?'', pergunta-se: ``o que aconteceria se, com estas mesmas unidades, o tratamento tivesse sido atribuído de forma diferente?''
+
+\subsection*{Por que isso importa na prática}
+
+Três razões tornam a perspectiva \textit{design-based} relevante em avaliação de políticas públicas no Brasil:
+
+\begin{enumerate}[leftmargin=*, label=(\roman*)]
+  \item \textbf{Dados administrativos censitários}: quando os dados cobrem a população inteira (todos os beneficiários do Bolsa Família, todos os funcionários públicos federais), a noção de ``amostra de uma superpopulação'' é forçada. A aleatoriedade relevante é a da política, não a da amostragem.
+  \item \textbf{Experimentos com cadastro fixo}: em RCTs em que a lista de participantes é definida antes da randomização, o processo que gera a incerteza é exatamente o sorteio do tratamento.
+  \item \textbf{Validade em amostras finitas}: a inferência por permutação é exata em amostras finitas, sem depender de aproximações assintóticas.
+\end{enumerate}
+
+\subsection*{Inferência por permutação}
+
+O procedimento central da inferência \textit{design-based} é a \textbf{inferência por permutação} (\textit{randomization inference}) \citep{Fisher1935}. Ela parte da \textbf{hipótese nula afiada} (\textit{sharp null}):
+
+\begin{hipotesebox}[Sharp null (Fisher)]
+Para todo indivíduo $i$: $Y_i(1) = Y_i(0)$, ou seja, o tratamento não afeta nenhum indivíduo.
+\end{hipotesebox}
+
+Sob a hipótese nula afiada, os resultados potenciais $Y_i(0)$ e $Y_i(1)$ são iguais para todo $i$ — e portanto os resultados observados seriam os mesmos independentemente de quem recebesse o tratamento. Isso significa que, sob $H_0^{\text{sharp}}$, qualquer permutação dos rótulos de tratamento deveria produzir uma estatística de teste semelhante à observada. O p-valor exato é a fração das permutações que geram uma estatística tão ou mais extrema:
+\begin{equation}
+  \text{p-valor}_{\text{perm}} = \frac{1}{|\mathcal{W}|}
+    \sum_{\mathbf{d} \in \mathcal{W}}
+    \mathds{1}\!\left[|T(\mathbf{d})| \geq |T(\mathbf{d}_{\text{obs}})|\right],
+  \label{eq:pvalue_perm}
+\end{equation}
+onde $\mathcal{W}$ é o conjunto de todas as atribuições possíveis e $T(\mathbf{d})$ é a estatística de teste calculada com a atribuição $\mathbf{d}$.
+
+\subsection*{Exemplo numérico}
+
+A Tabela~\ref{tab:permutacao} ilustra o procedimento com seis municípios, três dos quais recebem um programa de transferência de renda ($D_i = 1$). A estatística de teste é a diferença de médias entre tratados e controles.
+
+\begin{table}[H]
+\centering
+\caption{Dados observados para o exemplo de inferência por permutação}
+\label{tab:permutacao}
+\begin{tabular}{ccc}
+\toprule
+Município & Tratamento ($D_i$) & Taxa de pobreza (\%) \\
+\midrule
+A & 1 & 18 \\
+B & 1 & 21 \\
+C & 1 & 16 \\
+D & 0 & 27 \\
+E & 0 & 24 \\
+F & 0 & 29 \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\figmeta{Elaboração dos autores}{}{Dados hipotéticos. Tratados: municípios A, B, C. Controles: D, E, F.}
+\end{table}
+
+A diferença de médias observada é $T_{\text{obs}} = \bar{Y}_1 - \bar{Y}_0 = (18+21+16)/3 - (27+24+29)/3 = 18{,}33 - 26{,}67 = -8{,}33$. Existem $\binom{6}{3} = 20$ possíveis atribuições de 3 tratados entre 6 municípios. Sob $H_0^{\text{sharp}}$, calculamos a diferença de médias para cada uma:
+
+\begin{lstlisting}[style=Rstyle, caption={Inferência por permutação: exemplo com 6 municípios}]
+# -----------------------------
+# 1) Dados observados
+# -----------------------------
+rm(list = ls())
+library(combinat)
+
+Y <- c(18, 21, 16, 27, 24, 29)   # taxa de pobreza
+D <- c( 1,  1,  1,  0,  0,  0)   # tratamento observado
+n <- length(Y)
+n1 <- sum(D)
+
+T_obs <- mean(Y[D == 1]) - mean(Y[D == 0])
+cat("Diferença de médias observada:", round(T_obs, 2), "\n")
+
+# -----------------------------
+# 2) Gerar todas as C(6,3) = 20 permutações
+# -----------------------------
+perms <- combn(n, n1)  # colunas = cada possível conjunto de tratados
+T_perm <- apply(perms, 2, function(trat_idx) {
+  D_perm <- rep(0, n)
+  D_perm[trat_idx] <- 1
+  mean(Y[D_perm == 1]) - mean(Y[D_perm == 0])
+})
+
+cat("Distribuição de permutação:\n")
+print(sort(round(T_perm, 2)))
+
+# -----------------------------
+# 3) P-valor exato (bilateral)
+# -----------------------------
+p_perm <- mean(abs(T_perm) >= abs(T_obs))
+cat("\np-valor de permutação (bilateral):", round(p_perm, 3), "\n")
+cat("(", sum(abs(T_perm) >= abs(T_obs)), "de", ncol(perms), "permutações)\n")
+\end{lstlisting}
+
+No exemplo, apenas algumas das 20 permutações produzem uma diferença tão extrema quanto $-8{,}33$. O p-valor exato é a proporção dessas permutações. Note que esse p-valor é válido em amostras finitas, sem qualquer hipótese distribucional sobre os erros.
+
+\begin{notabox}[Sharp null vs.\ weak null]
+A hipótese nula afiada ($Y_i(1) = Y_i(0)$ para todo $i$) é mais forte do que a hipótese nula fraca ($\mathbb{E}[Y_i(1) - Y_i(0)] = 0$). A inferência por permutação testa a primeira. Com heterogeneidade de efeitos (alguns positivos, outros negativos com média zero), o teste de permutação pode não rejeitar $H_0^{\text{sharp}}$ mesmo quando a $H_0^{\text{weak}}$ também é falsa. Esse ponto é discutido em \citet{Imbens2015}, Capítulo 5.
+\end{notabox}
+
+
+%% ─────────────────────────────────────────────────────────────────
+\section{Testes de Falsificação}
+\label{sec:falsificacao}
+
+Em econometria causal, muitos dos testes mais informativos não testam o efeito do tratamento diretamente, mas a \textbf{plausibilidade das hipóteses de identificação}. Se a estratégia empírica requer tendências paralelas, a ausência de tendências divergentes antes do tratamento é evidência (circunstancial) a seu favor. Se a estratégia requer que um instrumento seja exógeno, a ausência de efeito sobre resultados que não deveriam ser afetados é reconfortante. Esses \textbf{testes de falsificação} (\textit{placebo tests}, \textit{falsification tests}) são uma das ferramentas mais valiosas do arsenal do avaliador.
+
+\subsection*{1 — Testes de pré-tendência (DiD)}
+
+No contexto de Diferenças em Diferenças, a identificação requer que o grupo tratado e o grupo controle teriam evoluído em paralelo na ausência do tratamento. Esse contrafactual não é testável diretamente, mas podemos verificar se os grupos evoluíam em paralelo \textit{antes} do tratamento.
+
+O procedimento padrão é o \textbf{estudo de evento} (\textit{event study}): regride-se o resultado sobre dummies de período relativo ao tratamento, separadas por grupo:
+\begin{equation}
+  Y_{it} = \alpha_i + \lambda_t + \sum_{k \neq -1} \delta_k \cdot D_i \cdot \mathds{1}[t = T_i + k] + \varepsilon_{it},
+  \label{eq:event_study}
+\end{equation}
+onde $k = -1$ é o período de referência (imediatamente antes do tratamento). Os coeficientes $\delta_k$ para $k < 0$ são os \textbf{coeficientes de pré-tendência}: sob tendências paralelas, devem ser estatisticamente indistinguíveis de zero.
+
+% FIGURA 4.3: Gráfico de event study.
+% Eixo x: períodos relativos ao tratamento (k = -4, -3, -2, -1, 0, 1, 2, 3, 4)
+% Eixo y: coeficiente delta_k com intervalo de confiança de 95%
+% Linha vertical em k = -0.5 (cutoff) e linha horizontal em 0
+% Coeficientes pré-tratamento (k < 0) próximos de zero; coeficientes pós-tratamento (k >= 0) positivos
+
+\begin{lstlisting}[style=Rstyle, caption={Estudo de evento: coeficientes de pré-tendência}]
+# -----------------------------
+# 1) Dados de painel simulados com pré-tendências satisfeitas
+# -----------------------------
+rm(list = ls())
+library(dplyr)
+library(ggplot2)
+library(lfe)  # para efeitos fixos (ou usar fixest)
+
+set.seed(42)
+N  <- 100   # unidades
+T  <- 10    # períodos (tratamento no período 6)
+
+dados_painel <- expand.grid(id = 1:N, t = 1:T)
+dados_painel <- dados_painel %>%
+  mutate(
+    tratado = id <= 50,        # metade das unidades é tratada
+    efeito  = ifelse(tratado & t >= 6, 2.0, 0),
+    Y = 5 + 0.3 * t +          # tendência comum
+        rnorm(N * T, sd = 1) +  # erro individual
+        efeito
+  )
+
+# -----------------------------
+# 2) Estudo de evento
+# -----------------------------
+dados_painel <- dados_painel %>%
+  mutate(k = t - 6)  # período relativo ao tratamento
+
+# Dummies de interação tratado × período (excluindo k = -1)
+library(fixest)
+mod_es <- feols(Y ~ i(k, tratado, ref = -1) | id + t,
+                data = dados_painel)
+
+# -----------------------------
+# 3) Gráfico de event study
+# -----------------------------
+coefs <- as.data.frame(coef(mod_es))
+iplot(mod_es,
+      main   = "Estudo de evento: coeficientes por período",
+      xlab   = "Período relativo ao tratamento",
+      ylab   = expression(delta[k]),
+      pt.pch = 16)
+abline(h = 0, lty = 2, col = "gray50")
+abline(v = -0.5, lty = 3, col = "gray30")
+\end{lstlisting}
+
+\begin{conexaobox}[Guia de Diferenças em Diferenças]
+A discussão completa sobre tendências paralelas, eventos escalonados (\textit{staggered DiD}) e estimadores robustos à heterogeneidade de efeitos está no \textit{Guia de Diferenças em Diferenças} (2 volumes) da Série Avaliação na Prática. Em particular, o segundo volume trata dos estimadores de Callaway-Sant'Anna, Sun-Abraham e Borusyak-Jaravel-Spiess, que evitam os pesos negativos do estimador TWFE em designs escalonados.
+\end{conexaobox}
+
+\subsection*{2 — Placebo de resultado}
+
+Um \textbf{placebo de resultado} aplica a mesma estratégia empírica a um resultado que, pela teoria, \textit{não} deveria ser afetado pelo tratamento. Um efeito estatisticamente significativo é evidência de que a estratégia pode estar captando algo além do tratamento de interesse.
+
+\begin{exemplobox}[Placebo de resultado: Bolsa Família e consumo]
+Suponha que se estime o efeito do Bolsa Família sobre o consumo de alimentos usando uma RDD no ponto de corte de elegibilidade (renda per capita = R\$\,218). Como placebo, aplica-se a mesma RDD ao consumo de bens de luxo (viagens internacionais, veículos de luxo) — itens que não deveriam ser afetados por uma transferência de baixo valor para famílias pobres. Um efeito significativo nesse placebo seria evidência de violação da hipótese de continuidade ao redor do corte.
+\end{exemplobox}
+
+\subsection*{3 — Placebo de tratamento}
+
+Um \textbf{placebo de tratamento} aplica a estratégia empírica a um período anterior ao tratamento real, como se o tratamento tivesse ocorrido nesse período anterior. Se a estratégia é válida, não deveria haver efeito detectável nesse período contrafactual.
+
+Em um painel com dados de 2010 a 2020 e tratamento em 2016, por exemplo, pode-se estimar o efeito como se o tratamento tivesse ocorrido em 2013, usando apenas dados de 2010 a 2015. Um efeito significativo em 2013 sugere que as diferenças pré-existentes entre grupos, e não o tratamento, explicam o resultado principal.
+
+\subsection*{4 — Teste de balanceamento}
+
+O \textbf{teste de balanceamento} verifica se covariadas pré-determinadas predizem o tratamento. Em um experimento aleatório, nenhuma característica pré-tratamento deveria prever quem recebe o tratamento (a não ser o próprio design de estratificação). Em um estudo observacional, o balanceamento não prova causalidade, mas desequilíbrio acentuado é evidência de seleção endógena.
+
+\begin{lstlisting}[style=Rstyle, caption={Teste de balanceamento via regressão}]
+# -----------------------------
+# 1) Regredir tratamento em covariadas pré-tratamento
+# Um F-teste conjunto testa se alguma covariada prediz D
+# -----------------------------
+rm(list = ls())
+library(estimatr)
+
+set.seed(55)
+n <- 500
+
+# Covariadas pré-tratamento
+idade   <- rnorm(n, 35, 10)
+renda   <- rnorm(n, 3000, 800)
+sexo    <- rbinom(n, 1, 0.5)
+
+# Tratamento: (a) aleatório ou (b) com seleção
+D_aleat  <- rbinom(n, 1, 0.5)
+D_selec  <- rbinom(n, 1, plogis(-1 + 0.03 * renda / 100))
+
+# -----------------------------
+# 2) F-teste de balanceamento
+# -----------------------------
+bal_aleat <- lm(D_aleat ~ idade + renda + sexo)
+bal_selec <- lm(D_selec ~ idade + renda + sexo)
+
+cat("=== Tratamento aleatório ===\n")
+print(summary(bal_aleat)$fstatistic)
+
+cat("\n=== Tratamento com seleção ===\n")
+print(summary(bal_selec)$fstatistic)
+
+# Tabela de diferenças por grupo
+for (D_var in list(D_aleat, D_selec)) {
+  cat("\nMédias por grupo:\n")
+  cat("  Renda tratados:   ", round(mean(renda[D_var == 1])), "\n")
+  cat("  Renda controles:  ", round(mean(renda[D_var == 0])), "\n")
+}
+\end{lstlisting}
+
+\subsection*{Uma advertência obrigatória}
+
+Os testes de falsificação são ferramentas poderosas, mas suas limitações precisam ser enunciadas com clareza. Passar em todos os placebos é evidência \textit{circunstancial} a favor da identificação — é um argumento para a credibilidade, não uma prova. Uma estratégia pode superar todos os testes disponíveis e ainda assim ter identificação inválida por razões não testáveis: um fator de confusão que não está nos dados, uma violação de SUTVA não observada, ou uma descontinuidade nas covariadas que coincide exatamente com o ponto de corte da política. Não confundir ausência de evidência contra a identificação com evidência a favor da identificação. Os testes de falsificação, como toda a inferência causal, devem ser lidos em conjunto com o argumento teórico e o conhecimento substantivo do fenômeno estudado.
+
+\begin{conexaobox}[Testes de falsificação nos guias de métodos]
+Cada guia da Série Avaliação na Prática discute os testes de falsificação específicos para o método em questão: o guia de \textit{RDD} trata da continuidade das covariadas e da densidade ao redor do corte (teste de McCrary); o guia de \textit{Matching} discute testes de qualidade do pareamento e equilíbrio; o guia de \textit{Variáveis Instrumentais} trata dos testes de superidentificação (Hansen-Sargan) e de instrumento fraco. Os procedimentos desta seção fornecem o arcabouço geral que fundamenta todos esses testes específicos.
+\end{conexaobox}

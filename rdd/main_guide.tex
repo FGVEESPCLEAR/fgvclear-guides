@@ -1,36 +1,47 @@
-\documentclass[12pt,a4paper]{article}
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Guia de Regressão Descontínua (RDD)
+%% ============================================================
 
-% ========== PACOTES ==========
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt, a4paper, openany]{book}
+
+%% ── Codificação e Idioma ────────────────────────────────────
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[brazilian]{babel}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{graphicx}
-\usepackage[dvipsnames]{xcolor}
-\usepackage{hyperref}
-\usepackage{natbib}
-\usepackage{geometry}
-\usepackage{setspace}
-\usepackage{enumitem}
-\usepackage{booktabs}
+\usepackage[brazil]{babel}
+
+%% ── Fonte ───────────────────────────────────────────────────
+\usepackage{tgpagella}
+
+%% ── Matemática ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e Tabelas ───────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
 \usepackage{longtable}
-\usepackage{float}
-\usepackage{caption}
-\usepackage{footnote}
-\usepackage{tcolorbox}
-\usepackage{listings}
-\usepackage{fancyhdr}
-\usepackage{titlesec}
-\usepackage{tocloft}
-\usepackage{multicol}
+\usepackage{tabularx}
 
-% ========== GEOMETRIA ==========
+%% ── Layout ──────────────────────────────────────────────────
+\usepackage{geometry}
 \geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
 \onehalfspacing
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{enumitem}
 
-% ========== CORES ==========
-\definecolor{clearblue}{RGB}{27,58,92}
-\definecolor{clearlightblue}{RGB}{44,95,138}
+%% ── Cores (paleta CLEAR) ────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
 \definecolor{salmonbg}{RGB}{252,235,230}
 \definecolor{salmonframe}{RGB}{230,160,140}
 \definecolor{bluebg}{RGB}{235,245,251}
@@ -42,56 +53,105 @@
 \definecolor{Rblue}{RGB}{0,80,160}
 \definecolor{Rgreen}{RGB}{0,128,0}
 \definecolor{Rgray}{RGB}{128,128,128}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{greenbg}{RGB}{225,242,225}
+\definecolor{greenframe}{RGB}{60,140,80}
 
-% ========== HYPERREF ==========
+%% ── Hyperlinks e Bibliografia ───────────────────────────────
+\usepackage{hyperref}
 \hypersetup{
-  colorlinks=true, linkcolor=clearlightblue, citecolor=clearlightblue, urlcolor=clearlightblue,
+  colorlinks=true,
+  linkcolor=clearlightblue,
+  citecolor=clearlightblue,
+  urlcolor=clearlightblue,
   pdfauthor={FGV CLEAR},
-  pdftitle={Avaliacao de Impacto: Regressao Descontínua (RDD)}
+  pdftitle={Guia de Regressão Descontínua (RDD)}
 }
+\usepackage{natbib}
 
-% ========== CABECALHOS ==========
+%% ── TColorbox ───────────────────────────────────────────────
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{breakable, skins}
+
+%% ── Código ──────────────────────────────────────────────────
+\usepackage{listings}
+
+%% ── Cabeçalhos e Rodapés ────────────────────────────────────
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[R]{\small\textit{Guia CLEAR $|$ Regressão Descontínua (RDD)}}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ Regress\~ao Descont\'inua (RDD)}}
 \fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
 
-% ========== TITULOS ==========
-\titleformat{\section}{\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
-\titleformat{\subsection}{\large\bfseries\color{clearlightblue}}{\thesubsection}{1em}{}
-\titleformat{\subsubsection}{\normalsize\bfseries\color{clearlightblue}}{\thesubsubsection}{1em}{}
-\titleformat{\paragraph}[runin]{\normalsize\bfseries\itshape\color{clearblue}}{}{}{}[.]
+%% ── Títulos de Seção ────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{clearblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{cleardarkblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{cleardarkblue}}{\thesubsubsection}{1em}{}
 
-% ========== CAIXAS ==========
-\newtcolorbox{hipotesebox}[1][Hip\'oteses]{
+%% ── Caixas Temáticas ────────────────────────────────────────
+\newtcolorbox{destaquebox}[1][Destaque]{
+  enhanced, breakable,
   colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
-  title=#1, boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
-}
-\newtcolorbox{exemplobox}[1][Exemplo]{
-  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
-  title=#1, boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
 \newtcolorbox{notabox}[1][Nota]{
+  enhanced, breakable,
   colback=bluebg, colframe=blueframe, coltitle=white, fonttitle=\bfseries,
-  title=#1, boxrule=0.5pt, arc=2pt, left=6pt, right=6pt, top=4pt, bottom=4pt
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
-\newtcolorbox{conexaobox}{
-  colback=orangebg, colframe=orangeframe, boxrule=0.5pt, arc=2pt,
-  left=6pt, right=6pt, top=3pt, bottom=3pt
+\newtcolorbox{conexaobox}[1][Conex\~ao com a s\'erie]{
+  enhanced, breakable,
+  colback=orangebg, colframe=orangeframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{exemplobox}[1][Exemplo]{
+  enhanced, breakable,
+  colback=greenbg, colframe=greenframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{atencaobox}[1][Aten\c{c}\~ao]{
+  enhanced, breakable,
+  colback=redbg, colframe=redframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
 
-% ========== LISTINGS ==========
+\newtcolorbox{hipotesebox}[1][Hip\'otese]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+%% ── Estilo de Listings ──────────────────────────────────────
 \lstdefinestyle{Rstyle}{
-  language=R, backgroundcolor=\color{codebg}, frame=single, rulecolor=\color{codeframe},
-  basicstyle=\small\ttfamily, keywordstyle=\color{Rblue}\bfseries,
-  stringstyle=\color{Rgreen}, commentstyle=\color{Rgray}\itshape,
-  numbers=none, breaklines=true, showstringspaces=false, tabsize=2,
-  xleftmargin=6pt, xrightmargin=6pt, aboveskip=8pt, belowskip=8pt,
+  language=R,
+  backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{codeframe},
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{Rblue}\bfseries,
+  stringstyle=\color{Rgreen},
+  commentstyle=\color{Rgray}\itshape,
+  numbers=none, breaklines=true,
+  showstringspaces=false, tabsize=2,
+  xleftmargin=6pt, xrightmargin=6pt,
+  aboveskip=8pt, belowskip=8pt,
   literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
            {ã}{{\~a}}1 {õ}{{\~o}}1 {ç}{{\c{c}}}1 {ê}{{\^e}}1 {â}{{\^a}}1 {ô}{{\^o}}1
            {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ú}{{\'U}}1
-           {<-}{{$\leftarrow$}}2
 }
 \lstdefinestyle{Routput}{
   backgroundcolor=\color{codebg}, frame=single, rulecolor=\color{codeframe},
@@ -100,23 +160,26 @@
   aboveskip=4pt, belowskip=8pt
 }
 
-% ========== TEOREMAS ==========
-\newtheorem{definicao}{Defini\c{c}\~ao}[section]
-\newtheorem{proposicao}{Proposi\c{c}\~ao}[section]
+%% ── Teoremas ────────────────────────────────────────────────
+\newtheorem{definicao}{Defini\c{c}\~ao}[chapter]
+\newtheorem{proposicao}{Proposi\c{c}\~ao}[chapter]
 
-% ========== METADADOS DE FIGURAS ==========
+%% ── Metadados de Figuras/Quadros ────────────────────────────
 \newcommand{\figmeta}[3]{%
   \par\vspace{4pt}%
   \begin{minipage}{\linewidth}%
   \footnotesize%
-  \textbf{Fonte:} #1\\%
-  \textbf{Elabora\c{c}\~ao:} #2%
-  \ifx&#3&\else\\[1pt]\textbf{Nota:} #3\fi%
+  \textbf{Fonte:} #1%
+  \ifx&#2&\else\\\textbf{Elabora\c{c}\~ao:} #2\fi%
+  \ifx&#3&\else\\\textbf{Nota:} #3\fi%
   \end{minipage}%
   \vspace{6pt}%
 }
 
-% ========== DOCUMENTO ==========
+%% ── Profundidade de numera\c{c}\~ao ─────────────────────────
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
 \begin{document}
 
 % ==========================================
@@ -129,19 +192,19 @@
 \vspace{1.5cm}
 
 {\Huge\bfseries\color{clearblue} Avalia\c{c}\~ao de Impacto:\\[0.3cm]
-Regress\~ao Descon\'inua\\[0.3cm]
+Regress\~ao Descont\'inua\\[0.3cm]
 (RDD)}
 
 \vspace{2cm}
-{\large FGV CLEAR $|$ FGV EESP $|$ Global Evaluation Initiative}
+{\large FGV CLEAR $|$ FGV EESP}
 
 \vspace{0.5cm}
-{\large [M\^es/Ano]}
+{\large Maio de 2026}
 
 \vfill
 
 \begin{abstract}
-\noindent Este guia apresenta o m\'etodo de Regress\~ao Descon\'inua (\textit{Regression Discontinuity Design} --- RDD) para avalia\c{c}\~ao de impacto de pol\'iticas p\'ublicas. O RDD \'e especialmente adequado quando a elegibilidade ao tratamento \'e determinada por um crit\'erio de corte numa vari\'avel cont\'inua, permitindo estimar efeitos causais a partir de descontinuidades locais. O guia cobre o arcabou\c{c}o te\'orico de identifica\c{c}\~ao \citep{Hahn2001,ImbensLemieux2008,LeeLemieux2010}, os casos Sharp e Fuzzy, os testes de validade e robustez \citep{McCrary2008,CattaneoJanssonMa2020}, e extens\~oes como m\'ultiplos cutoffs e RDD geogr\'afico. A aplica\c{c}\~ao emp\'irica avalia o impacto do Bolsa Fam\'ilia sobre a frequ\^encia escolar usando a regra de renda per capita como ponto de corte. Todos os exemplos incluem c\'odigo completo em R com os pacotes \texttt{rdrobust} \citep{Calonico2015} e \texttt{rddensity} \citep{CattaneoJanssonMa2018}.
+\noindent Este guia apresenta o m\'etodo de Regress\~ao Descont\'inua (\textit{Regression Discontinuity Design} --- RDD) para avalia\c{c}\~ao de impacto de pol\'iticas p\'ublicas. O RDD se aplica quando a elegibilidade ao tratamento depende de um crit\'erio de corte numa vari\'avel cont\'inua: a descontinuidade gerada nesse ponto permite identificar o efeito causal localmente. O guia cobre o arcabou\c{c}o te\'orico de identifica\c{c}\~ao \citep{Hahn2001,ImbensLemieux2008,LeeLemieux2010}, os casos Sharp e Fuzzy, os testes de validade e robustez \citep{McCrary2008,CattaneoJanssonMa2020} e extens\~oes como m\'ultiplos cutoffs e RDD geogr\'afico. A aplica\c{c}\~ao emp\'irica avalia o impacto do Bolsa Fam\'ilia sobre a frequ\^encia escolar usando a regra de renda per capita como ponto de corte. Todos os exemplos incluem c\'odigo completo em R com os pacotes \texttt{rdrobust} \citep{Calonico2015} e \texttt{rddensity} \citep{CattaneoJanssonMa2018}.
 \end{abstract}
 \end{center}
 \newpage
@@ -150,11 +213,9 @@ Regress\~ao Descon\'inua\\[0.3cm]
 % FICHA TECNICA
 % ==========================================
 \thispagestyle{empty}
-\section*{Ficha T\'ecnica}
+\chapter*{Ficha T\'ecnica}
 
-\textbf{Organizadores:} [Nome 1], [Nome 2]
-
-\textbf{Equipe t\'ecnica:} [Listar membros]
+\textbf{Equipe t\'ecnica:} Andr\'e Portela Souza, Caio de Souza Castro, Fabr\'icia Volot\~ao Peixoto, Luigi Garzon, Lycia Lima.
 
 \vspace{1cm}
 
@@ -168,6 +229,85 @@ Saiba mais sobre o FGV CLEAR e acesse outras publica\c{c}\~oes em: \textbf{www.f
 % ==========================================
 % SUMARIO
 % ==========================================
+% ─── SOBRE ESTE GUIA ─────────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Sobre este guia}
+O Bolsa Família tem uma linha de renda. Famílias abaixo dela entram no
+programa, famílias acima ficam de fora. Suponha que você queira saber se
+receber o benefício afeta a frequência escolar dos filhos. A comparação
+direta entre o grupo que recebe e o grupo que não recebe vai ser enviesada
+por construção: as famílias beneficiárias são, em média, mais pobres, têm
+menos escolaridade, vivem em municípios diferentes, têm trajetórias
+laborais diferentes. Tudo isso afeta a frequência escolar mesmo sem o
+programa. A diferença observada mistura efeito da pobreza com efeito do
+benefício, e nenhuma análise séria pode ignorar isso.
+
+A regressão descontínua se aproveita de uma característica do desenho do
+programa para contornar o problema. A regra de elegibilidade é abrupta:
+R\$ 5 abaixo da linha entra, R\$ 5 acima fica de fora. Mas duas famílias
+separadas por R\$ 10 na renda mensal não são, salvo pelo benefício,
+populações distintas. Idade dos filhos, escolaridade dos pais, região onde
+vivem, tudo isso é parecido em média na vizinhança imediata do corte. Quem
+fica de cada lado da linha foi separado por um detalhe quase fortuito. Se
+nessa vizinhança aparecer uma diferença sistemática na frequência escolar,
+ela vem do programa. É o tipo de comparação que se aproxima do que um
+experimento daria, sem que ninguém tenha sido sorteado.
+
+A premissa que sustenta o argumento é continuidade. A relação entre renda
+e frequência escolar pode ser decrescente, ruidosa, irregular ao longo da
+distribuição inteira. O método não precisa que ela seja linear, nem suave,
+nem nada parecido. Só precisa que seja contínua, sem saltos, exceto onde o
+programa muda discretamente. O efeito do tratamento é estimado como o
+salto da curva no ponto da regra. Tudo o mais é continuidade. Só o
+programa muda em degrau.
+
+Esse arranjo aparece em mais lugares do que parece. ProUni com nota mínima
+do Enem. Idade de corte para entrada na escola. Pontos de IDH acima dos
+quais um município passa a receber recursos federais. Limite de tamanho a
+partir do qual uma empresa passa a ter obrigações trabalhistas adicionais.
+Cada vez que há uma regra explícita separando quem é tratado de quem não
+é, e a regra é seguida com alguma fidelidade, há uma RDD possível.
+
+Este guia trata da identificação (quando essa lógica vale), da estimação
+na prática (regressão local polinomial, escolha de bandwidth, escolha do
+polinômio), dos testes de validade (manipulação da regra pelos
+beneficiários, descontinuidades em outras variáveis no mesmo ponto), e das
+duas variantes principais. Sharp RDD se aplica quando a regra é seguida à
+risca. Fuzzy RDD, quando o cumprimento é apenas parcial e a probabilidade
+de tratamento salta no corte sem chegar a 100\%. O guia também é honesto
+sobre o limite mais sério do método: o efeito estimado vale na vizinhança
+do corte. Saber se o Bolsa Família afeta famílias muito mais pobres ou
+muito mais ricas que a linha de elegibilidade exige outra estratégia.
+\newpage
+
+% ─── COMO LER ESTE GUIA ──────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Como ler este guia}
+Três tipos de caixa estruturam a leitura, identificados por cor:
+\vspace{0.3cm}
+\begin{notabox}[Caixa azul --- pontos-chave]
+Aparece ao fim de cada capítulo, com sínteses e recomendações para quem
+precisa decidir.
+\end{notabox}
+\begin{exemplobox}[Caixa verde --- exemplo aplicado]
+Mostra como as ideias do capítulo se traduzem em situações de política
+pública. Os casos são fictícios, mas calibrados por padrões recorrentes
+na literatura e na prática de gestão.
+\end{exemplobox}
+\begin{atencaobox}[Caixa vermelha --- cuidados essenciais]
+Sinaliza armadilhas comuns --- pontos em que uma escolha mal fundamentada
+compromete toda a análise.
+\end{atencaobox}
+\vspace{0.5cm}
+\noindent O guia faz referência recorrente ao \textit{Guia CLEAR de
+Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}
+\citep{Lima2025} --- doravante \textbf{Guia CLEAR de M\&A} ---, que trata
+em profundidade as etapas do ciclo da política pública adotado na série.
+Quando o texto menciona Teoria da Mudança, plano de monitoramento ou
+tipologia de avaliações, é nesse guia que o leitor encontra o
+desenvolvimento completo.
+\newpage
+
 \tableofcontents
 \newpage
 
@@ -175,13 +315,14 @@ Saiba mais sobre o FGV CLEAR e acesse outras publica\c{c}\~oes em: \textbf{www.f
 % ==========================================
 % SECAO 1: INTRODUCAO
 % ==========================================
-\section{Introdu\c{c}\~ao e Motiva\c{c}\~ao}
 
-\subsection{O Problema da Causalidade com Regras de Corte}
+\chapter{Introdu\c{c}\~ao e Motiva\c{c}\~ao}
 
-Uma das perguntas mais frequentes em avalia\c{c}\~ao de pol\'iticas p\'ublicas \'e: \textit{qual seria o resultado dos benefici\'arios caso n\~ao tivessem participado do programa?} Quando a participa\c{c}\~ao \'e determinada por sorteio, a resposta \'e direta. Mas a maioria das pol\'iticas p\'ublicas n\~ao \'e implementada por sorteio --- h\'a crit\'erios de sele\c{c}\~ao.
+\section{O Problema da Causalidade com Regras de Corte}
 
-Uma situa\c{c}\~ao particularmente frequente \'e aquela em que a elegibilidade \'e determinada por uma \textbf{regra de corte}: apenas quem possui uma vari\'avel cont\'inua --- renda, pontua\c{c}\~ao em teste, popula\c{c}\~ao, idade --- abaixo (ou acima) de certo valor tem acesso ao programa. Nesses casos, indiv\'iduos imediatamente acima e abaixo do ponto de corte s\~ao muito semelhantes entre si, mas diferem sistematicamente no acesso ao tratamento. Essa descontinuidade local pode ser explorada para estimar efeitos causais de forma rigorosa.
+Uma das perguntas mais frequentes em avalia\c{c}\~ao de pol\'iticas p\'ublicas \'e: \textit{o que teria acontecido com os benefici\'arios caso n\~ao tivessem participado do programa?} Quando a participa\c{c}\~ao \'e determinada por sorteio, a resposta \'e direta. Mas a maioria das pol\'iticas p\'ublicas n\~ao funciona assim --- h\'a crit\'erios de sele\c{c}\~ao.
+
+Em muitos casos esse crit\'erio toma a forma de uma \textbf{regra de corte}: tem acesso ao programa apenas quem possui uma vari\'avel cont\'inua --- renda, pontua\c{c}\~ao em teste, popula\c{c}\~ao ou idade --- abaixo (ou acima) de determinado valor. Indiv\'iduos imediatamente \`a esquerda e \`a direita desse limite s\~ao parecidos em quase tudo, mas diferem sistematicamente no acesso ao tratamento. \'E essa descontinuidade local que o RDD explora para identificar efeitos causais.
 
 \begin{exemplobox}[Exemplos de regras de corte em pol\'iticas brasileiras]
 \begin{itemize}[leftmargin=1.2cm, itemsep=2pt]
@@ -193,21 +334,21 @@ Uma situa\c{c}\~ao particularmente frequente \'e aquela em que a elegibilidade \
 \end{itemize}
 \end{exemplobox}
 
-\subsection{A Ideia Central do RDD}
+\section{A Ideia Central do RDD}
 
-A intui\c{c}\~ao do RDD \'e elegante. No ponto de corte $Z^*$, unidades com valores de $Z$ levemente abaixo e levemente acima s\~ao quase id\^enticas em todos os outros aspectos --- a \'unica diferen\c{c}a sistem\'atica \'e o acesso ao tratamento. Portanto, a diferen\c{c}a nos resultados entre esses dois grupos estima o efeito causal do programa \citep{LeeLemieux2010}.
+A l\'ogica do RDD parte de uma observa\c{c}\~ao simples. No ponto de corte $Z^*$, unidades com $Z$ levemente abaixo e levemente acima s\~ao quase id\^enticas em qualquer caracter\'istica relevante --- exceto pelo acesso ao tratamento, que muda abruptamente. A diferen\c{c}a nos resultados entre esses dois grupos, portanto, identifica o efeito causal do programa \citep{LeeLemieux2010}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.92\textwidth]{fig1_sharp_rdd.pdf}
+\includegraphics[width=0.92\textwidth]{fig0_intuicao_rdd.pdf}
 \caption{Intui\c{c}\~ao do RDD: descontinuidade no ponto de corte}
 \label{fig:intuicao}
-\figmeta{Dados simulados.}{FGV CLEAR.}{A frequ\^encia escolar cresce suavemente com a renda per capita, exceto no ponto de corte (R\$\,218) onde o acesso ao Bolsa Fam\'ilia gera uma descontinuidade. A diferen\c{c}a entre as curvas nesse ponto estima o LATE do programa.}
+\figmeta{Dados simulados.}{FGV CLEAR.}{A frequ\^encia escolar cresce suavemente com a renda per capita, exceto no ponto de corte (R\$\,218) onde o acesso ao Bolsa Fam\'ilia gera uma descontinuidade. Nesta conven\c{c}\~ao, fam\'ilias eleg\'iveis t\^em $x > 0$ (lado direito do gr\'afico) e apresentam frequ\^encia escolar mais elevada do que as n\~ao eleg\'iveis ($x < 0$). O LATE do programa \'e positivo: a descontinuidade reflete o aumento na frequ\^encia escolar causado pelo benef\'icio.}
 \end{figure}
 
-\subsection{Breve Hist\'orico e Aplica\c{c}\~oes}
+\section{Breve Hist\'orico e Aplica\c{c}\~oes}
 
-O RDD foi proposto por \cite{ThistlethwaiteCampbell1960} no contexto educacional. Sua retomada ocorreu com \cite{Hahn2001}, que formalizaram a identifica\c{c}\~ao, e \cite{ImbensLemieux2008} e \cite{LeeLemieux2010}, que consolidaram o m\'etodo. Alguns estudos paradigm\'aticos:
+A formula\c{c}\~ao original do RDD vem de \cite{ThistlethwaiteCampbell1960}, em contexto educacional. O m\'etodo s\'o ganharia tra\c{c}\~ao d\'ecadas depois, com a formaliza\c{c}\~ao da identifica\c{c}\~ao por \cite{Hahn2001} e a consolida\c{c}\~ao do arcabou\c{c}o pr\'atico em \cite{ImbensLemieux2008} e \cite{LeeLemieux2010}. Aplica\c{c}\~oes que se tornaram refer\^encia da literatura:
 
 \begin{itemize}[leftmargin=1.5cm, itemsep=2pt]
   \item \cite{AngristLavy1999}: efeito do tamanho da turma sobre desempenho escolar (regra de Maimonides em Israel)
@@ -216,7 +357,7 @@ O RDD foi proposto por \cite{ThistlethwaiteCampbell1960} no contexto educacional
   \item \cite{Romero2009}: impacto do Bolsa Fam\'ilia sobre indicadores educacionais no Brasil
 \end{itemize}
 
-\subsection{RDD no Ecossistema de M\'etodos de Avalia\c{c}\~ao}
+\section{RDD no Ecossistema de M\'etodos de Avalia\c{c}\~ao}
 
 \begin{table}[H]
 \centering
@@ -239,16 +380,16 @@ Visualiza\c{c}\~ao     & M\'edia    & Alta           & Muito alta      & \textbf
 \end{table}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conex\~ao com outros guias:}} \textit{Guia de DiD --- DiD para pol\'iticas com varia\c{c}\~ao temporal vs RDD para pol\'iticas com regra de corte; Guia de SCM --- SCM para poucas unidades tratadas vs RDD para muitas unidades com regra de corte; Guia de Matching --- Arcabou\c{c}o causal geral.}
+\textit{Guia de DiD --- DiD para pol\'iticas com varia\c{c}\~ao temporal vs RDD para pol\'iticas com regra de corte; Guia de SCM --- SCM para poucas unidades tratadas vs RDD para muitas unidades com regra de corte; Guia de Matching --- Arcabou\c{c}o causal geral.}
 \end{conexaobox}
 
 
 % ==========================================
 % SECAO 2: FUNDAMENTOS TEORICOS
 % ==========================================
-\section{Fundamentos Te\'oricos}
+\chapter{Fundamentos Te\'oricos}
 
-\subsection{Modelo de Resultados Potenciais}
+\section{Modelo de Resultados Potenciais}
 
 O arcabou\c{c}o de resultados potenciais \citep{Rubin1974} \'e a base formal do RDD. Para cada unidade $i$:
 \begin{itemize}[leftmargin=1.5cm, itemsep=2pt]
@@ -259,15 +400,15 @@ O arcabou\c{c}o de resultados potenciais \citep{Rubin1974} \'e a base formal do 
 
 O que observamos \'e $Y_i = D_i \cdot Y_i(1) + (1 - D_i) \cdot Y_i(0)$, onde $D_i \in \{0,1\}$ \'e o indicador de tratamento efetivo.
 
-\subsection{A \textit{Running Variable} e o Cutoff}
+\section{A \textit{Running Variable} e o Cutoff}
 
 \begin{definicao}[\textit{Running variable} e cutoff]
 A \textit{running variable} $Z_i$ \'e uma vari\'avel cont\'inua que determina (total ou parcialmente) a elegibilidade ao tratamento. O cutoff $Z^*$ \'e o valor a partir do qual a regra de elegibilidade se aplica. No Bolsa Fam\'ilia: $Z_i = $ renda per capita familiar, $Z^* = $ R\$\,218.
 \end{definicao}
 
-\'E conveniente trabalhar com a \textit{running variable} \textbf{centralizada}: $x_i = Z_i - Z^*$, de modo que o cutoff fique em $x = 0$. Unidades eleg\'iveis t\^em $x_i < 0$; n\~ao eleg\'iveis, $x_i > 0$ (quando o tratamento se aplica abaixo do corte).
+\'E conveniente trabalhar com a \textit{running variable} \textbf{centralizada}: $x_i = Z^* - Z_i$, de modo que o cutoff fique em $x = 0$. Unidades eleg\'iveis t\^em $x_i > 0$; n\~ao eleg\'iveis, $x_i < 0$ (no Bolsa Fam\'ilia: $x_i = \text{R}\$\,218 - \text{renda}_i$).
 
-\subsection{Hip\'oteses de Identifica\c{c}\~ao}
+\section{Hip\'oteses de Identifica\c{c}\~ao}
 
 \begin{hipotesebox}[Hip\'otese 1 --- Continuidade dos Resultados Potenciais]
 As fun\c{c}\~oes de expectativa condicional dos resultados potenciais s\~ao \textbf{cont\'inuas} no ponto de corte:
@@ -293,7 +434,7 @@ Sob essas duas hip\'oteses, o RDD identifica o \textbf{Efeito Local M\'edio do T
 O LATE do RDD \'e v\'alido apenas para as unidades \textbf{pr\'oximas ao ponto de corte}. No contexto do Bolsa Fam\'ilia, o efeito estimado em R\$\,218 refere-se \`as fam\'ilias com renda per capita nessa vizinhan\c{c}a --- n\~ao necessariamente para fam\'ilias em extrema pobreza ou muito acima do limiar \citep{LeeLemieux2010}.
 \end{notabox}
 
-\subsection{Estima\c{c}\~ao por Regress\~ao Local Polinomial}
+\section{Estima\c{c}\~ao por Regress\~ao Local Polinomial}
 
 A abordagem moderna estima o LATE por \textbf{regress\~ao polinomial local} separadamente \`a esquerda e \`a direita do cutoff, dentro de uma janela (\textit{bandwidth}) $h$:
 \begin{equation}
@@ -308,25 +449,24 @@ onde $\hat{\mu}^+(0)$ e $\hat{\mu}^-(0)$ s\~ao os limites estimados por regress\
 \paragraph{Sele\c{c}\~ao da janela.} O seletor MSE-\'otimo de \cite{Calonico2014}, implementado no \texttt{rdrobust} com \texttt{bwselect = "mserd"}, minimiza o erro quadr\'atico m\'edio e \'e o padr\~ao recomendado.
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conex\~ao com outros guias:}} \textit{Guia de Avalia\c{c}\~ao de Impacto (Vol.~2) --- Se\c{c}\~ao 3 (Modelo de resultados potenciais, ATE vs ATT vs LATE); Guia de Matching --- Se\c{c}\~ao 2 (Compara\c{c}\~ao de estimadores locais vs globais).}
+\textit{Guia de Avalia\c{c}\~ao de Impacto (Vol.~2) --- Se\c{c}\~ao 3 (Modelo de resultados potenciais, ATE vs ATT vs LATE); Guia de Matching --- Se\c{c}\~ao 2 (Compara\c{c}\~ao de estimadores locais vs globais).}
 \end{conexaobox}
 
 
 % ==========================================
 % SECAO 3: SHARP RDD
 % ==========================================
-\section{Sharp RDD}
-
-\subsection{Defini\c{c}\~ao}
+\chapter{Sharp RDD}
+\label{sec:sharp}
 
 No \textbf{Sharp RDD}, o tratamento \'e determinado \textbf{exclusivamente} pelo crit\'erio de corte:
 \begin{equation}
   D_i = \mathbf{1}[Z_i \leq Z^*].
 \end{equation}
 
-A probabilidade de tratamento passa de 0 para 1 \textit{exatamente} no ponto de corte. N\~ao h\'a ambiguidade: quem est\'a abaixo \'e tratado; quem est\'a acima, n\~ao.
+A probabilidade de tratamento passa de 0 para 1 \textit{no} ponto de corte: quem est\'a abaixo \'e tratado, quem est\'a acima n\~ao.
 
-\subsection{Estima\c{c}\~ao com \texttt{rdrobust}}
+\section{Estima\c{c}\~ao com \texttt{rdrobust}}
 
 O pacote \texttt{rdrobust} \citep{Calonico2015} implementa o estimador MSE-\'otimo com corre\c{c}\~ao de vi\'es e intervalos de confian\c{c}a robustos \citep{Calonico2014}.
 
@@ -338,7 +478,7 @@ library(rdrobust); library(rddensity)
 # Carregar dados (gerados por Cap_RDD_BolsaFamilia.R)
 df <- read.csv("bolsafamilia_rdd.csv")
 
-# Sharp RDD: x = renda_per_capita - 218 (elegivel quando x < 0)
+# Sharp RDD: x = 218 - renda_per_capita (elegivel quando x > 0)
 rdd_sharp <- rdrobust(
   y        = df$freq_escolar,
   x        = df$x,
@@ -350,7 +490,7 @@ rdd_sharp <- rdrobust(
 summary(rdd_sharp)
 \end{lstlisting}
 
-\subsection{Interpretando o Output}
+\section{Interpretando o Output}
 
 O \texttt{rdrobust} reporta tr\^es estimativas. A coluna \textbf{Robust} --- com corre\c{c}\~ao de vi\'es e erro-padr\~ao robusto --- \'e a recomendada para infer\^encia:
 
@@ -366,10 +506,10 @@ BW est. (h) = 44.1   |  Eff. N esq. = 687  |  Eff. N dir. = 512
 \end{lstlisting}
 
 \begin{notabox}[Como reportar o resultado]
-Sempre reporte a estimativa \textbf{Robust}, n\~ao a convencional. A estimativa robusta incorpora a corre\c{c}\~ao de vi\'es de segunda ordem e \'e v\'alida para o IC reportado. Exemplo: ``O LATE estimado \'e de 8,0 p.p. (IC\,95\%: [5,4;\,10,6], $p < 0{,}01$).''
+A estimativa a reportar \'e a \textbf{Robust}, n\~ao a convencional --- ela incorpora a corre\c{c}\~ao de vi\'es de segunda ordem e o IC reportado \'e v\'alido sob essa corre\c{c}\~ao. Formula\c{c}\~ao t\'ipica: ``O LATE estimado \'e de 8,0 p.p. (IC\,95\%: [5,4;\,10,6], $p < 0{,}01$).''
 \end{notabox}
 
-\subsection{O Gr\'afico RDD}
+\section{O Gr\'afico RDD}
 
 Um bom gr\'afico RDD mostra: (i) observa\c{c}\~oes agregadas em \textit{bins}, (ii) curvas de ajuste local por lado do cutoff, e (iii) a descontinuidade no ponto de corte. O pacote \texttt{rdplot} gera esse gr\'afico automaticamente:
 
@@ -377,7 +517,7 @@ Um bom gr\'afico RDD mostra: (i) observa\c{c}\~oes agregadas em \textit{bins}, (
 # Grafico RDD com rdplot
 rdplot(y = df$freq_escolar, x = df$x, c = 0,
        title = "Sharp RDD: Bolsa Familia",
-       x.label = "Renda per capita centralizada (R$ - R$ 218)",
+       x.label = "Renda per capita centralizada (R$ 218 - R$)",
        y.label = "Frequencia escolar (%)")
 \end{lstlisting}
 
@@ -386,16 +526,17 @@ rdplot(y = df$freq_escolar, x = df$x, c = 0,
 \includegraphics[width=0.92\textwidth]{fig1_sharp_rdd.pdf}
 \caption{Sharp RDD --- Impacto do Bolsa Fam\'ilia sobre frequ\^encia escolar}
 \label{fig:sharp}
-\figmeta{Dados simulados.}{FGV CLEAR.}{Cada ponto representa a m\'edia de frequ\^encia escolar num bin. As curvas s\~ao ajustes locais (LOESS) por lado do cutoff. As linhas pontilhadas delimitam a janela MSE-\'otima. A descontinuidade em $x=0$ estima o LATE do programa.}
+\figmeta{Dados simulados.}{FGV CLEAR.}{Cada ponto representa a m\'edia de frequ\^encia escolar num bin. As curvas s\~ao ajustes locais por lado do cutoff (geradas com \texttt{rdplot}). As linhas pontilhadas delimitam a janela MSE-\'otima. Fam\'ilias eleg\'iveis ($x > 0$) apresentam frequ\^encia escolar mais elevada (lado direito): a descontinuidade em $x = 0$ estima o LATE positivo do programa.}
 \end{figure}
+
+O gr\'afico confirma uma descontinuidade positiva e estatisticamente significativa na frequ\^encia escolar no cutoff de R\$\,218. O estimador robusto de \cite{Calonico2014} recupera um LATE pr\'oximo ao efeito verdadeiro de 8 p.p.\ implantado na simula\c{c}\~ao --- fam\'ilias com renda per capita pr\'oxima ao limiar e que acessam o Bolsa Fam\'ilia apresentam frequ\^encia escolar 8,0 pontos percentuais maior do que fam\'ilias similares sem o benef\'icio.
 
 
 % ==========================================
 % SECAO 4: FUZZY RDD
 % ==========================================
-\section{Fuzzy RDD}
-
-\subsection{Defini\c{c}\~ao e Motiva\c{c}\~ao}
+\chapter{Fuzzy RDD}
+\label{sec:fuzzy}
 
 No \textbf{Fuzzy RDD}, o cutoff define apenas a \textbf{elegibilidade}, n\~ao o recebimento efetivo do tratamento. A probabilidade de tratamento apresenta uma descontinuidade em $Z^*$, mas n\~ao salta de 0 para 1:
 \begin{equation}
@@ -408,11 +549,11 @@ Esse cen\'ario \'e an\'alogo ao \textit{non-compliance} em experimentos aleat\'o
 Nem todas as fam\'ilias eleg\'iveis (renda $\leq$ R\$\,218) se cadastram e recebem o benef\'icio --- estima-se compliance de aproximadamente 75\% entre os eleg\'iveis \citep{Ribeiro2017}. Al\'em disso, h\'a \textit{leakage}: fam\'ilias com renda levemente acima do cutoff podem permanecer no cadastro por desatualiza\c{c}\~ao do Cad\'Unico. Isso configura um Fuzzy RDD.
 \end{exemplobox}
 
-\subsection{Estima\c{c}\~ao por Vari\'aveis Instrumentais}
+\section{Estima\c{c}\~ao por Vari\'aveis Instrumentais}
 
-O Fuzzy RDD \'e estimado por \textbf{vari\'aveis instrumentais} (IV/2SLS), usando a elegibilidade $\mathbf{1}[Z_i \leq Z^*]$ como instrumento para o recebimento efetivo $D_i$:
+O Fuzzy RDD \'e estimado por \textbf{vari\'aveis instrumentais} (IV/2SLS), usando a elegibilidade $\mathbf{1}[Z_i \leq Z^*]$ como instrumento para o recebimento efetivo $D_i$. O par\^ametro de interesse --- o \textbf{estimando} --- \'e o LATE para os \textit{compliers} no cutoff, identificado pelo quociente entre a forma reduzida e o primeiro est\'agio:
 \begin{equation}
-  \hat{\tau}_{Fuzzy} =
+  \tau_{Fuzzy} =
   \frac{
     \lim_{x \downarrow 0} E[Y_i \mid x_i = x] - \lim_{x \uparrow 0} E[Y_i \mid x_i = x]
   }{
@@ -420,7 +561,7 @@ O Fuzzy RDD \'e estimado por \textbf{vari\'aveis instrumentais} (IV/2SLS), usand
   }.
 \end{equation}
 
-O par\^ametro estimado \'e o LATE para os \textit{compliers} no cutoff: fam\'ilias que se cadastram \textit{porque} s\~ao eleg\'iveis \citep{Hahn2001}.
+Sob a hip\'otese de monotonicidade (Hip\'otese~3 abaixo), essa express\~ao identifica o LATE para os \textit{compliers} no cutoff --- fam\'ilias que se cadastram \textit{porque} s\~ao eleg\'iveis \citep{Hahn2001}.
 
 \begin{hipotesebox}[Hip\'otese 3 --- Monotonicidade (Fuzzy RDD)]
 A elegibilidade n\~ao pode \textbf{reduzir} a probabilidade de tratamento para nenhuma unidade:
@@ -429,7 +570,7 @@ $D_i(Z_i \leq Z^*) \geq D_i(Z_i > Z^*)$ para todo $i$.
 \textit{Interpreta\c{c}\~ao:} no Bolsa Fam\'ilia, ser eleg\'ivel nunca desencoraja o cadastro, ou seja, n\~ao h\'a \textit{defiers} --- unidades que participam \textit{apenas} quando n\~ao s\~ao eleg\'iveis.
 \end{hipotesebox}
 
-\subsection{Implementa\c{c}\~ao em R}
+\section{Implementa\c{c}\~ao em R}
 
 \begin{lstlisting}[style=Rstyle]
 # Fuzzy RDD: 'fuzzy' recebe o indicador de tratamento efetivo
@@ -463,6 +604,8 @@ summary(fs, diagnostics = TRUE)
 \figmeta{Dados simulados.}{FGV CLEAR.}{Painel A: a probabilidade de receber o Bolsa Fam\'ilia salta de $\sim$5\% para $\sim$75\% no cutoff (primeiro est\'agio). Painel B: a frequ\^encia escolar apresenta descontinuidade positiva (forma reduzida). O quociente fornece o LATE para os \textit{compliers}.}
 \end{figure}
 
+O Painel~A confirma o primeiro est\'agio: a probabilidade de receber o Bolsa Fam\'ilia salta de $\sim$5\% (n\~ao eleg\'iveis, $x < 0$) para $\sim$75\% (eleg\'iveis, $x > 0$) no cutoff --- evidenciando que a regra de elegibilidade \'e um instrumento forte para o recebimento efetivo. A estimativa IV (Painel~B) \'e ligeiramente maior do que a estimativa Sharp, pois o Fuzzy LATE mede o efeito especificamente sobre os \textit{compliers}: as fam\'ilias que se cadastram \textit{por causa} da elegibilidade, e que seriam as mais beneficiadas pela pol\'itica.
+
 \begin{table}[H]
 \centering
 \caption{Compara\c{c}\~ao entre Sharp e Fuzzy RDD}
@@ -483,18 +626,18 @@ An\'alogo experimental & Compliance perfeito & \textit{Non-compliance} \\
 \end{table}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conex\~ao com outros guias:}} \textit{Guia de Avalia\c{c}\~ao de Impacto (Vol.~2) --- Se\c{c}\~ao 4 (Vari\'aveis instrumentais: primeiro est\'agio, forma reduzida e interpreta\c{c}\~ao LATE para compliers).}
+\textit{Guia de Avalia\c{c}\~ao de Impacto (Vol.~2) --- Se\c{c}\~ao 4 (Vari\'aveis instrumentais: primeiro est\'agio, forma reduzida e interpreta\c{c}\~ao LATE para compliers).}
 \end{conexaobox}
 
 
 % ==========================================
 % SECAO 5: VALIDADE E ROBUSTEZ
 % ==========================================
-\section{Testes de Validade e An\'alise de Robustez}
+\chapter{Testes de Validade e An\'alise de Robustez}
 
-A credibilidade de um RDD depende da verifica\c{c}\~ao emp\'irica das hip\'oteses de identifica\c{c}\~ao. Esta se\c{c}\~ao apresenta os quatro testes padr\~ao da literatura \citep{ImbensLemieux2008,LeeLemieux2010}.
+Toda estimativa de RDD precisa ser auditada empiricamente. As hip\'oteses de identifica\c{c}\~ao n\~ao s\~ao verific\'aveis diretamente, mas geram implica\c{c}\~oes test\'aveis. Esta se\c{c}\~ao apresenta os quatro testes que se tornaram padr\~ao na literatura \citep{ImbensLemieux2008,LeeLemieux2010}.
 
-\subsection{Teste de Densidade: Aus\^encia de Manipula\c{c}\~ao}
+\section{Teste de Densidade: Aus\^encia de Manipula\c{c}\~ao}
 
 Se as unidades conseguem manipular $Z_i$ para ficarem do lado preferido do cutoff, haver\'a uma concentra\c{c}\~ao an\^omala de observa\c{c}\~oes em um dos lados --- uma \textbf{descontinuidade na densidade} de $Z_i$ em $Z^*$. O teste de \cite{McCrary2008}, refinado por \cite{CattaneoJanssonMa2020}, verifica formalmente:
 \begin{equation}
@@ -505,7 +648,9 @@ Se as unidades conseguem manipular $Z_i$ para ficarem do lado preferido do cutof
 library(rddensity)
 density_test <- rddensity(X = df$x, c = 0)
 summary(density_test)
-# p-valor > 0.05: nao rejeitar H0 (sem evidencia de manipulacao)
+# Nos dados simulados (sem manipulacao): p-valor esperado > 0.05
+# -> nao rejeitar H0: sem evidencia de discontinuidade na densidade
+# ATENCAO: p-valor < 0.05 REJEITARIA H0, indicando possivel manipulacao
 \end{lstlisting}
 
 \begin{figure}[H]
@@ -513,10 +658,10 @@ summary(density_test)
 \includegraphics[width=0.75\textwidth]{fig2_densidade_mccrary.pdf}
 \caption{Teste de densidade --- aus\^encia de manipula\c{c}\~ao da \textit{running variable}}
 \label{fig:density}
-\figmeta{Dados simulados.}{FGV CLEAR.}{A continuidade da densidade em torno do cutoff (R\$\,218) sugere que as fam\'ilias n\~ao manipulam a renda declarada para se qualificarem. O p-valor do teste de Cattaneo-Jansson-Ma \'e reportado no gr\'afico.}
+\figmeta{Dados simulados.}{FGV CLEAR.}{A continuidade da densidade em torno do cutoff (R\$\,218) sugere que as fam\'ilias n\~ao manipulam a renda declarada para se qualificarem. Nos dados simulados, o p-valor do teste de Cattaneo-Jansson-Ma deve ser superior a 0{,}05, indicando aus\^encia de evid\^encia de manipula\c{c}\~ao (H$_0$ n\~ao rejeitada). Um p-valor abaixo de 0{,}05 rejeitaria H$_0$ e sinalizaria poss\'ivel viola\c{c}\~ao da hip\'otese de descontinuidade.}
 \end{figure}
 
-\subsection{Balanceamento de Covari\'aveis}
+\section{Balanceamento de Covari\'aveis}
 
 Se a atribui\c{c}\~ao ao tratamento \'e localmente aleat\'oria, \textbf{covari\'aveis predeterminadas} (observadas antes da pol\'itica) devem ser cont\'inuas no cutoff. Aplica-se o estimador RDD com as covari\'aveis como vari\'avel dependente \citep{LeeLemieux2010}:
 
@@ -535,7 +680,7 @@ for (cov in covariaveis) {
 H\'a dois usos distintos das covari\'aveis no RDD. Como \textbf{preditores} no modelo, elas aumentam a precis\~ao das estimativas \citep{CalonicoEtAl2019}. Como \textbf{testes de balanceamento}, elas verificam a hip\'otese de continuidade. No balanceamento, a covari\'avel \'e usada como vari\'avel dependente --- n\~ao como preditor.
 \end{notabox}
 
-\subsection{Placebo Cutoffs}
+\section{Placebo Cutoffs}
 
 Se o efeito identificado \'e genu\'ino, ele deve aparecer apenas no cutoff verdadeiro. Testar o modelo em \textbf{cutoffs falsos} (placebo) verifica que n\~ao h\'a efeitos esp\'urios:
 
@@ -551,9 +696,9 @@ for (info in list(list(c = -68, lbl = "R$150"),
 # Resultado esperado: efeitos nao significativos nos placebos
 \end{lstlisting}
 
-\subsection{Sensibilidade ao \textit{Bandwidth}}
+\section{Sensibilidade ao \textit{Bandwidth}}
 
-O resultado principal n\~ao deve mudar qualitativamente com varia\c{c}\~oes moderadas na janela:
+A escolha da janela MSE-\'otima envolve um \textit{trade-off} entre vi\'es e vari\^ancia, e a sensibilidade do resultado a essa escolha \'e parte da auditoria. Estimativas que se desfazem com varia\c{c}\~oes moderadas em $h$ devem ser tratadas como provis\'orias:
 
 \begin{lstlisting}[style=Rstyle]
 h_otimo <- rdd_sharp$bws[1, 1]
@@ -582,7 +727,7 @@ print(t(resultados))
 \includegraphics[width=0.92\textwidth]{fig7_polinomio_local.pdf}
 \caption{Ordem do polin\^omio local: compromisso entre vi\'es e vari\^ancia}
 \label{fig:polinomio}
-\figmeta{Dados simulados.}{FGV CLEAR.}{Painel A: polin\^omio de ordem 1 (linear local) --- estimativa pr\'oxima ao efeito verdadeiro (8 p.p.) com intervalos de confian\c{c}a razo\'aveis. Painel B: polin\^omio de ordem 4 --- ajuste mais flex\'{i}vel mas com maior vari\^ancia; a literatura recomenda ordem 1 ou 2 para o RDD \citep{GelmanImbens2019}.}
+\figmeta{Dados simulados.}{FGV CLEAR.}{Painel A: polin\^omio de ordem 1 (linear local) --- estimativa pr\'oxima ao efeito verdadeiro (8 p.p.) com intervalos de confian\c{c}a razo\'aveis. Painel B: polin\^omio de ordem 4 --- ajuste mais flex\'ivel mas com maior vari\^ancia; a literatura recomenda ordem 1 ou 2 para o RDD \citep{GelmanImbens2019}.}
 \end{figure}
 
 \begin{table}[H]
@@ -609,21 +754,21 @@ Placebo R\$\,280                    & $\approx 0$   & $> 0{,}10$ & Sem efeito no
 % ==========================================
 % SECAO 6: APLICACAO EMPIRICA
 % ==========================================
-\section{Aplica\c{c}\~ao Emp\'irica: Bolsa Fam\'ilia}
+\chapter{Aplica\c{c}\~ao Emp\'irica: Bolsa Fam\'ilia}
 
-\subsection{Contexto do Programa}
+\section{Contexto do Programa}
 
 O Bolsa Fam\'ilia foi criado em 2003 pela unifica\c{c}\~ao de programas sociais anteriores. No auge de sua implementa\c{c}\~ao, atendia mais de 14 milh\~oes de fam\'ilias. O programa concede benef\'icios mensais condicionados ao cumprimento de condicionalidades de sa\'ude e educa\c{c}\~ao --- em especial, frequ\^encia escolar m\'inima de 85\% para crian\c{c}as de 6 a 15 anos.
 
-\subsection{Design da Avalia\c{c}\~ao}
+\section{Design da Avalia\c{c}\~ao}
 
 A elegibilidade ao Bolsa Fam\'ilia \'e determinada pela renda per capita familiar registrada no Cad\'Unico, criando dois cutoffs naturais: R\$\,218 (linha de pobreza) e R\$\,109 (linha de extrema pobreza). Isso configura um Fuzzy RDD, pois nem todas as fam\'ilias eleg\'iveis se cadastram e algumas n\~ao eleg\'iveis permanecem no cadastro por defasagem de atualiza\c{c}\~ao \citep{Romero2009}.
 
-A principal dificuldade emp\'irica \'e a \textbf{qualidade da \textit{running variable}}: a renda registrada no Cad\'Unico pode diferir da renda efetiva, introduzindo erros de medi\c{c}\~ao que atenuam as estimativas (\textit{attenuation bias}).
+A dificuldade emp\'irica central est\'a na qualidade da \textit{running variable}: a renda registrada no Cad\'Unico difere da renda efetiva, e os erros de medi\c{c}\~ao da\'i resultantes atenuam as estimativas (\textit{attenuation bias}).
 
-\subsection{Dados Simulados}
+\section{Dados Simulados}
 
-Os dados desta aplica\c{c}\~ao s\~ao simulados para fins did\'aticos e est\~ao dispon\'iveis no arquivo \texttt{bolsafamilia\_rdd.csv}, gerado pelo script \texttt{Cap\_RDD\_BolsaFamilia.R} que acompanha este guia. O script tamb\'em gera todas as figuras usadas aqui. As caracter\'isticas da simula\c{c}\~ao replicam o padr\~ao da literatura:
+Os dados desta aplica\c{c}\~ao s\~ao simulados para fins did\'aticos e est\~ao dispon\'iveis no arquivo \texttt{bolsafamilia\_rdd.csv}, gerado pelo script \texttt{Cap\_RDD\_BolsaFamilia.R} que acompanha este guia. O script tamb\'em gera todas as figuras usadas aqui:
 
 \begin{lstlisting}[style=Rstyle]
 str(df)
@@ -640,17 +785,11 @@ str(df)
 # $ area_urbana      : int   (1 se area urbana)
 \end{lstlisting}
 
-\subsection{Resultados}
+\section{Resultados}
 
-\subsubsection{Sharp RDD --- Cutoff R\$\,218}
+Os resultados do Sharp RDD e do Fuzzy RDD est\~ao discutidos nas Se\c{c}\~oes~\ref{sec:sharp} e~\ref{sec:fuzzy}, respectivamente, logo ap\'os as figuras correspondentes. Esta subse\c{c}\~ao apresenta os resultados para o segundo cutoff natural do Bolsa Fam\'ilia --- a linha de extrema pobreza --- que complementa a an\'alise principal.
 
-O gr\'afico RDD (Figura~\ref{fig:sharp}) mostra uma descontinuidade positiva e estatisticamente significativa na frequ\^encia escolar no cutoff de R\$\,218. O estimador robusto de \cite{Calonico2014} recupera um LATE pr\'oximo ao efeito verdadeiro de 8 p.p.\ implantado na simula\c{c}\~ao.
-
-\subsubsection{Fuzzy RDD --- Compliance e Estimativa IV}
-
-O Painel A da Figura~\ref{fig:fuzzy} confirma o primeiro est\'agio: a probabilidade de receber o Bolsa Fam\'ilia salta de $\sim$5\% (n\~ao eleg\'iveis) para $\sim$75\% (eleg\'iveis) no cutoff. A estimativa IV (Painel B) \'e ligeiramente maior que a estimativa Sharp --- o Fuzzy LATE mede o efeito sobre os \textit{compliers}, que s\~ao as fam\'ilias que se cadastram \textit{por causa} da elegibilidade.
-
-\subsubsection{M\'ultiplos Cutoffs --- Efeitos Heterog\^eneos}
+\subsection{M\'ultiplos Cutoffs --- Efeitos Heterog\^eneos}
 
 \begin{lstlisting}[style=Rstyle]
 # Cutoff secundario: linha de extrema pobreza (R$109)
@@ -674,26 +813,26 @@ summary(rdd_c2)
 \end{figure}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conex\~ao com outros guias:}} \textit{Guia de DiD --- \cite{Ribeiro2017} e \cite{Chitolina2016} usam DiD para avaliar expans\~oes do Bolsa Fam\'ilia ao longo do tempo; \cite{Romero2009} usa RDD para estimar o efeito no ponto de corte.}
+\textit{Guia de DiD --- \cite{Ribeiro2017} e \cite{Chitolina2016} usam DiD para avaliar expans\~oes do Bolsa Fam\'ilia ao longo do tempo; \cite{Romero2009} usa RDD para estimar o efeito no ponto de corte.}
 \end{conexaobox}
 
 
 % ==========================================
 % SECAO 7: EXTENSOES
 % ==========================================
-\section{Extens\~oes}
+\chapter{Extens\~oes}
 
-\subsection{M\'ultiplos Cutoffs}
+\section{M\'ultiplos Cutoffs}
 
-Muitas pol\'iticas possuem mais de um ponto de corte, criando m\'ultiplas descontinuidades que podem ser exploradas para estimar \textbf{efeitos heterog\^eneos} \citep{CattaneoIdroboTitiunik2019}. A abordagem padr\~ao \'e estimar o RDD separadamente em cada cutoff, usando a \textit{running variable} centralizada no cutoff correspondente. \'E importante garantir que as janelas de estima\c{c}\~ao n\~ao se sobreponham entre cutoffs pr\'oximos entre si.
+Muitas pol\'iticas possuem mais de um ponto de corte, criando m\'ultiplas descontinuidades que podem ser exploradas para estimar \textbf{efeitos heterog\^eneos} \citep{CattaneoIdroboTitiunik2019}. A abordagem padr\~ao \'e estimar o RDD separadamente em cada cutoff, usando a \textit{running variable} centralizada no cutoff correspondente. Quando dois cutoffs est\~ao pr\'oximos, as janelas de estima\c{c}\~ao podem se sobrepor --- e nesse caso o efeito identificado em cada um deles fica contaminado pela presen\c{c}a do outro.
 
-\subsection{RDD Geogr\'afico}
+\section{RDD Geogr\'afico}
 
-O RDD Geogr\'afico usa fronteiras espaciais (munic\'ipios, estados, pa\'ises) como pontos de corte. A \textit{running variable} \'e a dist\^ancia \`a fronteira; unidades de um lado recebem o tratamento, do outro n\~ao. Aplica\c{c}\~oes incluem pol\'iticas estaduais, programas municipais e impactos de conflitos em regi\~oes fronteri\c{c}as. A implementa\c{c}\~ao requer aten\c{c}\~ao especial: (i) a fronteira deve ser exogenamente determinada; (ii) h\'a risco de mobilidade --- unidades que se movem para obter o tratamento.
+Fronteiras espaciais --- entre munic\'ipios, estados ou pa\'ises --- s\~ao tamb\'em descontinuidades, e o RDD pode trat\'a-las como tal. A \textit{running variable} \'e a dist\^ancia \`a fronteira, e o tratamento muda no momento em que essa dist\^ancia muda de sinal. As aplica\c{c}\~oes mais comuns envolvem pol\'iticas estaduais e municipais; estudos sobre conflitos em regi\~oes fronteiri\c{c}as tamb\'em recorrem ao desenho. Dois cuidados s\~ao mais delicados aqui do que no RDD usual: a fronteira deve ser exogenamente determinada (n\~ao tra\c{c}ada \textit{em resposta} ao que se quer medir), e \'e preciso descartar mobilidade das unidades atravessando a linha em busca do tratamento.
 
-\subsection{Regress\~ao Kink (\textit{Regression Kink Design})}
+\section{Regress\~ao Kink (\textit{Regression Kink Design})}
 
-No RKD, o tratamento \'e uma fun\c{c}\~ao linear da \textit{running variable}, e a pol\'itica cria uma \textbf{quina} (mudan\c{c}a na inclina\c{c}\~ao), n\~ao um salto no n\'ivel. O RKD identifica o efeito da \textit{taxa} do tratamento, n\~ao do n\'ivel. Aplica\c{c}\~oes t\'ipicas incluem programas de seguro-desemprego (onde o benef\'icio muda de inclina\c{c}\~ao em fun\c{c}\~ao da renda anterior) e benef\'icios previdenci\'arios.
+Algumas pol\'iticas n\~ao operam por salto, mas por mudan\c{c}a de inclina\c{c}\~ao. O seguro-desemprego \'e o exemplo cl\'assico: o benef\'icio cresce linearmente com a renda anterior at\'e um teto, e depois a inclina\c{c}\~ao muda --- mas o n\'ivel n\~ao salta. O RKD identifica o efeito da \textit{taxa} do tratamento explorando essa quina, em vez de uma descontinuidade no n\'ivel. Aplica\c{c}\~oes t\'ipicas incluem benef\'icios previdenci\'arios e programas com f\'ormulas escalonadas.
 
 \begin{figure}[H]
 \centering
@@ -703,9 +842,9 @@ No RKD, o tratamento \'e uma fun\c{c}\~ao linear da \textit{running variable}, e
 \figmeta{Dados simulados.}{FGV CLEAR.}{Painel A: no Sharp RDD, o resultado apresenta um \textbf{salto descont\'inuo} no cutoff. Painel B: no RKD, n\~ao h\'a salto de n\'ivel, mas a \textbf{inclina\c{c}\~ao muda} no cutoff --- o par\^ametro de interesse \'e $\Delta\beta = \beta^+ - \beta^-$ \citep{Card2015}.}
 \end{figure}
 
-\subsection{RDD em Tempo Cont\'inuo}
+\section{RDD em Tempo Cont\'inuo}
 
-Quando o tratamento \'e implementado em uma data espec\'ifica, o tempo pode ser tratado como \textit{running variable} e a data de implementa\c{c}\~ao como cutoff. Essa abordagem \'e especialmente \'util para avaliar pol\'iticas de entrada em vigor a partir de uma data precisa com dados de alta frequ\^encia.
+Quando uma pol\'itica entra em vigor numa data espec\'ifica, o pr\'oprio tempo pode servir como \textit{running variable} e a data de implementa\c{c}\~ao como cutoff. A estrat\'egia funciona melhor com dados de alta frequ\^encia, em que os dois lados da data podem ser bem amostrados sem que choques sazonais contaminem a compara\c{c}\~ao.
 
 \begin{notabox}[Quando usar cada extens\~ao]
 \begin{itemize}[leftmargin=1.2cm, itemsep=2pt]
@@ -717,36 +856,36 @@ Quando o tratamento \'e implementado em uma data espec\'ifica, o tempo pode ser 
 \end{notabox}
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conex\~ao com outros guias:}} \textit{Guia de SCM --- RDD Geogr\'afico e SCM s\~ao complementares quando a pol\'itica tem cobertura geogr\'afica espec\'ifica; Guia de DiD --- Time RDD \'e alternativa ao DiD quando h\'a uma \'unica data de implementa\c{c}\~ao e dados de alta frequ\^encia.}
+\textit{Guia de SCM --- RDD Geogr\'afico e SCM s\~ao complementares quando a pol\'itica tem cobertura geogr\'afica espec\'ifica; Guia de DiD --- Time RDD \'e alternativa ao DiD quando h\'a uma \'unica data de implementa\c{c}\~ao e dados de alta frequ\^encia.}
 \end{conexaobox}
 
 
 % ==========================================
 % SECAO 8: ARMADILHAS E CHECKLIST
 % ==========================================
-\section{Armadilhas Comuns e Checklist}
+\chapter{Armadilhas Comuns e Checklist}
 
-\subsection{Armadilha 1: Polin\^omios de Alta Ordem}
+\section{Armadilha 1: Polin\^omios de Alta Ordem}
 
-Usar polin\^omios de grau 4, 5 ou superior produz ajustes esp\'urios pr\'oximos ao cutoff --- os polin\^omios ``curvam'' para cima ou para baixo exatamente onde est\'a o ponto de interesse, inflando ou deflando a estimativa do salto. \textbf{Diagn\'ostico:} comparar estimativas de ordem 1, 2 e 3; se divergirem muito, o resultado \'e inst\'avel. \textbf{Solu\c{c}\~ao:} usar ordem 1 como padr\~ao e ordem 2 como robustez \citep{GelmanImbens2019}.
+Polin\^omios de grau 4 ou 5 produzem ajustes esp\'urios pr\'oximos ao cutoff --- curvam-se para cima ou para baixo exatamente onde est\'a o ponto de interesse, inflando ou deflando a estimativa do salto. \textbf{Diagn\'ostico:} comparar estimativas de ordem 1, 2 e 3; diverg\^encias grandes indicam resultado inst\'avel. \textbf{Solu\c{c}\~ao:} ordem 1 como padr\~ao, ordem 2 como robustez \citep{GelmanImbens2019}.
 
-\subsection{Armadilha 2: Janela \'{U}nica sem Verifica\c{c}\~ao de Sensibilidade}
+\section{Armadilha 2: Janela \'{U}nica sem Verifica\c{c}\~ao de Sensibilidade}
 
-Reportar apenas a janela MSE-\'otima sem verificar se os resultados se mant\^em com janelas menores e maiores \'e uma pr\'atica arriscada. \textbf{Solu\c{c}\~ao:} sempre reportar a Tabela de Sensibilidade ao Bandwidth (Se\c{c}\~ao~5.4).
+Reportar apenas a janela MSE-\'otima esconde do leitor o quanto o resultado depende daquela escolha. \textbf{Solu\c{c}\~ao:} sempre acompanhar a estimativa principal com a Tabela de Sensibilidade ao Bandwidth (Se\c{c}\~ao~5.4).
 
-\subsection{Armadilha 3: Heaping na \textit{Running Variable}}
+\section{Armadilha 3: Heaping na \textit{Running Variable}}
 
 Quando a \textit{running variable} \'e medida de forma imprecisa ou arredondada (ex.: renda declarada em m\'ultiplos de R\$\,100), concentra\c{c}\~oes an\^omalas de observa\c{c}\~oes em pontos espec\'ificos (``heaping'') podem mimetizar manipula\c{c}\~ao. \textbf{Diagn\'ostico:} histograma fino da \textit{running variable}; teste de densidade. \textbf{Solu\c{c}\~ao:} usar donut RDD (excluir uma vizinhan\c{c}a pequena do cutoff) ou m\'etodos espec\'ificos para heaping.
 
-\subsection{Armadilha 4: Descontinuidades em Outras Pol\'iticas}
+\section{Armadilha 4: Descontinuidades em Outras Pol\'iticas}
 
 Se outra pol\'itica usa o mesmo crit\'erio de corte (ex.: BPC e Bolsa Fam\'ilia ambos dependem de renda per capita), o efeito estimado pode refletir a combina\c{c}\~ao das duas pol\'iticas, n\~ao apenas a de interesse. \textbf{Solu\c{c}\~ao:} investigar qualitativa e institucionalmente se outras pol\'iticas geram descontinuidades no mesmo cutoff; ajustar o design se necess\'ario.
 
-\subsection{Armadilha 5: Generalizar o LATE para Toda a Popula\c{c}\~ao}
+\section{Armadilha 5: Generalizar o LATE para Toda a Popula\c{c}\~ao}
 
 O LATE do RDD \'e espec\'ifico para unidades pr\'oximas ao cutoff. Afirmar que ``o Bolsa Fam\'ilia aumenta a frequ\^encia escolar em 8 p.p.\ para todas as fam\'ilias pobres'' extrapola indevidamente o resultado. \textbf{Solu\c{c}\~ao:} ser expl\'icito sobre a popula\c{c}\~ao para a qual o efeito \'e v\'alido.
 
-\subsection{Tabela-Resumo: Diagn\'osticos e Solu\c{c}\~oes}
+\section{Tabela-Resumo: Diagn\'osticos e Solu\c{c}\~oes}
 
 \begin{table}[H]
 \centering
@@ -773,22 +912,14 @@ LATE generalizado & Afirmar efeito para toda popula\c{c}\~ao & Limitar interpret
 % ==========================================
 % SECAO 9: CONCLUSAO
 % ==========================================
-\section{Conclus\~ao}
+\chapter{Conclus\~ao}
 
-O m\'etodo de Regress\~ao Descon\'inua \'e hoje uma ferramenta indispens\'avel para avalia\c{c}\~ao de impacto quando a elegibilidade ao tratamento \'e determinada por uma regra de corte. Este guia apresentou um percurso completo: do arcabou\c{c}o te\'orico (Se\c{c}\~oes 2--3) aos casos Sharp e Fuzzy (Se\c{c}\~oes 3--4), passando pelos testes de validade (Se\c{c}\~ao 5), pela aplica\c{c}\~ao emp\'irica ao Bolsa Fam\'ilia (Se\c{c}\~ao 6) e pelas extens\~oes (Se\c{c}\~ao 7).
+A Regress\~ao Descont\'inua se tornou refer\^encia na avalia\c{c}\~ao de pol\'iticas com elegibilidade definida por regra de corte. O guia percorreu o arcabou\c{c}o de identifica\c{c}\~ao, os casos Sharp e Fuzzy, os testes de validade, a aplica\c{c}\~ao ao Bolsa Fam\'ilia e as principais extens\~oes (m\'ultiplos cutoffs, RKD, RDD geogr\'afico e em tempo cont\'inuo).
 
-As principais mensagens s\~ao:
-
-\begin{enumerate}[leftmargin=1.5cm]
-  \item O RDD \'e adequado quando h\'a uma \textbf{regra de corte clara} em uma vari\'avel cont\'inua; quanto mais precisa e ex\'ogena a \textit{running variable}, mais confi\'avel a estimativa;
-  \item A \textbf{aus\^encia de manipula\c{c}\~ao} da \textit{running variable} \'e a hip\'otese mais cr\'itica e deve ser testada formalmente com o teste de densidade;
-  \item O RDD estima um \textbf{LATE local} --- v\'alido apenas na vizinhan\c{c}a do cutoff; generaliza\c{c}\~oes para toda a popula\c{c}\~ao eleg\'ivel requerem hip\'oteses adicionais;
-  \item Sempre reportar as estimativas \textbf{Robust} do \texttt{rdrobust}, com corre\c{c}\~ao de vi\'es, e realizar os quatro testes de validade da Se\c{c}\~ao~5;
-  \item O \textbf{gr\'afico RDD} \'e obrigat\'orio: permite verificar visualmente a descontinuidade e comunicar os resultados com transpar\^encia.
-\end{enumerate}
+Cinco pontos merecem ser retidos pelo leitor que pretende aplicar o m\'etodo. O primeiro \'e que a qualidade da \textit{running variable} \'e o ativo central: quanto mais precisa e ex\'ogena, mais cr\'ivel a estimativa. Da\'i a centralidade do segundo ponto: a hip\'otese de aus\^encia de manipula\c{c}\~ao precisa ser testada formalmente, com o teste de densidade, e n\~ao apenas justificada institucionalmente. O terceiro ponto diz respeito \`a interpreta\c{c}\~ao --- o RDD identifica um LATE, v\'alido na vizinhan\c{c}a do cutoff; generaliza\c{c}\~oes para toda a popula\c{c}\~ao eleg\'ivel s\~ao extrapola\c{c}\~oes que precisam ser explicitadas. O quarto, de natureza t\'ecnica, \'e o reporte: a estimativa \textbf{Robust} do \texttt{rdrobust} \'e o padr\~ao, e os quatro testes de validade da Se\c{c}\~ao~5 devem acompanh\'a-la. Por fim, o gr\'afico do RDD n\~ao \'e opcional: \'e ele que permite ao leitor enxergar a descontinuidade e avaliar a credibilidade do desenho antes mesmo de olhar para o coeficiente.
 
 \begin{conexaobox}
-\textcolor{orangeframe}{\textbf{$\hookrightarrow$ Conex\~ao com outros guias:}} \textit{Guia de SCM --- RDD para pol\'iticas com regra de corte vs SCM para pol\'iticas de n\'ivel agregado; Guia de DiD --- Converg\^encia crescente RDD-DiD quando h\'a m\'ultiplos cutoffs e varia\c{c}\~ao temporal; Guia de Matching --- O RDD pode ser visto como um pareamento local no cutoff.}
+\textit{Guia de SCM --- RDD para pol\'iticas com regra de corte vs SCM para pol\'iticas de n\'ivel agregado; Guia de DiD --- Converg\^encia crescente RDD-DiD quando h\'a m\'ultiplos cutoffs e varia\c{c}\~ao temporal; Guia de Matching --- O RDD pode ser visto como um pareamento local no cutoff.}
 \end{conexaobox}
 
 
@@ -829,6 +960,11 @@ Calonico, S., Cattaneo, M.~D., Farrell, M.~H. e Titiunik, R. (2019).
 Card, D., Dobkin, C. e Maestas, N. (2008).
 \newblock The Impact of Nearly Universal Insurance Coverage on Health Care Utilization: Evidence from Medicare.
 \newblock \textit{American Economic Review}, 98(5), 2242--2258.
+
+\bibitem[Card et al.(2015)]{Card2015}
+Card, D., Lee, D.~S., Pei, Z. e Weber, A. (2015).
+\newblock Inference on Causal Effects in a Generalized Regression Kink Design.
+\newblock \textit{Econometrica}, 83(6), 2453--2483.
 
 \bibitem[Cattaneo, Idrobo e Titiunik(2019)]{CattaneoIdroboTitiunik2019}
 Cattaneo, M.~D., Idrobo, N. e Titiunik, R. (2019).
