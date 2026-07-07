@@ -1,23 +1,49 @@
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Guia de Fontes de Dados para Avaliação de Políticas Públicas
+%% ============================================================
+
 % !TEX program = pdflatex
 % !TEX encoding = UTF-8 Unicode
-% ============================================================
-%  main.tex — Guia de Fontes de Dados
-%  Série Avaliação na Prática — FGV CLEAR
-% ============================================================
 
 \documentclass[12pt, a4paper, openany]{book}
 
+%% ── Codificação e Idioma ────────────────────────────────────
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
-\usepackage{tgpagella}          % Palatino clone (pdflatex)
 
-\usepackage[top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm, headheight=15pt]{geometry}
+%% ── Fonte ───────────────────────────────────────────────────
+\usepackage{tgpagella}
 
-% ── Cores FGV CLEAR ──
+%% ── Matemática ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e Tabelas ───────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
+\usepackage{longtable}
+\usepackage{tabularx}
+
+%% ── Layout ──────────────────────────────────────────────────
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm, headheight=15pt]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*, topsep=4pt, itemsep=2pt}
+\setlist[enumerate]{leftmargin=*, topsep=4pt, itemsep=2pt}
+
+%% ── Cores (paleta CLEAR) ────────────────────────────────────
 \usepackage{xcolor}
-\definecolor{clearblue}{RGB}{27, 58, 92}
-\definecolor{clearlightblue}{RGB}{44, 95, 138}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
+% Variações específicas usadas nas caixas deste guia (preservadas)
 \definecolor{clearsalmon}{RGB}{207, 90, 54}
 \definecolor{clearlightsalmon}{RGB}{250, 228, 218}
 \definecolor{clearlightbluelight}{RGB}{215, 232, 248}
@@ -25,9 +51,75 @@
 \definecolor{clearlightgreen}{RGB}{218, 240, 222}
 \definecolor{clearred}{RGB}{170, 30, 30}
 \definecolor{clearlightred}{RGB}{248, 218, 215}
-\definecolor{cleargray}{RGB}{90, 90, 90}
+% Paleta padronizada do template (mantida para compatibilidade)
+\definecolor{salmonbg}{RGB}{252,235,230}
+\definecolor{salmonframe}{RGB}{230,160,140}
+\definecolor{bluebg}{RGB}{235,245,251}
+\definecolor{blueframe}{RGB}{58,125,181}
+\definecolor{orangebg}{RGB}{254,245,231}
+\definecolor{orangeframe}{RGB}{230,126,34}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeframe}{RGB}{200,200,200}
 
-% ── Títulos ──
+%% ── Hyperlinks e Bibliografia ───────────────────────────────
+\usepackage{hyperref}
+\usepackage{url}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=clearlightblue,
+  citecolor=clearlightblue,
+  urlcolor=clearlightblue,
+  pdfauthor={FGV CLEAR},
+  pdftitle={Guia de Fontes de Dados para Avalia\c{c}\~ao de Pol\'iticas P\'ublicas}
+}
+\usepackage[round, authoryear]{natbib}
+\bibliographystyle{plainnat}
+
+%% URLs longos: permitir quebra em qualquer separador comum
+\makeatletter
+\g@addto@macro{\UrlBreaks}{\do\/\do\-\do\.\do\_\do\?\do\=\do\&\do\#\do\%\do\:}
+\makeatother
+\emergencystretch=3em
+\tolerance=800
+\hyphenpenalty=50
+
+%% Hifenização para termos técnicos recorrentes no guia
+\hyphenation{
+  CEPAL-STAT BA-DE-HOG PLA-TA-FORMA-NILO-PECANHA POR-TAL-DA-TRANS-PARENCIA
+  Mi-cro-da-dos ava-li-a-ti-va ava-li-a-ti-vas desa-gre-ga-ção desa-gre-ga-ções
+  mi-cro-da-dos multi-di-men-si-o-nais subna-ci-o-nais re-gis-tros es-ta-du-al
+  mu-ni-ci-pal es-ta-du-ais me-to-do-ló-gi-cas me-to-do-ló-gi-co comple-men-ta-res
+  PNAD-C PNAD FINBRA FINBRA-Siconfi PRODES MapBiomas Datasus
+  Eco-nô-mi-co De-sen-vol-vi-men-to in-ter-na-ci-o-nais in-ter-na-ci-o-nal
+}
+
+%% ── TColorbox ───────────────────────────────────────────────
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{breakable, skins}
+
+%% ── Código R ────────────────────────────────────────────────
+\usepackage{listings}
+\lstset{
+  language=R, basicstyle=\small\ttfamily,
+  keywordstyle=\color{clearblue}\bfseries,
+  commentstyle=\color{cleargray}\itshape,
+  stringstyle=\color{cleargreen},
+  backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{codeframe},
+  breaklines=true, showstringspaces=false,
+  numbers=left, numberstyle=\tiny\color{cleargray}, numbersep=5pt, xleftmargin=12pt
+}
+
+%% ── Cabeçalhos e Rodapés ────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ Fontes de Dados}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+%% ── Títulos de Seção ────────────────────────────────────────
 \usepackage{titlesec}
 \titleformat{\chapter}[display]
   {\normalfont\huge\bfseries\color{clearblue}}
@@ -37,106 +129,127 @@
 \titleformat{\section}
   {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
 \titleformat{\subsection}
-  {\normalfont\large\bfseries\color{clearlightblue}}{\thesubsection}{1em}{}
+  {\normalfont\large\bfseries\color{cleardarkblue}}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}
-  {\normalfont\normalsize\bfseries\color{clearlightblue}}{\thesubsubsection}{1em}{}
+  {\normalfont\normalsize\bfseries\color{cleardarkblue}}{\thesubsubsection}{1em}{}
 
-% ── Cabeçalho / rodapé ──
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[R]{\small\itshape\color{cleargray}Guia CLEAR $|$ Fontes de Dados}
-\fancyfoot[C]{\small\thepage}
-\renewcommand{\headrulewidth}{0pt}
-\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
-
-% ── Tabelas ──
-\usepackage{booktabs}
-\usepackage{tabularx}
-\usepackage{longtable}
-\usepackage{multirow}
-\usepackage{float}
-\usepackage{array}
-
-% ── Listas ──
-\usepackage{enumitem}
-\usepackage{amssymb}
-\setlist[itemize]{leftmargin=*, topsep=4pt, itemsep=2pt}
-\setlist[enumerate]{leftmargin=*, topsep=4pt, itemsep=2pt}
-
-% ── Links ──
-\usepackage{hyperref}
-\usepackage{url}
-\hypersetup{
-  colorlinks=true, linkcolor=clearblue, urlcolor=clearlightblue, citecolor=clearblue,
-  pdftitle={Guia de Fontes de Dados para Avaliação de Políticas Públicas},
-  pdfauthor={FGV CLEAR}
+%% ── Wrapper de Título para Caixas com Títulos Longos ────────
+\newcommand{\tituloboxlimitado}[1]{%
+  \parbox[t]{\dimexpr\linewidth-16mm\relax}{\raggedright\strut #1\strut}%
 }
 
-% ── Código R ──
-\usepackage{listings}
-\lstset{
-  language=R, basicstyle=\small\ttfamily,
-  keywordstyle=\color{clearblue}\bfseries,
-  commentstyle=\color{cleargray}\itshape,
-  stringstyle=\color{cleargreen},
-  backgroundcolor=\color{gray!8},
-  frame=single, rulecolor=\color{gray!40},
-  breaklines=true, showstringspaces=false,
-  numbers=left, numberstyle=\tiny\color{gray}, numbersep=5pt, xleftmargin=12pt
-}
-
-% ── Caixas tcolorbox ──
-\usepackage[most]{tcolorbox}
-\tcbuselibrary{skins, breakable}
-
+%% ── Caixas Temáticas (semântica preservada deste guia) ──────
+% boxdestaque (salmão) — usada para conceitos-chave
 \newtcolorbox{boxdestaque}[1]{enhanced,breakable,colback=clearlightsalmon,colframe=clearsalmon,
-  coltitle=white,fonttitle=\bfseries,
+  coltitle=white,fonttitle=\bfseries\small,
   attach boxed title to top left={yshift=-2mm,xshift=6mm},
-  boxed title style={colback=clearsalmon,colframe=clearsalmon,sharp corners,rounded corners=northeast},
-  title={#1},sharp corners,rounded corners=southeast}
+  boxed title style={colback=clearsalmon,colframe=clearsalmon,sharp corners,rounded corners=northeast,
+    top=2pt,bottom=2pt,left=6pt,right=6pt},
+  title={\tituloboxlimitado{#1}},sharp corners,rounded corners=southeast}
 
+% boxatencao (vermelha) — alertas e cuidados
 \newtcolorbox{boxatencao}[1]{enhanced,breakable,colback=clearlightred,colframe=clearred,
-  coltitle=white,fonttitle=\bfseries,
+  coltitle=white,fonttitle=\bfseries\small,
   attach boxed title to top left={yshift=-2mm,xshift=6mm},
-  boxed title style={colback=clearred,colframe=clearred,sharp corners,rounded corners=northeast},
-  title={#1},sharp corners,rounded corners=southeast}
+  boxed title style={colback=clearred,colframe=clearred,sharp corners,rounded corners=northeast,
+    top=2pt,bottom=2pt,left=6pt,right=6pt},
+  title={\tituloboxlimitado{#1}},sharp corners,rounded corners=southeast}
 
+% boxdica (azul) — dicas práticas
 \newtcolorbox{boxdica}[1]{enhanced,breakable,colback=clearlightbluelight,colframe=clearblue,
-  coltitle=white,fonttitle=\bfseries,
+  coltitle=white,fonttitle=\bfseries\small,
   attach boxed title to top left={yshift=-2mm,xshift=6mm},
-  boxed title style={colback=clearblue,colframe=clearblue,sharp corners,rounded corners=northeast},
-  title={#1},sharp corners,rounded corners=southeast}
+  boxed title style={colback=clearblue,colframe=clearblue,sharp corners,rounded corners=northeast,
+    top=2pt,bottom=2pt,left=6pt,right=6pt},
+  title={\tituloboxlimitado{#1}},sharp corners,rounded corners=southeast}
 
+% boxexemplo (verde) — exemplos aplicados
 \newtcolorbox{boxexemplo}[1]{enhanced,breakable,colback=clearlightgreen,colframe=cleargreen,
-  coltitle=white,fonttitle=\bfseries,
+  coltitle=white,fonttitle=\bfseries\small,
   attach boxed title to top left={yshift=-2mm,xshift=6mm},
-  boxed title style={colback=cleargreen,colframe=cleargreen,sharp corners,rounded corners=northeast},
-  title={#1},sharp corners,rounded corners=southeast}
+  boxed title style={colback=cleargreen,colframe=cleargreen,sharp corners,rounded corners=northeast,
+    top=2pt,bottom=2pt,left=6pt,right=6pt},
+  title={\tituloboxlimitado{#1}},sharp corners,rounded corners=southeast}
 
-% ── Ficha rápida ──
+%% Caixas padronizadas adicionais do template (disponíveis para uso futuro)
+\newtcolorbox{destaquebox}[1][Destaque]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{notabox}[1][Nota]{
+  enhanced, breakable,
+  colback=bluebg, colframe=blueframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{conexaobox}[1][Conex\~ao com a s\'erie]{
+  enhanced, breakable,
+  colback=orangebg, colframe=orangeframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{exemplobox}[1][Exemplo]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{hipotesebox}[1][Hip\'otese]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+%% ── Ficha rápida (comando ESSENCIAL deste guia) ─────────────
+% URLs longos na linha "Acesso" precisam quebrar em qualquer caractere
 \newcommand{\ficharapida}[6]{%
   \begin{tcolorbox}[enhanced,breakable,colback=clearlightbluelight!60,colframe=clearblue,
-    coltitle=white,fonttitle=\bfseries,title={Ficha rápida: #1},
+    coltitle=white,fonttitle=\bfseries\small,title={\tituloboxlimitado{Ficha rápida: #1}},
     attach boxed title to top left={yshift=-2mm,xshift=6mm},
-    boxed title style={colback=clearblue,colframe=clearblue,sharp corners,rounded corners=northeast},
+    boxed title style={colback=clearblue,colframe=clearblue,sharp corners,rounded corners=northeast,
+      top=2pt,bottom=2pt,left=6pt,right=6pt},
     sharp corners,rounded corners=southeast]
   \small
+  \begingroup
+    \Urlmuskip=0mu plus 1mu\relax
+    \def\UrlBreaks{\do\/\do\-\do\.\do\_\do\?\do\=\do\&\do\#\do\%\do\:\do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m\do\n\do\o\do\p\do\q\do\r\do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z\do\A\do\B\do\C\do\D\do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M\do\N\do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X\do\Y\do\Z\do\0\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9}%
+    \sloppy\hbadness=10000\relax
   \begin{tabular}{@{}p{3.2cm}p{\dimexpr\linewidth-3.5cm}@{}}
     \textbf{Produtor:}      & #2 \\[3pt]
-    \textbf{Acesso:}        & \small\url{#3} \\[3pt]
+    \textbf{Acesso:}        & {\footnotesize\url{#3}} \\[3pt]
     \textbf{Cobertura:}     & #4 \\[3pt]
     \textbf{Periodicidade:} & #5 \\[3pt]
     \textbf{Unidade:}       & #6 \\
   \end{tabular}
+  \endgroup
   \end{tcolorbox}%
 }
 
+%% ── Comando \fonte: equivalente local simplificado do \figmeta ──
 \newcommand{\fonte}[1]{\vspace{3pt}\par\small\textit{Fonte: #1}}
 
-% ── Bibliografia ──
-\usepackage[round, authoryear]{natbib}
-\bibliographystyle{plainnat}
+%% ── Metadados de Figuras/Quadros (padrão da série) ──────────
+\newcommand{\figmeta}[3]{%
+  \par\vspace{4pt}%
+  \begin{minipage}{\linewidth}%
+  \footnotesize%
+  \textbf{Fonte:} #1%
+  \ifx&#2&\else\\\textbf{Elabora\c{c}\~ao:} #2\fi%
+  \ifx&#3&\else\\\textbf{Nota:} #3\fi%
+  \end{minipage}%
+  \vspace{6pt}%
+}
+
+%% ── Teoremas ────────────────────────────────────────────────
+\newtheorem{definicao}{Defini\c{c}\~ao}[chapter]
+\newtheorem{proposicao}{Proposi\c{c}\~ao}[chapter]
+
+%% ── Profundidade de numera\c{c}\~ao ─────────────────────────
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
 
 % ============================================================
 \begin{document}
@@ -144,7 +257,96 @@
 \frontmatter
 \include{cap00_capa}
 \include{cap00_apresentacao}
+% ─── SOBRE ESTE GUIA ─────────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Sobre este guia}
+Toda avaliação começa por uma pergunta. Mas a pergunta só vira evidência
+quando há dados que a respondam. E os dados disponíveis num país nunca
+são neutros: foram produzidos por alguém, com algum objetivo, com alguma
+decisão metodológica embutida que afeta o que pode e o que não pode ser
+feito com eles depois.
+
+O Brasil tem uma infraestrutura ampla de dados públicos, construída por
+uma sucessão de instituições ao longo de décadas. O IBGE produz o Censo
+Demográfico decenal e a PNAD trimestral, base para indicadores sociais e
+de mercado de trabalho. O Datasus consolida o sistema de informação em
+saúde: SIM para mortalidade, SIH para internações hospitalares, SIA para
+atenção ambulatorial. O Ministério do Trabalho mantém o CAGED, registro
+de admissões e desligamentos no emprego formal. O Inep cuida da educação
+básica e superior, do Censo Escolar ao Saeb ao Enem. O INPE produz dados
+ambientais a partir de satélite, do desmatamento amazônico ao uso do solo
+agrícola. O Siconfi consolida as contas dos entes federados. E há
+dezenas de outras: CGU, IPEA, ANVISA, Suframa, Banco Central, todos
+publicando dados, cada um com sua lógica de coleta, frequência, cobertura
+e granularidade.
+
+Saber qual dessas fontes serve para qual pergunta é boa parte da batalha
+em qualquer avaliação. Querer estimar desigualdade salarial entre regiões:
+a PNAD captura, mas a RAIS (limitada ao emprego formal) pode subestimar
+a desigualdade real porque deixa de fora o setor informal, onde se
+concentra parte importante da heterogeneidade. Querer medir a prevalência
+de uma doença crônica não letal: o SIM não serve (registra óbitos), o SIH
+pode (registra internações), com a ressalva de que captura apenas os
+casos graves o suficiente para chegar ao hospital. Querer estudar política
+agrícola em regiões específicas: a Pesquisa Agrícola Municipal do IBGE
+existe, mas tem cobertura desigual entre culturas, e para algumas
+culturas é mais confiável usar dados de comercialização da Conab. Cada
+fonte cobre uma fatia da realidade, e usar a fonte errada para a pergunta
+certa produz uma evidência que parece sólida mas mede a coisa errada.
+
+A cada ano também surgem fontes novas, e algumas antigas mudam de
+natureza ou de qualidade. APIs governamentais agora permitem extrair
+dados em volume sem fazer download manual. Microdados antes restritos
+passam a ser abertos. Algumas fontes históricas sofrem rupturas
+metodológicas (a PNAD virou PNAD Contínua em 2012, com mudança de painel
+e amostra) que tornam séries longas comparáveis só com cuidado.
+Ferramentas de IA e web scraping ampliam o que pode ser considerado
+``fonte'' hoje, pegando informação de portais de transparência, notícias
+e documentos que antes ficavam fora do alcance da avaliação.
+
+Este guia funciona como um catálogo orientado. Para cada eixo temático
+(mercado de trabalho e renda, saúde, educação, assistência social,
+segurança pública, infraestrutura e território, finanças públicas, fontes
+internacionais), descreve as principais fontes brasileiras: quem produz,
+o que cobrem, com que frequência são atualizadas, em que unidade
+geográfica são disponibilizadas, e que limitações o avaliador precisa
+conhecer antes de usá-las. Cobre também ferramentas de acesso (APIs, web
+scraping, uso de IA na extração de dados não estruturados) e fontes
+internacionais para comparações entre países. Não é um manual de método.
+É um guia de fontes: o que existe, onde encontrar, e como decidir qual
+delas responde à pergunta em mãos.
+\newpage
+
+% ─── COMO LER ESTE GUIA ──────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Como ler este guia}
+Três tipos de caixa estruturam a leitura, identificados por cor:
+\vspace{0.3cm}
+\begin{boxdica}{Caixa azul --- pontos-chave}
+Aparece ao fim de cada capítulo, com sínteses e recomendações para quem
+precisa decidir.
+\end{boxdica}
+\begin{boxexemplo}{Caixa verde --- exemplo aplicado}
+Mostra como as ideias do capítulo se traduzem em situações de política
+pública. Os casos são fictícios, mas calibrados por padrões recorrentes
+na literatura e na prática de gestão.
+\end{boxexemplo}
+\begin{boxatencao}{Caixa vermelha --- cuidados essenciais}
+Sinaliza armadilhas comuns --- pontos em que uma escolha mal fundamentada
+compromete toda a análise.
+\end{boxatencao}
+\vspace{0.5cm}
+\noindent O guia faz referência recorrente ao \textit{Guia CLEAR de
+Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}
+\citep{Lima2025} --- doravante \textbf{Guia CLEAR de M\&A} ---, que trata
+em profundidade as etapas do ciclo da política pública adotado na série.
+Quando o texto menciona Teoria da Mudança, plano de monitoramento ou
+tipologia de avaliações, é nesse guia que o leitor encontra o
+desenvolvimento completo.
+\newpage
+
 \tableofcontents
+
 
 \mainmatter
 \include{cap01_introducao}
@@ -166,6 +368,10 @@
 \include{anexo_a_tabela_catalogo}
 \include{anexo_b_glossario}
 
+% Bibliografia recomendada: lista todas as entradas do .bib mesmo
+% sem citação no texto (este é um guia de fontes, não um paper).
+\renewcommand{\bibname}{Bibliografia recomendada}
+\nocite{*}
 \bibliography{referencias}
 
 \end{document}

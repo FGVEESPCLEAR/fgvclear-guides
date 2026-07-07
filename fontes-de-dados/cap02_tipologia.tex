@@ -43,7 +43,7 @@ Toda pesquisa amostral domiciliar do IBGE fornece uma variável de peso amostral
 \section{Censos}
 % ────────────────────────────────────────────────────────────
 
-Censos são levantamentos que buscam cobrir \textit{toda} a população ou universo de interesse — não uma amostra, mas o conjunto completo de unidades. No Brasil, os principais censos relevantes para avaliação de políticas públicas são o Censo Demográfico (IBGE), o Censo Escolar (Inep) e o Censo Agropecuário (IBGE).
+Censos são levantamentos que buscam cobrir \textit{toda} a população ou universo de interesse — não uma amostra, mas o conjunto completo de unidades. No Brasil, os principais censos relevantes para avaliação de políticas públicas são o Censo Demográfico (IBGE), o Censo Escolar (Inep), o Censo Agropecuário (IBGE), a Pesquisa de Assistência Médico-Sanitária (AMS, IBGE) --- de caráter censitário para estabelecimentos de saúde --- e o Censo SUAS (MDS), que cobre os equipamentos da assistência social (CRAS, CREAS e unidades de acolhimento).
 
 \textbf{O que os caracteriza.} Por visarem cobertura universal, os censos permitem desagregações impossíveis em pesquisas amostrais: estimativas para municípios pequenos, bairros, zonas rurais específicas ou grupos populacionais minoritários. O Censo Escolar, por exemplo, registra individualmente cada aluno, cada professor e cada escola do Brasil, permitindo análises extremamente granulares.
 
@@ -51,7 +51,7 @@ Censos são levantamentos que buscam cobrir \textit{toda} a população ou unive
 
 \textbf{Limitações.} A principal limitação dos censos demográficos é a periodicidade longa: o Censo Demográfico é decenal, o que significa que pode haver uma defasagem de até dez anos entre a coleta e o momento da avaliação. Mesmo o Censo Escolar, anual, tem uma defasagem de alguns meses entre o período de referência (geralmente maio) e a publicação dos microdados. Além disso, censos estão sujeitos a subregistro: domicílios em áreas de difícil acesso, populações em situação de rua e comunidades isoladas tendem a ser sub-representados.
 
-\textbf{Principais exemplos no Brasil.} Censo Demográfico (decenal), Censo Escolar (anual), Censo da Educação Superior (anual), Censo Agropecuário (periodicidade irregular).
+\textbf{Principais exemplos no Brasil.} Censo Demográfico (decenal), Censo Escolar (anual), Censo da Educação Superior (anual), Censo Agropecuário (periodicidade irregular), AMS (IBGE) e Censo SUAS (MDS).
 
 % ────────────────────────────────────────────────────────────
 \section{Registros administrativos}
@@ -63,7 +63,7 @@ Registros administrativos são dados produzidos como subproduto da operação ro
 
 \textbf{Vantagens.} Frequência e cobertura são as principais. O CAGED, por exemplo, é publicado mensalmente e cobre todos os movimentos de emprego formal no país. O Censo Escolar captura cada matrícula individualmente. Essa granularidade e frequência permitem análises que seriam impossíveis com pesquisas amostrais. Além disso, registros administrativos costumam ter baixo custo de acesso — em geral estão disponíveis gratuitamente em portais do governo.
 
-\textbf{Limitações.} A limitação estrutural dos registros administrativos é que eles cobrem apenas o que passa pelo sistema formal. Trabalhadores informais não estão no CAGED. Partos domiciliares não registrados não estão no SINASC. Crianças fora da escola não constam no Censo Escolar. Essa é uma forma de viés de cobertura que pode ser especialmente problemática em avaliações de políticas voltadas a populações vulneráveis, que tendem a ter menor presença nos sistemas formais.
+\textbf{Limitações.} A limitação estrutural dos registros administrativos é que eles cobrem apenas o que passa pelo sistema formal. Trabalhadores informais não estão no CAGED. Óbitos sem atendimento médico em áreas remotas podem não chegar ao SIM. Crianças fora da escola não constam no Censo Escolar. Essa é uma forma de viés de cobertura que pode ser especialmente problemática em avaliações de políticas voltadas a populações vulneráveis, que tendem a ter menor presença nos sistemas formais.
 
 Outra limitação importante é a variabilidade na qualidade de preenchimento: como os dados são inseridos por diferentes operadores em milhares de municípios, erros de digitação, campos em branco e inconsistências são frequentes e precisam ser tratados antes da análise.
 
@@ -71,7 +71,7 @@ Outra limitação importante é a variabilidade na qualidade de preenchimento: c
 
 % CORRIGIDO: título encurtado para caber na caixa
 \begin{boxatencao}{Atenção — Viés nos registros administrativos}
-A qualidade de um registro administrativo depende dos incentivos institucionais de quem o preenche. Secretarias municipais de saúde podem sub-registrar óbitos por causas sensíveis politicamente. Escolas podem registrar alunos ausentes como presentes para evitar penalidades. Esse viés de notificação é estrutural e deve ser considerado na interpretação dos dados. Sempre que possível, compare a fonte administrativa com fontes independentes para checar consistência.
+A qualidade de um registro administrativo depende dos incentivos institucionais de quem o preenche. Secretarias municipais de saúde podem sub-registrar óbitos por causas sensíveis politicamente. Escolas podem registrar alunos ausentes como presentes para evitar penalidades. Esse viés de notificação é estrutural e deve ser considerado na interpretação dos dados. Por outro lado, o arranjo federativo brasileiro cria contrapesos importantes: boa parte das transferências federais para municípios --- no SUS, na educação básica e na assistência social --- está condicionada ao preenchimento regular dos sistemas de informação correspondentes. Esse desenho institucional aumenta os incentivos para registro e tende a mitigar os vieses descritos acima, sobretudo nos sistemas mais maduros. Ainda assim, sempre que possível, compare a fonte administrativa com fontes independentes para checar consistência.
 \end{boxatencao}
 
 % ────────────────────────────────────────────────────────────
@@ -84,7 +84,7 @@ Sistemas de informação setoriais são plataformas institucionais que integram 
 
 \textbf{Vantagens.} Oferecem acesso centralizado a múltiplas dimensões de um setor. O DATASUS, por exemplo, reúne em um só portal sistemas de mortalidade, nascimentos, internações, ambulatório, vigilância epidemiológica e cadastro de estabelecimentos. Isso facilita a construção de análises multidimensionais sem necessidade de acessar fontes dispersas.
 
-\textbf{Limitações.} A integração nem sempre é plena: sistemas diferentes dentro de um mesmo setor frequentemente não compartilham identificadores comuns, dificultando a linkagem entre bases. Além disso, a qualidade dos dados varia significativamente entre municípios e estados, refletindo diferenças na capacidade administrativa local.
+\textbf{Limitações.} A integração nem sempre é plena: sistemas diferentes dentro de um mesmo setor frequentemente não compartilham identificadores comuns, dificultando a integração entre bases. Além disso, a qualidade dos dados varia entre municípios e estados, refletindo diferenças na capacidade administrativa local --- ainda que, em sistemas consolidados como os do DATASUS e do Censo Escolar, essa heterogeneidade venha diminuindo ao longo do tempo.
 
 \textbf{Principais exemplos no Brasil.} DATASUS (saúde), Inep/sistemas educacionais, SUAS/MDS (assistência social), SNIS (saneamento).
 
@@ -141,7 +141,7 @@ Uma categoria crescente e ainda pouco sistematizada é a de dados obtidos ou est
 
 \textbf{Vantagens.} Permitem obter dados em tempo real ou com alta frequência, acessar informações que não estão disponíveis em formato tabulado e automatizar coletas que seriam inviáveis manualmente. APIs governamentais abertas — como as do IBGE, do Banco Central e do Portal de Dados Abertos — democratizaram o acesso a dados que antes exigiam download manual de dezenas de arquivos.
 
-\textbf{Limitações.} Exigem competências técnicas de programação. Dados obtidos por \textit{scraping} podem ter qualidade variável e estão sujeitos a mudanças na estrutura dos sites-fonte. O uso de IA para estruturar ou sintetizar dados introduce riscos de erros não detectados (``alucinações'') que exigem verificação cuidadosa.
+\textbf{Limitações.} Exigem competências técnicas de programação. Dados obtidos por \textit{scraping} podem ter qualidade variável e estão sujeitos a mudanças na estrutura dos sites-fonte. O uso de IA para estruturar ou sintetizar dados introduz riscos de erros não detectados (``alucinações'') que exigem verificação cuidadosa.
 
 \textbf{Principais exemplos.} API do IBGE (Sidra), API do Banco Central (SGS), Portal de Dados Abertos do Governo Federal (\url{dados.gov.br}), diários oficiais municipais e estaduais.
 
@@ -188,7 +188,31 @@ APIs e tecnologia & Automação, tempo real, não estruturados & Contínua & IBG
 \section{Síntese do capítulo}
 % ────────────────────────────────────────────────────────────
 
-Este capítulo organizou o ecossistema de fontes de dados em oito tipos, cada um com características, vantagens e limitações próprias. Os pontos centrais são:
+Este capítulo organizou o ecossistema de fontes de dados em oito tipos, cada um com características, vantagens e limitações próprias. A Tabela~\ref{tab:tradeoffs_tipos} sintetiza esses trade-offs.
+
+\begin{table}[H]
+\centering
+\caption{Trade-offs entre os principais tipos de fontes}
+\label{tab:tradeoffs_tipos}
+\small
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{3.2cm} X X @{}}
+\toprule
+\textbf{Tipo} & \textbf{Vantagem central} & \textbf{Limitação central} \\
+\midrule
+Pesquisas amostrais     & Medem variáveis que nenhum registro administrativo captura (percepções, comportamentos, condições de vida) & Tamanho de amostra limita desagregação territorial e por subgrupos \\
+Censos                  & Cobertura universal; permitem análises territoriais finas                                                  & Periodicidade longa e defasagem entre coleta e disponibilização \\
+Registros administrativos & Alta frequência, granularidade individual, baixo custo                                                    & Cobrem apenas quem passa pelo sistema formal; qualidade heterogênea \\
+Sistemas setoriais      & Integração temática, consulta pública, padronização entre unidades federativas                            & Nem sempre integram identificadores entre bases do mesmo sistema \\
+Dados fiscais           & Permitem análises de eficiência, custo-efetividade e custo-benefício                                       & Classificação orçamentária pode não refletir o gasto efetivo por atividade \\
+Dados territoriais      & Resolução espacial fina; múltiplas fontes complementares                                                    & Exigem competências de geoprocessamento \\
+Fontes internacionais   & Comparabilidade entre países                                                                                & Harmonização reduz detalhe nacional \\
+APIs e tecnologia       & Tempo real, automação, acesso a dados não estruturados                                                      & Exigem competências técnicas; qualidade variável \\
+\bottomrule
+\end{tabularx}
+\fonte{FGV CLEAR, elaboração própria.}
+\end{table}
+
+\noindent Em síntese:
 
 \begin{itemize}
   \item Pesquisas amostrais oferecem representatividade estatística, mas têm limites de desagregação; censos oferecem cobertura universal, mas periodicidade longa.
@@ -200,8 +224,8 @@ Este capítulo organizou o ecossistema de fontes de dados em oito tipos, cada um
   \item APIs e tecnologias digitais ampliam o acesso a dados, mas exigem cuidado metodológico adicional.
 \end{itemize}
 
-Os próximos capítulos percorrem esse território fonte por fonte, começando pelas categorias mais consolidadas e avançando para as mais especializadas. A leitura pode ser feita em ordem ou por saltos temáticos --- a tipologia apresentada aqui serve de bússola em qualquer direção.
+Os próximos capítulos percorrem esse território fonte por fonte, começando pelas categorias mais consolidadas e avançando para as mais especializadas. A leitura pode ser feita em ordem ou por saltos temáticos.
 
 \medskip
 
-O primeiro grande território a explorar é o das pesquisas amostrais e censos demográficos: as fontes que, desde o IBGE, nos dizem quem os brasileiros são, como vivem e em que condições --- o ponto de partida insubstituível de qualquer diagnóstico nacional.
+O capítulo seguinte abre o catálogo pelas pesquisas amostrais e censos do IBGE: PNAD Contínua, POF, PNS, Censo Demográfico --- a base do diagnóstico socioeconômico brasileiro.

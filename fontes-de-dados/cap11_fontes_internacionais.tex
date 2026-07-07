@@ -289,6 +289,42 @@ O FAOSTAT é a principal base de dados sobre produção agrícola, pecuária, pe
   \item Dados de uso do solo e desmatamento em perspectiva global.
 \end{itemize}
 
+\subsection{Penn World Table (PWT)}
+
+\ficharapida
+  {Penn World Table}
+  {Groningen Growth and Development Centre (University of Groningen) e University of Pennsylvania}
+  {https://www.rug.nl/ggdc/productivity/pwt/}
+  {Mais de 180 países}
+  {Anual (desde 1950; atualização a cada 2--3 anos)}
+  {País}
+
+A Penn World Table é a base de referência para contas nacionais comparáveis entre países em termos reais, amplamente utilizada em macroeconomia e economia do desenvolvimento. Traz séries longas de PIB em paridade de poder de compra, capital, produtividade total dos fatores, trabalho e preços relativos, todas construídas com metodologia harmonizada que permite comparações robustas ao longo do tempo e entre países. Para avaliações de políticas brasileiras que exigem contexto macroeconômico comparado --- estudos sobre convergência, produtividade setorial, efeitos de choques externos ou retornos a fatores ---, a PWT é frequentemente a fonte primária.
+
+\subsection{Human Mortality Database (HMD)}
+
+\ficharapida
+  {Human Mortality Database}
+  {UC Berkeley e Max Planck Institute for Demographic Research}
+  {https://www.mortality.org/}
+  {41 países com sistemas estatísticos maduros}
+  {Anual (séries longas, muitas iniciando no século XIX)}
+  {País, sexo e idade (tábuas de vida detalhadas)}
+
+A Human Mortality Database reúne tábuas de vida detalhadas por idade, sexo e ano-calendário para países com estatísticas vitais de alta qualidade. Os dados passam por harmonização rigorosa e são acompanhados de documentação metodológica por país. Para análises de mortalidade comparada, projeções demográficas e avaliação de políticas de longevidade, é a fonte de referência. O Brasil não está atualmente coberto pela HMD devido aos níveis históricos de subregistro, mas a base é útil como contraponto de alta qualidade para análises comparadas com países de renda alta.
+
+\subsection{WHO Mortality Database}
+
+\ficharapida
+  {WHO Mortality Database}
+  {Organização Mundial da Saúde (OMS)}
+  {https://www.who.int/data/data-collection-tools/who-mortality-database}
+  {Países membros da OMS que reportam óbitos codificados por CID}
+  {Anual}
+  {País, sexo, idade e causa (CID-9/CID-10)}
+
+A WHO Mortality Database consolida os registros de óbito reportados à OMS pelos países membros, codificados por CID. Complementa a HMD ao cobrir um conjunto muito maior de países --- incluindo o Brasil, que reporta os dados do SIM --- embora com maior heterogeneidade de qualidade. É a principal fonte para análises comparadas de mortalidade por causa específica (homicídios, suicídios, doenças crônicas, mortalidade materna), permitindo contextualizar avaliações de políticas de saúde brasileiras em perspectiva internacional.
+
 \subsection{Banco Interamericano de Desenvolvimento (BID)}
 
 O BID disponibiliza dados sobre seus projetos de financiamento na América Latina e o Caribe, bem como bases de dados temáticas sobre infraestrutura, educação, saúde e governança na região. O portal \textit{IDB Data} (\url{data.iadb.org}) oferece acesso gratuito a indicadores regionais e dados de projetos.
@@ -338,7 +374,7 @@ Este capítulo apresentou as principais fontes internacionais e comparadas dispo
 \caption{Síntese das principais fontes internacionais}
 \label{tab:sintese_cap11}
 \small
-\begin{tabularx}{\textwidth}{@{} p{2.5cm} p{2.5cm} p{2.5cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{3cm} >{\raggedright\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}p{2.3cm} X @{}}
 \toprule
 \textbf{Fonte} & \textbf{Produtor} & \textbf{Cobertura} &
 \textbf{Principal uso} \\
@@ -350,7 +386,7 @@ PISA              & OCDE/Inep            & 80+ países         & Desempenho educ
 ILOSTAT           & OIT                  & 200+ países        & Trabalho, informalidade, trabalho infantil \\
 GHO               & OMS                  & 194 países         & Saúde, mortalidade, doenças \\
 HDR/IDHM          & PNUD                 & 190+ países        & IDH, pobreza multidimensional \\
-CEPALSTAT/BADEHOG & CEPAL                & 33 países AL       & Comparações regionais, microdados \\
+CEPALSTAT/\newline BADEHOG & CEPAL                & 33 países AL       & Comparações regionais, microdados \\
 FAOSTAT           & FAO                  & 245+ países        & Agropecuária, segurança alimentar \\
 V-Dem             & Univ.\ Gotemburgo    & 200+ países        & Qualidade democrática, governança \\
 \bottomrule
@@ -370,4 +406,4 @@ Os pontos centrais do capítulo são:
 
 \medskip
 
-As fontes tradicionais cobrem um vasto território, mas há um ecossistema emergente que as complementa e, em alguns casos, transforma: dados estruturados com apoio de APIs governamentais, \textit{web scraping} e inteligência artificial. Essas ferramentas não substituem as fontes institucionais --- elas preenchem lacunas, aceleram a coleta e criam possibilidades analíticas novas que seriam impraticáveis sem elas. O capítulo seguinte discute como aproveitá-las com rigor metodológico.
+O próximo capítulo apresenta um conjunto emergente de fontes e ferramentas que complementam as bases institucionais: APIs governamentais, \textit{web scraping} e inteligência artificial. Não substituem as fontes tradicionais --- preenchem lacunas, aceleram a coleta e abrem possibilidades analíticas novas que seriam impraticáveis sem elas. O capítulo discute como aproveitá-las com rigor metodológico.

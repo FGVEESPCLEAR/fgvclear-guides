@@ -136,7 +136,7 @@ Exemplos de fontes relevantes para avaliação de políticas públicas que frequ
 
 \begin{itemize}
   \item \textbf{Python}: as bibliotecas \texttt{BeautifulSoup} e \texttt{Scrapy} são as mais utilizadas para extração de HTML; \texttt{Selenium} e \texttt{Playwright} permitem automatizar navegadores para lidar com páginas que carregam conteúdo dinamicamente via JavaScript;
-  \item \textbf{R}: o pacote \texttt{rvest} oferece funcionalidades de \textit{scraping} integradas ao ecossistema do \texttt{tidyverse};
+  \item \textbf{R}: o pacote \texttt{rvest} oferece funcionalidades de \textit{scraping} integradas ao ecossistema do \texttt{tidyverse}; para requisições HTTP mais estruturadas (APIs REST, autenticação, \textit{headers} customizados, controle de \textit{cookies}), o pacote \texttt{httr} (ou \texttt{httr2}) complementa o \texttt{rvest}, cumprindo papel análogo ao da biblioteca \texttt{requests} em Python;
   \item \textbf{Extração de PDF}: para documentos em PDF, as bibliotecas \texttt{pdfplumber} (Python) e \texttt{pdftools} (R) extraem texto e tabelas com qualidade variável dependendo do tipo de PDF (nativo vs.\ escaneado).
 \end{itemize}
 
@@ -190,17 +190,9 @@ LLMs --- e modelos de linguagem mais especializados --- podem ser usados para:
 
 Esses usos são mais robustos do que a geração de informações novas, porque o modelo está operando sobre textos fornecidos pelo pesquisador --- não gerando conteúdo a partir de seu treinamento.
 
-\subsubsection{Revisão de literatura e síntese de evidências}
-
-Ferramentas especializadas em revisão de literatura --- como \textit{Elicit} (\url{elicit.org}), \textit{Consensus} (\url{consensus.app}) e \textit{Semantic Scholar} --- usam modelos de IA para ajudar pesquisadores a:
-
-\begin{itemize}
-  \item Identificar estudos relevantes em uma área temática a partir de uma pergunta de pesquisa em linguagem natural;
-  \item Extrair automaticamente informações estruturadas de artigos (tamanho da amostra, métodos, resultados principais);
-  \item Mapear o estado da evidência sobre uma intervenção específica.
-\end{itemize}
-
-Essas ferramentas são úteis como ponto de partida para revisões sistemáticas, mas não substituem a leitura cuidadosa dos artigos identificados nem a avaliação crítica da qualidade metodológica dos estudos.
+\begin{boxdica}{Nota --- Revisão de literatura e síntese de evidências}
+O uso de IA e de ferramentas digitais para revisão de literatura e síntese de evidências --- incluindo plataformas como \textit{Elicit}, \textit{Consensus} e \textit{Semantic Scholar} --- é tratado em detalhe no guia \textit{Uso de Evidências Acadêmicas em Avaliação de Políticas Públicas}, também integrante da série \textit{Avaliação na Prática}. Este capítulo concentra-se nas tecnologias de \textbf{acesso e coleta de dados} (APIs, \textit{web scraping}, IA aplicada à estruturação de microdados).
+\end{boxdica}
 
 \subsection{Usos de maior risco: geração de dados e informações}
 
@@ -301,4 +293,4 @@ Este capítulo apresentou as principais abordagens tecnológicas para coleta e e
 
 \medskip
 
-Todas essas ferramentas e fontes --- tradicionais e emergentes, nacionais e internacionais --- convergem para um momento concreto: o de escolher um dado específico, obtê-lo, combiná-lo com outras bases e usá-lo para responder uma pergunta avaliativa real. O capítulo final reúne os fios condutores do guia em um roteiro prático para esse processo --- da pergunta à fonte, do acesso à documentação, da linkagem à conformidade com a LGPD.
+Todas essas ferramentas e fontes --- tradicionais e emergentes, nacionais e internacionais --- convergem para um momento concreto: o de escolher um dado específico, obtê-lo, combiná-lo com outras bases e usá-lo para responder uma pergunta avaliativa real. O capítulo final reúne os fios condutores do guia em um roteiro prático para esse processo --- da pergunta à fonte, do acesso à documentação, da integração à conformidade com a LGPD.

@@ -15,7 +15,7 @@ Este capítulo apresenta as principais fontes de dados sobre finanças públicas
 \section{Introdução: por que dados fiscais importam para avaliação}
 % ────────────────────────────────────────────────────────────
 
-Dados de finanças públicas são fundamentais para a avaliação de políticas públicas por pelo menos três razões. Primeira, o \textbf{gasto público é frequentemente a política}: em muitos casos, o que se avalia não é uma intervenção específica com regras de elegibilidade bem definidas, mas o impacto de diferentes níveis ou composições do gasto público sobre resultados de interesse. Segunda, dados fiscais permitem calcular \textbf{custos de políticas}, insumo indispensável para análises de custo-efetividade e custo-benefício. Terceira, a \textbf{capacidade fiscal} dos entes federativos é um determinante importante da qualidade e da cobertura dos serviços públicos --- e, portanto, uma variável de contexto relevante em avaliações de políticas descentralizadas.
+Dados de finanças públicas são fundamentais para a avaliação de políticas públicas por pelo menos quatro razões. Primeira, em várias áreas da política pública \textbf{o gasto é, em si, o instrumento}: transferências de renda, compras governamentais e investimentos em infraestrutura atuam sobre a realidade social via fluxo financeiro --- nesses casos, analisar dados orçamentários é analisar a política. Segunda, dados fiscais funcionam com frequência como \textbf{primeiro estágio} da análise causal: uma lei pode prever transferências ou obrigar determinado gasto, mas o que aparece na execução orçamentária pode diferir do previsto; antes de estimar efeitos de uma política sobre resultados sociais, é boa prática verificar que o gasto público associado efetivamente variou conforme a regra, sob pena de confundir ausência de efeito com ausência de implementação. Terceira, dados fiscais permitem calcular \textbf{custos de políticas}, insumo indispensável para análises de custo-efetividade e custo-benefício. Quarta, a \textbf{capacidade fiscal} dos entes federativos é um determinante importante da qualidade e da cobertura dos serviços públicos --- e, portanto, uma variável de contexto relevante em avaliações de políticas descentralizadas. Os dados de finanças públicas são ainda o principal insumo para o monitoramento do cumprimento da \textbf{Lei de Responsabilidade Fiscal} (Lei Complementar n.º 101/2000), permitindo verificar, por município ou estado, a observância dos limites de gasto com pessoal, de endividamento e dos mínimos constitucionais em saúde e educação --- e, assim, identificar entes sujeitos a sanções institucionais cujo comportamento fiscal pode interagir com as políticas avaliadas.
 
 O Brasil tem um sistema de transparência fiscal relativamente bem desenvolvido para os padrões internacionais, com obrigações de publicação de dados fiscais para todos os entes federativos desde a Lei de Responsabilidade Fiscal (Lei Complementar n.º 101/2000) e a Lei de Transparência (Lei Complementar n.º 131/2009). Na prática, no entanto, a qualidade e a completude dos dados variam consideravelmente entre municípios, estados e o governo federal.
 
@@ -24,7 +24,7 @@ O Brasil tem um sistema de transparência fiscal relativamente bem desenvolvido 
 \caption{Principais fontes de dados de finanças públicas}
 \label{tab:ecossistema_fiscal}
 \small
-\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} p{2cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{2.5cm} X @{}}
 \toprule
 \textbf{Fonte} & \textbf{O que registra} & \textbf{Desde} &
 \textbf{Principal uso em avaliação} \\
@@ -119,7 +119,7 @@ Para análises de capacidade fiscal que exijam maior granularidade do que o Sico
 
 \begin{itemize}
   \item \textbf{Portal Siconfi}: consultas online e download por ente, exercício e classificação orçamentária em \url{siconfi.tesouro.gov.br};
-  \item \textbf{FINBRA histórico}: séries 1986--2012 disponíveis para download na STN em formato Excel;
+  \item \textbf{FINBRA histórico}: séries 1986--2012 disponíveis para download na STN. As séries mais antigas circulam em formatos legados (alguns exercícios em arquivos \texttt{.mdb} do Microsoft Access), o que pode exigir conversão para formatos abertos antes da análise; edições posteriores estão em Excel;
   \item \textbf{Base dos Dados}: a plataforma \textit{Base dos Dados} (\url{basedosdados.org}) disponibiliza o FINBRA e o Siconfi compatibilizados em BigQuery, com tabelas anuais por município desde 1986;
   \item \textbf{Ipeadata}: séries históricas de indicadores fiscais municipais e estaduais com normalização e deflacionamento parcial.
 \end{itemize}
@@ -140,7 +140,7 @@ Comparações de gasto público ao longo do tempo requerem deflacionamento para 
 \end{itemize}
 
 \begin{boxexemplo}{Exemplo prático --- Avaliando o impacto do FPM sobre gasto municipal e resultados de saúde}
-O Fundo de Participação dos Municípios (FPM) distribui recursos federais aos municípios com base em faixas populacionais discretas: municípios que cruzam determinados limiares populacionais recebem mais recursos por habitante do que municípios imediatamente abaixo do limiar. Pesquisadores utilizaram essa descontinuidade como estratégia de regressão descontínua: municípios logo acima e logo abaixo do limiar são comparáveis em tudo, exceto pelo valor das transferências recebidas. Combinando dados do FINBRA (receita do FPM e gasto por função) com dados do DATASUS (mortalidade infantil) e do Censo Escolar (matrículas e IDEB), foi possível estimar o efeito causal de um real adicional de transferência federal sobre o gasto em saúde e educação e sobre os respectivos indicadores de resultado.
+O Fundo de Participação dos Municípios (FPM) distribui recursos federais aos municípios com base em faixas populacionais discretas: municípios que cruzam determinados limiares populacionais recebem mais recursos por habitante do que municípios imediatamente abaixo do limiar. Pesquisadores utilizaram essa descontinuidade como estratégia de regressão descontínua\footnote{Para aprofundamento metodológico, ver o volume da série \textit{Avaliação na Prática} dedicado a Regressão Descontínua.}: municípios logo acima e logo abaixo do limiar são comparáveis em tudo, exceto pelo valor das transferências recebidas. Combinando dados do FINBRA (receita do FPM e gasto por função) com dados do DATASUS (mortalidade infantil) e do Censo Escolar (matrículas e IDEB), foi possível estimar o efeito causal de um real adicional de transferência federal sobre o gasto em saúde e educação e sobre os respectivos indicadores de resultado.
 
 \textit{Fonte: FGV CLEAR, elaboração própria.}
 \end{boxexemplo}
@@ -310,18 +310,18 @@ Este capítulo apresentou as principais fontes de dados de finanças públicas d
 \caption{Síntese das fontes de dados de finanças públicas}
 \label{tab:sintese_cap10}
 \small
-\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} p{2cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{3cm} >{\raggedright\arraybackslash}p{2.6cm} X @{}}
 \toprule
 \textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} &
 \textbf{Principal uso em avaliação} \\
 \midrule
-FINBRA/Siconfi   & Receitas e despesas anuais    & Municipal/estadual & Gasto por função, capacidade fiscal \\
-RREO             & Execução bimestral            & Municipal/estadual & Acompanhamento infraanual \\
-RGF              & Limites LRF                   & Municipal/estadual & Endividamento, risco fiscal \\
+FINBRA/Siconfi   & Receitas e despesas anuais    & Municipal e estadual & Gasto por função, capacidade fiscal \\
+RREO             & Execução bimestral            & Municipal e estadual & Acompanhamento infraanual \\
+RGF              & Limites LRF                   & Municipal e estadual & Endividamento, risco fiscal \\
 Portal Transparência & Execução orçamentária     & Federal            & Programas, transferências, beneficiários \\
-SIOPE            & Gasto em educação             & Municipal/estadual & Custo-aluno, FUNDEB \\
-SIOPS            & Gasto em saúde                & Municipal/estadual & Gasto per capita em saúde \\
-TSE              & Financiamento eleitoral       & Municipal/estadual & Ciclo político, reforma eleitoral \\
+SIOPE            & Gasto em educação             & Municipal e estadual & Custo-aluno, FUNDEB \\
+SIOPS            & Gasto em saúde                & Municipal e estadual & Gasto per capita em saúde \\
+TSE              & Financiamento eleitoral       & Municipal e estadual & Ciclo político, reforma eleitoral \\
 BCB/SGS          & Séries macroeconômicas        & Nacional           & Deflacionamento, índices de preços \\
 BCB/Estban       & Crédito por município         & Municipal          & Acesso ao crédito, políticas de crédito \\
 \bottomrule

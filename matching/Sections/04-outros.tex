@@ -1,0 +1,246 @@
+Para entender como o pareamento funciona na prática, é útil começar pelo caso mais simples possível: o pareamento baseado em uma única variável. Esse exercício é didaticamente poderoso porque todas as decisões fundamentais do pareamento já aparecem de forma clara, sem a complexidade adicional trazida por múltiplas covariadas. Mesmo quando passarmos a métodos mais sofisticados, com várias variáveis e \textit{propensity score}, estaremos apenas elaborando respostas mais complexas para exatamente as mesmas perguntas básicas.
+
+O objetivo desse exemplo não é realismo empírico, mas clareza conceitual. Ao reduzir o problema a uma única dimensão, conseguimos isolar e discutir explicitamente as decisões de desenho envolvidas no pareamento --- como a definição de proximidade, o uso de múltiplos controles, a atribuição de pesos e o descarte de observações --- sem que essas escolhas fiquem escondidas pela complexidade do caso geral.
+
+Suponha, no contexto do NSW, que decidimos começar comparando tratados e controles apenas com base na escolaridade. A ideia geral é simples: queremos comparar indivíduos tratados com indivíduos não tratados que tenham níveis semelhantes de escolaridade. No entanto, essa ideia aparentemente trivial imediatamente nos obriga a responder uma sequência de decisões fundamentais.
+
+A primeira decisão de desenho é: \textbf{qual será exatamente o nosso critério de pareamento?} Com apenas uma variável, isso equivale a definir o que entendemos por ``semelhança''. Dois indivíduos com 10 e 11 anos de estudo podem ser considerados comparáveis? E 10 e 12? Em algum ponto, a diferença deixa de ser aceitável. Mesmo nesse caso unidimensional, somos obrigados a transformar uma noção intuitiva de proximidade em uma regra concreta de comparação.
+
+Do ponto de vista formal, essa decisão equivale à escolha de uma métrica de distância entre indivíduos. No caso unidimensional, essa métrica é trivial --- a distância absoluta entre os valores da covariada --- mas a lógica subjacente é exatamente a mesma que será utilizada quando passarmos a espaços multivariados. O pareamento, em qualquer de suas variantes, começa sempre pela definição explícita de como a proximidade entre unidades será medida.
+
+
+
+A segunda decisão é: \textbf{vamos selecionar pares específicos ou construir uma amostra pareada ponderada?} Em outras palavras, para cada tratado, podemos escolher um ou alguns controles específicos para compará-lo diretamente, ou podemos usar vários controles simultaneamente, combinados por meio de uma média ponderada. Essas duas alternativas não são apenas variações técnicas, mas refletem abordagens conceitualmente distintas. 
+
+Na primeira, a ênfase está em comparações diretas entre indivíduos ou unidades específicas, o que torna o contrafactual mais transparente, mas pode aumentar a variância ao utilizar poucos controles. Na segunda, a ênfase está na construção de um grupo sintético de comparação por meio de ponderações, o que tipicamente reduz a variância ao usar mais informação, mas torna o contrafactual menos diretamente interpretável como um indivíduo específico, passando a ser uma média ponderada de múltiplas unidades de controle.
+
+
+Se a escolha for pela seleção de pares, surge imediatamente a terceira decisão: \textbf{quantos controles usar para cada tratado?} Podemos usar apenas um controle, os dois mais próximos, os cinco mais próximos, ou todos os que estejam dentro de certo intervalo aceitável. Usar poucos controles tende a produzir comparações mais próximas, mas também mais instáveis. Usar muitos controles tende a reduzir a variância, mas pode introduzir controles pouco comparáveis.
+
+Se, por outro lado, a escolha for pela construção de uma amostra ponderada, aparece a quarta decisão: \textbf{como os pesos devem decair com a distância?} Controles mais próximos ao tratado devem receber pesos maiores, mas quão rapidamente esse peso deve cair à medida que a distância aumenta? A queda deve ser abrupta, com peso zero para controles um pouco mais distantes, ou suave, permitindo que controles menos semelhantes ainda influenciem a comparação? Essa decisão determina o balanço entre proximidade e uso da informação disponível.
+
+Por fim, independentemente de estarmos selecionando pares específicos ou construindo médias ponderadas, surge a quinta decisão fundamental: \textbf{qual é o pior pareamento que ainda estamos dispostos a aceitar?} Em algum ponto, um controle é tão diferente do tratado que a comparação deixa de fazer sentido. Isso nos obriga a estabelecer um limite máximo de distância aceitável entre unidades comparadas.
+
+Na prática, esse limite máximo corresponde a uma decisão explícita sobre suporte comum. Quando nenhum controle suficientemente próximo existe, o tratado correspondente deixa de possuir um contrafactual crível. Nesses casos, a exclusão da observação não é um problema técnico do método, mas uma consequência lógica da ausência de informação comparável nos dados. O pareamento apenas torna essa limitação explícita, em vez de escondê-la por meio de extrapolação implícita.
+
+Essas cinco perguntas — qual é o critério de pareamento, se vamos selecionar ou ponderar, quantos pares usar, como os pesos decaem com a distância e qual é o pior pareamento aceitável — formam o núcleo prático de qualquer método de pareamento. Todas as variações que veremos nas próximas seções nada mais são do que diferentes respostas técnicas a esse mesmo conjunto de decisões.
+
+Ao começar pelo caso de uma única variável, essas escolhas ficam completamente transparentes. Vemos com clareza como o pareamento transforma uma noção intuitiva de “comparar pessoas parecidas” em um procedimento operacional bem definido. A partir desse ponto, podemos avançar naturalmente para os métodos de pareamento, sempre mantendo essas cinco decisões fundamentais como fio condutor.
+
+\section{Pareamento pela Distância}
+
+O método de vizinho mais próximo é a forma mais direta e intuitiva de implementar o pareamento quando trabalhamos com apenas uma variável. A ideia é simples: para cada indivíduo tratado, escolhe-se no grupo de controle aquele cuja característica observável está mais próxima. Quando essa característica é unidimensional, como a escolaridade, “proximidade” significa simplesmente a menor diferença absoluta entre os valores observados.
+
+Para fixar as ideias, considere uma situação hipotética inspirada no contexto do NSW, em que utilizamos apenas os anos de estudo como variável de pareamento. A Tabela 4.1 apresenta três indivíduos tratados e quatro indivíduos no grupo de controle.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+        Indivíduo & Grupo & Anos de estudo & Salário\\\midrule
+        A & Tratado  & 10 & 1.200  \\
+        B & Tratado  & 12 & 1.250  \\
+        C & Tratado  & 14 & 1.400  \\
+        1 & Controle &  9 & 900  \\
+        2 & Controle & 11 & 1.000  \\
+        3 & Controle & 13 & 1.100  \\
+        4 & Controle & 16 & 1.300  \\\bottomrule
+    \end{tabular}
+    \caption{Exemplo numérico - pareamento pela metodologia do vizinho mais próximo}
+    \label{tab:placeholder}
+\end{table}
+
+O primeiro passo do vizinho mais próximo é calcular a distância entre cada tratado e todos os controles. A Tabela 4.2 mostra essas distâncias. No nosso caso, consideramos como distância a diferença absoluta dos anos de estudo.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lllll}
+         & Controle 1 (9) & Controle 2 (11) & Controle 3 (13) & Controle 4 (16) \\\midrule
+        Tratado A (10) & 1 & 1 & 3 & 6\\
+        Tratado B (12) & 3 & 1 & 1 & 4\\
+        Tratado C (14) & 5 & 3 & 1 & 2 \\\bottomrule
+    \end{tabular}
+    \caption{Distância absoluta entre tratados e controles}
+    \label{tab:placeholder}
+\end{table}
+
+Com base nessa matriz de distâncias, o vizinho mais próximo de cada tratado pode ser identificado de forma objetiva. Para o tratado A, os controles 1 e 2 são igualmente próximos. Para o tratado B, os controles 2 e 3 são os mais próximos. Para o tratado C, o controle 3 é o mais próximo, seguido do controle 4.
+
+Se adotarmos o critério de um único vizinho mais próximo, cada tratado será emparelhado com apenas um controle. Suponhamos, por simplicidade, que os emparelhamentos escolhidos sejam os apresentados na Tabela 4.3. Nesse caso, os contrafactuais e os efeitos individuais aparecem na Tabela 4.4.
+
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+        Tratado & Anos de Estudo & Controle Escolhido & Anos de Estudo\\\midrule
+        A & 10 & 1 & 9\\
+        B & 12 & 2 & 11\\
+        C & 14 & 3 & 13\\\bottomrule
+    \end{tabular}
+    \caption{Controles escolhidos para cada tratado - 1 vizinho}
+    \label{tab:placeholder}
+\end{table}
+
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+        Tratado & Salário tratado & Salário controle & Efeito\\\midrule
+        A & 1.200 & 900 & 300\\
+        B & 1.250 & 1.000 & 250\\
+        C & 1.400 & 1.100 & 300\\\bottomrule
+    \end{tabular}
+    \caption{Efeitos individuais calculados pelo par}
+    \label{tab:placeholder}
+\end{table}
+
+Se, em vez disso, utilizarmos dois vizinhos mais próximos, o contrafactual passa a ser a média dos dois controles mais próximos. Nesse caso, os pares de comparação seriam os apresentados na Tabela 4.5.
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{lllll}
+       Tratado  & Salário tratado & Controles & Média dos controles & Efeito \\\midrule
+        A & 1.200 & 1 e 2 & 950 & 250\\
+        B & 1.250 & 2 e 3 & 1.050 & 200\\
+        C & 1.400 & 3 e 4 & 1.200 & 200\\\bottomrule
+    \end{tabular}
+    \caption{Controles escolhidos para cada tratado - 2 vizinhos}
+    \label{tab:placeholder}
+\end{table}
+
+Esse exemplo mostra com clareza como a escolha do número de vizinhos afeta diretamente o valor do contrafactual e, portanto, o efeito estimado. Usar poucos controles produz comparações mais “pontuais”, mas também mais instáveis. Usar mais controles suaviza a comparação, mas pode introduzir controles menos comparáveis.
+
+Outro passo fundamental na aplicação do vizinho mais próximo é estabelecer o pior pareamento aceitável, isto é, um limite máximo para a distância entre tratado e controle. Suponha, por exemplo, que decidimos aceitar apenas comparações com diferença de até dois anos de estudo. Nesse caso, todos os emparelhamentos mostrados acima ainda seriam válidos. Se, no entanto, houvesse um tratado com 18 anos de estudo e nenhum controle acima de 16, esse tratado ficaria automaticamente sem par aceitável e precisaria ser excluído da análise. Esse procedimento protege o pesquisador de comparações conceitualmente frágeis.
+
+Por fim, é importante notar que, no pareamento por vizinho mais próximo, um mesmo controle pode ser utilizado como comparação para vários tratados. Isso ocorre no exemplo quando o controle~2 é usado para os tratados~A e~B, e o controle~3 para os tratados~B e~C. Essa reutilização aumenta o aproveitamento da amostra, mas também cria dependência estatística entre as comparações.
+
+É fundamental destacar que essa dependência afeta a inferência, e não a identificação causal. A hipótese de independência condicional continua válida, e o estimando causal permanece o mesmo. O que muda é a estrutura de variância do estimador, exigindo cuidado adicional no cálculo de erros-padrão. Alternativamente, poderíamos impor que cada controle fosse utilizado no máximo uma única vez, o que transforma o problema em uma questão de alocação entre tratados concorrentes pelos mesmos controles, com implicações distintas para viés e variância.
+
+
+O vizinho mais próximo com uma variável representa, assim, a forma mais simples de responder às cinco decisões fundamentais introduzidas no início deste capítulo. Ele define explicitamente como medir proximidade, escolhe a seleção direta de controles, fixa o número de vizinhos, dispensa ponderações contínuas e exige que o pesquisador estabeleça um limite de qualidade para os pareamentos. Todos os métodos mais sofisticados que veremos a seguir podem ser entendidos como extensões dessa mesma lógica básica.
+
+\section{Ponderação da Amostra}
+
+No pareamento por vizinho mais próximo, o contrafactual de cada tratado é construído a partir de um número fixo de controles, escolhidos pela menor distância na variável de interesse. Esse procedimento é simples e transparente, mas produz comparações “discretas”: pequenas mudanças nos dados podem fazer com que um controle entre ou saia completamente da comparação, alterando o contrafactual de forma brusca.
+
+O pareamento por \textit{kernel} propõe uma alternativa mais suave às abordagens baseadas em decisões discretas. Em vez de decidir se um controle ``entra'' ou ``não entra'' na comparação, o \textit{kernel} substitui essas escolhas binárias por pesos contínuos, mantendo exatamente a mesma lógica causal do pareamento.
+
+Nesse método, todos os controles podem, em princípio, contribuir para a construção do contrafactual, mas com pesos que diminuem gradualmente à medida que a distância em relação ao tratado aumenta. Controles muito próximos ao tratado recebem pesos maiores; controles mais distantes recebem pesos menores; e controles suficientemente distantes acabam, na prática, recebendo peso zero. O efeito causal é então estimado como uma diferença entre médias ponderadas, em que os pesos refletem explicitamente o grau de proximidade entre unidades.
+
+
+A ferramenta que implementa essa ideia é a função kernel, que recebe como argumento uma medida de distância padronizada e devolve um peso. A padronização é feita em unidades de desvio-padrão: se $X_i$ é a covariada de pareamento (por exemplo, anos de estudo), definimos a distância padronizada entre o tratado $i$ e o controle $j$ como
+
+$$
+u_{ij} = \frac{X_j - X_i}{\sigma_X},
+$$
+
+em que $\sigma_X$ é desvio padrão de $X_i$. Assim, um controle com $u_{ij} = 0,33$ está a cerca de um terço de desvio padrão do tratado; um controle com $u_{ij} = 1$ está a um desvio padrão de distância, e assim por diante.
+
+No caso do kernel de Epanechnikov, muito usado em aplicações, a regra de ponderação é:
+
+$$
+K(u) = \frac{3}{4} (1-u^2)\mathds{1}(| u | \leq 1).
+$$
+
+Ou seja, apenas controles com $|u| \leq 1$ recebem peso positivo, e dentro desse intervalo os pesos decaem de forma quadrática à medida que a distância padronizada aumenta. Em termos práticos, isso significa que o pesquisador está disposto a usar controles até um desvio-padrão de distância, com maior peso para os mais próximos e peso zero para os que estão além desse raio.
+
+Para ver como isso funciona, retomemos o exemplo do NSW com uma única variável de pareamento, a escolaridade. A Tabela 4.6 apresenta novamente os dados.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+        Indivíduo & Grupo & Anos de estudo & Salário\\\midrule
+        A & Tratado  & 10 & 1.200  \\
+        B & Tratado  & 12 & 1.250  \\
+        C & Tratado  & 14 & 1.400  \\
+        1 & Controle &  9 & 900  \\
+        2 & Controle & 11 & 1.000  \\
+        3 & Controle & 13 & 1.100  \\
+        4 & Controle & 16 & 1.300  \\\bottomrule
+    \end{tabular}
+    \caption{Exemplo numérico pareamento kernel}
+    \label{tab:placeholder}
+\end{table}
+
+O desvio padrão dos anos de estudo para o grupo de controle é $\sigma_X \approx 3$. As distâncias padronizadas entre cada tratado e controle são dadas pela Tabela 4.7.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lllll}
+         & Controle 1 (9) & Controle 2 (11) & Controle 3 (13) & Controle 4 (16) \\\midrule
+        Tratado A (10) & -0,33 & 0,33 & 1,00 & 2,00\\
+        Tratado B (12) & -1,00 & -0,33 & 0,33 & 1,33\\
+        Tratado C (14) & -1,67 & -1,00 & -0,33 & 0,67 \\\bottomrule
+    \end{tabular}
+    \caption{Distância padronizada entre tratados e controles}
+    \label{tab:placeholder}
+\end{table}
+
+
+Aplicando o kernel de Epanechnikov, apenas os pares com $|u| \leq 1$ recebem peso positivo. Para esses pares, calculamos o peso bruto $K(u) = \frac{3}{4} (1-u^2)$ e depois normalizamos para que os pesos somem 1 para cada tratado.
+
+Para o Tratado A, com $u_{A1} = -0,33$, $u_{A2} = 0,33$, $u_{A3} = 1,00$ e $u_{A4} = 2,00$, apenas os controles 1 e 2 têm $|u| \leq 1$ e $K(u) > 0$. A Tabela 4.8 resume os cálculos.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+        Controle & $u$ & Peso bruto $K(u)$ & Peso normalizado\\\midrule
+        1 & -0,33 & 0,67 & 0,50\\
+        2 & 0,33 & 0,67 & 0,50\\
+        3 & 1,00 & 0 & 0\\
+        4 & 2,00 & 0 & 0\\\bottomrule
+    \end{tabular}
+    \caption{Pesos para tratado A}
+    \label{tab:placeholder}
+\end{table}
+
+Para o Tratado B, com $u_{B1} = -1,00$, $u_{B2} = -0,33$, $u_{B3} = 0,33$ e $u_{B4} = 1,33$, apenas os controles 2 e 3 têm $|u| \leq 1$ e $K(u) > 0$. A Tabela 4.10 resume os cálculos.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+        Controle & $u$ & Peso bruto $K(u)$ & Peso normalizado\\\midrule
+        1 & -1,00 & 0 & 0\\
+        2 & -0,33 & 0,67 & 0,50\\
+        3 & 0,33 & 0,67 & 0,50\\
+        4 & 1,33 & 0 & 0\\\bottomrule
+    \end{tabular}
+    \caption{Pesos para tratado B}
+    \label{tab:placeholder}
+\end{table}
+
+Para o Tratado C, com $u_{C1} = -1,67$, $u_{C2} = -1,00$, $u_{C3} = -0,33$ e $u_{C4} = 0,67$, apenas os controles 3 e 4 têm $|u| \leq 1$ e $K(u) > 0$. A Tabela 4.11 resume os cálculos.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+        Controle & $u$ & Peso bruto $K(u)$ & Peso normalizado\\\midrule
+        1 & -1,67 & 0 & 0\\
+        2 & -1,00 & 0 & 0\\
+        3 & -0,33 & 0,67 & 0,62\\
+        4 & 0,67 & 0,42 & 0,38\\\bottomrule
+    \end{tabular}
+    \caption{Pesos para tratado C}
+    \label{tab:placeholder}
+\end{table}
+
+Com os pesos das Tabelas 4.9 a 4.11, os contrafactuais e os efeitos individuais são apresentados na Tabela 4.12.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llll}
+         Tratado & Contrafactual & Salário tratado & Efeito\\\midrule
+         A & $0,50 \cdot 900 + 0,50 \cdot 1.000 = 950$ & 1.200 & 250\\
+         B & $0,50 \cdot 1.000 + 0,50 \cdot 1.100 = 1.050$ & 1.250  & 200\\
+         C & $0,62 \cdot 1.100 + 0,38 \cdot 1.300 \approx 1.177$ & 1400 & 223\\\bottomrule
+    \end{tabular}
+    \caption{Efeitos individuais utilizando kernel}
+    \label{tab:placeholder}
+\end{table}
+
+Esse exercício mostra claramente o que o kernel faz: ele constrói o contrafactual de cada tratado como uma média ponderada dos resultados dos controles, em que os pesos dependem da distância padronizada em desvios-padrão. Apenas controles dentro de um raio de um desvio-padrão participam da comparação, e dentro desse raio os pesos são maiores para os mais próximos e menores para os mais distantes.
+
+Do ponto de vista prático, o pareamento por kernel resolve as cinco decisões fundamentais do pareamento de forma muito natural. O critério de pareamento continua sendo a distância em $X_i$, agora medida em unidades de desvio-padrão. A opção é claramente pela construção de uma amostra ponderada, não pela seleção pontual de pares. Não precisamos decidir quantos vizinhos usar: todos os controles dentro de $|u| \leq 1$ participam automaticamente. A forma de decaimento dos pesos é determinada pela escolha do kernel, e o “pior pareamento aceitável” é controlado pelo fato de que $|u| > 1$ implica peso zero.
+
+No contexto do NSW, o uso do kernel de Epanechnikov permite explorar toda a informação relevante no grupo de controle, preservando a ideia de que comparações mais próximas devem pesar mais. Em amostras pequenas, isso tende a produzir contrafactuais mais estáveis e menos sensíveis a variações pontuais do que o pareamento por vizinho mais próximo.
+
+Com isso, encerramos o estudo dos métodos de pareamento com uma variável. Na sequência, passaremos para o pareamento com múltiplas covariadas, onde a noção de distância deixa de ser unidimensional e a redução de dimensionalidade via \textit{propensity score} ganha papel central.

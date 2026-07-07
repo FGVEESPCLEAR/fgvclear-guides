@@ -7,7 +7,7 @@
 % ════════════════════════════════════════════════════════════
 
 \begin{boxdestaque}{Neste capítulo}
-Este capítulo apresenta as principais fontes de dados sobre saúde disponíveis para o Brasil. Cobrimos o DATASUS e seus sistemas componentes --- SIM, SINASC, SIH, SIA, SINAN, CNES, SIOPS e SISVAN ---, a Pesquisa Nacional de Saúde (PNS) e a Pesquisa de Assistência Médico-Sanitária (AMS). Para cada fonte, detalhamos histórico, estrutura, variáveis disponíveis, forma de acesso e aplicações típicas em avaliação de políticas de saúde pública.
+Este capítulo apresenta as principais fontes de dados sobre saúde disponíveis para o Brasil. Cobrimos o DATASUS e seus sistemas componentes --- SIM, SINASC, SIH, SIA, SINAN, CNES, SIOPS, SISVAN e SISAB ---, a Pesquisa Nacional de Saúde (PNS) e a Pesquisa de Assistência Médico-Sanitária (AMS). Para cada fonte, detalhamos histórico, estrutura, variáveis disponíveis, forma de acesso e aplicações típicas em avaliação de políticas de saúde pública.
 \end{boxdestaque}
 
 % ────────────────────────────────────────────────────────────
@@ -25,7 +25,7 @@ A Figura~\ref{fig:datasus_sistemas} apresenta uma visão esquemática dos princi
 \caption{Principais sistemas do DATASUS e suas coberturas}
 \label{fig:datasus_sistemas}
 \small
-\begin{tabularx}{\textwidth}{@{} p{1.8cm} p{3.5cm} p{2cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} p{1.8cm} p{3.5cm} >{\raggedright\arraybackslash}p{2.5cm} X @{}}
 \toprule
 \textbf{Sistema} & \textbf{O que registra} & \textbf{Desde} & \textbf{Principal uso em avaliação} \\
 \midrule
@@ -35,8 +35,9 @@ SIH    & Internações hospitalares SUS  & 1992 & Uso hospitalar, procedimentos,
 SIA    & Atendimentos ambulatoriais SUS & 1994 & Produção ambulatorial, cobertura \\
 SINAN  & Agravos de notificação        & 1993 & Doenças infecciosas, vigilância epidemiológica \\
 CNES   & Estabelecimentos de saúde     & 2005 & Infraestrutura, RH, capacidade instalada \\
-SIOPS  & Orçamento público em saúde    & 2000 & Gasto público, financiamento do SUS \\
+SIOPS  & Orçamento e execução em saúde    & 2000 & Gasto público, financiamento do SUS \\
 SISVAN & Vigilância alimentar/nutricional & 2008 & Desnutrição, obesidade, segurança alimentar \\
+SISAB  & Atenção primária à saúde      & 2013 & Cobertura de AB, ESF, ações de saúde na AB \\
 \bottomrule
 \end{tabularx}
 \fonte{FGV CLEAR, elaboração própria com base em DATASUS.}
@@ -65,8 +66,8 @@ Para a avaliação de políticas públicas, o SIM é uma fonte insubstituível p
 Cada registro do SIM corresponde a uma Declaração de Óbito e contém:
 
 \begin{itemize}
-  \item \textbf{Características do falecido}: sexo, idade, raça/cor, escolaridade, estado civil, ocupação;
-  \item \textbf{Causa da morte}: causa básica e causas associadas, codificadas pela CID-10; causa externa (para mortes violentas);
+  \item \textbf{Características do falecido}: sexo, idade, raça/cor, escolaridade, estado civil e ocupação --- a qualidade de preenchimento dessas variáveis é heterogênea; em particular, escolaridade, raça/cor e ocupação apresentam taxas expressivas de \textit{missing} e exigem tratamento cuidadoso antes da análise;
+  \item \textbf{Causa da morte}: causa básica e causas associadas, codificadas pela CID-10 (adotada no Brasil em 1996, com implementação plena nos registros do SIM a partir de 1998; séries anteriores usam a CID-9 e exigem compatibilização para análises históricas); causa externa (para mortes violentas);
   \item \textbf{Localização}: município de residência e município de ocorrência do óbito;
   \item \textbf{Data e local do óbito}: data, hora, local (hospital, domicílio, via pública, etc.);
   \item \textbf{Para óbitos infantis e fetais}: informações adicionais sobre a mãe (idade, número de filhos, gestação) e sobre o recém-nascido (peso ao nascer, duração da gestação).
@@ -83,7 +84,7 @@ Cada registro do SIM corresponde a uma Declaração de Óbito e contém:
 
 % CORRIGIDO: título encurtado para caber na caixa
 \begin{boxatencao}{Atenção --- Subregistro e causa básica no SIM}
-O SIM tem dois problemas de qualidade conhecidos que o analista deve considerar. Primeiro, o \textbf{subregistro de óbitos}: estima-se que uma parcela dos óbitos --- especialmente em municípios pequenos, áreas rurais e regiões Norte e Nordeste --- não é registrada, o que subestima a mortalidade real nessas áreas. Segundo, a \textbf{qualidade do preenchimento da causa básica}: uma proporção relevante dos óbitos é classificada como ``causas mal definidas'' (capítulo XVIII da CID-10), especialmente em regiões com menor cobertura de serviços de saúde. Análises de mortalidade por causa específica devem sempre verificar a proporção de causas mal definidas no universo analisado e, se necessário, aplicar redistribuição proporcional.
+O SIM tem dois problemas de qualidade conhecidos que o analista deve considerar. Primeiro, o \textbf{subregistro de óbitos}: historicamente, uma parcela dos óbitos --- especialmente em municípios pequenos, áreas rurais e regiões Norte e Nordeste --- não era registrada, subestimando a mortalidade real nessas áreas. Esse quadro melhorou substancialmente nas últimas duas décadas, com a expansão da Estratégia Saúde da Família, iniciativas como a Busca Ativa de Óbitos e a qualificação das equipes municipais de vigilância; ainda assim, desigualdades regionais persistem em municípios menores e mais isolados. Segundo, a \textbf{qualidade do preenchimento da causa básica}: uma proporção dos óbitos é classificada como ``causas mal definidas'' (capítulo XVIII da CID-10), especialmente em regiões com menor cobertura de serviços de saúde --- proporção que também vem caindo de forma expressiva ao longo do tempo. Análises de mortalidade por causa específica devem sempre verificar a proporção de causas mal definidas no universo analisado e, se necessário, aplicar redistribuição proporcional.
 \end{boxatencao}
 
 \subsection{Acesso aos dados}
@@ -115,7 +116,7 @@ Cada registro contém:
 \begin{itemize}
   \item \textbf{Características do recém-nascido}: sexo, peso ao nascer, duração da gestação (semanas), índice de Apgar, presença de anomalia congênita;
   \item \textbf{Características da mãe}: idade, escolaridade, raça/cor, município de residência, número de filhos anteriores (nascidos vivos e mortos), número de consultas de pré-natal, tipo de parto (vaginal ou cesáreo);
-  \item \textbf{Local do nascimento}: município e estabelecimento de saúde.
+  \item \textbf{Local do nascimento}: município de ocorrência, estabelecimento de saúde (quando aplicável) e local do parto (hospitalar, domiciliar, outro estabelecimento de saúde, via pública, outros).
 \end{itemize}
 
 \subsection{Aplicações típicas em avaliação}
@@ -219,7 +220,7 @@ A notificação compulsória é obrigatória por lei, mas o cumprimento da obrig
 
 \subsection{O que é e principais variáveis}
 
-O CNES é o cadastro de todos os estabelecimentos de saúde do Brasil --- públicos e privados, com e sem fins lucrativos, vinculados ou não ao SUS. Cada estabelecimento é identificado por um código único (CNES) que serve de chave de linkagem com os sistemas SIH, SIA e SINAN.
+O CNES é o cadastro de todos os estabelecimentos de saúde do Brasil --- públicos e privados, com e sem fins lucrativos, vinculados ou não ao SUS. Cada estabelecimento é identificado por um código único (CNES) que serve de chave de integração com os sistemas SIH, SIA e SINAN.
 
 As principais variáveis disponíveis incluem:
 
@@ -286,6 +287,31 @@ As principais aplicações em avaliação incluem:
 \end{itemize}
 
 A principal limitação do SISVAN é que cobre apenas indivíduos que comparecem às consultas na atenção básica --- portanto, não é representativo da população geral.
+
+% ────────────────────────────────────────────────────────────
+\section{SISAB --- Sistema de Informação em Saúde para a Atenção Básica}
+% ────────────────────────────────────────────────────────────
+
+\ficharapida
+  {SISAB}
+  {Ministério da Saúde / SAPS}
+  {https://sisab.saude.gov.br}
+  {Brasil, Unidades da Federação, municípios e equipes}
+  {Contínuo (desde 2013, substituindo o SIAB)}
+  {Indivíduo atendido, equipe e estabelecimento de atenção básica}
+
+\subsection{O que é e aplicações}
+
+O SISAB consolida a produção das equipes de atenção básica do SUS --- Estratégia Saúde da Família (ESF), Núcleos Ampliados de Saúde da Família (eMulti, sucessor do NASF-AB) e demais modelos de Unidade Básica de Saúde (UBS). Substituiu o antigo SIAB em 2013 e é alimentado pelo prontuário eletrônico do cidadão (PEC) e por formulários de CDS (Coleta de Dados Simplificada).
+
+Para a avaliação de políticas públicas, o SISAB permite:
+\begin{itemize}
+  \item Acompanhar a \textbf{cobertura populacional da atenção básica} por município e por equipe, variável-chave em avaliações de impacto da ESF sobre desfechos de saúde;
+  \item Construir indicadores de \textbf{produção de ações da AB} (consultas, visitas domiciliares, procedimentos, ações coletivas, visitas de ACS);
+  \item Cruzar dados da atenção básica a sistemas hospitalares (SIH) e de mortalidade (SIM) via código CNES, permitindo análises do efeito da AB sobre hospitalizações sensíveis à atenção primária e mortalidade evitável.
+\end{itemize}
+
+Como no SISVAN, a limitação central é a cobertura restrita aos usuários efetivos da atenção básica e a heterogeneidade municipal no preenchimento.
 
 % ────────────────────────────────────────────────────────────
 \section{Pesquisa Nacional de Saúde (PNS)}
@@ -359,7 +385,7 @@ Este capítulo percorreu o ecossistema de dados de saúde disponível para o Bra
 \caption{Síntese das fontes de dados de saúde}
 \label{tab:sintese_cap5}
 \small
-\begin{tabularx}{\textwidth}{@{} p{2cm} p{3.5cm} p{2cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} p{2cm} p{3.5cm} >{\raggedright\arraybackslash}p{2.5cm} X @{}}
 \toprule
 \textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} & \textbf{Principal uso em avaliação} \\
 \midrule
@@ -369,8 +395,9 @@ SIH    & Internações SUS            & SUS apenas & Uso hospitalar, procediment
 SIA    & Atendimentos ambulatoriais SUS & SUS apenas & Produção ambulatorial \\
 SINAN  & Agravos notificáveis       & Notificados (subnotificação) & Vigilância epidemiológica \\
 CNES   & Estabelecimentos de saúde  & Todos (públicos e privados) & Infraestrutura, acesso \\
-SIOPS  & Orçamento público em saúde & Entes federativos & Financiamento do SUS \\
+SIOPS  & Orçamento e execução em saúde & Entes federativos & Financiamento do SUS \\
 SISVAN & Estado nutricional         & Usuários da atenção básica & Nutrição, segurança alimentar \\
+SISAB  & Produção da atenção básica & Usuários da atenção básica & Cobertura da ESF, ações da AB \\
 PNS    & Saúde da população geral   & Amostra representativa & Prevalências, acesso, desigualdades \\
 AMS    & Estabelecimentos (histórico) & Todos (descontinuada) & Séries históricas 1999--2009 \\
 \bottomrule
@@ -391,4 +418,4 @@ Os pontos centrais do capítulo são:
 
 \medskip
 
-Saúde e educação são dimensões que se alimentam mutuamente no desenvolvimento humano: crianças mais saudáveis aprendem mais, e populações mais escolarizadas vivem mais. O capítulo seguinte cruza essa fronteira, apresentando as fontes que documentam o que os brasileiros sabem, onde estudam e como progridem no sistema educacional --- um ecossistema igualmente rico, coordenado pelo Inep.
+O próximo capítulo apresenta as fontes sobre educação: o Censo Escolar, o SAEB, o ENEM, o Censo da Educação Superior e o SIOPE --- o ecossistema coordenado pelo Inep, que documenta matrículas, desempenho cognitivo, acesso ao ensino e financiamento da educação básica.

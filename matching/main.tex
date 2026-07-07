@@ -1,165 +1,393 @@
-\documentclass[12pt, a4paper]{article}
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Guia de Pareamento (Matching)
+%% ============================================================
 
-\usepackage{amssymb,amsmath,amsfonts,eurosym,geometry,ulem,graphicx,caption, xcolor,setspace,sectsty,comment,footmisc,caption,natbib,pdflscape,array,hyperref, fancyhdr, csquotes, tikz, enumitem, dsfont, amsthm, makecell, multicol,multirow, booktabs,xcolor,subcaption}
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
 
-\usepackage{etex,etoolbox}
-\usepackage{thmtools}
-\usepackage[many]{tcolorbox}
-\usepackage{apxproof}
-\usepackage{listings}
+\documentclass[12pt, a4paper, openany]{book}
 
+%% ── Codificação e Idioma ────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+%% ── Fonte ───────────────────────────────────────────────────
+\usepackage{tgpagella}
+
+%% ── Matemática ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e Tabelas ───────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
+\usepackage{longtable}
+\usepackage{tabularx}
 \usepackage{tabularray}
-\usepackage{float}
-\usepackage{graphicx}
-\usepackage{codehigh}
-\usepackage[normalem]{ulem}
 \UseTblrLibrary{booktabs}
 \UseTblrLibrary{siunitx}
+\usepackage{makecell}
+% Compatibilidade com saída do modelsummary
 \newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
 \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
 \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+\usepackage{ulem}\normalem
 
+%% ── TikZ ────────────────────────────────────────────────────
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing,positioning,arrows.meta}
 
-\usetikzlibrary{decorations.pathreplacing,positioning, arrows.meta}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=purple,
-    filecolor=magenta,      
-    urlcolor=purple,
-    citecolor=purple,
-    pdftitle={Overleaf Example},
-    pdfpagemode=FullScreen,
-    }
-\normalem
-
-
-
+%% ── Layout ──────────────────────────────────────────────────
+\usepackage{geometry}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
 \onehalfspacing
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[theorem]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{remark}{Remark}
-\newtheorem{assumption}{Hipótese}[section]
-\newtheorem{proposition}{Proposition}[section]
-\newtheoremrep{claim}{\sc \large Claim}[section]
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{enumitem}
 
+%% ── Cores (paleta CLEAR) ────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
+\definecolor{salmonbg}{RGB}{252,235,230}
+\definecolor{salmonframe}{RGB}{230,160,140}
+\definecolor{bluebg}{RGB}{235,245,251}
+\definecolor{blueframe}{RGB}{58,125,181}
+\definecolor{orangebg}{RGB}{254,245,231}
+\definecolor{orangeframe}{RGB}{230,126,34}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeframe}{RGB}{200,200,200}
+\definecolor{Rblue}{RGB}{0,80,160}
+\definecolor{Rgreen}{RGB}{0,128,0}
+\definecolor{Rgray}{RGB}{128,128,128}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{greenbg}{RGB}{225,242,225}
+\definecolor{greenframe}{RGB}{60,140,80}
 
-\newtheorem{hyp}{Hypothesis}
-\newtheorem{subhyp}{Hypothesis}[hyp]
-\renewcommand{\thesubhyp}{\thehyp\alph{subhyp}}
+%% ── Hifenização ─────────────────────────────────────────────
+\hyphenation{par-ti-ci-pa-ção par-ti-ci-pan-tes par-ti-ci-pa-ram par-ti-ci-par
+res-pos-ta ca-rac-te-rís-ti-cas ca-rac-te-rís-ti-ca dis-cre-tas
+res-pon-sá-vel a-le-a-tó-ria pro-pen-sity}
 
-\newtheorem{thm}{Hypothesis}[subsection]
-\renewcommand{\thethm}{\Alph{subsection}.\arabic{thm}}
+%% ── Hyperlinks e Bibliografia ───────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=clearlightblue,
+  citecolor=clearlightblue,
+  urlcolor=clearlightblue,
+  pdfauthor={FGV CLEAR},
+  pdftitle={Guia de Pareamento (Matching)}
+}
+\usepackage{natbib}
 
+%% ── TColorbox ───────────────────────────────────────────────
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{breakable, skins}
 
-\newtheorem{inner}{\innerheader}
-\newcommand{\innerheader}{}
-\newenvironment{hypothesis}[1]
- {\renewcommand\innerheader{#1}\begin{inner}}
- {\end{inner}}
+%% ── Código ──────────────────────────────────────────────────
+\usepackage{listings}
 
- \renewcommand{\refname}{\sc References}
+%% ── Cabeçalhos e Rodapés ────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ Pareamento (Matching)}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
 
-\newcommand{\red}[1]{{\color{red} #1}}
-\newcommand{\blue}[1]{{\color{blue} #1}}
-\newcommand{\ImageWidth}{11cm}
+%% ── Títulos de Seção ────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{clearblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{cleardarkblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{cleardarkblue}}{\thesubsubsection}{1em}{}
 
-\newcolumntype{L}[1]{>{\raggedright\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
-\newcolumntype{C}[1]{>{\centering\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
-\newcolumntype{R}[1]{>{\raggedleft\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
+%% ── Caixas Temáticas ────────────────────────────────────────
+\newtcolorbox{destaquebox}[1][Destaque]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{notabox}[1][Nota]{
+  enhanced, breakable,
+  colback=bluebg, colframe=blueframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{conexaobox}[1][Conex\~ao com a s\'erie]{
+  enhanced, breakable,
+  colback=orangebg, colframe=orangeframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{exemplobox}[1][Exemplo]{
+  enhanced, breakable,
+  colback=greenbg, colframe=greenframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{atencaobox}[1][Aten\c{c}\~ao]{
+  enhanced, breakable,
+  colback=redbg, colframe=redframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
 
-\geometry{left=1.0in,right=1.0in,top=1.0in,bottom=1.0in}
+\newtcolorbox{hipotesebox}[1][Hip\'oteses]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
 
-\title{\sc Guia de Pareamento}
-\author{}
-\date{}
-
-\renewcommand*\contentsname{\sc Sumário}
-
-\numberwithin{equation}{section}
-\numberwithin{table}{section}
-\numberwithin{figure}{section}
-
+% Caixa boxH usada nos arquivos das seções para blocos de código R
 \newtcolorbox{boxH}{
-    colback = sub, 
-    colframe = main, 
-    boxrule = 0pt, 
-    leftrule = 0pt, % left rule weight
-    breakable
+  enhanced, breakable,
+  colback=codebg, colframe=codeframe, boxrule=0.5pt, arc=2pt,
+  left=4pt, right=4pt, top=2pt, bottom=2pt
 }
 
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.1,0.2,0.5}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+%% ── Estilo de Listings ──────────────────────────────────────
+\lstdefinestyle{Rstyle}{
+  language=R,
+  backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{codeframe},
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{Rblue}\bfseries,
+  stringstyle=\color{Rgreen},
+  commentstyle=\color{Rgray}\itshape,
+  numbers=none, breaklines=true,
+  showstringspaces=false, tabsize=2,
+  xleftmargin=6pt, xrightmargin=6pt,
+  aboveskip=8pt, belowskip=8pt,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {à}{{\`a}}1
+           {ã}{{\~a}}1 {õ}{{\~o}}1 {ç}{{\c{c}}}1 {ê}{{\^e}}1 {â}{{\^a}}1 {ô}{{\^o}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ú}{{\'U}}1
+}
+\lstdefinestyle{Routput}{
+  backgroundcolor=\color{codebg}, frame=single, rulecolor=\color{codeframe},
+  basicstyle=\small\ttfamily\color{Rgray}, numbers=none, breaklines=true,
+  showstringspaces=false, xleftmargin=6pt, xrightmargin=6pt,
+  aboveskip=4pt, belowskip=8pt
+}
+\lstset{style=Rstyle}
 
-\lstdefinestyle{mystyle}{
-    language = R,
-    commentstyle=\color{codegray},
-    keywordstyle=\color{codepurple},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=false,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2,
-    inputencoding=utf8,
-    extendedchars=true,
-    literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {â}{{\^a}}1 {ó}{{\'o}}1 {ç}{{\c{c}}}1 {õ}{{\~o}}1 {à}{{\`a}}1
+%% ── Teoremas ────────────────────────────────────────────────
+\newtheorem{definicao}{Defini\c{c}\~ao}[chapter]
+\newtheorem{proposicao}{Proposi\c{c}\~ao}[chapter]
+\newtheorem{assumption}{Hip\'otese}[chapter]
+
+%% ── Metadados de Figuras/Quadros ────────────────────────────
+\newcommand{\figmeta}[3]{%
+  \par\vspace{4pt}%
+  \begin{minipage}{\linewidth}%
+  \footnotesize%
+  \textbf{Fonte:} #1%
+  \ifx&#2&\else\\\textbf{Elabora\c{c}\~ao:} #2\fi%
+  \ifx&#3&\else\\\textbf{Nota:} #3\fi%
+  \end{minipage}%
+  \vspace{6pt}%
 }
 
-\lstset{style=mystyle}
+%% ── Profundidade de numera\c{c}\~ao ─────────────────────────
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
 
+% ============================================================
 \begin{document}
 
-\maketitle
+% ============================================================
+% CAPA
+% ============================================================
+\thispagestyle{empty}
+\begin{center}
+\vspace*{3cm}
+
+{\Large\bfseries\color{clearlightblue} S\'ERIE: AVALIA\c{C}\~AO NA PR\'ATICA}
+
+\vspace{1.8cm}
+
+{\Huge\bfseries\color{clearblue} Guia de Pareamento\\[0.3cm]
+(Matching)}
+
+\vspace{2.2cm}
+
+{\large FGV CLEAR $|$ FGV EESP}
+
+\vspace{0.5cm}
+
+{\large Maio de 2026}
+
+\vfill
+
+\begin{abstract}
+\noindent Este guia apresenta o m\'etodo de \textit{Pareamento} (\textit{Matching}) para avalia\c{c}\~ao de impacto de pol\'iticas p\'ublicas. O pareamento \'e particularmente \'util quando a aleatoriza\c{c}\~ao do tratamento n\~ao \'e poss\'ivel e o pesquisador disp\~oe apenas de dados observacionais. A ideia central \'e construir um grupo de compara\c{c}\~ao que se assemelhe ao grupo tratado em termos de caracter\'isticas observ\'aveis, simulando uma situa\c{c}\~ao experimental. O guia cobre o arcabou\c{c}o te\'orico de identifica\c{c}\~ao via Hip\'otese de Independ\^encia Condicional (CIA), os m\'etodos de pareamento exato e aproximado, o uso do \textit{propensity score} \citep{rosenbaum1983central}, m\'etricas de dist\^ancia como Mahalanobis e estimadores baseados em pondera\c{c}\~ao inversa de probabilidade (IPW). A aplica\c{c}\~ao emp\'irica utiliza dados do \textit{National Supported Work Demonstration} (NSW) combinados com a \textit{Current Population Survey} (CPS), seguindo a tradi\c{c}\~ao iniciada por \cite{lalonde1986evaluating}, para ilustrar como o pareamento pode reduzir o vi\'es de sele\c{c}\~ao em dados n\~ao-experimentais.
+\end{abstract}
+\end{center}
+\newpage
+
+% ============================================================
+% FICHA TÉCNICA
+% ============================================================
+\thispagestyle{empty}
+\vspace*{1.5cm}
+
+{\Large\bfseries\color{clearblue} Ficha T\'ecnica}
+
+\bigskip
+
+\noindent\textbf{Equipe t\'ecnica:} Andr\'e Portela Souza, Caio de Souza Castro, Fabr\'icia Volot\~ao Peixoto, Hugo Villarinho Pereira de Carvalho, Luigi Garzon, Lycia Lima.
+
+\bigskip
+
+\noindent\textbf{Apresenta\c{c}\~ao.} Este guia integra a s\'erie de publica\c{c}\~oes \textit{Avalia\c{c}\~ao na Pr\'atica}, desenvolvida pelo FGV CLEAR com o objetivo de ampliar o acesso a conhecimentos sobre monitoramento e avalia\c{c}\~ao com foco em pol\'iticas p\'ublicas.
+
+\medskip
+
+\noindent Fundado em 2015, o FGV CLEAR tem se dedicado ao fortalecimento da cultura de gest\~ao orientada por evid\^encias no Brasil e em pa\'ises lus\'ofonos. Com sede na Escola de Economia de S\~ao Paulo da Funda\c{c}\~ao Getulio Vargas (FGV EESP), o FGV CLEAR atua como centro regional da Iniciativa CLEAR (\textit{Centers for Learning on Evaluation and Results}).
+
+\medskip
+
+\noindent Saiba mais sobre o FGV CLEAR e acesse outras publica\c{c}\~oes em: \textbf{www.fgvclear.org}
+
+\vfill
+
+\noindent{\small\color{cleargray}%
+Os textos desta publica\c{c}\~ao s\~ao de responsabilidade exclusiva dos autores. As opini\~oes expressas n\~ao refletem necessariamente a posi\c{c}\~ao das institui\c{c}\~oes parceiras.}
+
+\newpage
+
+% ============================================================
+% SUMÁRIO
+% ============================================================
+% ─── SOBRE ESTE GUIA ─────────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Sobre este guia}
+Pareamento se aplica num cenário comum: temos um programa público, sabemos
+quem foi atingido por ele e quem não foi, e queremos estimar o efeito
+comparando os dois grupos. O problema é que tratados e não-tratados não
+foram sorteados. A entrada no programa veio de algum processo
+(autosseleção dos beneficiários, decisão administrativa, critérios
+institucionais, oferta desigual nas regiões) e quase sempre esse processo
+torna os dois grupos diferentes em muito mais do que só a participação no
+programa. Comparar diretamente as médias dos dois grupos confunde efeito
+da política com tudo isso.
+
+A intuição do método é simular o que um experimento teria feito. Num
+experimento, o sorteio garantiria que tratados e não-tratados fossem, em
+média, idênticos antes da intervenção. Tudo o que pudesse afetar o
+resultado estaria igualmente distribuído nos dois grupos por construção, e
+a comparação direta seria justificada. Sem sorteio, a alternativa é olhar
+para cada tratado e procurar, no grupo não-tratado, uma pessoa parecida em
+tudo o que importa: idade, renda, escolaridade, região, situação prévia.
+A comparação entre os dois grupos pareados, esta sim, aproxima o que um
+experimento daria.
+
+A dificuldade está em ``parecida em tudo o que importa''. Com poucas
+covariáveis e todas discretas, pareamento exato funciona. Para cada
+tratado, basta achar um não-tratado com os mesmos valores em todas as
+variáveis observadas. Mas a abordagem direta é derrotada pela
+dimensionalidade rapidamente. Com dez covariáveis contínuas, simplesmente
+não existem pares exatos disponíveis na maioria das amostras práticas.
+Daí as duas alternativas usuais. A distância de Mahalanobis combina todas
+as covariáveis numa única métrica e busca o vizinho mais próximo nesse
+espaço multidimensional. O escore de propensão (Rosenbaum e Rubin, 1983)
+reduz tudo a uma dimensão: a probabilidade estimada de cada pessoa ser
+tratada dadas suas características. Pessoas com escores parecidos são
+pareadas.
+
+Cada abordagem tem suas escolhas práticas que afetam a estimativa: usar um
+par ou vários, com ou sem reposição, com ou sem calibre, descartando ou
+não regiões de pouca sobreposição entre os grupos. O guia trata dessas
+escolhas e dos diagnósticos que checam se o pareamento de fato equilibrou
+as covariáveis entre tratados e controles, que é o teste mais útil antes
+de confiar nos resultados.
+
+O guia também é claro sobre o que o método não resolve. Pareamento
+elimina viés decorrente do que se observa, das características que estão
+na amostra e foram incluídas no procedimento. Mas tudo o que não está nas
+covariáveis (motivação para entrar no programa, oportunidades não
+observáveis, contexto familiar não capturado nos dados) continua podendo
+confundir o resultado. A hipótese de independência condicional, que
+sustenta o método, é uma hipótese sobre o que não vemos, e por isso não
+tem teste direto possível. O pareamento é mais defensável quando o
+conjunto de covariáveis observadas é rico, e mais frágil quando há razões
+para acreditar que variáveis importantes ficaram de fora.
+\newpage
+
+% ─── COMO LER ESTE GUIA ──────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Como ler este guia}
+Três tipos de caixa estruturam a leitura, identificados por cor:
+\vspace{0.3cm}
+\begin{notabox}[Caixa azul --- pontos-chave]
+Aparece ao fim de cada capítulo, com sínteses e recomendações para quem
+precisa decidir.
+\end{notabox}
+\begin{exemplobox}[Caixa verde --- exemplo aplicado]
+Mostra como as ideias do capítulo se traduzem em situações de política
+pública. Os casos são fictícios, mas calibrados por padrões recorrentes
+na literatura e na prática de gestão.
+\end{exemplobox}
+\begin{atencaobox}[Caixa vermelha --- cuidados essenciais]
+Sinaliza armadilhas comuns --- pontos em que uma escolha mal fundamentada
+compromete toda a análise.
+\end{atencaobox}
+\vspace{0.5cm}
+\noindent O guia faz referência recorrente ao \textit{Guia CLEAR de
+Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}
+\citep{Lima2025} --- doravante \textbf{Guia CLEAR de M\&A} ---, que trata
+em profundidade as etapas do ciclo da política pública adotado na série.
+Quando o texto menciona Teoria da Mudança, plano de monitoramento ou
+tipologia de avaliações, é nesse guia que o leitor encontra o
+desenvolvimento completo.
+\newpage
+
 \tableofcontents
-\pagebreak \newpage
+\newpage
 
-\doublespacing
+% ============================================================
+% CONTEÚDO
+% ============================================================
 
+\chapter{Introdu\c{c}\~ao}\label{introducao}
+\input{Sections/01-introducao}
 
-\section{\sc Introdução} \label{introducao}
+\chapter{Causalidade}\label{causalidade}
+\input{Sections/02-experimentos}
 
+\chapter{Pareamento}\label{pareamento}
+\input{Sections/03-aproximado}
 
-\input{Sections/1 - Introdução}
+\chapter{Pareamento com uma vari\'avel}\label{univariado}
+\input{Sections/04-outros}
 
-\section{\sc Causalidade}\label{poder}
+\chapter{Pareamento com m\'ultiplas vari\'aveis}\label{multivariado}
+\input{Sections/05-rct}
 
-\input{Sections/2 - Experimentos}
+\chapter{Conclus\~ao}\label{conclusao}
+\input{Sections/08-conclusao}
 
-\section{\sc Pareamento}\label{late}
-
-\input{Sections/3 - Aproximado}
-
-\section{\sc Pareamento com uma variável}\label{cluster}
-
-\input{Sections/4 - Outros}
-
-\section{\sc Pareamento com múltiplas variáveis}\label{strat}
-
-\input{Sections/5 - RCT}
-
-%\section{\sc Pareamento em Outros Métodos}\label{multihip}
-
-%\input{Sections/6 - Policymakers}
-
-\section{\sc Conclusão}
-
-\input{Sections/8 - Conclusão}
-
+% ============================================================
+% REFERÊNCIAS
+% ============================================================
 \setlength\bibsep{0pt}
-\bibliographystyle{mystyle} 
-\bibliography{ref.bib}
-
+\bibliographystyle{plainnat}
+\bibliography{ref}
 
 \end{document}
-

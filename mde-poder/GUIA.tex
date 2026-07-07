@@ -1,152 +1,465 @@
-\documentclass[12pt, a4paper]{article}
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Introdução à Inferência Causal
+%% ============================================================
 
-\usepackage{amssymb,amsmath,amsfonts,eurosym,geometry,ulem,graphicx,caption, xcolor,setspace,sectsty,comment,footmisc,caption,natbib,pdflscape,array,hyperref, fancyhdr, csquotes, tikz, enumitem, dsfont, amsthm, makecell, multicol,multirow, booktabs,xcolor,subcaption}
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
 
-\usepackage{etex,etoolbox}
-\usepackage{thmtools}
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\documentclass[12pt, a4paper, openany]{book}
+
+%% ── Codificação e Idioma ────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+%% ── Fonte ───────────────────────────────────────────────────
+\usepackage{tgpagella}
+
+%% ── Matemática ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e Tabelas ───────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
+\usepackage{longtable}
+\usepackage{tabularx}
+
+%% ── Layout ──────────────────────────────────────────────────
+\usepackage{geometry}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{enumitem}
+
+%% ── TikZ e PGF ──────────────────────────────────────────────
+\usepackage{csquotes}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta, positioning, decorations.pathreplacing}
+
+%% ── Cores (paleta CLEAR) ────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
+\definecolor{salmonbg}{RGB}{252,235,230}
+\definecolor{salmonframe}{RGB}{230,160,140}
+\definecolor{bluebg}{RGB}{235,245,251}
+\definecolor{blueframe}{RGB}{58,125,181}
+\definecolor{orangebg}{RGB}{254,245,231}
+\definecolor{orangeframe}{RGB}{230,126,34}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeframe}{RGB}{200,200,200}
+\definecolor{codegray}{rgb}{0.45,0.45,0.45}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{greenbg}{RGB}{225,242,225}
+\definecolor{greenframe}{RGB}{60,140,80}
+
+%% ── Hyperlinks e Bibliografia ───────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = clearlightblue,
+  urlcolor   = clearlightblue,
+  citecolor  = clearlightblue,
+  pdftitle   = {Guia de Cálculo de Poder},
+  pdfauthor  = {FGV CLEAR}
+}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+%% ── TColorbox ───────────────────────────────────────────────
 \usepackage[many]{tcolorbox}
-\usepackage{apxproof}
+\tcbuselibrary{breakable, skins}
+
+%% ── Código ──────────────────────────────────────────────────
 \usepackage{listings}
 
-\usetikzlibrary{decorations.pathreplacing,positioning, arrows.meta}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=purple,
-    filecolor=magenta,      
-    urlcolor=purple,
-    citecolor=purple,
-    pdftitle={Overleaf Example},
-    pdfpagemode=FullScreen,
-    }
-\normalem
+%% ── Cabeçalhos e Rodapés ────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ C\'alculo de Poder}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
 
+%% ── Títulos de Seção ────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{clearblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{cleardarkblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{cleardarkblue}}{\thesubsubsection}{1em}{}
 
+%% ── Numeração ───────────────────────────────────────────────
+\numberwithin{equation}{chapter}
+\numberwithin{table}{chapter}
+\numberwithin{figure}{chapter}
 
-\onehalfspacing
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[theorem]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{remark}{Remark}
-\newtheorem{assumption}{Hipótese}[section]
-\newtheorem{proposition}{Proposition}[section]
-\newtheoremrep{claim}{\sc \large Claim}[section]
-
-
-\newtheorem{hyp}{Hypothesis}
-\newtheorem{subhyp}{Hypothesis}[hyp]
-\renewcommand{\thesubhyp}{\thehyp\alph{subhyp}}
-
-\newtheorem{thm}{Hypothesis}[subsection]
-\renewcommand{\thethm}{\Alph{subsection}.\arabic{thm}}
-
-
-\newtheorem{inner}{\innerheader}
-\newcommand{\innerheader}{}
-\newenvironment{hypothesis}[1]
- {\renewcommand\innerheader{#1}\begin{inner}}
- {\end{inner}}
-
- \renewcommand{\refname}{\sc References}
-
-\newcommand{\red}[1]{{\color{red} #1}}
-\newcommand{\blue}[1]{{\color{blue} #1}}
-\newcommand{\ImageWidth}{11cm}
-
-\newcolumntype{L}[1]{>{\raggedright\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
-\newcolumntype{C}[1]{>{\centering\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
-\newcolumntype{R}[1]{>{\raggedleft\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
-
-\geometry{left=1.0in,right=1.0in,top=1.0in,bottom=1.0in}
-
-\title{\sc Guia de Cálculo de Poder}
-\author{}
-\date{}
-
-\renewcommand*\contentsname{\sc Sumário}
-
-\numberwithin{equation}{section}
-\numberwithin{table}{section}
-\numberwithin{figure}{section}
-
-\newtcolorbox{boxH}{
-    colback = sub, 
-    colframe = main, 
-    boxrule = 0pt, 
-    leftrule = 6pt, % left rule weight
-    breakable
+%% ── Caixas Temáticas ────────────────────────────────────────
+\newtcolorbox{destaquebox}[1][Destaque]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{notabox}[1][Nota]{
+  enhanced, breakable,
+  colback=bluebg, colframe=blueframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{conexaobox}[1][Conex\~ao com a s\'erie]{
+  enhanced, breakable,
+  colback=orangebg, colframe=orangeframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{exemplobox}[1][Exemplo]{
+  enhanced, breakable,
+  colback=greenbg, colframe=greenframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{hipotesebox}[1][Hip\'otese]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{atencaobox}[1][Aten\c{c}\~ao]{
+  enhanced, breakable,
+  colback=redbg, colframe=redframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
 
+%% ── Estilo de Listings ──────────────────────────────────────
+\lstdefinestyle{Rstyle}{
+  language         = R,
+  commentstyle     = \color{codegray}\itshape,
+  keywordstyle     = \color{clearblue}\bfseries,
+  numberstyle      = \tiny\color{codegray},
+  stringstyle      = \color{clearlightblue},
+  basicstyle       = \ttfamily\small,
+  breakatwhitespace= false,
+  breaklines       = true,
+  captionpos       = b,
+  keepspaces       = true,
+  numbers          = left,
+  numbersep        = 8pt,
+  showspaces       = false,
+  showstringspaces = false,
+  showtabs         = false,
+  tabsize          = 2,
+  frame            = single,
+  rulecolor        = \color{codeframe},
+  backgroundcolor  = \color{codebg},
+  inputencoding    = utf8,
+  extendedchars    = true,
+  literate =
+    {á}{{\'{a}}}1 {à}{{\`{a}}}1 {â}{{\^{a}}}1 {ã}{{\~{a}}}1
+    {é}{{\'{e}}}1 {ê}{{\^{e}}}1
+    {í}{{\'{i}}}1
+    {ó}{{\'{o}}}1 {ô}{{\^{o}}}1 {õ}{{\~{o}}}1
+    {ú}{{\'{u}}}1
+    {ç}{{\c{c}}}1
+    {Á}{{\'{A}}}1 {Â}{{\^{A}}}1 {Ã}{{\~{A}}}1
+    {É}{{\'{E}}}1 {Ê}{{\^{E}}}1
+    {Í}{{\'{I}}}1
+    {Ó}{{\'{O}}}1 {Ô}{{\^{O}}}1 {Õ}{{\~{O}}}1
+    {Ú}{{\'{U}}}1
+    {Ç}{{\c{C}}}1
+}
+\lstset{style=Rstyle}
+
+%% ── Teoremas ────────────────────────────────────────────────
+\newtheorem{definition}{Defini\c{c}\~ao}[chapter]
+\newtheorem{proposition}{Proposi\c{c}\~ao}[chapter]
+\newtheorem{remark}{Observa\c{c}\~ao}[chapter]
+
+%% ── Atalhos Matemáticos ─────────────────────────────────────
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+
+%% ── Metadados de Figuras/Quadros ────────────────────────────
+\newcommand{\figmeta}[3]{%
+  \par\vspace{4pt}%
+  \begin{minipage}{\linewidth}%
+  \footnotesize%
+  \textbf{Fonte:} #1%
+  \ifx&#2&\else\\\textbf{Elabora\c{c}\~ao:} #2\fi%
+  \ifx&#3&\else\\\textbf{Nota:} #3\fi%
+  \end{minipage}%
+  \vspace{6pt}%
+}
+
+%% ── Profundidade de numera\c{c}\~ao ─────────────────────────
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+
+
+% ============================================================
+%  Compatibilidade — definições próprias do Guia de Cálculo de Poder
+%  (caixa boxH e estilo de código harmonizados à paleta CLEAR)
+% ============================================================
+
+%% ── Pacotes adicionais usados no corpo ──────────────────────
+\usepackage{makecell}
+\usepackage{eurosym}
+
+%% ── Cores auxiliares ────────────────────────────────────────
+\definecolor{main}{HTML}{1B3A6E}   % harmonizado com clearblue
+\definecolor{sub}{RGB}{235,245,251} % harmonizado com bluebg
 \definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
-\lstdefinestyle{mystyle}{
-    language = R,
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=false,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2,
-    inputencoding=utf8,
-    extendedchars=true,
-    literate={á}{{\'a}}1 {ã}{{\~a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {â}{{\^a}}1 {ó}{{\'o}}1 {ç}{{\c{c}}}1
+%% ── Atalhos do corpo ────────────────────────────────────────
+\providecommand{\red}[1]{{\color{red} #1}}
+\providecommand{\blue}[1]{{\color{blue} #1}}
+\providecommand{\ImageWidth}{11cm}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%% ── Caixa de destaque (paleta CLEAR) — antes: boxH ──────────
+\newtcolorbox{boxH}{
+  enhanced, breakable,
+  colback=bluebg, colframe=clearblue,
+  boxrule=0pt, leftrule=6pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
 }
 
+%% ── Estilo de código R (paleta CLEAR) ───────────────────────
+\lstdefinestyle{mystyle}{
+  language         = R,
+  commentstyle     = \color{codegray}\itshape,
+  keywordstyle     = \color{clearblue}\bfseries,
+  numberstyle      = \tiny\color{codegray},
+  stringstyle      = \color{clearlightblue},
+  basicstyle       = \ttfamily\footnotesize,
+  breakatwhitespace= false,
+  breaklines       = true,
+  captionpos       = b,
+  keepspaces       = true,
+  numbers          = none,
+  numbersep        = 5pt,
+  showspaces       = false,
+  showstringspaces = false,
+  showtabs         = false,
+  tabsize          = 2,
+  inputencoding    = utf8,
+  extendedchars    = true,
+  literate =
+    {á}{{\'{a}}}1 {à}{{\`{a}}}1 {â}{{\^{a}}}1 {ã}{{\~{a}}}1
+    {é}{{\'{e}}}1 {ê}{{\^{e}}}1
+    {í}{{\'{i}}}1
+    {ó}{{\'{o}}}1 {ô}{{\^{o}}}1 {õ}{{\~{o}}}1
+    {ú}{{\'{u}}}1
+    {ç}{{\c{c}}}1
+    {Á}{{\'{A}}}1 {Â}{{\^{A}}}1 {Ã}{{\~{A}}}1
+    {É}{{\'{E}}}1 {Ê}{{\^{E}}}1
+    {Í}{{\'{I}}}1
+    {Ó}{{\'{O}}}1 {Ô}{{\^{O}}}1 {Õ}{{\~{O}}}1
+    {Ú}{{\'{U}}}1
+    {Ç}{{\c{C}}}1
+}
 \lstset{style=mystyle}
 
 \begin{document}
 
-\maketitle
+\frontmatter
+
+% ============================================================
+% CAPA
+% ============================================================
+\thispagestyle{empty}
+\begin{center}
+\vspace*{3cm}
+
+{\Large\bfseries\color{clearlightblue} S\'ERIE: AVALIA\c{C}\~AO NA PR\'ATICA}
+
+\vspace{1.8cm}
+
+{\Huge\bfseries\color{clearblue} C\'alculo de Poder }
+
+\vspace{2.2cm}
+
+{\large FGV CLEAR $|$ FGV EESP}
+
+\vspace{0.5cm}
+
+{\large Maio de 2026}
+
+\vfill
+\end{center}
+\newpage
+
+% ============================================================
+% FICHA TÉCNICA
+% ============================================================
+\thispagestyle{empty}
+\vspace*{1.5cm}
+
+{\Large\bfseries\color{clearblue} Ficha T\'ecnica}
+
+\bigskip
+
+\noindent\textbf{Equipe t\'ecnica:} FGV CLEAR.
+
+\bigskip
+
+\noindent\textbf{Apresenta\c{c}\~ao.} Este guia integra a s\'erie de publica\c{c}\~oes \textit{Avalia\c{c}\~ao na Pr\'atica}, desenvolvida pelo FGV CLEAR com o objetivo de ampliar o acesso a conhecimentos sobre monitoramento e avalia\c{c}\~ao com foco em pol\'iticas p\'ublicas.
+
+\medskip
+
+\noindent Fundado em 2015, o FGV CLEAR tem se dedicado ao fortalecimento da cultura de gest\~ao orientada por evid\^encias no Brasil e em pa\'ises lus\'ofonos. Com sede na Escola de Economia de S\~ao Paulo da Funda\c{c}\~ao Getulio Vargas (FGV EESP), o FGV CLEAR atua como centro regional da Iniciativa CLEAR (\textit{Centers for Learning on Evaluation and Results}).
+
+\medskip
+
+\noindent Saiba mais sobre o FGV CLEAR e acesse outras publica\c{c}\~oes em: \textbf{www.fgvclear.org}
+
+\vfill
+
+\noindent{\small\color{cleargray}%
+\textbf{Cita\c{c}\~ao recomendada:} FGV CLEAR. (\the\year). \textit{Guia de C\'alculo de Poder}. S\'erie Avalia\c{c}\~ao na Pr\'atica. S\~ao Paulo: FGV CLEAR.
+
+\medskip
+
+\noindent Os textos desta publica\c{c}\~ao s\~ao de responsabilidade exclusiva dos autores. As opini\~oes expressas n\~ao refletem necessariamente a posi\c{c}\~ao das institui\c{c}\~oes parceiras.}
+
+\newpage
+
+% ============================================================
+% SOBRE ESTE GUIA
+% ============================================================
+\thispagestyle{empty}
+\section*{Sobre este guia}
+Antes de rodar um experimento, vale fazer uma pergunta incomoda: e se ele n\~ao
+detectar nada? Um ensaio aleatorizado bem desenhado pode terminar sem efeito
+estat\'isticamente significante n\~ao porque a pol\'itica n\~ao funciona, mas porque
+a amostra era pequena demais para enxergar um efeito que existe. Calcular poder
+\'e o exerc\'icio que separa essas duas situa\c{c}\~oes antes de gastar tempo e or\c{c}amento
+em campo.
+
+O conceito central \'e o efeito m\'inimo detect\'avel, ou MDE --- o menor efeito
+verdadeiro que o experimento tem chance razo\'avel de identificar, dado o tamanho
+da amostra, a vari\^ancia do desfecho e o n\'ivel de signific\^ancia. Pensar em
+termos de MDE inverte a l\'ogica usual: em vez de perguntar qual o efeito
+estimado, pergunta-se qual efeito o desenho seria capaz de detectar caso
+estivesse l\'a. Um experimento cujo MDE \'e maior do que qualquer efeito
+plaus\'ivel da interven\c{c}\~ao nasce condenado a um resultado nulo pouco informativo.
+
+O guia parte do c\'alculo de poder no caso mais simples e vai relaxando hip\'oteses
+conforme os desenhos reais exigem. Trata da convers\~ao entre poder e tamanho de
+amostra, do problema de cumprimento imperfeito --- quando nem todos os designados
+ao tratamento de fato o recebem ---, dos experimentos aleatorizados por grupo,
+em que a unidade de aleatoriza\c{c}\~ao n\~ao \'e o indiv\'iduo, da estratifica\c{c}\~ao como
+ferramenta para ganhar precis\~ao e do ajuste para m\'ultiplas hip\'oteses. Cada
+t\'opico combina a deriva\c{c}\~ao da f\'ormula com simula\c{c}\~oes em R que reproduzem o
+c\'alculo.
+
+O leitor que conhece o \textit{Guia CLEAR de Introdu\c{c}\~ao \`a Infer\^encia Causal}
+reconhecer\'a que poder \'e a contraparte de planejamento da etapa de infer\^encia:
+enquanto a infer\^encia quantifica a incerteza depois de observar os dados, o
+c\'alculo de poder antecipa, antes da coleta, quanta incerteza o desenho vai
+deixar. Os dois lados precisam conversar para que um experimento valha o que
+custa.
+\newpage
+
+% ============================================================
+% COMO LER ESTE GUIA
+% ============================================================
+\thispagestyle{empty}
+\section*{Como ler este guia}
+O guia alterna a deriva\c{c}\~ao das f\'ormulas com sua implementa\c{c}\~ao pr\'atica.
+Dois elementos se repetem ao longo dos cap\'itulos e merecem aten\c{c}\~ao.
+
+\vspace{0.2cm}
+\begin{boxH}
+\textbf{Caixa de destaque.} A barra azul \`a esquerda marca os pontos em que uma
+escolha de desenho --- tamanho de amostra, n\'ivel de agrupamento, regra de
+ajuste --- altera diretamente o poder do experimento. \'E onde a teoria do
+cap\'itulo vira decis\~ao pr\'atica.
+\end{boxH}
+\vspace{0.3cm}
+
+\noindent O \textbf{c\'odigo em R} aparece em blocos monoespa\c{c}ados, prontos para
+reprodu\c{c}\~ao, logo ap\'os a f\'ormula correspondente. As subse\c{c}\~oes intituladas
+``Praticando'' levam o leitor da f\'ormula anal\'itica \`a simula\c{c}\~ao, mostrando
+que os dois caminhos chegam ao mesmo n\'umero.
+
+\vspace{0.3cm}
+\noindent O guia faz refer\^encia ao \textit{Guia CLEAR de Monitoramento e
+Avalia\c{c}\~ao de Pol\'iticas P\'ublicas: do diagn\'ostico \`a decis\~ao} ---
+doravante \textbf{Guia CLEAR de M\&A} --- para o ciclo da pol\'itica p\'ublica, e ao
+\textit{Guia CLEAR de Introdu\c{c}\~ao \`a Infer\^encia Causal} para o arcabou\c{c}o de
+identifica\c{c}\~ao, estima\c{c}\~ao e infer\^encia.
+\newpage
+
 \tableofcontents
-\pagebreak \newpage
+\newpage
 
-\doublespacing
+% ============================================================
+% CONTEÚDO
+% ============================================================
+
+\mainmatter
+
+\chapter{Introdução}\label{introducao}
+
+\input{Sections/sec1_introducao}
+
+\chapter{Cálculo de Poder}\label{poder}
+
+\input{Sections/sec2_calculo_de_poder}
+
+\chapter{Imperfect Compliance}\label{late}
+
+\input{Sections/sec3_imperfect_compliance}
+
+\chapter{RCT Agrupado}\label{cluster}
+
+\input{Sections/sec4_clustered_rct}
+
+\chapter{Estratificação}\label{strat}
+
+\input{Sections/sec5_estratificacao}
+
+\chapter{Múltiplas Hipóteses}\label{multihip}
+
+\input{Sections/sec6_multiplas_hipoteses}
+
+\chapter{Conclusão}\label{conclusao}
+
+\input{Sections/sec7_conclusao}
 
 
-\section{\sc Introdução} \label{introducao}
-
-\input{Sections/1. Introdução}
-
-\section{\sc Cálculo de Poder}\label{poder}
-
-\input{Sections/2. Cálculo de Poder}
-
-\section{\sc Imperfect Compliance}\label{late}
-
-\input{Sections/3. Imperfect Compliance}
-
-\section{\sc RCT Agrupado}\label{cluster}
-
-\input{Sections/4. Clustered RCT}
-
-\section{\sc Estratificação}\label{strat}
-
-\input{Sections/5. Estratificação}
-
-\section{\sc Múltiplas Hipóteses}\label{multihip}
-
-\input{Sections/6. Múltiplas Hipóteses}
-
-\section{\sc Conclusão} \label{conclusao}
-
-\input{Sections/7. Conclusão}
-
+% ============================================================
+% REFERÊNCIAS
+% ============================================================
+\backmatter
 \setlength\bibsep{0pt}
-\bibliographystyle{mystyle} 
-\bibliography{ref.bib}
-
+\bibliography{ref}
 
 \end{document}
-

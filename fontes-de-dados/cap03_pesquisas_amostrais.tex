@@ -27,7 +27,7 @@ Este capítulo apresenta as principais pesquisas amostrais domiciliares e os cen
 
 O Censo Demográfico é o mais abrangente levantamento de informações sobre a população brasileira. Realizado pelo IBGE desde 1940 com periodicidade decenal --- com exceção do intervalo de onze anos entre 2010 e 2022, provocado pela pandemia de COVID-19 ---, o Censo visita \textit{todos} os domicílios do território nacional, tornando-o a única fonte capaz de produzir informações confiáveis para municípios pequenos, áreas rurais remotas, comunidades indígenas e quilombolas, e qualquer outro recorte territorial ou demográfico para o qual pesquisas amostrais não têm representatividade.
 
-Para a avaliação de políticas públicas, o Censo tem um papel insubstituível como fonte de \textbf{linha de base} --- especialmente quando a política foi implementada entre dois censos --- e como base para a \textbf{construção de contrafactuais} em métodos como o pareamento por escore de propensão. Dados censitários também são amplamente utilizados para calcular taxas populacionais (mortalidade infantil, analfabetismo, cobertura de saneamento) que exigem denominadores populacionais precisos.
+Para a avaliação de políticas públicas, o Censo tem um papel insubstituível como fonte de \textbf{linha de base} --- especialmente quando a política foi implementada entre dois censos --- e como base para a \textbf{construção de contrafactuais} em métodos como o pareamento por escore de propensão. É também amplamente usado como fonte de \textbf{variáveis de controle} em desenhos quase-experimentais, já que oferece informações socioeconômicas granulares e temporalmente estáveis que podem ser incorporadas como covariáveis em estratégias como pareamento, diferença-em-diferenças e regressão descontínua. Dados censitários também são amplamente utilizados para calcular taxas populacionais (mortalidade infantil, analfabetismo, cobertura de saneamento) que exigem denominadores populacionais precisos.
 
 \subsection{Estrutura da coleta: questionário básico e amostral}
 
@@ -36,7 +36,7 @@ Desde 1960, o Censo utiliza dois instrumentos de coleta com abrangências distin
 \begin{itemize}
   \item \textbf{Questionário básico}: aplicado a todos os domicílios do país. Coleta informações elementares sobre os moradores --- nome, sexo, idade, relação com o responsável pelo domicílio e rendimento nominal mensal.
 
-  \item \textbf{Questionário amostral}: aplicado a uma fração dos domicílios (aproximadamente 10\% a 20\%, dependendo do porte do município). Contém um conjunto muito mais amplo de variáveis, incluindo:
+  \item \textbf{Questionário amostral}: aplicado a uma fração dos domicílios (aproximadamente 10\% a 20\%, dependendo do porte do município). Com a aplicação dos pesos amostrais fornecidos pelo IBGE, é representativo no nível municipal, o que amplia consideravelmente o leque de análises locais viáveis a partir do Censo Demográfico. Contém um conjunto muito mais amplo de variáveis, incluindo:
   \begin{itemize}
     \item Características sociodemográficas: escolaridade, raça/cor, religião, migração, fecundidade, nupcialidade;
     \item Características do domicílio: material das paredes, tipo de piso, existência de água encanada, esgotamento sanitário, coleta de lixo, energia elétrica;
@@ -128,7 +128,7 @@ A segunda --- e frequentemente subestimada --- é a \textbf{amostra complexa}. A
   \item \textbf{A agregação temporal pode melhorar a precisão} para recortes finos. Para subgrupos com amostras pequenas, a combinação de múltiplos trimestres pode reduzir o CV das estimativas --- mas exige atenção ao painel rotativo para evitar dupla contagem de domicílios.
 \end{itemize}
 
-A documentação metodológica completa da PNADC está disponível em \url{ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Notas_metodologicas/notas_metodologicas.pdf} e deve ser consultada antes de qualquer análise que envolva domínios de estimação não convencionais.
+A documentação metodológica completa da PNADC está \href{ftp://ftp.ibge.gov.br/Trabalho_e_Rendimento/Pesquisa_Nacional_por_Amostra_de_Domicilios_continua/Notas_metodologicas/notas_metodologicas.pdf}{disponível neste link} e deve ser consultada antes de qualquer análise que envolva domínios de estimação não convencionais.
 
 \begin{boxatencao}{Atenção --- PNAD Contínua não é base de inferência municipal}
 Um erro frequente em avaliações de políticas públicas é usar a PNAD Contínua para calcular indicadores de mercado de trabalho ou renda no nível municipal, muitas vezes por ausência de alternativa mais conveniente. Esse uso não é metodologicamente válido: a amostra da PNADC não foi desenhada para representar municípios individuais, e as estimativas produzidas para esse nível têm precisão estatística inadequada. Para análises que exijam indicadores no nível municipal, as alternativas são o Censo Demográfico (para variáveis cobertas pelo questionário amostral) ou registros administrativos (para indicadores de mercado de trabalho formal, como CAGED e RAIS).
@@ -355,12 +355,12 @@ Este capítulo apresentou as principais pesquisas amostrais e censos demográfic
 \caption{Síntese das pesquisas amostrais e censos demográficos}
 \label{tab:sintese_cap3}
 \small
-\begin{tabularx}{\textwidth}{@{} p{2.8cm} p{2.2cm} p{2cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} p{2.8cm} p{2.2cm} >{\raggedright\arraybackslash}p{2.5cm} X @{}}
 \toprule
 \textbf{Fonte} & \textbf{Período} & \textbf{Periodicidade} & \textbf{Principal uso em avaliação} \\
 \midrule
 Censo Demográfico    & 1940--2022  & Decenal      & Linha de base, denominadores populacionais, contrafactuais \\
-PNAD Contínua        & 2012--atual & Trimestral/anual & Mercado de trabalho, educação, habitação, pobreza (Brasil, regiões, UFs) \\
+PNAD Contínua        & 2012--atual & Trimestral\slash \allowbreak anual & Mercado de trabalho, educação, habitação, pobreza (Brasil, regiões, UFs) \\
 PNAD (anterior)      & 1967--2015  & Anual        & Séries históricas longas, suplementos temáticos \\
 PME                  & 1980--2016  & Mensal       & Mercado de trabalho metropolitano histórico \\
 POF                  & 1987--2018  & Irregular    & Consumo, linhas de pobreza, transferências de renda \\

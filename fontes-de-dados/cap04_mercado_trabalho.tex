@@ -116,7 +116,7 @@ Um estado implementou um programa de atração de investimentos industriais que 
   {https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/estatisticas-trabalho/rais}
   {Brasil, Grandes Regiões, Unidades da Federação e municípios}
   {Anual (desde 1975)}
-  {Vínculo empregatício (base de vínculos) e estabelecimento (base de estabelecimentos)}
+  {Vínculo empregatício e estabelecimento; inclui remuneração mensal e total anual, jornada, CBO, CNAE, tempo no emprego e motivo de desligamento}
 
 \subsection{O que é e por que importa}
 
@@ -133,7 +133,7 @@ A RAIS é disponibilizada em duas bases distintas, com unidades de análise dife
   \item \textbf{Base de estabelecimentos}: cada linha é um estabelecimento (identificado pelo CNPJ). Contém informações sobre localização geográfica, setor de atividade, porte, número de empregados e composição da força de trabalho por escolaridade, sexo e faixa etária.
 \end{itemize}
 
-As duas bases podem ser linkadas pelo CNPJ do estabelecimento, permitindo análises que combinam características dos trabalhadores e das firmas.
+As duas bases podem ser cruzadas pelo CNPJ do estabelecimento, permitindo análises que combinam características dos trabalhadores e das firmas.
 
 \subsection{Principais variáveis da base de vínculos}
 
@@ -155,22 +155,23 @@ O acesso à RAIS tem dois níveis:
 
 \begin{itemize}
   \item \textbf{Dados agregados e tabulações}: disponíveis gratuitamente no portal do MTE, sem necessidade de cadastro;
-  \item \textbf{Microdados anonimizados}: disponíveis para pesquisadores mediante cadastro no portal do MTE. Os microdados públicos têm o CPF substituído por um identificador anonimizado, o que impede linkagem com outras bases por CPF, mas permite análises individuais;
-  \item \textbf{Microdados com CPF}: disponíveis apenas mediante convênio formal com o MTE, para pesquisadores vinculados a instituições acadêmicas ou governamentais. Com o CPF, é possível linkar a RAIS com outras bases (como o CadÚnico, o SINASC ou dados de programas específicos), o que abre possibilidades analíticas muito mais ricas.
+  \item \textbf{Microdados anonimizados}: disponíveis para pesquisadores mediante cadastro no portal do MTE. Os microdados públicos têm o CPF substituído por um identificador anonimizado, o que impede integração com outras bases por CPF, mas permite análises individuais;
+  \item \textbf{Microdados com CPF}: disponíveis apenas mediante convênio formal com o MTE, para pesquisadores vinculados a instituições acadêmicas ou governamentais. Com o CPF, é possível cruzar a RAIS com outras bases (como o CadÚnico, o SINASC ou dados de programas específicos), o que abre possibilidades analíticas muito mais ricas.
 \end{itemize}
 
 \begin{boxdica}{Dica — RAIS identificada via convênio}
-Para pesquisadores que precisam da RAIS com CPF para linkagem de bases, o processo de convênio com o MTE exige uma proposta de pesquisa, termo de sigilo e aprovação por comitê. O prazo costuma ser de dois a quatro meses. A plataforma \textit{Base dos Dados} oferece a RAIS anonimizada já tratada em BigQuery, o que facilita muito o acesso para análises que não exigem identificação individual.
+Para pesquisadores que precisam da RAIS com CPF para integração de bases, o processo de convênio com o MTE exige uma proposta de pesquisa, termo de sigilo e aprovação por comitê. O prazo costuma ser de dois a quatro meses. A plataforma \textit{Base dos Dados} oferece a RAIS anonimizada já tratada em BigQuery, o que facilita muito o acesso para análises que não exigem identificação individual.
 \end{boxdica}
 
 \subsection{Aplicações típicas em avaliação}
 
 \begin{itemize}
   \item \textbf{Análises salariais e de desigualdade}: a RAIS é a principal fonte para estudos de diferencial salarial por sexo, raça, escolaridade e setor;
-  \item \textbf{Avaliação de políticas de qualificação profissional}: linkagem entre participantes de programas de treinamento (identificados pelo CPF) e seus vínculos na RAIS antes e depois do programa;
+  \item \textbf{Avaliação de políticas de qualificação profissional}: integração entre participantes de programas de treinamento (identificados pelo CPF) e seus vínculos na RAIS antes e depois do programa;
   \item \textbf{Estudos de mobilidade ocupacional e setorial}: trajetórias de trabalhadores ao longo do tempo, usando o painel implícito construído pelo CPF;
   \item \textbf{Análise do setor público}: por incluir estatutários, a RAIS é a única fonte administrativa que permite comparar remuneração e características do emprego público e privado;
-  \item \textbf{Estudos de firmas}: a base de estabelecimentos permite análises sobre produtividade, crescimento e mortalidade de empresas.
+  \item \textbf{Estudos de firmas}: a base de estabelecimentos permite análises sobre produtividade, crescimento e mortalidade de empresas;
+  \item \textbf{Análise da transição entre formal e informal}: combinada à PNAD Contínua (que capta emprego informal) e ao CAGED/Novo CAGED, a RAIS permite estimar efeitos de políticas de formalização sobre a composição do mercado de trabalho --- identificando, por exemplo, se uma política gerou novos vínculos formais ou apenas realocou trabalhadores já formalizados.
 \end{itemize}
 
 % ────────────────────────────────────────────────────────────
@@ -232,7 +233,7 @@ O CadÚnico é organizado em duas unidades de análise vinculadas:
   \item \textbf{Pessoa}: para cada membro da família — nome, CPF, NIS (Número de Identificação Social), data de nascimento, sexo, raça/cor, escolaridade, situação no mercado de trabalho, renda individual de todas as fontes.
 \end{itemize}
 
-O NIS é o identificador único de cada pessoa no CadÚnico e pode ser usado para linkar o cadastro com bases de benefícios (Bolsa Família, BPC) e, mediante convênio, com outras bases administrativas.
+O NIS é o identificador único de cada pessoa no CadÚnico e pode ser usado para cruzar o cadastro com bases de benefícios (Bolsa Família, BPC) e, mediante convênio, com outras bases administrativas.
 
 \subsection{Atualização e qualidade dos dados}
 
@@ -249,7 +250,7 @@ O CadÚnico cobre apenas as famílias que se cadastraram voluntariamente. Famíl
 \begin{itemize}
   \item \textbf{Dados agregados públicos}: disponíveis no portal CECAD (\url{cecad.cidadania.gov.br}) e no VISDATA (\url{aplicacoes.mds.gov.br/sagi/vis/data3}), com tabelas e mapas por município;
   \item \textbf{Microdados anonimizados}: disponíveis para pesquisadores mediante convênio com o MDS. O processo exige proposta de pesquisa, termo de confidencialidade e aprovação institucional;
-  \item \textbf{Linkagem com Bolsa Família}: o MDS disponibiliza dados de beneficiários do Bolsa Família (atual e histórico) no Portal da Transparência, com NIS como identificador.
+  \item \textbf{Integração com Bolsa Família}: o MDS disponibiliza dados de beneficiários do Bolsa Família (atual e histórico) no Portal da Transparência, com NIS como identificador.
 \end{itemize}
 
 \subsection{Aplicações típicas em avaliação}
@@ -258,12 +259,12 @@ O CadÚnico cobre apenas as famílias que se cadastraram voluntariamente. Famíl
   \item \textbf{Avaliação de programas de transferência de renda}: o CadÚnico é a base de elegibilidade do Bolsa Família, tornando-o essencial para identificar o grupo de tratamento em qualquer avaliação desse programa;
   \item \textbf{Focalização de políticas sociais}: análise de cobertura — quantas famílias elegíveis estão sendo atendidas e quem está sendo excluído;
   \item \textbf{Caracterização multidimensional da pobreza}: a riqueza de variáveis sobre domicílio, educação e trabalho permite análises de pobreza multidimensional;
-  \item \textbf{Linkagem com registros de saúde e educação}: mediante convênio, o CadÚnico pode ser linkado com o SINASC, o SIM ou o Censo Escolar pelo CPF ou NIS, permitindo avaliar como condições socioeconômicas se associam a resultados de saúde e educação.
+  \item \textbf{Integração com registros de saúde e educação}: mediante convênio, o CadÚnico pode ser cruzado com o SINASC, o SIM ou o Censo Escolar pelo CPF ou NIS, permitindo avaliar como condições socioeconômicas se associam a resultados de saúde e educação.
 \end{itemize}
 
 % CORRIGIDO: título encurtado para caber na caixa
-\begin{boxexemplo}{Exemplo — Linkagem CadÚnico + Censo Escolar: Bolsa Família}
-Uma das avaliações mais citadas do Programa Bolsa Família utilizou a linkagem entre o CadÚnico (que identifica as famílias beneficiárias pelo NIS) e o Censo Escolar (que registra a frequência de cada aluno pelo CPF). Ao combinar as duas bases, os pesquisadores puderam comparar a frequência escolar de crianças de famílias beneficiárias com a de crianças de famílias elegíveis mas não beneficiárias, controlando por características socioeconômicas observáveis do CadÚnico. Essa linkagem tornou possível uma avaliação robusta sem necessidade de coleta primária de dados.
+\begin{boxexemplo}{Exemplo — Integração CadÚnico + Censo Escolar: Bolsa Família}
+Uma das avaliações mais citadas do Programa Bolsa Família utilizou a integração entre o CadÚnico (que identifica as famílias beneficiárias pelo NIS) e o Censo Escolar (que registra a frequência de cada aluno pelo CPF). Ao combinar as duas bases, os pesquisadores puderam comparar a frequência escolar de crianças de famílias beneficiárias com a de crianças de famílias elegíveis mas não beneficiárias, controlando por características socioeconômicas observáveis do CadÚnico. Essa integração tornou possível uma avaliação robusta sem necessidade de coleta primária de dados.
 
 \textit{Fonte: FGV CLEAR, elaboração própria.}
 \end{boxexemplo}
@@ -291,7 +292,7 @@ Como as firmas responderam à política (tamanho, setor, localização)? & RAIS 
 \addlinespace
 Qual é o perfil socioeconômico do público-alvo de uma política social? & Cadastro Único \\
 \addlinespace
-A política aumentou a taxa de formalização entre trabalhadores de baixa renda? & CadÚnico + CAGED/RAIS (linkagem por CPF) \\
+A política aumentou a taxa de formalização entre trabalhadores de baixa renda? & CadÚnico + CAGED/RAIS (integração por CPF) \\
 \addlinespace
 Como evoluiu o rendimento médio dos trabalhadores ao longo do tempo? & PNAD Contínua (séries longas) \\
 \addlinespace
@@ -311,10 +312,10 @@ Este capítulo apresentou as principais fontes administrativas de dados sobre me
 
 \begin{itemize}
   \item O \textbf{CAGED} registra o fluxo mensal de admissões e demissões no emprego formal celetista; o \textbf{Novo CAGED} (a partir de 2020) ampliou a cobertura mas introduziu uma quebra de série que impede comparação direta com o período anterior sem ajustes;
-  \item A \textbf{RAIS} registra o estoque anual de vínculos formais, incluindo estatutários, e é a principal fonte para análises de diferencial salarial, mobilidade ocupacional e características de firmas; o acesso com CPF, via convênio, abre possibilidades de linkagem com outras bases;
+  \item A \textbf{RAIS} registra o estoque anual de vínculos formais, incluindo estatutários, e é a principal fonte para análises de diferencial salarial, mobilidade ocupacional e características de firmas; o acesso com CPF, via convênio, abre possibilidades de integração com outras bases;
   \item O \textbf{eSocial} unifica obrigações trabalhistas e deve se tornar progressivamente uma fonte central de dados administrativos, mas seu uso para pesquisa ainda está em consolidação;
   \item O \textbf{Cadastro Único} é a principal fonte de dados sobre famílias de baixa renda e trabalhadores informais, cobrindo exatamente o público que o CAGED e a RAIS não alcançam; sua limitação é que cobre apenas quem se cadastrou voluntariamente;
-  \item A \textbf{combinação estratégica} dessas fontes — especialmente via linkagem por CPF ou NIS — permite análises muito mais ricas do que qualquer fonte isolada.
+  \item A \textbf{combinação estratégica} dessas fontes — especialmente via integração por CPF ou NIS — permite análises muito mais ricas do que qualquer fonte isolada.
 \end{itemize}
 
-O mercado de trabalho registra quem tem emprego formal — mas não registra o que acontece quando esse trabalhador adoece, se acidenta ou deixa de ter acesso ao sistema de saúde. A dimensão sanitária da vida das pessoas é ao mesmo tempo causa e consequência das condições de trabalho e renda. O próximo capítulo abre esse universo, apresentando os sistemas do DATASUS e a Pesquisa Nacional de Saúde — fontes que cobrem nascimentos, mortes, internações e a experiência de saúde de toda a população brasileira, formal ou informal.
+O próximo capítulo apresenta as fontes de dados sobre saúde: os sistemas do DATASUS (SIM, SINASC, SIH, SIA, SINAN, CNES e outros) e a Pesquisa Nacional de Saúde, que cobrem nascimentos, óbitos, internações, vigilância epidemiológica e a experiência de saúde da população brasileira como um todo.

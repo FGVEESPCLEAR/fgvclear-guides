@@ -1,0 +1,407 @@
+Antes de introduzirmos o pareamento, é necessário discutir a causalidade de maneira mais formal. Esta seção tem como objetivo fixar a notação básica, definir os principais estimandos de interesse e explicitar o problema do viés de seleção que surge na ausência de um desenho experimental. Para tanto, utilizaremos um exemplo real de política de treinamento, que acompanhará o restante do guia.
+
+Iniciaremos o exemplo relacionando o programa ao modelo de resultados potenciais. Em seguida, discutiremos o caso sob uma ótica experimental e, por fim, mostraremos como essas mesmas ideias se estendem a contextos não experimentais, preparando o terreno conceitual para a introdução do pareamento.
+
+\section{Avaliando um Programa de Treinamento}
+
+O \textit{National Supported Work Demonstration} (NSW) foi um programa de treinamento profissional conduzido nos Estados Unidos na metade da década de 1970 pela \textit{Manpower Demonstration Research Corporation} (MDRC). O objetivo principal do NSW era ajudar trabalhadores em situação de vulnerabilidade, que tinham pouca experiência ou qualificações, a se inserir no mercado de trabalho. O programa oferecia emprego temporário, treinamento e acompanhamento psicológico dentro de um ambiente protegido — ou seja, uma espécie de “fase de transição” entre o desemprego e o mercado formal.
+
+Os participantes selecionados recebiam emprego garantido por 9 a 18 meses, dependendo do grupo e da localidade. Trabalhavam em equipes pequenas, de três a cinco pessoas, e se reuniam regularmente com um conselheiro do programa para discutir dificuldades e desempenho. O trabalho era remunerado, embora com salários inferiores aos de empregos regulares, mas havia possibilidade de aumento conforme o desempenho e a assiduidade. Após o término do contrato, os participantes precisavam buscar trabalho no mercado comum — o NSW era, portanto, uma ponte temporária para o emprego formal. As atividades variavam: alguns trabalhavam em postos de gasolina, outros em gráficas ou oficinas, e homens e mulheres frequentemente exerciam funções diferentes.
+
+
+Para avaliar o impacto do programa, a MDRC coletou dados sobre renda e características demográficas dos participantes e do grupo de controle no período inicial e em até quatro entrevistas de acompanhamento realizadas a cada nove meses.
+Esses dados serviram para medir como o programa influenciava o emprego e a renda ao longo do tempo — sendo um dos primeiros experimentos sociais randomizados em políticas de emprego e uma referência clássica em avaliação de impacto.
+
+Antes de entrarmos no assunto da causalidade, vamos baixar os dados desse experimento. Ao longo desse guia, utilizaremos o \textit{software} \texttt{R} para manipular os dados e estimar os resultados. Vamos começar limpando o ambiente do \texttt{R} e carregando os pacotes necessários.
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+# Limpar o ambiente 
+rm(list=ls())
+
+library(tidyverse) # Manipulação de dados + gráficos
+library(haven) # Abre diversos tipos de arquivos
+
+# Estimações
+library(sandwich)
+library(lmtest)
+library(car)
+library(estimatr)
+
+# Visualização
+library(modelsummary)
+library(kableExtra)
+\end{lstlisting}
+\end{boxH}
+
+Agora, para baixarmos os dados, vamos criar uma função que acessa a pasta do GitHub em que os dados estão armazenados e, ao rodarmos essa função em que o argumento é o nome da base, os dados serão abertos no \texttt{R}.
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+baixar_dados <- function(dados)
+{
+  link <- paste("https://github.com/scunning1975/mixtape/raw/master/", 
+                     dados, sep = "")
+  df <- read_dta(link)
+  return(link)
+}
+
+nsw <- baixar_dados("nsw_mixtape.dta")
+\end{lstlisting}
+\end{boxH}
+
+Por fim, iremos criar algumas variáveis que utilizaremos em análises mais adiante.
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+nsw <- nsw %>% 
+    mutate(agesq = age^2, # Idade ao quadrado
+           agecube = age^3, # Idade ao cubo
+           educsq = educ^2, # Educação ao quadrado
+           u74 = case_when(re74 == 0 ~ 1, TRUE ~ 0), # Desemprego 1974
+           u75 = case_when(re75 == 0 ~ 1, TRUE ~ 0), # Desemprego 1975
+           re74sq = re74^2, # Renda 1974
+           re75sq = re75^2) # Renda 1975
+\end{lstlisting}
+\end{boxH}
+
+\section{Resultados Potenciais}\label{po}
+
+A avaliação do programa NSW tem como objetivo principal estimar os efeitos da participação no programa sobre os ganhos monetários reais dos participantes. Seguindo a lógica de \cite{imbensrubin2015}, para cada indivíduo $i = 1,\dots,N$, definimos os resultados potenciais:
+
+\begin{itemize}
+    \item $Y_i(1)$ é o ganho monetário real do indivíduo $i$ caso ele participe do programa;
+    \item $Y_i(0)$ é o ganho monetário real do indivíduo $i$ caso ele \textbf{não} participe do programa.
+\end{itemize}
+
+Assim, é possível definir o efeito causal do programa NSW \textbf{para cada indivíduo $i$}:
+$$ \delta_i = Y_i(1) - Y_i(0)$$
+
+Esse parâmetro captura a diferença entre os ganhos monetários reais que um indivíduo teria caso participasse do programa e aqueles que teria caso não participasse. No entanto, para cada indivíduo, apenas um desses resultados potenciais é observado em um dado período. Seja $D_i = 1$ caso o indivíduo $i$ tenha participado do programa e $D_i = 0$ caso contrário, o resultado observado pode ser escrito como:
+
+$$
+Y_i = D_i Y_i(1) + (1 - D_i) Y_i(0)
+$$
+
+Ou seja, se o indivíduo $i$ participou do programa, $D_i = 1$, então o ganho monetário real observado para esse indivíduo será $Y_i = Y_i(1)$. Caso ele não tenha participado do programa, $D_i = 0$, o ganho monetário real observado será $Y_i = Y_i(0)$.
+
+Como não é possível comparar os resultados de ter participado do programa com os resultados de não ter participado do programa para um mesmo indivíduo, tentaremos comparar os indivíduos que participaram do programa com os indivíduos que não participaram do programa. Nosso objetivo é tentar estimar o efeito médio do tratamento (\textit{Average Treatment Effect} - ATE), ou o efeito médio do tratamento nos tratados (\textit{Average Treatment Effect on the Treated} - ATT), definidos por
+$$
+ATE = \mathbb{E}[Y_i(1) - Y_i(0)], \qquad ATT = \mathbb{E}[Y_i(1) - Y_i(0) \mid D_i = 1]
+$$
+
+\textbf{Será que conseguimos recuperar o ATE ou o ATT apenas comparando a média do grupo de tratamento com a média do grupo de controle?} 
+
+Para responder a essa pergunta, precisamos pensar no que observamos. Se observássemos todos os indivíduos, o valor esperado dos ganhos monetários reais dos indivíduos que participaram do programa NSW seria $\mathbb{E}[Y_i \mid D_i = 1]$. Para os indivíduos que não participaram do programa, o valor esperado seria $\mathbb{E}[Y_i \mid D_i = 0]$. Comparando os dois, temos que
+
+\begin{equation}\label{viesselecao}
+    \begin{split}
+        \mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0] & = \mathbb{E}[Y_i(1) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]\\
+        & = \underbrace{\mathbb{E}[Y_i(1) \mid D_i = 1] \color{red} -\mathbb{E}[Y_i(0) \mid D_i = 1]\color{black}}_{\text{ATT}} \\
+        & - \underbrace{\mathbb{E}[Y_i(0) \mid D_i = 0] \color{red} + \mathbb{E}[Y_i(0) \mid D_i = 1] \color{black}}_{\text{Viés de Seleção}}
+    \end{split}
+\end{equation}
+
+\noindent onde a primeira igualdade vem da definição do resultado observado e a segunda igualdade vem do fato de que $\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 1] = 0$. 
+
+A Equação \eqref{viesselecao} nos mostra que a resposta é não — pelo menos por enquanto. Na ausência de uma hipótese explícita sobre o processo de alocação no programa NSW, a simples comparação de médias entre o grupo de tratamento e o grupo de controle estará potencialmente enviesada. O viés de seleção, definido como $\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]$, reflete a presença de características individuais que influenciam simultaneamente a decisão de participar do programa e os ganhos monetários potenciais.
+
+
+Imagine, por exemplo, que a divulgação do programa NSW tenha atingido majoritariamente pessoas de maior escolaridade. Assim, podemos supor que a probabilidade de alguém ser tratado aumenta quanto maior for sua escolaridade. Além disso, pessoas com maior escolaridade tendem a ter ganhos monetários maiores. Podemos visualizar as direções da causalidade no grafo abaixo:
+
+\[
+\begin{array}{ccccc}
+  & & \text{Escolaridade} & & \\
+  & \swarrow & & \searrow \\
+  D & &\longrightarrow && Y
+\end{array}
+\]
+
+Neste caso, ao compararmos o grupo que participou do NSW com o grupo que não participou, estamos essencialmente comparando os ganhos monetários de pessoas com maior escolaridade com os de pessoas com menor escolaridade. Se acreditarmos que os ganhos monetários desses dois grupos é diferente, o que é totalmente plausível, então $\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0] \neq 0$, ou seja, existe viés de seleção.
+
+\section{Experimentos}
+
+O diferencial do NSW é que ele foi um experimento aleatorizado: entre os candidatos elegíveis, alguns foram escolhidos aleatoriamente para participar, enquanto outros não foram selecionados e serviram como grupo de controle. Isso permite avaliar de forma rigorosa o efeito causal do programa sobre a renda e o emprego dos participantes.
+
+A aleatorização nos garante que a alocação do tratamento não depende de nenhuma característica individual. Em termos matemáticos, nós temos que
+$$(Y_i(1), Y_i(0)) \perp D_i,$$
+
+\noindent ou seja, participar ou não do programa é independente dos ganhos monetários potenciais. Isso significa que, ao compararmos as pessoas que participaram do NSW com as pessoas que não participaram, estaremos comparando pessoas com características semelhantes. Em média, a única coisa que difere um grupo do outro é a participação no programa. 
+
+Na prática, não conseguimos verificar diretamente essa independência a partir dos dados. No entanto, em um experimento aleatorizado, ela é garantida pelo desenho do estudo, e não pelos dados em si. O que podemos fazer empiricamente é avaliar se os grupos de tratamento e controle são semelhantes em termos de suas características \textbf{observáveis}, $X_i$. Esse procedimento é conhecido como \textbf{análise de balanceamento} e tem caráter diagnóstico: ele fornece evidência indireta de que a aleatorização produziu grupos comparáveis, mas não a testa formalmente. Na prática, iremos verificar se a média das variáveis observáveis no grupo tratado é estatisticamente igual à média no grupo de controle, isto é, $\overline{X}_{D_i=1} = \overline{X}_{D_i=0}$. No \texttt{R}, utilizaremos o pacote \texttt{vtable} para produzir uma \textbf{tabela de balanceamento}.
+
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+library(vtable)
+
+nsw %>% select(c("treat","age", "educ","nodegree","marr", "black","hisp","re74","re75","u74","u75")) %>%
+  sumtable(group = "treat", group.test=TRUE, digits = 3)
+\end{lstlisting}
+\end{boxH}
+
+O código acima produz a Tabela \ref{balance}. Nela, temos dez características observáveis disponíveis. Para cada característica, temos a média e o desvio padrão para o grupo de tratamento e o grupo de controle, além do teste F de signifiância conjunta. Nela, podemos ver que as características estão, em geral, balanceadas. Apenas ensino médio incompleto tem uma diferença estatisticamente significante. Mesmo com a alocação do tratamento ter sido aleatória, podemos ter diferenças como essa devido ao baixo número de observações.
+
+\begin{table}[!htbp] \centering \caption{Balanceamento}\label{balance}
+\begin{tabular}{lccccccl}
+\toprule
+Tratamento & \multicolumn{3}{c}{0} & \multicolumn{3}{c}{1} &   \\
+  \midrule
+ Variável & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Média} & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Média} & \multicolumn{1}{c}{SD} & \multicolumn{1}{c}{Teste F} \\ 
+\midrule
+Idade \hspace{70mm}& 260 & 25.1 & 7.06 & 185 & 25.8 & 7.16 & F$=1.247^{}$ \\ 
+Educação & 260 & 10.1 & 1.61 & 185 & 10.3 & 2.01 & F$=2.237^{}$ \\ 
+Ensino Médio Incompleto & 260 & 0.835 & 0.372 & 185 & 0.708 & 0.456 & F$=10.338^{***}$ \\ 
+Pardo & 260 & 0.154 & 0.361 & 185 & 0.189 & 0.393 & F$=0.961^{}$ \\ 
+Negro & 260 & 0.827 & 0.379 & 185 & 0.843 & 0.365 & F$=0.207^{}$ \\ 
+Hispânico & 260 & 0.108 & 0.311 & 185 & 0.0595 & 0.237 & F$=3.153^{*}$ \\ 
+Renda 1974 & 260 & 2107 & 5688 & 185 & 2096 & 4887 & F$=0^{}$ \\ 
+Renda 1975 & 260 & 1267 & 3103 & 185 & 1532 & 3219 & F$=0.765^{}$ \\ 
+Desemprego 1974 & 260 & 0.75 & 0.434 & 185 & 0.708 & 0.456 & F$=0.966^{}$ \\ 
+Desemprego 1975 & 260 & 0.685 & 0.466 & 185 & 0.6 & 0.491 & F$=3.41^{*}$\\ 
+\midrule
+\multicolumn{8}{l}{Significância estatística: * $p<0.1$; ** $p<0.05$; *** $p<0.01$}\\ 
+\end{tabular}
+
+\end{table}
+
+O ponto central da Tabela \ref{balance} é gerarmos evidência de que a alocação do tratamento não está correlacionada com nenhuma característica observada. Um bom balanceamento adicionado ao fato de a alocação do tratamento ter sido aleatorizada são ótimos passos para argumentar que um efeito causal está sendo recuperado na hora de estimar os resultados. Se estamos comparando dois grupos iguais em média, isso significa que $\mathbb{E}[Y_i(0) \mid D_i = 1] = \mathbb{E}[Y_i(0) \mid D_i = 0]$. Ou seja, agora o viés de seleção deixa de existir, e nossa comparação de médias é igual ao ATT:
+$$
+\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0] = \mathbb{E}[Y_i(1) \mid D_i = 1]  -\mathbb{E}[Y_i(0) \mid D_i = 1] = ATT
+$$
+
+Como cada um dos resultados potenciais vão ser, em média, iguais para os grupos de tratamento e controle, isto é, $\mathbb{E}[Y_i(1) \mid D_i] = \mathbb{E}[Y_i(1)]$ e $\mathbb{E}[Y_i(0) \mid D_i] = \mathbb{E}[Y_i(0)]$, então a comparação de média entre os dois grupos não só retorna o ATT, como também o ATE:
+$$
+\mathbb{E}[Y_i \mid D_i = 1] - \mathbb{E}[Y_i \mid D_i = 0] = \mathbb{E}[Y_i(1) - Y_i(0)]  = ATE
+$$
+
+Podemos estimar esses parâmetros causais de duas maneiras: por meio de uma diferença de médias simples ou por meio da regressão dos ganhos monetários na participação no programa. A diferença de médias, nesse caso, é equivalente ao parâmetro de Mínimos Quadrados Ordinários (MQO) relacionado à variável de tratamento.\footnote{Apêndice} Aqui, iremos estimar esses efeitos através da seguinte regressão:
+$$
+Y_i = \alpha + \beta D_i + \varepsilon_i,
+$$
+
+\noindent em que $\varepsilon_i$ é o erro idiossincrático. Neste caso, o estimador de $\beta$, que iremos chamar de $\hat{\beta}$, irá recuperar o ATE. No \texttt{R}, iremos utilizar a função \texttt{lm\_robust} do pacote \texttt{estimatr} para rodarmos a regressão.
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+# Igual à diferença de médias
+fit_nsw = lm_robust(re78 ~ treat, se_type = "stata", data = nsw)
+
+# Resultados
+summary(fit_nsw)
+\end{lstlisting}
+\end{boxH}
+
+A Tabela \ref{reg1} mostra os resultados da regressão. Ela indica que o programa NSW \textbf{causou}, em média, um aumento de \$1.794,342 para os participantes do programa.
+
+\begin{table}[h]
+
+\centering
+\caption{Resultados da Regressão}
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]},
+column{2}={}{halign=c,},
+column{1}={}{halign=l,},
+hline{6}={1-2}{solid, black, 0.05em},
+}                     %% tabularray inner close
+\toprule
+& Estimativa \\ \midrule %% TinyTableHeader
+Intercepto \hspace{80mm} & \num{4554.801}*** \\
+& (\num{340.204}) \\
+Tratamento & \num{1794.342}** \\
+& (\num{670.824}) \\
+Observações & \num{445} \\
+\bottomrule
+\end{talltblr}\label{reg1}
+\end{table} 
+
+\section{Dados Não-Experimentais}
+
+Até aqui, utilizamos o programa NSW como um exemplo ideal de avaliação causal, pois ele foi implementado como um experimento aleatorizado. A aleatorização garantiu que, em média, tratados e controles fossem comparáveis antes da intervenção, o que nos permitiu interpretar diretamente a diferença de médias como um efeito causal. No entanto, esse tipo de desenho é a exceção, e não a regra, na avaliação de políticas públicas. Na grande maioria das situações, o pesquisador dispõe apenas de dados observacionais, isto é, dados gerados sem qualquer controle direto sobre o processo de seleção para o tratamento.
+
+Para ilustrar esse cenário, vamos agora considerar uma base de dados não-experimental: a \textit{Current Population Survey} (CPS), uma pesquisa domiciliar representativa da população dos Estados Unidos. Diferentemente do NSW, a CPS não foi desenhada para avaliar um programa específico. Ela contém informações sobre renda, escolaridade, idade, raça, entre outras características, mas a participação em programas de treinamento não é resultado de sorteio, e sim de decisões individuais, institucionais e sociais. Como consequência, ao compararmos indivíduos tratados e não tratados nesse contexto, estamos comparando grupos que podem ser estruturalmente muito diferentes entre si. Essa simples comparação não permite isolar o efeito causal do programa, pois está sujeita a viés de seleção: indivíduos que participam do treinamento podem diferir sistematicamente dos não participantes em características observadas e não observadas que também afetam os resultados.
+
+Agora, vamos baixar os dados da CPS no \texttt{R} e juntar com os tratados da base anterior do NSW. A ideia é mostrar que, utilizando os indivíduos da base da CPS como controle, não teremos um grupo de comparação válido como o que tínhamos na nossa base experimental.
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+# Baixar dados não-experimentais
+cps <- baixar_dados("cps_mixtape.dta") 
+
+# Juntar dados não-experimentais com o grupo tratado do experimento
+nsw_treat <- nsw %>% filter(treat==1)
+
+# Adicionar variáveis quadráticas e dummies
+cps <- cps %>% 
+  bind_rows(nsw_treat) %>% 
+  mutate(agesq = age^2,
+         agecube = age^3,
+         educsq = educ*educ,
+         u74 = case_when(re74 == 0 ~ 1, TRUE ~ 0),
+         u75 = case_when(re75 == 0 ~ 1, TRUE ~ 0),
+         re74sq = re74^2,
+         re75sq = re75^2)
+\end{lstlisting}
+\end{boxH}
+
+Após preparar os dados, iremos rodar a regressão usando os dados da CPS como controles. 
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+# Diferença simples entre tratados e controle não-experimental
+fit_nswcps = lm_robust(re78 ~ treat, se_type = "stata", data = cps)
+
+modelsummary(fit_nswcps, stars = TRUE, fmt = 3, output = "latex")
+\end{lstlisting}
+\end{boxH}
+
+A comparação entre os resultados da Tabela \ref{reg2}, baseada em dados não experimentais, e da Tabela \ref{reg1}, que utiliza a amostra experimental, ilustra de forma clara o problema do viés de seleção. Enquanto a regressão com dados experimentais aponta um efeito positivo e estatisticamente significativo do tratamento, refletindo o impacto causal médio estimado a partir de um desenho aleatório, a regressão com dados não experimentais produz uma estimativa fortemente negativa para o coeficiente do tratamento. Essa reversão de sinal não decorre de um efeito causal adverso do programa, mas sim do fato de que, na amostra não experimental, os indivíduos tratados diferem sistematicamente dos controles em características relevantes que também afetam o resultado. Em particular, participantes do programa tendem a apresentar piores condições iniciais no mercado de trabalho, o que gera uma correlação negativa espúria entre tratamento e desfecho quando essas diferenças não são adequadamente controladas. Esse contraste evidencia que, na ausência de aleatorização, estimativas ingênuas baseadas em regressões simples podem estar severamente enviesadas.
+
+\begin{table}[h]
+\centering
+\caption{Resultados da Regressão com Dados Não-Experimentais}
+\begin{talltblr}[         %% tabularray outer open
+entry=none,label=none,
+note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]},
+column{2}={}{halign=c,},
+column{1}={}{halign=l,},
+hline{6}={1-2}{solid, black, 0.05em},
+}                     %% tabularray inner close
+\toprule
+& Estimativa \\ \midrule %% TinyTableHeader
+Intercepto \hspace{80mm} & \num{14846.660}*** \\
+& (\num{76.291}) \\
+Tratamento & \num{-8497.516}*** \\
+& (\num{581.916}) \\
+Observações & \num{16177} \\
+\bottomrule
+\end{talltblr}\label{reg2}
+\end{table} 
+
+Esse contraste muda completamente a natureza do problema. Enquanto no experimento a igualdade entre grupos era garantida pelo desenho, nos dados não-experimentais essa igualdade precisa ser construída estatisticamente. Caso contrário, qualquer comparação direta entre tratados e não tratados estará contaminada por viés de seleção. Em termos do modelo de resultados potenciais discutido na Seção \ref{po}, o problema central é que, sem um experimento, não conseguimos garantir que
+$$
+\mathbb{E}[Y_i(0) \mid D_i = 1] = \mathbb{E}[Y_i(0) \mid D_i = 0],
+$$
+
+\noindent ou seja, o resultado contrafactual dos tratados não é, em média, igual ao resultado observado dos controles. Neste caso, o estimando de MQO não identifica mais o ATE ou o ATT. Em vez disso, ele capturará uma combinação do efeito causal verdadeiro com o viés de seleção, como mostramos na Equação \eqref{viesselecao}. Intuitivamente, isso ocorre porque a decisão de participar de um programa de qualificação, por exemplo, está relacionada a características como escolaridade, histórico de renda, desemprego prévio, motivação e acesso à informação — todas variáveis que também afetam diretamente os salários futuros.
+
+
+Esse ponto é crucial: a regressão não-ajustada em dados não-experimentais falha exatamente porque está comparando pessoas diferentes entre si. Um jovem que voluntariamente se inscreve em um programa de qualificação pode ser mais proativo, ter redes de contato melhores ou estar em uma fase diferente do ciclo de vida do que um jovem que não se inscreve. Mesmo que o programa não tenha efeito algum, a simples comparação das médias pode indicar um ``impacto positivo'', quando, na verdade, estamos apenas observando diferenças preexistentes entre os grupos.
+
+
+
+
+
+\section{Ajustando pelas características observáveis}
+
+Na seção anterior, vimos que, ao trabalhar com dados não-experimentais, a simples comparação entre tratados e não tratados está contaminada por viés de seleção. Uma resposta natural a esse problema é tentar ``corrigir'' essa comparação ajustando pelas características observáveis dos indivíduos. Em termos práticos, isso significa controlar, na regressão, por variáveis como idade, escolaridade, raça, renda passada, histórico de desemprego e outras covariadas que afetam tanto a participação no programa quanto o resultado de interesse.
+
+Formalmente, em vez da regressão simples, passamos a estimar um modelo do tipo
+\begin{equation}\label{olscov}
+    Y_i = \alpha + \beta D_i + X_i'\gamma + \varepsilon_i
+\end{equation}
+
+
+
+em que $X_i$ é um vetor de características observáveis. A expectativa é que, ao controlar por essas variáveis, estejamos ``limpando'' as diferenças sistemáticas entre tratados e controles, tornando a comparação mais justa. Ainda, podemos utilizar a regressão de Lin, que adiciona a uma interação entre o tratamento e cada uma das covariadas. No caso de um experimento, isso garantiria a menor variância do estimador de OLS. 
+
+\begin{equation}\label{olslin}
+    Y_i = \alpha 
++ \beta D_i 
++ X_i' \gamma 
++ (D_i \cdot X_i)' \delta 
++ \varepsilon_i
+\end{equation}
+
+
+De fato, esse tipo de ajuste frequentemente altera de forma substancial a estimativa do efeito do tratamento. Em muitos casos empíricos, a magnitude do coeficiente associado ao tratamento cai drasticamente após a inclusão dos controles — o que já indica que uma parte relevante da diferença bruta observada antes era explicada por características preexistentes dos indivíduos. Esse exercício é importante porque revela, de forma concreta, a força do viés de seleção nos dados observacionais.
+
+Agora, iremos rodar as especificações dadas pelas equações \eqref{olscov} e \eqref{olslin} para os dados experimentais e para os dados não-experimentais. Para rodar a regressão de Lin, utilizaremos a função \texttt{lm\_lin} do pacote \texttt{estimatr}.
+
+\begin{center}
+    [Tabela regressão ajustada CPS]
+\end{center}
+
+\begin{boxH}
+\begin{lstlisting}[language = R]
+
+# Ajustando por covariáveis (NSW)
+fit_nsw_cov = lm_robust(re78 ~ treat + age+agesq+educ+nodegree+marr+black+hisp+re74+re75+u74+u75, se_type = "stata", data = nsw)
+
+# Regressão de Lin (NSW)
+fit_nsw_adj = lm_lin(re78 ~ treat, covariates = ~ age+agesq+educ+nodegree+marr+black+hisp+re74+re75+u74+u75, se_type = "stata", data = nsw)
+
+# Ajustando por covariáveis (NSW + CPS)
+fit_nswcps_cov = lm_robust(re78 ~ treat + age+agesq+educ+nodegree+marr+black+hisp+re74+re75+u74+u75, se_type = "stata", data = cps)
+
+# Regressão de Lin (NSW + CPS)
+fit_nswcps_adj = lm_lin(re78 ~ treat, covariates = ~ age+agesq+educ+nodegree+marr+black+hisp+re74+re75+u74+u75, se_type = "stata", data = cps)
+
+\end{lstlisting}
+\end{boxH}
+
+A Tabela \ref{reg3} evidencia, em primeiro lugar, que, na amostra experimental do NSW, a estimação por mínimos quadrados produz resultados relativamente estáveis à inclusão de covariadas. A estimativa do efeito do tratamento permanece positiva e estatisticamente significativa ao se controlar pelas características observáveis dos indivíduos, e a adoção da especificação de Lin — que permite efeitos heterogêneos das covariadas entre tratados e controles — não altera substantivamente as conclusões. Esse padrão é consistente com a aleatorização do tratamento, que garante comparabilidade ex ante entre os grupos e assegura que o controle por covariadas tenha apenas um papel de ganho de precisão, e não de correção de viés.
+
+Em contraste, quando a amostra não-experimental do CPS é incorporada, as estimativas obtidas por OLS mudam drasticamente, mesmo após o controle por um amplo conjunto de covariadas e pela especificação de Lin. O coeficiente associado ao tratamento permanece negativo e, em alguns casos, estatisticamente significativo, indicando que o simples controle linear por características observáveis é insuficiente para eliminar o viés de seleção presente nos dados não-experimentais. Esse resultado sugere que as diferenças sistemáticas entre tratados e controles não são adequadamente capturadas pela forma funcional imposta pelo OLS, seja devido a relações não lineares, falta de suporte comum ou à presença de seleção em dimensões não observadas.
+
+\begin{table}
+\centering
+\caption{Regressões ajustadas com dados experimentais e não-experimentais}
+\begin{talltblr}[
+entry=none,label=none,
+note{}={+ p \num{< 0.1}, * p \num{< 0.05}, ** p \num{< 0.01}, *** p \num{< 0.001}},
+]
+{
+colspec={Q[]Q[]Q[]},
+column{2-3}={}{halign=c,},
+column{1}={}{halign=l,},
+hline{8}={1-3}{solid, black, 0.05em},
+}
+\toprule
+& Tratamento & Observações \\ \midrule
+NSW & \num{1794.342}** & \num{445} \\
+& (\num{670.824}) & \\
+NSW (Covariadas) & \num{1669.843}* & \num{445} \\
+& (\num{680.269}) & \\
+NSW (Covariadas - Lin)\hspace{30mm} & \num{1567.145}* & \num{445} \\
+& (\num{662.403}) & \\
+NSW+CPS & \num{-8497.516}*** & \num{16177} \\
+& (\num{581.916}) & \\
+NSW+CPS (Covariadas) & \num{1137.196}+ & \num{16177} \\
+& (\num{627.993}) & \\
+NSW+CPS (Covariadas - Lin) & \num{-5149.338} & \num{16177} \\
+& (\num{3255.997}) & \\
+\bottomrule
+\end{talltblr}\label{reg3}
+\end{table}
+
+
+
+No entanto, apesar de ser um avanço em relação à regressão não-ajustada, a regressão múltipla ainda não garante, por si só, a identificação de um efeito causal. Para que o coeficiente $\beta$ possa ser interpretado causalmente, é necessário assumir que, condicionalmente a $X_i$, a participação no programa é ``como se fosse aleatória''. Em termos do modelo de resultados potenciais, essa hipótese pode ser escrita como
+$$
+(Y_i(1),Y_i(0)) \perp D_i \mid X_i.
+$$
+
+Essa condição é conhecida como \textbf{hipótese de independência condicional}. Ela afirma que, após o controle por um conjunto suficiente de covariadas, não restariam fatores não observados que afetassem simultaneamente a decisão de participar do programa e o resultado. Essa hipótese, no entanto, apresenta três limitações centrais:
+
+\begin{enumerate}
+    \item \textbf{Suposição forte e não testável.} A hipótese exige que todas as fontes relevantes de seleção estejam observadas e incluídas em $X_i$. Como fatores não observados, por definição, não podem ser controlados, essa suposição não pode ser diretamente verificada nos dados. Na prática, é plausível que características como motivação, expectativas, habilidades socioemocionais, redes de contato e atitudes em relação ao risco influenciem tanto a participação em políticas públicas quanto os resultados econômicos. Assim, mesmo após o controle por diversas covariadas, pode persistir viés residual.
+
+    \item \textbf{Dependência de forma funcional.} A regressão impõe uma forma funcional específica para a relação entre covariadas e o resultado. Ao assumir, por exemplo, que a renda depende linearmente da escolaridade ou da idade, o modelo impõe restrições que podem não refletir bem a realidade. Se essas relações forem não lineares, tiverem descontinuidades ou interações complexas, o ajuste paramétrico pode falhar em equalizar corretamente os grupos, introduzindo novas fontes de viés.
+
+    \item \textbf{Falta de sobreposição (suporte comum) e extrapolação.} Mesmo sob a hipótese de seleção em observáveis, pode haver regiões do espaço de covariadas nas quais quase não existem indivíduos comparáveis entre tratados e controles. Nesses casos, a regressão tradicional tende a produzir uma estimativa que é uma média ponderada de efeitos individuais baseada em extrapolações para áreas com pouco ou nenhum suporte comum. Como resultado, o contrafactual torna-se altamente dependente da forma funcional imposta pelo modelo, enfraquecendo a credibilidade da estimativa causal.
+\end{enumerate}
+
+Essas limitações ajudam a explicar por que, embora a regressão ajustada frequentemente reduza substancialmente a diferença bruta entre tratados e controles, ela ainda pode falhar em recuperar um efeito causal confiável. Portanto, embora o ajuste por covariadas via regressão seja uma ferramenta útil e amplamente utilizada, ele não resolve de forma completamente satisfatória o problema fundamental dos dados não-experimentais: a construção de um contrafactual crível para os tratados.
+
+
+
+Portanto, embora o ajuste por covariadas via regressão seja uma ferramenta útil e amplamente utilizada, ele não resolve de forma completamente satisfatória o problema fundamental dos dados não-experimentais: a construção de um contrafactual crível para os tratados. É exatamente nesse ponto que entra o \textit{pareamento}. Em vez de tentar ``corrigir'' as diferenças por meio de um modelo paramétrico, o \textit{pareamento} propõe um caminho alternativo: primeiro tornar os grupos comparáveis no espaço das covariadas e só depois comparar seus resultados. Essa mudança de lógica é o tema central da próxima seção.
+

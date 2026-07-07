@@ -86,7 +86,7 @@ O SNIS reporta cobertura a partir das declarações dos prestadores; o Censo Dem
 
 \begin{itemize}
   \item Avaliação de programas de universalização do saneamento;
-  \item Impacto do saneamento sobre mortalidade infantil e diarreias;
+  \item Impacto do saneamento sobre mortalidade infantil e sobre indicadores sensíveis a saneamento --- diarreias, outras doenças de veiculação hídrica e hospitalizações por gastroenterites, em geral mensurados a partir de SIM/SIH;
   \item Análise de eficiência dos prestadores;
   \item Avaliação do Marco Legal do Saneamento (Lei n.º 14.026/2020).
 \end{itemize}
@@ -123,6 +123,10 @@ Para a avaliação de políticas públicas, a Munic ocupa um lugar especial: é 
 \end{itemize}
 
 A \textbf{Estadic} (Pesquisa de Informações Básicas Estaduais), disponível em \url{www.ibge.gov.br/estatisticas/sociais/saude/16770-pesquisa-de-informacoes-basicas-estaduais.html}, é o equivalente da Munic para os estados e o Distrito Federal.
+
+\begin{boxdica}{Dica --- Suplementos temáticos da Munic e da Estadic}
+Além do núcleo fixo de perguntas, a Munic e a Estadic incluem, em edições específicas, \textbf{suplementos temáticos} que ampliam consideravelmente o escopo analítico. Entre os mais usados em avaliações: Cultura (2006, 2009, 2014), Esporte (2003, 2015), Juventude (2009, 2013), Assistência Social (2005, 2009, 2013, 2018), Habitação (2001, 2008, 2017), Saúde (2001, 2005, 2009, 2014), Recursos Humanos (diversas edições) e Meio Ambiente (2002, 2017). Para uma análise que dependa de um suplemento específico, é imprescindível verificar no portal do IBGE o ano exato em que cada tema foi investigado antes de desenhar a estratégia empírica.
+\end{boxdica}
 
 \subsection{Aplicações típicas em avaliação}
 
@@ -171,7 +175,7 @@ A ANATEL disponibiliza dados sobre cobertura de sinal móvel (2G, 3G, 4G, 5G) e 
   {Trimestral}
   {Beneficiário de plano de saúde e operadora}
 
-A ANS disponibiliza dados sobre beneficiários de planos de saúde por município, faixa etária e sexo, operadoras ativas por modalidade e indicadores de qualidade assistencial (Idss). Para avaliações de políticas de saúde que afetam tanto o SUS quanto a saúde suplementar, os dados da ANS são indispensáveis para capturar o universo completo do setor.
+A ANS disponibiliza dados sobre beneficiários de planos de saúde por município, faixa etária e sexo, operadoras ativas por modalidade e indicadores de qualidade assistencial (Idss). Para avaliações de políticas de saúde que afetam tanto o SUS quanto a saúde suplementar, os dados da ANS são indispensáveis para capturar o universo completo do setor. Um uso recorrente é a análise de efeitos de \textit{crowding-out} entre público e privado: quando a oferta pública de serviços aumenta --- por exemplo, com a expansão da atenção primária ou a abertura de novos hospitais públicos ---, é possível testar se há redução correspondente na adesão a planos privados no mesmo território, combinando microdados da ANS com indicadores de oferta do CNES/SIH.
 
 % ────────────────────────────────────────────────────────────
 \section{Malhas Territoriais e Dados Georreferenciados do IBGE}
@@ -195,7 +199,7 @@ Para a avaliação de políticas públicas, as malhas territoriais cumprem funç
 \begin{itemize}
   \item \textbf{Visualização cartográfica}: produção de mapas de cobertura, distribuição de beneficiários e indicadores de resultado por território;
   \item \textbf{Análise espacial}: cálculo de distâncias entre pontos (domicílios e equipamentos públicos), identificação de áreas de influência, análise de autocorrelação espacial e spillovers entre territórios;
-  \item \textbf{Linkagem territorial}: combinação de bases de dados que usam diferentes identificadores geográficos. Muitas bases relevantes para avaliação --- como cadastros imobiliários municipais com endereços, registros de ITBI com CEP, ou dados de licenciamento urbanístico --- não compartilham identificadores administrativos comuns com bases como o Censo Demográfico ou o Censo Escolar. A integração geoespacial, por meio de operações de intersecção ou join espacial, frequentemente é o único caminho para combiná-las.
+  \item \textbf{Integração territorial}: combinação de bases de dados que usam diferentes identificadores geográficos. Muitas bases relevantes para avaliação --- como cadastros imobiliários municipais com endereços, registros de ITBI com CEP, ou dados de licenciamento urbanístico --- não compartilham identificadores administrativos comuns com bases como o Censo Demográfico ou o Censo Escolar. A integração geoespacial, por meio de operações de intersecção ou join espacial, frequentemente é o único caminho para combiná-las.
 \end{itemize}
 
 \subsection{Setores censitários}
@@ -250,7 +254,7 @@ A depender do município, os microdados de ITBI podem conter:
   \item Tipo de financiamento (à vista, financiamento bancário, FGTS), em municípios com dados mais detalhados.
 \end{itemize}
 
-Essas bases são \textbf{centrais em avaliações urbanas} porque permitem acompanhar transações imobiliárias com granularidade muito superior à das pesquisas nacionais. Para avaliações de impacto de projetos de infraestrutura urbana (como extensões de metrô, obras de saneamento, parques lineares) sobre os preços dos imóveis, de políticas de regularização fundiária sobre o mercado formal, ou de programas habitacionais sobre a dinâmica do entorno, as bases de ITBI são frequentemente insubstituíveis.
+Essas bases são \textbf{centrais em avaliações urbanas} porque permitem acompanhar transações imobiliárias com granularidade muito superior à das pesquisas nacionais. Para avaliações de impacto de projetos de infraestrutura urbana --- extensões de metrô, corredores de BRT, requalificação de áreas centrais, programas habitacionais como o Minha Casa Minha Vida, obras de saneamento, parques lineares --- sobre os preços dos imóveis; de políticas de regularização fundiária sobre o mercado formal; ou de programas habitacionais sobre a dinâmica do entorno, as bases de ITBI são frequentemente insubstituíveis.
 
 \textbf{Acesso}: os microdados de ITBI não estão disponíveis em nenhum repositório nacional centralizado. O acesso deve ser obtido diretamente junto às prefeituras --- via portais de dados abertos municipais (quando existentes) ou por pedido LAI. Municípios como São Paulo, Belo Horizonte e Porto Alegre disponibilizam dados de ITBI em seus portais de dados abertos com graus variados de detalhe.
 
@@ -321,7 +325,7 @@ Em comparações entre municípios, a harmonização dessas dimensões é um tra
 
 O PRODES é o sistema oficial de monitoramento do desmatamento na Amazônia Legal, operado pelo INPE desde 1988. Utiliza imagens de satélite para identificar e quantificar as áreas de floresta desmatadas a cada ano. Os dados são disponibilizados em formato georreferenciado (Shapefile e GeoTIFF) e incluem polígonos de desmatamento por ano com área calculada, taxa anual de desmatamento por município e estado, e dados históricos desde 1988 para análises de longo prazo.
 
-Para avaliações de políticas ambientais --- como o PPCDAm, a criação de unidades de conservação ou a implementação do CAR ---, o PRODES é a referência nacional e internacionalmente reconhecida.
+Para avaliações de políticas ambientais --- como o Plano de Ação para Prevenção e Controle do Desmatamento na Amazônia Legal (PPCDAm), a criação de unidades de conservação ou a implementação do CAR ---, o PRODES é a referência nacional e internacionalmente reconhecida.
 
 \subsection{DETER --- Sistema de Detecção do Desmatamento em Tempo Real}
 
@@ -392,22 +396,22 @@ Este capítulo apresentou as principais fontes de dados sobre infraestrutura, te
 \caption{Síntese das fontes de dados de infraestrutura, território e meio ambiente}
 \label{tab:sintese_cap9}
 \small
-\begin{tabularx}{\textwidth}{@{} p{2.8cm} p{3.2cm} p{2cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} >{\raggedright\arraybackslash}p{3cm} >{\raggedright\arraybackslash}p{2.5cm} X @{}}
 \toprule
 \textbf{Fonte} & \textbf{O que registra} & \textbf{Cobertura} &
 \textbf{Principal uso em avaliação} \\
 \midrule
 SNIS         & Saneamento básico           & Municipal (adesão voluntária) & Cobertura de água/esgoto, qualidade \\
-Munic/Estadic & Capacidade institucional   & Municipal/estadual & Variável de controle institucional, habitação \\
+Munic/Estadic & Capacidade institucional   & Municipal\slash \allowbreak estadual & Variável de controle institucional, habitação \\
 ANEEL        & Energia elétrica            & Municipal          & Cobertura, qualidade, tarifas \\
 ANATEL       & Telecomunicações            & Municipal          & Cobertura de internet e telefonia \\
 ANS          & Saúde suplementar           & Municipal          & Beneficiários de planos de saúde \\
-Malhas IBGE  & Limites territoriais        & Todos os níveis    & Análise espacial, visualização, linkagem \\
+Malhas IBGE  & Limites territoriais        & Todos os níveis    & Análise espacial, visualização, integração \\
 ITBI         & Transações imobiliárias     & Municipal          & Mercado imobiliário, políticas urbanas \\
 Cadastro/IPTU & Imóveis e valores venais   & Municipal          & Habitação, regulação urbana, PGV \\
 Licenciamento & Aprovação de obras          & Municipal          & Produção habitacional, adensamento \\
-PRODES/INPE  & Desmatamento                & Amazônia/Brasil    & Políticas ambientais \\
-DETER/INPE   & Alertas de desmatamento     & Amazônia/Cerrado   & Fiscalização ambiental \\
+PRODES/INPE  & Desmatamento                & Amazônia\slash \allowbreak Brasil    & Políticas ambientais \\
+DETER/INPE   & Alertas de desmatamento     & Amazônia\slash \allowbreak Cerrado   & Fiscalização ambiental \\
 MapBiomas    & Uso e cobertura do solo     & Brasil (desde 1985) & Mudanças no uso do solo \\
 CAR          & Imóveis rurais              & Brasil             & Código Florestal, crédito rural \\
 \bottomrule
@@ -426,7 +430,7 @@ Os pontos centrais do capítulo são:
 
   \item Os \textbf{registros de licenciamento urbanístico} e as \textbf{bases de zoneamento} permitem rastrear a dinâmica da produção do espaço urbano em resposta a políticas de habitação e regulação;
 
-  \item As \textbf{malhas territoriais e setores censitários} do IBGE são a base para qualquer análise espacial e, frequentemente, o único caminho para linkar fontes que não compartilham identificadores administrativos comuns;
+  \item As \textbf{malhas territoriais e setores censitários} do IBGE são a base para qualquer análise espacial e, frequentemente, o único caminho para cruzar fontes que não compartilham identificadores administrativos comuns;
 
   \item O \textbf{PRODES/INPE}, o \textbf{DETER} e o \textbf{MapBiomas} são as referências para dados ambientais, com séries históricas longas e cobertura nacional ou de biomas específicos;
 

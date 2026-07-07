@@ -24,7 +24,7 @@ Para a avaliação de políticas públicas, a assistência social oferece um con
 \caption{Principais fontes de dados da assistência social}
 \label{tab:ecossistema_suas}
 \small
-\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} p{2cm} X @{}}
+\begin{tabularx}{\textwidth}{@{} p{3cm} p{3.5cm} >{\raggedright\arraybackslash}p{2.5cm} X @{}}
 \toprule
 \textbf{Fonte} & \textbf{O que registra} & \textbf{Desde} &
 \textbf{Principal uso em avaliação} \\
@@ -81,7 +81,7 @@ O Portal da Transparência (\url{portaldatransparencia.gov.br}) disponibiliza me
   \item Quantidade de membros da família.
 \end{itemize}
 
-Esses dados permitem construir séries históricas municipais de cobertura (número de famílias beneficiárias) e valor médio dos benefícios, além de análises individuais quando linkados com o CadÚnico pelo NIS.
+Esses dados permitem construir séries históricas municipais de cobertura (número de famílias beneficiárias) e valor médio dos benefícios, além de análises individuais quando cruzados com o CadÚnico pelo NIS.
 
 \subsubsection{CECAD — Consulta, Seleção e Extração de Informações do CadÚnico}
 
@@ -110,7 +110,7 @@ O acompanhamento das condicionalidades gera dados específicos que são fontes v
 
 % CORRIGIDO: título encurtado para caber na caixa
 \begin{boxexemplo}{Exemplo — Bolsa Família e frequência escolar}
-Uma das formas mais rigorosas de avaliar o impacto do Bolsa Família sobre a frequência escolar usa a \textbf{regressão descontínua} na renda familiar per capita: famílias imediatamente abaixo do limite de elegibilidade recebem o benefício; famílias imediatamente acima não recebem. Comparando a frequência escolar de crianças dessas duas famílias — assumindo que a única diferença relevante entre elas é o recebimento do benefício — é possível estimar o efeito causal da condicionalidade. Essa estratégia foi implementada usando os dados de condicionalidade de educação do MDS linkados com o Censo Escolar pelo código do aluno.
+Uma das formas mais rigorosas de avaliar o impacto do Bolsa Família sobre a frequência escolar usa a \textbf{regressão descontínua} na renda familiar per capita: famílias imediatamente abaixo do limite de elegibilidade recebem o benefício; famílias imediatamente acima não recebem. Comparando a frequência escolar de crianças dessas duas famílias — assumindo que a única diferença relevante entre elas é o recebimento do benefício — é possível estimar o efeito causal da condicionalidade. Essa estratégia foi implementada usando os dados de condicionalidade de educação do MDS cruzados com o Censo Escolar pelo código do aluno.
 
 \textit{Fonte: FGV CLEAR, elaboração própria.}
 \end{boxexemplo}
@@ -162,7 +162,7 @@ Os dados do BPC estão disponíveis em múltiplas fontes:
 
 \begin{itemize}
   \item \textbf{Avaliação de impacto sobre pobreza de idosos}: o BPC é o principal mecanismo de proteção de idosos de baixa renda fora do sistema previdenciário; análises de regressão descontínua no critério de renda são a estratégia mais comum;
-  \item \textbf{Impacto sobre saúde dos beneficiários}: linkagem com dados do DATASUS (SIH, SIM) para analisar efeitos sobre hospitalização e mortalidade de idosos e PcD;
+  \item \textbf{Impacto sobre saúde dos beneficiários}: integração com dados do DATASUS (SIH, SIM) para analisar efeitos sobre hospitalização e mortalidade de idosos e PcD;
   \item \textbf{Análise de cobertura}: proporção de idosos e PcD elegíveis que estão recebendo o benefício por município;
   \item \textbf{Efeitos de transbordamento}: impacto do BPC sobre outros membros do domicílio do beneficiário (como educação de crianças que moram com um idoso beneficiário).
 \end{itemize}
@@ -253,7 +253,7 @@ Para avaliações de impacto do MCMV, as principais fontes de dados são:
 
 \subsection{Tarifa Social de Energia Elétrica (TSEE)}
 
-A Tarifa Social de Energia Elétrica concede descontos na conta de luz para famílias de baixa renda cadastradas no CadÚnico. Os dados de beneficiários estão disponíveis na ANEEL e podem ser linkados com o CadÚnico pelo NIS para análises de cobertura e focalização.
+A Tarifa Social de Energia Elétrica concede descontos na conta de luz para famílias de baixa renda cadastradas no CadÚnico. Os dados de beneficiários estão disponíveis na ANEEL e podem ser cruzados com o CadÚnico pelo NIS para análises de cobertura e focalização.
 
 \subsection{Programas estaduais e municipais}
 
@@ -263,12 +263,12 @@ Além dos programas federais, estados e municípios operam programas próprios d
 \section{Combinando fontes para avaliação de políticas sociais}
 % ────────────────────────────────────────────────────────────
 
-A avaliação de políticas de assistência social e transferência de renda se beneficia enormemente da \textbf{linkagem entre bases}. O CadÚnico, por usar o NIS como identificador único de cada pessoa, serve como elo central que conecta:
+A avaliação de políticas de assistência social e transferência de renda se beneficia enormemente da \textbf{integração entre bases}. O CadÚnico, por usar o NIS como identificador único de cada pessoa, serve como elo central que conecta:
 
 \begin{itemize}
   \item \textbf{CadÚnico $\leftrightarrow$ Bolsa Família}: identifica quais famílias elegíveis estão recebendo o benefício e quais não estão — essencial para análises de cobertura e para construir grupos de controle em avaliações de impacto;
   \item \textbf{CadÚnico $\leftrightarrow$ Censo Escolar}: permite analisar o desempenho escolar de crianças de famílias beneficiárias em relação a crianças de famílias com perfil similar não beneficiárias;
-  \item \textbf{CadÚnico $\leftrightarrow$ DATASUS}: linkagem por CPF ou NIS permite analisar desfechos de saúde (mortalidade, internações, vacinação) em função do recebimento de benefícios;
+  \item \textbf{CadÚnico $\leftrightarrow$ DATASUS}: integração por CPF ou NIS permite analisar desfechos de saúde (mortalidade, internações, vacinação) em função do recebimento de benefícios;
   \item \textbf{CadÚnico $\leftrightarrow$ RAIS/CAGED}: permite rastrear a inserção no mercado formal de trabalho de beneficiários ao longo do tempo.
 \end{itemize}
 
@@ -284,11 +284,11 @@ O MDS disponibiliza, para pesquisadores com convênio, uma plataforma de anális
 Este capítulo apresentou o ecossistema de dados da assistência social e transferência de renda no Brasil. Os pontos centrais são:
 
 \begin{itemize}
-  \item O \textbf{CadÚnico} é a espinha dorsal do sistema de dados de assistência social: serve como porta de entrada para os principais programas e como base para linkagem com outras fontes;
+  \item O \textbf{CadÚnico} é a espinha dorsal do sistema de dados de assistência social: serve como porta de entrada para os principais programas e como base para integração com outras fontes;
   \item Os dados do \textbf{Bolsa Família} — disponíveis no Portal da Transparência, no CECAD e no VISDATA — permitem análises de cobertura, focalização e impacto com diferentes estratégias de identificação causal;
   \item O \textbf{BPC} cobre idosos e pessoas com deficiência de baixa renda e seus dados, disponíveis via Portal da Transparência e SUIBE, permitem avaliações de impacto com regressão descontínua na renda;
   \item O \textbf{Censo SUAS} e o \textbf{RMA} monitoram a estrutura e a produção dos equipamentos da rede socioassistencial, sendo fundamentais para avaliações de implementação e fidelidade;
-  \item A \textbf{linkagem entre bases} — especialmente CadÚnico com Censo Escolar, DATASUS e RAIS — é o que permite as avaliações mais robustas de políticas sociais.
+  \item A \textbf{integração entre bases} — especialmente CadÚnico com Censo Escolar, DATASUS e RAIS — é o que permite as avaliações mais robustas de políticas sociais.
 \end{itemize}
 
-O CadÚnico mapeia a vulnerabilidade socioeconômica com uma precisão geográfica notável — e não surpreende que os mapas de cobertura dos programas sociais se sobreponham fortemente aos mapas de violência. Pobreza, exclusão e crime não são a mesma coisa, mas compartilham territórios. O próximo capítulo aborda as fontes de dados sobre segurança pública: o Atlas da Violência, o Anuário FBSP, os registros estaduais e as pesquisas de vitimização, ferramentas essenciais para quem quer entender — e avaliar intervenções sobre — a violência no Brasil.
+O próximo capítulo aborda as fontes de dados sobre segurança pública: o Atlas da Violência, o Anuário FBSP, os registros estaduais (especialmente SP, RJ e MG) e as pesquisas de vitimização --- conjunto de fontes heterogêneo, com problemas estruturais de comparabilidade entre estados que exigem cautela metodológica especial.
