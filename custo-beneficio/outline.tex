@@ -1,0 +1,116 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\usepackage{amssymb,amsmath,amsfonts,eurosym,geometry,ulem,graphicx,caption, xcolor,setspace,sectsty,comment,footmisc,caption,natbib,pdflscape,array,hyperref, fancyhdr, csquotes, tikz, enumitem, dsfont, amsthm, makecell, multicol,multirow, booktabs,xcolor,subcaption}
+
+\title{Guia -- Matching -- Outline}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\doublespacing
+
+\section{Introdução: Por que Precisamos de Comparações Justas}
+A pergunta central em avaliação de políticas é simples: \textbf{``Esse programa funciona?''}. 
+No entanto, responder a essa questão exige comparações justas entre beneficiários e não beneficiários. 
+Se os participantes de um curso de qualificação, por exemplo, já eram mais motivados ou tinham melhor escolaridade antes mesmo do curso, comparar médias de resultados diretamente pode levar a conclusões enviesadas. 
+Esse é o problema clássico do \textit{viés de seleção}.
+
+\section{A Ideia Central do Matching}
+O matching busca resolver esse problema aproximando-se de uma situação contrafactual: encontrar um grupo de comparação que seja o mais parecido possível com os participantes do programa. 
+Diferente de simplesmente comparar médias, o matching tenta construir um grupo de controle que reflita como seriam os participantes caso não tivessem recebido o tratamento.
+
+\section{Matching Exato}
+No matching exato, comparamos indivíduos que compartilham exatamente as mesmas características observáveis relevantes (por exemplo, idade, escolaridade e gênero). 
+Isso pode ser ilustrado com uma tabela simples, em que cada tratado é pareado com um controle idêntico.  
+
+\textbf{Prós:} é altamente intuitivo e transparente.  
+\textbf{Contras:} com muitas variáveis, torna-se praticamente inviável devido à chamada \textit{maldição da dimensionalidade}.
+
+\section{Matching Aproximado}
+Na prática, o matching exato geralmente falha porque raramente encontramos pares perfeitamente idênticos. 
+Por isso, métodos aproximados são amplamente usados:
+
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item \textbf{Propensity Score Matching:} condensa várias variáveis observadas em uma única medida de probabilidade de tratamento.
+    \item \textbf{Nearest-Neighbor Matching:} seleciona o indivíduo mais próximo em termos de características.
+    \item \textbf{Kernel Matching / Ponderação:} constrói médias ponderadas de vários controles.
+    \item \textbf{Coarsened Exact Matching:} agrupa variáveis em categorias mais amplas para permitir pareamentos.
+\end{itemize}
+
+Essas abordagens podem ser ilustradas com gráficos que mostrem como controles são ``trazidos para perto'' dos tratados.
+
+\section{Matching e Outros Métodos Econométricos}
+O matching não é uma técnica isolada: muitas ferramentas modernas de inferência causal incorporam sua lógica.
+
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item \textbf{Matching + Diferenças-em-Diferenças (DiD):} ajuda a garantir que grupos tratados e de controle sejam mais comparáveis antes da análise de trajetórias temporais.
+    \item \textbf{Controle Sintético (SC):} cria uma ``unidade sintética'' a partir de combinações de várias unidades de controle — essencialmente, um matching em nível agregado.
+    \item \textbf{DiD Sintético:} une elementos de DiD e SC, combinando matching e análise de tendências.
+\end{itemize}
+
+Conclusão parcial: as ideias de matching estão no centro de várias ferramentas modernas.
+
+\section{Matching em RCTs}
+Mesmo em experimentos randomizados, matching pode ter papel importante.  
+Dois exemplos comuns:
+
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item \textbf{Pareamento (matched-pairs):} formar pares de indivíduos ou unidades semelhantes antes da randomização.
+    \item \textbf{Estratificação:} dividir amostras em subgrupos equilibrados em características-chave.
+\end{itemize}
+
+Isso aumenta a precisão estatística e a credibilidade política dos resultados.
+
+\section{O que Formuladores de Políticas Devem Ter em Mente}
+O matching tem \textbf{pontos fortes}: é intuitivo, baseado em dados e transparente.  
+Mas também apresenta \textbf{limitações}: não elimina viés de fatores não observados.  
+
+Perguntas-chave:
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item Como os pares foram escolhidos?
+    \item Tratados e controles eram realmente comparáveis?
+    \item Podem existir diferenças ocultas que distorçam o resultado?
+\end{itemize}
+
+\section{Aplicações em Políticas Públicas}
+Diversos estudos já usaram matching para avaliar programas em áreas como:
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item Educação (impacto de cursos técnicos ou bolsas de estudo).
+    \item Saúde (programas de prevenção ou acompanhamento médico).
+    \item Mercado de trabalho (políticas de qualificação ou subsídios).
+\end{itemize}
+
+Esses exemplos mostram como o matching contribui para avaliações mais convincentes.
+
+\section{Principais Lições para Formuladores de Políticas}
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item Matching leva a comparações mais justas.
+    \item Pode ser usado sozinho ou combinado com DiD, SC e RCTs.
+    \item Aumenta a credibilidade, mas não garante causalidade absoluta.
+\end{itemize}
+
+\section*{Apêndice (Opcional, para Leitores Técnicos)}
+Para leitores com interesse técnico, pode-se detalhar:
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item Definições formais de \textit{propensity score}.
+    \item Propriedades assintóticas dos estimadores.
+    \item Discussões sobre viés e variância.
+\end{itemize}
+
+\subsection*{Leituras Recomendadas}
+\begin{itemize}[topsep=2pt,itemsep=2pt]
+    \item Cunningham (2021). \textit{Mixtape}, Capítulo 5.
+    \item Stuart (2010). \textit{Matching methods for causal inference: A review and a look forward}.
+    \item Rosenbaum \& Rubin (1983, 1985).
+    \item Abadie \& Imbens (2006, 2011).
+\end{itemize}
+
+\end{document}
