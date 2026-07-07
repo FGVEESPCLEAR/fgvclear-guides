@@ -1,0 +1,328 @@
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Deixando os Dados Falarem (Métodos Não Paramétricos)
+%% ============================================================
+%
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\documentclass[12pt, a4paper, openany]{book}
+
+%% ── Codificação e idioma ──────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+%% ── Fonte ─────────────────────────────────────────────────────
+\usepackage{tgpagella}
+
+%% ── Matemática ────────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e tabelas ─────────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
+\usepackage{longtable}
+\usepackage{tabularx}
+
+%% ── Layout ────────────────────────────────────────────────────
+\usepackage{geometry}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{microtype}
+\usepackage{emptypage}
+\usepackage{enumitem}
+
+%% ── Cores (paleta CLEAR) ──────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
+\definecolor{cleargreen}{HTML}{2E7D5B}
+\definecolor{clearlightgreen}{HTML}{E3F1EA}
+\definecolor{clearred}{HTML}{B23A3A}
+\definecolor{clearlightred}{HTML}{FAE6E1}
+\definecolor{bluebg}{HTML}{EBF3F8}
+
+%% ── Caixas (tcolorbox) ────────────────────────────────────────
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+% Caixa azul — pontos-chave / síntese
+\newtcolorbox{destacebox}[1][]{enhanced, breakable,
+  colback=bluebg, colframe=clearblue,
+  coltitle=white, fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm, xshift=6mm},
+  boxed title style={colback=clearblue, colframe=clearblue,
+                     sharp corners, rounded corners=northeast},
+  title={#1}, sharp corners, rounded corners=southeast}
+
+% Caixa verde — exemplo aplicado
+\newtcolorbox{exemplobox}[1][]{enhanced, breakable,
+  colback=clearlightgreen, colframe=cleargreen,
+  coltitle=white, fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm, xshift=6mm},
+  boxed title style={colback=cleargreen, colframe=cleargreen,
+                     sharp corners, rounded corners=northeast},
+  title={#1}, sharp corners, rounded corners=southeast}
+
+% Caixa vermelha — cuidados essenciais
+\newtcolorbox{atencaobox}[1][]{enhanced, breakable,
+  colback=clearlightred, colframe=clearred,
+  coltitle=white, fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm, xshift=6mm},
+  boxed title style={colback=clearred, colframe=clearred,
+                     sharp corners, rounded corners=northeast},
+  title={#1}, sharp corners, rounded corners=southeast}
+
+% Caixa cinza — nota técnica (digressão opcional)
+\newtcolorbox{notatecnica}[1][]{enhanced, breakable,
+  colback=gray!5, colframe=cleargray,
+  coltitle=white, fonttitle=\bfseries,
+  attach boxed title to top left={yshift=-2mm, xshift=6mm},
+  boxed title style={colback=cleargray, colframe=cleargray,
+                     sharp corners, rounded corners=northeast},
+  title={#1}, sharp corners, rounded corners=southeast,
+  fontupper=\small}
+
+%% ── Cabeçalho / rodapé ────────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{clearblue}\textit{Série Avaliação na Prática}}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ Deixando os Dados Falarem}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
+
+%% ── Títulos de seção (titlesec) ───────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\Huge\bfseries\color{clearblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}
+  {\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{clearlightblue}}
+  {\thesubsection}{1em}{}
+
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{1}
+
+%% ── Hiperlinks ────────────────────────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = clearlightblue,
+  citecolor  = clearlightblue,
+  urlcolor   = clearlightblue,
+  pdfauthor  = {FGV CLEAR},
+  pdftitle   = {Deixando os Dados Falarem (Métodos Não Paramétricos)}
+}
+
+%% ── Sumário ───────────────────────────────────────────────────
+\usepackage[titles]{tocloft}
+\renewcommand{\cftchapfont}{\bfseries\color{clearblue}}
+\renewcommand{\cftsecfont}{\color{clearblue}}
+
+%% ── Referências ───────────────────────────────────────────────
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+%% ── Indentação ────────────────────────────────────────────────
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% ============================================================
+\begin{document}
+
+\frontmatter
+
+% ============================================================
+% CAPA
+% ============================================================
+\thispagestyle{empty}
+\begin{center}
+\vspace*{3cm}
+
+{\Large\bfseries\color{clearlightblue} SÉRIE: AVALIAÇÃO NA PRÁTICA}
+
+\vspace{1.8cm}
+
+{\Huge\bfseries\color{clearblue} Deixando os Dados Falarem}
+
+\vspace{0.6cm}
+
+{\Large\color{clearblue}\textit{Métodos Não Paramétricos}}
+
+\vspace{2.2cm}
+
+{\large FGV CLEAR $|$ FGV EESP}
+
+\vspace{0.5cm}
+
+{\large Junho de \the\year}
+
+\vfill
+\end{center}
+\newpage
+
+% ============================================================
+% FICHA TÉCNICA
+% ============================================================
+\thispagestyle{empty}
+\vspace*{1.5cm}
+
+{\Large\bfseries\color{clearblue} Ficha Técnica}
+
+\bigskip
+
+\noindent\textbf{Equipe técnica:} FGV CLEAR.
+
+\bigskip
+
+\noindent\textbf{Apresentação.} Este guia integra a série de publicações
+\textit{Avaliação na Prática}, desenvolvida pelo FGV CLEAR com o objetivo
+de ampliar o acesso a conhecimentos sobre monitoramento e avaliação com
+foco em políticas públicas.
+
+\medskip
+
+\noindent Fundado em 2015, o FGV CLEAR tem se dedicado ao fortalecimento
+da cultura de gestão orientada por evidências no Brasil e em países
+lusófonos. Com sede na Escola de Economia de São Paulo da Fundação Getulio
+Vargas (FGV EESP), o FGV CLEAR atua como centro regional da Iniciativa
+CLEAR (\textit{Centers for Learning on Evaluation and Results}).
+
+\medskip
+
+\noindent Saiba mais sobre o FGV CLEAR e acesse outras publicações em:
+\textbf{www.fgvclear.org}
+
+\vfill
+
+\noindent{\small\color{cleargray}%
+\textbf{Citação recomendada:} FGV CLEAR. (\the\year). \textit{Deixando os
+Dados Falarem (Métodos Não Paramétricos)}. Série Avaliação na Prática.
+São Paulo: FGV CLEAR.
+
+\medskip
+
+\noindent Os textos desta publicação são de responsabilidade exclusiva dos
+autores. As opiniões expressas não refletem necessariamente a posição das
+instituições parceiras.}
+\newpage
+
+% ============================================================
+% SOBRE ESTE GUIA
+% ============================================================
+\thispagestyle{empty}
+\chapter*{Sobre este guia}
+\addcontentsline{toc}{chapter}{Sobre este guia}
+
+Este guia ocupa um espaço diferente dos demais da Série Avaliação na Prática.
+Os volumes sobre diferenças-em-diferenças, regressão descontínua, controle
+sintético, pareamento e variáveis instrumentais cobrem desenhos de identificação
+causal --- cada um construído em torno de uma fonte específica de variação exógena.
+Aqui, o problema é outro. A pergunta não é "como identificar o efeito", mas
+"que forma esse efeito tem".
+
+A regressão linear continua sendo o ponto de partida da maioria das análises
+aplicadas, e por boas razões: é simples de estimar, fácil de interpretar e, em
+muitos contextos, fornece uma aproximação razoável da relação entre variáveis.
+Mas a linearidade é uma hipótese, não um fato. Quando os retornos são
+decrescentes, quando há limiares, platôs, formato de U, ou quando o efeito
+varia ao longo da distribuição do resultado, uma reta esconde mais do que
+revela. Os métodos não paramétricos e semiparamétricos existem justamente para
+esses casos --- e para os casos em que o pesquisador, antes de impor estrutura,
+quer ver o que os dados sugerem.
+
+O guia segue uma narrativa progressiva. Começa pelas limitações da regressão
+linear, apresenta a ideia central da estimação local e da regressão linear
+local, e em seguida volta ao problema clássico da endogeneidade --- mostrando
+por que o 2SLS, tão útil no caso linear, deixa de ser suficiente quando o
+modelo não é linear ou quando há heterogeneidade de efeitos. É nesse ponto
+que a abordagem de \emph{control function} se torna mais natural do que o
+2SLS, generalizando para ambientes que o 2SLS não cobre. O guia termina nos
+métodos semiparamétricos, com destaque para a regressão quantílica, que
+oferece um meio-termo útil entre a estrutura do modelo linear e a flexibilidade
+da estimação não paramétrica.
+
+O público de referência são alunos de economia em formação avançada e
+pesquisadores aplicados que já conhecem regressão linear, mas ainda não tiveram
+contato sistemático com esses métodos. O texto privilegia intuição sobre
+demonstração formal; quando uma derivação precisa entrar, ela aparece de
+forma econômica, sem se sobrepor à linha narrativa. A motivação empírica vem
+de exemplos recorrentes em economia aplicada --- retornos da educação,
+relação idade-salário, efeitos heterogêneos sobre desigualdade salarial.
+
+\newpage
+
+% ============================================================
+% COMO LER ESTE GUIA
+% ============================================================
+\thispagestyle{empty}
+\chapter*{Como ler este guia}
+\addcontentsline{toc}{chapter}{Como ler este guia}
+
+Três tipos de caixa estruturam a leitura, identificados por cor.
+
+\begin{destacebox}[Caixa azul --- pontos-chave]
+Aparece para destacar sínteses, recomendações e momentos em que o argumento
+do capítulo é condensado em uma ideia central.
+\end{destacebox}
+
+\begin{exemplobox}[Caixa verde --- exemplo aplicado]
+Mostra como as ideias do capítulo se traduzem em situações de pesquisa
+aplicada e gestão pública. Os exemplos são calibrados por padrões recorrentes
+na literatura de economia aplicada brasileira e internacional.
+\end{exemplobox}
+
+\begin{atencaobox}[Caixa vermelha --- cuidados essenciais]
+Sinaliza armadilhas comuns --- pontos em que uma escolha mal fundamentada
+compromete a leitura dos resultados.
+\end{atencaobox}
+
+Quando o texto precisa abrir uma digressão sobre um detalhe técnico que
+não cabe no fluxo principal, ela aparece em uma caixa cinza intitulada
+\textbf{Nota técnica}.
+
+\medskip
+
+\noindent O guia faz referência recorrente ao \textit{Guia CLEAR de
+Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}
+--- doravante \textbf{Guia CLEAR de M\&A} ---, que trata em profundidade as
+etapas do ciclo da política pública adotado na série. O arcabouço de
+inferência causal usado aqui é desenvolvido no \textit{Guia CLEAR de
+Introdução à Inferência Causal}; o guia de \textbf{Variáveis Instrumentais
+(IV)} cobre o caso linear da endogeneidade, ao qual este texto se reporta
+quando discute as limitações do 2SLS em ambientes não lineares.
+
+\newpage
+
+% ============================================================
+% SUMÁRIO
+% ============================================================
+\tableofcontents
+\newpage
+
+\mainmatter
+
+% ============================================================
+% CONTEÚDO PRINCIPAL
+% ============================================================
+\input{src/conteudo}
+
+% ============================================================
+% REFERÊNCIAS
+% ============================================================
+\backmatter
+\bibliography{references/referencias}
+
+\end{document}

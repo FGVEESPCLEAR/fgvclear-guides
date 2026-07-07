@@ -1,0 +1,837 @@
+% ============================================================
+% Corpo principal do guia. Incluído a partir de main.tex.
+% Headings em nível de \chapter (classe book).
+% ============================================================
+
+\chapter{O ponto de partida: a regressão linear}
+% ============================================================
+
+A regressão linear é, de longe, o método mais usado em econometria aplicada. E há boas
+razões para isso: ela é simples de estimar, fácil de interpretar e, em muitos contextos,
+fornece uma aproximação razoável da relação entre variáveis. Quando queremos resumir como
+uma variável $X$ se relaciona com um resultado $Y$, o modelo linear diz:
+
+\begin{equation}
+Y = \alpha + \beta X + \varepsilon,
+\label{eq:linear}
+\end{equation}
+
+\noindent
+onde $\alpha$ é o intercepto, $\beta$ é o coeficiente de inclinação e $\varepsilon$
+captura tudo o mais que afeta $Y$ mas não está incluído no modelo.
+
+O que $\beta$ significa? Ele mede o efeito médio de uma unidade adicional de $X$ sobre
+$Y$ — e, criticamente, esse efeito é \emph{o mesmo} para qualquer nível de $X$. Se
+$\beta = 1{,}5$, cada unidade extra de $X$ está associada, em média, a um aumento de
+1,5 unidades em $Y$, independentemente de $X$ valer 2 ou 200.
+
+Essa é a essência do modelo linear: \textbf{um único coeficiente resume a relação
+entre $X$ e $Y$ em todos os pontos da distribuição}.
+
+\begin{exemplobox}[Exemplo: idade e salário]
+Suponha que $Y$ é o salário e $X$ é a idade. Uma regressão linear estimaria que cada
+ano adicional de idade aumenta o salário por uma quantidade fixa. Mas pense no que
+acontece na vida real: no início da carreira, ganhos salariais costumam ser rápidos;
+na meia-idade, os salários se estabilizam; e, perto da aposentadoria, podem até cair.
+A relação verdadeira tem a forma de uma curva de sino, não de uma reta. Uma regressão
+linear aplicada a esses dados produziria uma reta que nenhum ponto da curva real
+representa bem.
+\end{exemplobox}
+
+Isso não significa que a regressão linear seja inútil. Em muitos casos, ela captura
+a maior parte da variação relevante dos dados, e sua simplicidade facilita enormemente
+a comunicação dos resultados. O ponto é que a linearidade é uma \emph{hipótese}, não
+um fato. Quando essa hipótese é razoável, o modelo linear é uma ferramenta poderosa.
+Quando não é, os resultados podem enganar.
+
+% ============================================================
+\chapter{Quando a linearidade vira uma restrição forte demais}
+% ============================================================
+
+O problema com a linearidade não é apenas estético. Impor uma forma funcional errada
+pode distorcer as conclusões de maneira importante. Vejamos alguns padrões que um
+modelo linear captura mal.
+
+\textbf{Retornos decrescentes.} Em muitos contextos, os primeiros anos de educação
+têm um impacto enorme sobre o salário; anos adicionais de escolaridade já têm um
+retorno menor. Isso é uma relação côncava: o efeito marginal de educação sobre salário
+diminui à medida que o nível de educação aumenta. Um modelo linear forçaria um efeito
+constante, provavelmente superestimando o retorno da educação em altos níveis e
+subestimando-o em baixos.
+
+\textbf{Limiares (\emph{thresholds}).} Em estudos de saúde ambiental, é comum que
+a poluição cause pouco dano até um determinado nível crítico, a partir do qual os
+efeitos sobre a saúde disparam. Um modelo linear forçaria uma relação proporcional em
+toda a faixa de poluição, ignorando essa descontinuidade.
+
+\textbf{Platôs.} Gastos públicos em educação podem melhorar indicadores de
+aprendizagem até um certo ponto, mas a partir daí o efeito se esgota. A relação tem
+um platô. Uma regressão linear subestimaria o impacto dos primeiros reais gastos e
+superestimaria o efeito de gastos já elevados.
+
+\textbf{Formato de U ou U invertido.} A relação entre experiência no trabalho e
+produtividade pode crescer no início, atingir um máximo e depois declinar. Ou a
+relação entre desigualdade e crescimento econômico pode ter essa forma. Em ambos os
+casos, um único coeficiente linear é uma caricatura.
+
+\textbf{Efeitos que variam ao longo da distribuição.} Mesmo quando a relação é
+aproximadamente monótona, o tamanho do efeito pode ser diferente para valores
+baixos, médios e altos de $X$. Uma regressão linear calcula uma média ponderada desses
+efeitos, mas pode mascarar heterogeneidade relevante.
+
+\begin{destacebox}[A questão prática]
+Em todos esses casos, o pesquisador que impõe linearidade sem questionar pode chegar a
+conclusões quantitativamente erradas e, às vezes, qualitativamente enganosas. O antídoto
+é: antes de impor uma forma funcional, olhe os dados. Faça gráficos de dispersão, explore
+relações não paramétricas e só imponha estrutura quando houver razão teórica ou empírica
+para isso.
+\end{destacebox}
+
+Essa reflexão prepara o terreno para os métodos não paramétricos. Se não queremos
+impor uma forma funcional, precisamos de ferramentas que deixem os dados revelarem
+a relação entre $X$ e $Y$ por conta própria.
+
+% ============================================================
+\chapter{A ideia dos métodos não paramétricos}
+% ============================================================
+
+A ideia central dos métodos não paramétricos é simples: em vez de impor que a
+relação entre $X$ e $Y$ tem uma forma específica, deixamos que essa forma emerja
+dos dados.
+
+Em termos formais, em vez de estimar o modelo:
+
+\begin{equation}
+Y = \alpha + \beta X + \varepsilon,
+\end{equation}
+
+\noindent
+queremos estimar:
+
+\begin{equation}
+Y = g(X) + \varepsilon,
+\label{eq:nonparam}
+\end{equation}
+
+\noindent
+onde $g(\cdot)$ é uma função \emph{desconhecida}. Não impomos que $g$ seja uma reta,
+uma parábola ou qualquer outra forma pré-definida. Queremos estimar $g$ diretamente
+dos dados.
+
+\textbf{O que ganhos com isso?} A flexibilidade para descobrir se a relação é
+crescente, decrescente, côncava, convexa, com platô, com salto, ou qualquer outra
+forma que os dados sugiram. Métodos não paramétricos são excelentes ferramentas
+exploratórias: permitem enxergar padrões que uma especificação linear esconderia.
+
+\textbf{O que perdemos?} Liberdade tem um custo.
+
+\begin{itemize}
+  \item \textbf{Precisão.} Quanto mais flexível o modelo, mais dados são necessários
+  para estimar cada parte da função com precisão. Com poucos dados, estimativas muito
+  flexíveis são ruidosas.
+
+  \item \textbf{Viés e variância.} Em estatística, há um dilema clássico: modelos
+  mais simples (como o linear) têm viés potencialmente alto se a relação verdadeira
+  não for linear, mas têm variância baixa. Modelos muito flexíveis têm viés baixo,
+  mas variância alta. Métodos não paramétricos precisam navegar esse dilema.
+
+  \item \textbf{\emph{Overfitting}.} Um modelo excessivamente flexível pode se ajustar
+  ao ruído presente na amostra, em vez de capturar o padrão real. O resultado parece
+  perfeito nos dados de treinamento, mas generaliza mal.
+
+  \item \textbf{Maldição da dimensionalidade.} Quando há muitas covariáveis $X_1, X_2,
+  \ldots, X_k$, estimar $g(X_1, X_2, \ldots, X_k)$ de forma não paramétrica exige
+  quantidades enormes de dados. O espaço de covariáveis cresce exponencialmente com
+  o número de variáveis, e os dados ficam cada vez mais ``espalhados'' nesse espaço.
+\end{itemize}
+
+\begin{destacebox}[Resumo intuitivo do dilema]
+Pense em um artesão que pode usar régua ou mão livre para desenhar uma curva. Com a
+régua, o traço é preciso, mas só serve para retas. Sem a régua, pode desenhar qualquer
+forma — mas pequenos tremores da mão introduzem imperfeições. Métodos não paramétricos
+são como desenhar à mão livre: mais expressivos, mas mais sensíveis ao ruído. O
+desafio é controlar o quanto a mão ``treme'' sem perder a capacidade de desenhar
+curvas.
+\end{destacebox}
+
+Na prática, métodos não paramétricos são mais úteis quando: (i) há quantidade
+razoável de dados, (ii) o número de covariáveis é pequeno (idealmente uma ou duas),
+e (iii) o pesquisador quer explorar a forma da relação antes de impor estrutura.
+
+% ============================================================
+\chapter{Estimação local: a intuição por trás da regressão linear local}
+% ============================================================
+
+Como, na prática, estimamos uma função $g(X)$ sem impor sua forma? A ideia mais
+intuitiva é a \textbf{estimação local}: se queremos saber como $Y$ se comporta perto
+de um ponto específico $x_0$, faz sentido olhar principalmente para as observações
+que estão \emph{próximas} de $x_0$.
+
+Observações muito distantes de $x_0$ podem ser pouco informativas sobre o
+comportamento local da função. Se a relação é não linear, o que acontece em $X = 2$
+pode dizer pouco sobre o que acontece em $X = 10$. Portanto, ao estimar o valor de
+$g$ próximo de $x_0$, podemos dar mais peso às observações vizinhas e menos às mais
+distantes.
+
+\section*{Da média local à regressão linear local}
+
+A forma mais simples de estimação local seria calcular a média de $Y$ para as
+observações com $X$ próximo de $x_0$. Isso é chamado de \emph{Nadaraya-Watson
+estimator} e produz, para cada ponto $x_0$, uma média ponderada de $Y$.
+
+A \textbf{regressão linear local} (\emph{local linear regression}) vai um passo além:
+em vez de apenas calcular uma média ponderada, estima uma \emph{reta} dentro de cada
+vizinhança local. Formalmente, para cada ponto $x_0$, minimizamos:
+
+\begin{equation}
+\sum_{i=1}^{n} K\!\left(\frac{X_i - x_0}{h}\right) \bigl(Y_i - a - b(X_i - x_0)\bigr)^2,
+\label{eq:llr}
+\end{equation}
+
+\noindent
+onde $K(\cdot)$ é o \emph{kernel} (que define os pesos), $h$ é o \emph{bandwidth}
+(que define o tamanho da vizinhança) e $(a, b)$ são os parâmetros locais. O
+estimador de $g(x_0)$ é o valor ajustado $\hat{a}$, que corresponde à reta local
+avaliada no ponto $x_0$.
+
+\section*{O papel do kernel e do bandwidth}
+
+\textbf{Kernel} ($K$): define como os pesos diminuem com a distância até $x_0$.
+Kernels populares atribuem peso máximo para observações em $x_0$ e decrescem suavemente
+até zero nas bordas da vizinhança. O kernel mais comum é o gaussiano, mas outros
+(como Epanechnikov ou triangular) também são usados.
+
+\textbf{Bandwidth} ($h$): controla o tamanho da vizinhança. Este é o parâmetro
+mais importante da estimação:
+
+\begin{itemize}
+  \item \textbf{Bandwidth pequeno}: a vizinhança é estreita, usamos poucas observações,
+  a estimativa é muito flexível (segue os dados de perto), mas pode ser bastante
+  ruidosa.
+  \item \textbf{Bandwidth grande}: a vizinhança é larga, usamos muitas observações,
+  a estimativa é mais suave e estável, mas pode não capturar variações locais
+  importantes.
+\end{itemize}
+
+\begin{exemplobox}[Voltando ao exemplo de idade e salário]
+Imagine uma amostra de trabalhadores com suas idades e salários. Uma regressão linear
+produziria uma reta: talvez um efeito positivo de \$500 por ano adicional de idade.
+Uma regressão linear local revelaria algo diferente: crescimento salarial rápido entre
+20 e 35 anos (trabalhadores iniciantes ganhando experiência), estabilização entre 35
+e 50 anos, e eventual declínio depois dos 55. O resultado é uma curva suave que
+conta uma história muito mais rica do que a reta linear.
+\end{exemplobox}
+
+\section*{Por que regressão linear local e não apenas médias locais?}
+
+A regressão linear local tem uma vantagem técnica importante sobre estimadores de
+médias ponderadas: ela funciona melhor nas \textbf{bordas da distribuição de $X$}.
+
+Quando $x_0$ está perto do extremo da distribuição de $X$ (por exemplo, idades muito
+jovens ou muito velhas na amostra), o estimador de média local sofre de um viés de
+fronteira, pois as observações disponíveis ficam todas de um lado de $x_0$. A
+regressão linear local incorpora a inclinação local, o que reduz substancialmente
+esse problema.
+
+\begin{notatecnica}[Nota técnica: escolha do bandwidth]
+Na prática, $h$ é escolhido por \emph{cross-validation}: o pesquisador testa vários
+valores de $h$ e escolhe aquele que minimiza o erro de previsão fora da amostra.
+Regras de bolso (\emph{rules of thumb}) baseadas na distribuição normal também são
+comuns. O pacote \texttt{nprobust} em R e Stata oferece métodos automáticos de
+seleção de bandwidth com propriedades ótimas.
+\end{notatecnica}
+
+% ============================================================
+\chapter{Até aqui, o problema era forma funcional --- agora entra a endogeneidade}
+% ============================================================
+
+Até agora, nossa preocupação era \emph{forma funcional}: a relação entre $X$ e $Y$
+pode não ser linear. Métodos não paramétricos resolvem exatamente esse problema ---
+estimam $g(X)$ de forma flexível, sem impor uma reta.
+
+Mas existe outro problema central em econometria aplicada, completamente distinto do
+problema de forma funcional: \textbf{endogeneidade}.
+
+A endogeneidade aparece quando $X$ está correlacionado com fatores não observados que
+também afetam $Y$. Em termos do modelo \eqref{eq:linear}, isso significa que
+$\mathrm{Cov}(X, \varepsilon) \neq 0$. Quando isso acontece, o estimador de OLS
+(ou qualquer estimador que trate $X$ como exógeno) é viesado e não tem interpretação
+causal.
+
+\begin{exemplobox}[Exemplo clássico: educação e salário]
+Suponha que queremos estimar o efeito causal da educação sobre o salário. O problema é
+que pessoas com mais educação tendem a ter mais habilidade não observada, mais motivação,
+melhores conexões familiares e acesso a redes de contato mais poderosas. Essas
+características também afetam salários diretamente. Portanto, quando comparamos pessoas
+com mais e menos educação, parte da diferença salarial que observamos não é causada pela
+educação em si, mas por essas outras características. O coeficiente de OLS mistura o
+efeito causal da educação com a seleção de quem decide estudar mais.
+\end{exemplobox}
+
+Aqui está o ponto crucial desta seção: \textbf{um modelo mais flexível não resolve
+a endogeneidade}. Se estimarmos $g(X)$ por local linear regression sem lidar com o
+fato de que $X$ é correlacionado com fatores não observados, estaremos estimando
+a relação observacional entre $X$ e $Y$, não o efeito causal de $X$ sobre $Y$.
+
+A função $g(X)$ estimada de forma não paramétrica pode revelar uma relação bela e
+complexa nos dados, mas continuará sendo uma descrição da correlação, não da
+causalidade. Flexibilidade de forma funcional e identificação causal são problemas
+distintos, que exigem soluções distintas.
+
+% ============================================================
+\chapter{O caso linear com endogeneidade: 2SLS e control function}
+% ============================================================
+
+Vamos começar pelo caso mais simples: o modelo linear com endogeneidade.
+
+O modelo estrutural é:
+
+\begin{equation}
+Y = \alpha + \beta X + \varepsilon,
+\label{eq:structural}
+\end{equation}
+
+\noindent
+mas $\mathrm{Cov}(X, \varepsilon) \neq 0$ --- $X$ está correlacionado com o erro.
+
+Para resolver esse problema, precisamos de um \textbf{instrumento} $Z$: uma variável
+que afeta $X$, mas que não tem efeito direto sobre $Y$ (exceto por meio de $X$), e que
+não está correlacionada com o termo de erro $\varepsilon$.
+
+\begin{destacebox}[O que faz um bom instrumento?]
+O instrumento $Z$ precisa satisfazer duas condições: \textbf{relevância} ($Z$ precisa
+ter relação com $X$) e \textbf{exogeneidade} ($Z$ não pode estar correlacionado com
+$\varepsilon$). No exemplo de educação e salário, um instrumento clássico é a
+\emph{distância até a faculdade mais próxima}: ela afeta a decisão de ir à faculdade,
+mas não deveria afetar diretamente o salário futuro --- exceto pela via da educação.
+\end{destacebox}
+
+\section*{2SLS: usar só a parte exógena de $X$}
+
+O estimador de \textbf{variáveis instrumentais de dois estágios} (2SLS) funciona assim:
+
+\textbf{Primeiro estágio:} Regredimos $X$ em $Z$ (e quaisquer controles adicionais):
+\begin{equation}
+X = \gamma_0 + \gamma_1 Z + \nu.
+\label{eq:first_stage}
+\end{equation}
+Obtemos a parte prevista de $X$: $\hat{X} = \hat{\gamma}_0 + \hat{\gamma}_1 Z$.
+
+\textbf{Segundo estágio:} Regredimos $Y$ em $\hat{X}$ (em vez de $X$):
+\begin{equation}
+Y = \alpha + \beta \hat{X} + \text{erro}.
+\end{equation}
+
+A intuição é direta: $\hat{X}$ é a parte de $X$ que é explicada pelo instrumento $Z$.
+Como $Z$ é exógeno (não correlacionado com $\varepsilon$), $\hat{X}$ também é exógeno.
+Ao usar $\hat{X}$ no lugar de $X$, ``limpamos'' $X$ da parte que está contaminada
+pelos fatores não observados.
+
+\section*{Control function: controlar a parte endógena}
+
+A \textbf{abordagem de control function} chega ao mesmo resultado por um caminho
+diferente.
+
+\textbf{Primeiro estágio:} Mesma regressão de \eqref{eq:first_stage}. Agora, guardamos
+o \textbf{resíduo}:
+\begin{equation}
+\hat{\nu}_i = X_i - \hat{\gamma}_0 - \hat{\gamma}_1 Z_i.
+\end{equation}
+
+\textbf{Segundo estágio:} Regredimos $Y$ em $X$ \emph{e} $\hat{\nu}$:
+\begin{equation}
+Y = \alpha + \beta X + \delta \hat{\nu} + \text{erro}.
+\label{eq:cf_linear}
+\end{equation}
+
+Por que isso funciona? O resíduo $\hat{\nu}$ captura exatamente a parte de $X$ que
+não é explicada por $Z$ --- ou seja, a parte potencialmente correlacionada com os
+fatores não observados em $\varepsilon$. Ao incluir $\hat{\nu}$ na equação, o
+pesquisador está, em essência, controlando diretamente a ``contaminação'' de $X$.
+Com $\hat{\nu}$ incluído, a variação remanescente em $X$ é, por construção, ortogonal
+ao erro --- e o coeficiente $\beta$ pode ser interpretado causalmente.
+
+\begin{destacebox}[2SLS e control function no modelo linear: resultados equivalentes]
+No modelo linear clássico, 2SLS e control function produzem \emph{exatamente} o mesmo
+estimador para $\beta$. Eles são duas formas diferentes de pensar sobre o mesmo
+procedimento. O 2SLS olha pela janela da \emph{variação exógena}: usa apenas a parte
+de $X$ que vem do instrumento. A control function olha pela janela do \emph{controle
+direto}: mantém $X$ original, mas controla o componente endógeno por meio do resíduo.
+No ambiente linear, ambas as janelas mostram o mesmo cenário.
+\end{destacebox}
+
+% ============================================================
+\chapter{Por que o 2SLS deixa de ser suficiente em modelos não lineares}
+% ============================================================
+
+A equivalência entre 2SLS e control function depende de uma condição fundamental:
+a \textbf{linearidade do modelo}. Quando relaxamos essa condição, os dois métodos
+divergem — e o 2SLS começa a apresentar limitações sérias.
+
+\section*{O que muda quando o modelo é não linear?}
+
+No modelo linear, o efeito de $X$ sobre $Y$ é resumido por um único número, $\beta$.
+Esse coeficiente tem uma interpretação clara: é o efeito médio de $X$ sobre $Y$ para
+a população coberta pelo instrumento.
+
+Mas, quando a relação verdadeira é não linear, a ideia de ``um único coeficiente
+resume tudo'' começa a se desfazer. Considere os seguintes cenários:
+
+\begin{itemize}
+  \item O efeito da educação sobre salário pode ser muito diferente para quem tem
+  apenas ensino fundamental do que para quem já tem ensino superior.
+  \item O efeito de uma transferência de renda pode ser muito maior para famílias
+  abaixo da linha de pobreza do que para famílias já acima dela.
+  \item O efeito de uma regulação ambiental sobre produtividade pode depender de
+  características não observadas das firmas, como sua capacidade tecnológica.
+\end{itemize}
+
+Em todos esses casos, o pesquisador pode estar interessado na \textbf{função causal
+inteira} $g(X)$ — como o efeito de $X$ varia ao longo de seu suporte — e não apenas
+num efeito médio.
+
+\section*{O problema de substituir $X$ por $\hat{X}$ em modelos não lineares}
+
+No 2SLS, a ideia central é substituir $X$ por $\hat{X}$ no segundo estágio. No
+modelo linear, isso é exato. Mas imagine que o modelo verdadeiro é:
+
+\begin{equation}
+Y = g(X) + \varepsilon,
+\end{equation}
+
+\noindent
+com $X$ endógeno. Se simplesmente substituirmos $X$ por $\hat{X}$ e estimarmos
+$g(\hat{X})$, teremos um problema: $\hat{X}$ é uma variável contínua cuja distribuição
+é diferente da de $X$. Ao compor a função não linear $g$ com $\hat{X}$, estamos
+avaliando $g$ em pontos que não correspondem aos pontos originais de interesse. O
+resultado é, em geral, inconsistente para $g(X)$.
+
+\begin{destacebox}[Intuição do problema]
+Imagine que $g(X) = X^2$. Se usarmos $\hat{X}$ no lugar de $X$:
+$g(\hat{X}) = \hat{X}^2 = (X - \hat{\nu})^2 = X^2 - 2X\hat{\nu} + \hat{\nu}^2.$
+Isso é claramente diferente de $g(X) = X^2$. A não-linearidade faz com que a
+substituição mecânica de $X$ por $\hat{X}$ gere termos adicionais indesejados. O
+2SLS, como ferramenta naturalmente linear, não resolve o problema corretamente.
+\end{destacebox}
+
+Essa limitação do 2SLS em ambientes não lineares motiva a necessidade de uma
+abordagem diferente — e é exatamente aqui que a control function se torna mais
+natural e mais poderosa.
+
+% ============================================================
+\chapter{Control function em modelos não lineares e não paramétricos}
+% ============================================================
+
+A grande vantagem da control function em relação ao 2SLS é que ela não depende da
+linearidade do modelo. Sua lógica se generaliza naturalmente para ambientes mais
+complexos.
+
+\section*{A ideia central}
+
+Recorde o que acontecia no caso linear. No segundo estágio, incluíamos $X$ e o
+resíduo $\hat{\nu}$ do primeiro estágio. O resíduo capturava a parte endógena de $X$.
+Ao controlar por $\hat{\nu}$, tornávamos $X$ ``como se fosse exógeno'' condicionalmente.
+
+A mesma lógica se aplica quando a relação entre $Y$ e $X$ é não linear. O modelo
+estrutural geral é:
+
+\begin{equation}
+Y = g(X, \nu) + \text{erro},
+\end{equation}
+
+\noindent
+onde $\nu$ representa os fatores não observados que tornam $X$ endógeno (por exemplo,
+a habilidade não observada que afeta tanto a escolha de educação quanto o salário).
+O problema é que $\nu$ não é observado — mas podemos \emph{estimar} $\nu$ usando
+o primeiro estágio com o instrumento $Z$.
+
+\textbf{Primeiro estágio:} Modelamos a escolha de $X$ como função de $Z$ e de
+características observadas. O resíduo do primeiro estágio, $\hat{\nu}$, é a nossa
+estimativa do componente não observado que torna $X$ endógeno.
+
+\textbf{Segundo estágio:} Estimamos a relação entre $Y$ e $X$, controlando por
+$\hat{\nu}$. No modelo não linear, isso pode ser feito de maneira flexível:
+
+\begin{equation}
+Y = g(X, \hat{\nu}) + \text{erro},
+\end{equation}
+
+\noindent
+onde $g(\cdot, \cdot)$ pode ser estimada não parametricamente. Com $\hat{\nu}$
+incluído como controle, a variação em $X$ que é usada para identificar $g$ é, por
+construção, independente do componente endógeno.
+
+\section*{Modelos não separáveis e heterogeneidade de efeitos}
+
+A literatura mais avançada, a partir dos trabalhos seminais de
+\citet{imbens_identification_2009} e \citet{chesher_identification_2003}, mostra que
+a abordagem de control function pode ser usada para identificar efeitos causais em
+modelos \textbf{não separáveis}:
+
+\begin{equation}
+Y = g(X, U),
+\end{equation}
+
+\noindent
+onde $U$ representa heterogeneidade individual não observada e $g$ pode ser uma
+função geral (não necessariamente aditiva em $U$). Essa classe de modelos é muito
+mais rica que o modelo linear, pois o efeito de $X$ sobre $Y$ pode variar de acordo
+com características não observadas dos indivíduos.
+
+Alguns conceitos úteis para entender essa literatura:
+
+\begin{itemize}
+  \item \textbf{Modelo não separável}: o efeito de $X$ sobre $Y$ pode depender de
+  características não observadas $U$. Em vez de $Y = g(X) + \varepsilon$, temos
+  $Y = g(X, U)$. Isso permite que o efeito causal seja diferente para diferentes
+  tipos de indivíduos.
+
+  \item \textbf{Heterogeneidade de efeitos}: o efeito causal de $X$ sobre $Y$ não é
+  necessariamente o mesmo para todos os indivíduos. Pode ser maior para alguns grupos,
+  menor para outros.
+
+  \item \textbf{Variável de controle}: no contexto da control function, é a variável
+  construída a partir do primeiro estágio que, quando incluída como controle, torna
+  $X$ exógeno condicionalmente. No caso linear, é simplesmente o resíduo do primeiro
+  estágio. Em casos mais gerais, pode ser uma transformação desse resíduo.
+
+  \item \textbf{Identificação}: o conjunto de hipóteses que permite interpretar a
+  relação estimada como causal. Na abordagem de control function em modelos não
+  separáveis, as hipóteses tipicamente envolvem a forma como o instrumento afeta
+  $X$ e como os fatores não observados entram no modelo.
+\end{itemize}
+
+\begin{exemplobox}[O exemplo de educação e salário revisitado]
+Suponha que diferentes pessoas têm diferentes habilidades não observadas $U$, e que
+tanto a decisão de estudar mais (escolha de $X$) quanto o salário ($Y$) dependem de
+$U$. Em um modelo não separável, o retorno da educação pode ser diferente para pessoas
+com alta habilidade e para pessoas com baixa habilidade.
+
+A control function, nesse contexto, usa o instrumento $Z$ (por exemplo, distância à
+faculdade) para construir uma estimativa de $U$ para cada indivíduo. Com essa
+estimativa como controle, podemos estimar como o efeito da educação sobre o salário
+varia ao longo da distribuição de habilidade --- algo impossível com um 2SLS linear
+padrão.
+\end{exemplobox}
+
+\textbf{A mensagem central desta seção}: quando há endogeneidade e queremos estimar
+relações causais flexíveis, a control function é uma ponte natural entre os instrumentos
+e os métodos não paramétricos. Ela permite combinar a lógica de identificação dos
+instrumentos com a flexibilidade dos modelos não paramétricos, sem as restrições que
+o 2SLS impõe ao ambiente linear.
+
+% ============================================================
+\chapter{Onde entram os métodos semiparamétricos?}
+% ============================================================
+
+Até agora, percorremos dois extremos: o modelo linear, muito estruturado, e os modelos
+não paramétricos, muito flexíveis. Na prática, muitas aplicações vivem no meio-termo.
+
+\textbf{Métodos paramétricos} (como OLS) impõem muita estrutura: a forma funcional é
+completamente especificada antes de ver os dados. Isso facilita a estimação e a
+interpretação, mas ao custo de viés se a especificação estiver errada.
+
+\textbf{Métodos não paramétricos} impõem pouca estrutura: deixam os dados revelarem
+a função $g(X)$. Isso é ótimo para exploração, mas exige grandes amostras, sofre com
+muitas covariáveis e pode dificultar a interpretação.
+
+\textbf{Métodos semiparamétricos} ficam no meio: mantêm alguma parte do modelo com
+estrutura paramétrica, mas deixam outra parte flexível. A ideia é combinar o melhor
+dos dois mundos: a interpretabilidade dos modelos paramétricos com a flexibilidade dos
+não paramétricos.
+
+Por que isso é útil? Em muitas situações práticas, o pesquisador:
+
+\begin{itemize}
+  \item Tem uma quantidade moderada de dados — suficiente para um modelo paramétrico,
+  mas talvez insuficiente para um não paramétrico completamente livre.
+  \item Quer preservar alguma interpretação econômica clara para parte do modelo
+  (por exemplo, o efeito de uma variável de política específica).
+  \item Sabe que a relação entre certas variáveis é razoavelmente bem descrita por
+  uma forma linear, mas não quer impor linearidade em toda a equação.
+\end{itemize}
+
+Exemplos de modelos semiparamétricos:
+
+\begin{itemize}
+  \item \textbf{Modelos parcialmente lineares}: $Y = \beta X_1 + g(X_2) + \varepsilon$.
+  O efeito de $X_1$ é linear e tem interpretação direta; o efeito de $X_2$ é estimado
+  de forma não paramétrica.
+  \item \textbf{Modelos aditivos generalizados (GAM)}: $Y = \sum_j g_j(X_j) + \varepsilon$.
+  Cada covariável tem seu próprio componente não paramétrico, mas esses componentes são
+  aditivos, o que evita a maldição da dimensionalidade.
+  \item \textbf{Regressão quantílica}: impõe estrutura linear para o quantil condicional
+  de $Y$, mas não especifica a distribuição completa dos erros.
+\end{itemize}
+
+% ============================================================
+\chapter{Regressão quantílica: olhando além da média}
+% ============================================================
+
+A regressão linear tradicional estima o \textbf{efeito médio} de $X$ sobre $Y$. Mais
+precisamente, ela modela a \emph{média condicional} de $Y$ dado $X$:
+$\mathbb{E}[Y \mid X]$.
+
+Mas muitas perguntas aplicadas não são sobre médias:
+
+\begin{itemize}
+  \item A educação aumenta os salários igualmente para trabalhadores no percentil 10
+  (salários baixos) e no percentil 90 (salários altos)?
+  \item Uma política de transferência de renda melhora mais as famílias na base da
+  distribuição ou as famílias que já estão perto da linha de pobreza?
+  \item Uma intervenção reduz desigualdade ou apenas eleva a média sem mudar a dispersão?
+\end{itemize}
+
+Para responder a essas perguntas, precisamos estimar o efeito de $X$ em
+\emph{diferentes partes da distribuição condicional de $Y$} --- não apenas na média.
+É exatamente isso que a \textbf{regressão quantílica} \citep{koenker_regression_1978}
+permite.
+
+\section*{A ideia básica}
+
+Para um nível quantílico $\tau \in (0,1)$, a regressão quantílica modela o
+$\tau$-ésimo quantil condicional de $Y$:
+
+\begin{equation}
+Q_Y(\tau \mid X) = \alpha(\tau) + \beta(\tau) X.
+\label{eq:qr}
+\end{equation}
+
+\noindent
+Os coeficientes $\alpha(\tau)$ e $\beta(\tau)$ \emph{dependem de $\tau$}: eles podem
+(e geralmente vão) ser diferentes para a mediana ($\tau = 0{,}5$) e para o percentil
+90 ($\tau = 0{,}9$).
+
+Isso é muito mais informativo do que um único coeficiente médio. Por exemplo:
+
+\begin{itemize}
+  \item Se $\beta(0{,}1) < \beta(0{,}9)$, o efeito de $X$ sobre $Y$ é maior para
+  quem já está em posição mais favorável na distribuição — o que sugere que $X$
+  aumenta a desigualdade.
+  \item Se $\beta(0{,}1) > \beta(0{,}9)$, o efeito é maior para quem está em posição
+  pior — o que sugere que $X$ reduz a desigualdade.
+  \item Se $\beta(\tau)$ é aproximadamente constante em $\tau$, o efeito é homogêneo
+  ao longo da distribuição.
+\end{itemize}
+
+\begin{exemplobox}[Exemplo: efeito da educação ao longo da distribuição salarial]
+\citet{angrist_quantile_2006} e outros autores mostram que o retorno da educação é
+heterogêneo: para trabalhadores no topo da distribuição salarial, os retornos adicionais
+de um ano de escolaridade são maiores do que para trabalhadores na base. Uma regressão
+linear simples calcularia uma média desses efeitos, mascarando essa heterogeneidade
+importante. A regressão quantílica revela o padrão completo.
+\end{exemplobox}
+
+\section*{Por que é semiparamétrica?}
+
+A regressão quantílica é classificada como semiparamétrica porque:
+
+\begin{itemize}
+  \item Ela impõe uma estrutura \emph{parcial}: assume que o quantil condicional é
+  linear em $X$ (equação \ref{eq:qr}).
+  \item Mas \emph{não} especifica a distribuição completa dos erros. Ao contrário da
+  regressão linear (que sob hipóteses padrão assume normalidade ou pelo menos
+  homocedasticidade), a regressão quantílica é robusta a distribuições assimétricas,
+  caudas pesadas e heterocedasticidade.
+\end{itemize}
+
+\begin{notatecnica}[Nota técnica: como a regressão quantílica é estimada?]
+A regressão quantílica minimiza uma função de perda assimétrica, chamada \emph{função
+check} (ou perda tilted $\ell_1$):
+\[
+\hat{\beta}(\tau) = \arg\min_b \sum_{i=1}^n \rho_\tau(Y_i - X_i' b),
+\]
+onde $\rho_\tau(u) = u[\tau - \mathbf{1}(u < 0)]$. Para $\tau = 0{,}5$, isso equivale
+à minimização do erro absoluto médio (regressão de mediana). Para outros valores de
+$\tau$, a função penaliza erros positivos e negativos de forma diferente.
+\end{notatecnica}
+
+\section*{Limitações importantes}
+
+Assim como outros métodos, a regressão quantílica tem limitações que merecem atenção:
+
+\begin{itemize}
+  \item \textbf{Endogeneidade}: a regressão quantílica padrão não resolve o problema
+  de endogeneidade. Se $X$ é endógeno, os quantis estimados continuarão confundindo
+  causalidade com seleção. Há extensões da regressão quantílica para variáveis
+  instrumentais (como em \citealt{chernozhukov_instrumental_2005}), mas elas são
+  mais complexas e exigem cuidado na interpretação.
+  \item \textbf{Interpretação dos quantis condicionais}: os quantis condicionais
+  estimados descrevem a distribuição condicional de $Y$ dado $X$, não
+  necessariamente o efeito estrutural para indivíduos num determinado quantil da
+  distribuição de $Y$. A distinção entre quantis condicionais e efeitos de tratamento
+  quantílicos é sutil, mas importante.
+\end{itemize}
+
+% ============================================================
+\chapter{Como escolher entre os métodos?}
+% ============================================================
+
+Chegamos a um ponto em que temos várias ferramentas disponíveis. Esta seção oferece
+um guia prático para a escolha entre elas, na forma de uma sequência de perguntas.
+
+\section*{Perguntas de diagnóstico}
+
+\textbf{1. A relação entre $X$ e $Y$ parece aproximadamente linear?}
+
+\begin{itemize}
+  \item Se \textbf{sim}: a regressão linear é um bom ponto de partida. Ela é simples,
+  interpretável e eficiente quando a linearidade é uma aproximação razoável.
+  \item Se \textbf{não} (ou se não sabe): métodos não paramétricos, como local linear
+  regression, podem revelar padrões que uma reta esconde. Comece explorando
+  graficamente a relação antes de escolher um modelo.
+\end{itemize}
+
+\textbf{2. O objetivo é descrição/previsão ou identificação causal?}
+
+\begin{itemize}
+  \item Se o objetivo é \textbf{descrever padrões} nos dados ou \textbf{prever} $Y$
+  a partir de $X$: métodos não paramétricos são ferramentas poderosas.
+  \item Se o objetivo é \textbf{identificar um efeito causal}: a forma funcional
+  importa menos do que a estratégia de identificação. É necessário pensar em
+  exogeneidade, seleção e outras ameaças à validade interna.
+\end{itemize}
+
+\textbf{3. Existe endogeneidade?}
+
+\begin{itemize}
+  \item Se \textbf{sim}: é necessário um instrumento, uma estratégia de
+  diferenças-em-diferenças, um desenho de regressão descontínua, ou outra fonte de
+  variação exógena. A escolha do método de estimação (2SLS, control function) vem
+  \emph{depois} da estratégia de identificação.
+  \item Se \textbf{não} (ou se a exogeneidade for defensável): OLS e métodos
+  não paramétricos são viáveis.
+\end{itemize}
+
+\textbf{4. O modelo causal é bem representado por um efeito linear médio?}
+
+\begin{itemize}
+  \item Se \textbf{sim}: o 2SLS é adequado e bem-fundamentado.
+  \item Se \textbf{não} (relação não linear, heterogeneidade, modelo não separável):
+  a abordagem de control function, possivelmente combinada com estimação não
+  paramétrica no segundo estágio, é mais apropriada.
+\end{itemize}
+
+\textbf{5. Você quer estudar efeitos em diferentes partes da distribuição de $Y$?}
+
+\begin{itemize}
+  \item Se \textbf{sim}: a regressão quantílica é a ferramenta natural. Ela permite
+  estudar como o efeito de $X$ varia ao longo da distribuição condicional de $Y$.
+\end{itemize}
+
+\section*{Limitações que merecem atenção}
+
+Nenhum método é livre de limitações. A tabela abaixo resume as principais:
+
+\medskip
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\textbf{Método} & \textbf{Limitações principais} \\
+\hline
+Regressão linear & Viés se a relação não for linear \\
+Local linear regression & Precisa de muitos dados; sofre com muitas covariáveis \\
+& Escolha do bandwidth pode ser determinante \\
+2SLS & Naturalmente linear; perde consistência em modelos não lineares \\
+Control function & Exige hipóteses fortes; sensível à especificação do 1.º estágio \\
+& Instrumento precisa ser válido \\
+Regressão quantílica & Não resolve endogeneidade automaticamente \\
+& Interpretação de quantis condicionais requer cuidado \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+\chapter{Conclusão}
+% ============================================================
+
+Este guia percorreu um caminho que começa na regressão linear e termina nos métodos
+semiparamétricos, passando pelos métodos não paramétricos e pelo problema de
+endogeneidade.
+
+A \textbf{regressão linear} é um ponto de partida poderoso e indispensável em
+econometria aplicada. Mas ela impõe duas simplificações importantes: linearidade
+(o efeito de $X$ sobre $Y$ é constante) e foco no efeito médio (um único número
+resume a relação).
+
+\textbf{Métodos não paramétricos}, como a regressão linear local, relaxam a forma
+funcional e permitem enxergar relações mais flexíveis nos dados. Eles são ferramentas
+valiosas de exploração e, quando as hipóteses de identificação são satisfeitas, também
+de estimação causal. Mas flexibilidade na forma funcional não elimina o problema de
+endogeneidade.
+
+Para \textbf{identificação causal}, é necessário uma estratégia específica. No caso
+linear, o \textbf{2SLS} e a \textbf{control function} oferecem soluções equivalentes,
+cada uma com sua intuição distinta. Em modelos não lineares, não separáveis ou com
+heterogeneidade de efeitos, a control function se torna mais natural: ela generaliza
+diretamente para esses ambientes, enquanto o 2SLS fica preso à lógica linear.
+
+\textbf{Métodos semiparamétricos}, como a \textbf{regressão quantílica}, aparecem
+como um meio-termo útil: mais flexíveis do que modelos lineares simples (pois não se
+limitam a um efeito médio), mas ainda interpretáveis e viáveis em aplicações com
+amostras de tamanho moderado.
+
+Conhecer esses métodos não é apenas ampliar a caixa de ferramentas. É desenvolver
+a capacidade de fazer as perguntas certas: a relação é linear? O efeito é homogêneo?
+A estimação é causal? As respostas a essas perguntas é que guiam a escolha do método
+— e não o contrário.
+
+\bigskip
+
+\begin{destacebox}[Mensagem final]
+Métodos são meios, não fins. O passo mais importante antes de escolher qualquer
+ferramenta é entender a pergunta que está sendo feita e as ameaças à sua resposta.
+Um pesquisador que entende profundamente a regressão linear e seus limites está
+mais bem equipado do que um que conhece muitos métodos sem entender suas hipóteses.
+\end{destacebox}
+
+% ============================================================
+%  Referências para leitura posterior
+% ============================================================
+\chapter*{Leituras recomendadas}
+\addcontentsline{toc}{chapter}{Leituras recomendadas}
+
+As referências abaixo são um ponto de partida para quem quiser aprofundar os tópicos
+deste guia.
+
+\textbf{Sobre regressão não paramétrica e estimação local:}
+
+\begin{itemize}
+  \item \citet{fan_local_1996} — referência clássica sobre regressão polinomial
+  local; rigorosa, mas acessível a quem tem boa base de estatística.
+  \item \citet{li_nonparametric_2007} — manual abrangente de econometria não
+  paramétrica e semiparamétrica, com muitas aplicações.
+  \item \citet{wand_kernel_1994} — texto acessível sobre suavização por kernel,
+  incluindo escolha de bandwidth.
+\end{itemize}
+
+\textbf{Sobre control function em modelos não lineares e não separáveis:}
+
+\begin{itemize}
+  \item \citet{imbens_identification_2009} — artigo fundamental sobre identificação
+  e estimação em modelos não separáveis com variáveis instrumentais; usa a abordagem
+  de control function de forma geral.
+  \item \citet{chesher_identification_2003} — mostra condições de identificação em
+  modelos não separáveis com heterogeneidade de efeitos; mais técnico, mas essencial
+  para quem quiser entender os fundamentos.
+\end{itemize}
+
+\textbf{Sobre regressão quantílica:}
+
+\begin{itemize}
+  \item \citet{koenker_regression_1978} — artigo original de Koenker e Bassett que
+  introduz a regressão quantílica.
+  \item \citet{koenker_quantile_2005} — livro completo de Koenker sobre regressão
+  quantílica, teoria e aplicações.
+  \item \citet{chernozhukov_instrumental_2005} — extensão da regressão quantílica para
+  variáveis instrumentais.
+\end{itemize}
+
+\textbf{Introduções gerais a econometria não paramétrica:}
+
+\begin{itemize}
+  \item \citet{pagan_nonparametric_1999} — introdução acessível a métodos não
+  paramétricos para economistas; bom ponto de partida para quem está começando.
+  \item \citet{cattaneo_simple_2020} — apresenta estimadores de regressão não
+  paramétrica com foco em aplicações práticas e inferência, com exemplos em R e Stata.
+\end{itemize}

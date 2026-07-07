@@ -1,0 +1,1333 @@
+%% ============================================================
+%%  Série Avaliação na Prática — FGV CLEAR
+%%  Guia de Coleta de Dados Primários
+%% ============================================================
+
+% !TEX program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt, a4paper, openany]{book}
+
+%% ── Codificação e Idioma ────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+%% ── Fonte ───────────────────────────────────────────────────
+\usepackage{tgpagella}
+
+%% ── Matemática ──────────────────────────────────────────────
+\usepackage{amsmath, amssymb, amsfonts, dsfont, amsthm}
+
+%% ── Figuras e Tabelas ───────────────────────────────────────
+\usepackage{graphicx, float}
+\usepackage[labelfont=bf, font=small, justification=justified]{caption}
+\usepackage{subcaption}
+\usepackage{booktabs, multirow, multicol, array}
+\usepackage{longtable}
+\usepackage{tabularx}
+
+%% ── Layout ──────────────────────────────────────────────────
+\usepackage{geometry}
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\usepackage{enumitem}
+
+%% ── Cores (paleta CLEAR) ────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{clearblue}{HTML}{1B3A6E}
+\definecolor{clearlightblue}{HTML}{5CA4A9}
+\definecolor{cleardarkblue}{HTML}{003F72}
+\definecolor{cleargray}{HTML}{6E6E6E}
+\definecolor{salmonbg}{RGB}{252,235,230}
+\definecolor{salmonframe}{RGB}{230,160,140}
+\definecolor{bluebg}{RGB}{235,245,251}
+\definecolor{blueframe}{RGB}{58,125,181}
+\definecolor{orangebg}{RGB}{254,245,231}
+\definecolor{orangeframe}{RGB}{230,126,34}
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeframe}{RGB}{200,200,200}
+\definecolor{redbg}{RGB}{250,230,225}
+\definecolor{redframe}{RGB}{180,40,40}
+\definecolor{greenbg}{RGB}{225,242,225}
+\definecolor{greenframe}{RGB}{60,140,80}
+
+%% ── Hyperlinks e Bibliografia ───────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=clearlightblue,
+  citecolor=clearlightblue,
+  urlcolor=clearlightblue,
+  pdfauthor={FGV CLEAR},
+  pdftitle={Guia de Coleta de Dados Primários}
+}
+\usepackage{natbib}
+
+%% ── TColorbox ───────────────────────────────────────────────
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{breakable, skins}
+
+%% ── Código ──────────────────────────────────────────────────
+\usepackage{listings}
+
+%% ── Cabeçalhos e Rodapés ────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small\color{clearblue}\textit{Guia CLEAR $|$ Coleta de Dados Primários}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{clearblue}\leaders\hrule height \headrulewidth\hfill}}
+
+%% ── Títulos de Seção ────────────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{clearblue}}
+  {\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{clearblue}}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{cleardarkblue}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{cleardarkblue}}{\thesubsubsection}{1em}{}
+
+%% ── Caixas Temáticas ────────────────────────────────────────
+\newtcolorbox{destaquebox}[1][Destaque]{
+  enhanced, breakable,
+  colback=salmonbg, colframe=salmonframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{notabox}[1][Nota]{
+  enhanced, breakable,
+  colback=bluebg, colframe=blueframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{conexaobox}[1][Conex\~ao com a s\'erie]{
+  enhanced, breakable,
+  colback=orangebg, colframe=orangeframe, coltitle=black, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{exemplobox}[1][Exemplo]{
+  enhanced, breakable,
+  colback=greenbg, colframe=greenframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+\newtcolorbox{atencaobox}[1][Aten\c{c}\~ao]{
+  enhanced, breakable,
+  colback=redbg, colframe=redframe, coltitle=white, fonttitle=\bfseries,
+  title=#1, boxrule=0.5pt, arc=2pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt
+}
+
+
+%% ── Estilo de Listings (caso necessário) ────────────────────
+\lstdefinestyle{Rstyle}{
+  language=R,
+  backgroundcolor=\color{codebg},
+  frame=single, rulecolor=\color{codeframe},
+  basicstyle=\small\ttfamily,
+  numbers=none, breaklines=true,
+  showstringspaces=false, tabsize=2,
+  xleftmargin=6pt, xrightmargin=6pt,
+  aboveskip=8pt, belowskip=8pt
+}
+
+%% ── Metadados de Figuras/Quadros ────────────────────────────
+\newcommand{\figmeta}[3]{%
+  \par\vspace{4pt}%
+  \begin{minipage}{\linewidth}%
+  \footnotesize%
+  \textbf{Fonte:} #1%
+  \ifx&#2&\else\\\textbf{Elabora\c{c}\~ao:} #2\fi%
+  \ifx&#3&\else\\\textbf{Nota:} #3\fi%
+  \end{minipage}%
+  \vspace{6pt}%
+}
+
+%% ── Profundidade de numera\c{c}\~ao ─────────────────────────
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+
+% ============================================================
+\begin{document}
+
+% ============================================================
+% CAPA
+% ============================================================
+\thispagestyle{empty}
+\begin{center}
+\vspace*{3cm}
+
+{\Large\bfseries\color{clearlightblue} S\'ERIE: AVALIA\c{C}\~AO NA PR\'ATICA}
+
+\vspace{1.8cm}
+
+{\Huge\bfseries\color{clearblue} Guia de Coleta de\\[0.3cm]
+Dados Prim\'arios}
+
+\vspace{2.2cm}
+
+{\large FGV CLEAR $|$ FGV EESP}
+
+\vspace{0.5cm}
+
+{\large Maio de 2026}
+
+\vfill
+\end{center}
+\newpage
+
+% ============================================================
+% FICHA TÉCNICA
+% ============================================================
+\thispagestyle{empty}
+\vspace*{1.5cm}
+
+{\Large\bfseries\color{clearblue} Ficha T\'ecnica}
+
+\bigskip
+
+\noindent\textbf{Equipe t\'ecnica:} Beatriz Burattini, Caio de Souza Castro, Pedro Molina Ogeda, Vitor Menezes.
+
+\bigskip
+
+\noindent\textbf{Apresenta\c{c}\~ao.} Este guia integra a s\'erie de publica\c{c}\~oes \textit{Avalia\c{c}\~ao na Pr\'atica}, desenvolvida pelo FGV CLEAR com o objetivo de ampliar o acesso a conhecimentos sobre monitoramento e avalia\c{c}\~ao com foco em pol\'iticas p\'ublicas.
+
+\medskip
+
+\noindent Fundado em 2015, o FGV CLEAR tem se dedicado ao fortalecimento da cultura de gest\~ao orientada por evid\^encias no Brasil e em pa\'ises lus\'ofonos. Com sede na Escola de Economia de S\~ao Paulo da Funda\c{c}\~ao Getulio Vargas (FGV EESP), o FGV CLEAR atua como centro regional da Iniciativa CLEAR (\textit{Centers for Learning on Evaluation and Results}).
+
+\medskip
+
+\noindent Saiba mais sobre o FGV CLEAR e acesse outras publica\c{c}\~oes em: \textbf{www.fgvclear.org}
+
+\vfill
+
+\noindent{\small\color{cleargray}%
+Os textos desta publica\c{c}\~ao s\~ao de responsabilidade exclusiva dos autores. As opini\~oes expressas n\~ao refletem necessariamente a posi\c{c}\~ao das institui\c{c}\~oes parceiras.}
+
+\newpage
+
+% ============================================================
+% SUMÁRIO
+% ============================================================
+% ─── SOBRE ESTE GUIA ─────────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Sobre este guia}
+Nem toda pergunta de avaliação tem resposta numa base existente. Saber
+se um curso de qualificação melhorou a autopercepção dos participantes
+sobre suas chances de conseguir emprego; se um programa de mediação
+escolar mudou a forma como alunos lidam com conflitos; se um treinamento
+de gestores afetou a forma como conduzem reuniões; se moradores de uma
+região se sentem mais seguros depois da reforma da praça do bairro: nada
+disso está no CAGED, na PNAD, no Datasus, nem em qualquer registro
+administrativo. Para perguntas sobre percepção, comportamento, prática,
+opinião ou processo, os dados existentes raramente bastam. O avaliador
+precisa gerá-los.
+
+A coleta primária é o processo de gerar esses dados em campo. Cada
+decisão envolvida afeta o que sai do outro lado, e a sequência de
+decisões importa tanto quanto a sofisticação da análise que vem depois.
+Uma análise impecável de dados ruins ainda é uma análise de dados ruins;
+nenhum método consegue extrair de uma amostra o que ela não tem.
+
+A primeira decisão é a metodologia. Survey presencial, em domicílio ou em
+local específico, é caro mas costuma ter taxa de resposta alta e permite
+controle do entrevistador sobre como cada pergunta é interpretada. Survey
+por telefone é mais barato e mais rápido, mas filtra populações sem linha
+estável e produz amostras enviesadas para certos perfis. Survey online
+(cada vez mais usado) tem custo marginal próximo de zero e permite coleta
+em larga escala, mas amostra de fato quem tem acesso à internet e
+disposição para responder, o que pode excluir partes importantes da
+população de interesse. Cada modo de coleta vem com seu viés
+característico, e a escolha está longe de ser independente da pergunta
+sendo feita.
+
+A segunda é o plano amostral. Pode-se sortear participantes da população
+inteira com probabilidade uniforme (amostra aleatória simples), separar
+a população em estratos relevantes e sortear dentro de cada um para
+garantir representação (estratificada), ou amostrar conglomerados
+inteiros para reduzir custo logístico (cluster). A escolha entre essas
+estratégias afeta tanto o custo do trabalho quanto a precisão da
+estimativa final, e o cálculo do tamanho de amostra necessário depende
+dela. Amostrar mal é a forma mais comum de produzir dados que parecem
+informativos sobre uma população mas só descrevem o subgrupo que
+respondeu, que costuma ser o mais fácil de encontrar e também o mais
+diferente da população que se queria estudar.
+
+A terceira é a redação dos instrumentos. Como cada pergunta é formulada
+determina o que o respondente entende dela, o que ele decide responder, o
+que ele decide omitir, e em que escala ele organiza sua resposta. Uma
+pergunta ambígua produz respostas que não são comparáveis entre
+indivíduos. Uma pergunta enviesada (que sugere a resposta esperada)
+produz a resposta esperada. Uma escala mal calibrada (cinco pontos onde
+os extremos quase nunca são usados) descarta variação útil. Uma pergunta
+sensível mal posicionada no questionário (perguntada cedo demais, ou logo
+depois de uma pergunta que predispõe a determinada resposta) contamina o
+que se mediria. Esses problemas são difíceis de detectar depois de
+coletados os dados e impossíveis de consertar com mais análise. A única
+defesa é desenhar bem antes, com piloto, revisão por pessoas com perfil
+próximo ao da amostra, e cuidado na ordem e no enquadramento de cada
+item.
+
+A quarta é a aplicação em campo. Treinamento dos entrevistadores,
+supervisão durante a coleta, controle de qualidade conforme os dados
+entram, gestão de não-resposta. A qualidade do dado final depende muito
+mais desses processos, frequentemente esquecidos na fase de planejamento,
+do que da metodologia escolhida ou do instrumento desenhado.
+
+Por trás dessas quatro decisões há uma quinta que cobre todas: ética em
+pesquisa com seres humanos. Consentimento informado, confidencialidade,
+justificativa do incômodo causado ao respondente, devolutiva apropriada
+quando relevante. No Brasil, projetos de pesquisa com pessoas precisam
+passar por um Comitê de Ética em Pesquisa (CEP), processo que tem suas
+peculiaridades e que o avaliador precisa conhecer antes de chegar ao
+momento de aplicar o questionário.
+
+Este guia trata dessas decisões na sequência em que costumam aparecer num
+projeto real: metodologia, amostra, ética, elaboração de instrumentos, e
+aplicação. É indicado para quem precisa montar uma pesquisa do zero, para
+diagnóstico, monitoramento ou avaliação.
+\newpage
+
+% ─── COMO LER ESTE GUIA ──────────────────────────────────────────────────────
+\thispagestyle{empty}
+\section*{Como ler este guia}
+Três tipos de caixa estruturam a leitura, identificados por cor:
+\vspace{0.3cm}
+\begin{notabox}[Caixa azul --- pontos-chave]
+Aparece ao fim de cada capítulo, com sínteses e recomendações para quem
+precisa decidir.
+\end{notabox}
+\begin{exemplobox}[Caixa verde --- exemplo aplicado]
+Mostra como as ideias do capítulo se traduzem em situações de política
+pública. Os casos são fictícios, mas calibrados por padrões recorrentes
+na literatura e na prática de gestão.
+\end{exemplobox}
+\begin{atencaobox}[Caixa vermelha --- cuidados essenciais]
+Sinaliza armadilhas comuns --- pontos em que uma escolha mal fundamentada
+compromete toda a análise.
+\end{atencaobox}
+\vspace{0.5cm}
+\noindent O guia faz referência recorrente ao \textit{Guia CLEAR de
+Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}
+\citep{Lima2025} --- doravante \textbf{Guia CLEAR de M\&A} ---, que trata
+em profundidade as etapas do ciclo da política pública adotado na série.
+Quando o texto menciona Teoria da Mudança, plano de monitoramento ou
+tipologia de avaliações, é nesse guia que o leitor encontra o
+desenvolvimento completo.
+\newpage
+
+\tableofcontents
+\newpage
+
+% ============================================================
+% 1. INTRODUÇÃO
+% ============================================================
+
+\chapter{Introdu\c{c}\~ao}
+
+Decis\~oes de pol\'itica p\'ublica que se pretendem informadas dependem de algo banal e dif\'icil: informa\c{c}\~ao confi\'avel sobre o que est\'a acontecendo no campo. Registros administrativos e pesquisas j\'a existentes resolvem parte do problema --- s\~ao baratos, est\~ao prontos e cobrem dimens\~oes amplas da realidade. Mas raramente cobrem tudo. Quando a pergunta avaliativa exige informa\c{c}\~ao que essas bases n\~ao t\^em (ou n\~ao t\^em na granularidade necess\'aria, ou n\~ao t\^em atualizada), n\~ao h\'a alternativa: \'e preciso coletar.
+
+A coleta prim\'aria \'e a produ\c{c}\~ao de informa\c{c}\~oes originais junto a quem participa, se beneficia ou implementa uma pol\'itica. \'E o canal pelo qual a avalia\c{c}\~ao acessa n\~ao apenas resultados, mas processos, percep\c{c}\~oes, barreiras e contextos --- as dimens\~oes que registros administrativos t\^ipicamente n\~ao registram. \'E tamb\'em por onde se identificam efeitos n\~ao previstos, se distinguem falhas de teoria de falhas de implementa\c{c}\~ao e se mapeiam mudan\c{c}as estruturais que indicadores convencionais n\~ao captam.
+
+Este Guia foi escrito para quem desenvolve, executa ou supervisiona pesquisas e avalia\c{c}\~oes. O texto trata das decis\~oes metodol\'ogicas centrais, dos cuidados \'eticos e operacionais e das boas pr\'aticas que sustentam a validade e a confiabilidade das informa\c{c}\~oes produzidas em campo.
+
+A organiza\c{c}\~ao do guia segue o fluxo de uma pesquisa aplicada. O Cap\'itulo~2 trata das metodologias de coleta, contrastando abordagens quantitativas e qualitativas. O Cap\'itulo~3 aborda a defini\c{c}\~ao da amostra e os crit\'erios de sele\c{c}\~ao de participantes. O Cap\'itulo~4 discute as considera\c{c}\~oes \'eticas --- princ\'ipios gerais, marco normativo, sele\c{c}\~ao de participantes e tratamento dos dados ---, que atravessam todo o processo. O Cap\'itulo~5 entra na elabora\c{c}\~ao de question\'arios e roteiros, com \^enfase em clareza, precis\~ao e adequa\c{c}\~ao ao objetivo. O Cap\'itulo~6 fecha com os procedimentos de campo: treinamento, acompanhamento, prote\c{c}\~ao dos dados e controle de qualidade. As Considera\c{c}\~oes finais retomam limites de generaliza\c{c}\~ao e quest\~oes operacionais que perpassam tudo o que veio antes.
+
+% ============================================================
+% 2. METODOLOGIAS DE COLETA
+% ============================================================
+\chapter{Metodologias de coleta}
+
+A escolha da metodologia de coleta depende dos objetivos da pesquisa, do perfil do p\'ublico-alvo, dos recursos dispon\'iveis e do tipo de informa\c{c}\~ao buscada. \textit{Surveys} (ou question\'arios) entregam dados quantitativos compar\'aveis em amostras grandes e permitem an\'alises generaliz\'aveis. Entrevistas trazem profundidade --- contexto, l\'ogicas sociais, motivos por tr\'as do comportamento --- e por isso s\~ao a via natural quando o que se quer entender s\~ao percep\c{c}\~oes e experi\^encias.
+
+A Tabela~\ref{tab:quando_quanti_quali} sintetiza a refer\^encia elaborada por \citet{morra2009road} para a escolha do instrumento adequado a cada tipo de pesquisa avaliativa. T\'ecnicas quantitativas e qualitativas representam paradigmas distintos de investiga\c{c}\~ao, e a melhor forma de ler suas diferen\c{c}as \'e pelo que cada uma entrega:
+
+As \textbf{abordagens quantitativas} produzem grande volume de informa\c{c}\~oes padronizadas, viabilizando mensura\c{c}\~ao precisa e an\'alise estat\'istica de fen\^omenos observ\'aveis em popula\c{c}\~oes amplas. O foco \'e quantifica\c{c}\~ao, generaliza\c{c}\~ao e identifica\c{c}\~ao de padr\~oes e rela\c{c}\~oes de causalidade.
+
+As \textbf{abordagens qualitativas} buscam significados, percep\c{c}\~oes, motiva\c{c}\~oes e din\^amicas sociais que est\~ao por tr\'as dos fen\^omenos, sem recorrer necessariamente \`a quantifica\c{c}\~ao. Seu valor est\'a em explorar a complexidade de processos e contextos espec\'ificos.
+
+Em muitas pesquisas avaliativas, nenhum dos dois isoladamente d\'a conta. A \textbf{metodologia mista} \citep{creswell2014research,bryman2012social} combina os dois e captura tanto a abrang\^encia dos \textit{surveys} quanto a profundidade das entrevistas e grupos focais --- arranjo particularmente \'util quando o objetivo \'e n\~ao s\'o medir o impacto de uma interven\c{c}\~ao, mas tamb\'em entender por quais mecanismos esse impacto ocorre \citep{morra2009road}.
+
+\begin{table}[H]
+\centering
+\caption{Quando utilizar abordagens quantitativas e qualitativas?}
+\label{tab:quando_quanti_quali}
+\begin{tabular}{p{0.55\linewidth} p{0.35\linewidth}}
+\toprule
+\textbf{Se voc\^e} & \textbf{Ent\~ao, use esta abordagem} \\
+\midrule
+Deseja conduzir an\'alises estat\'isticas & Quantitativa \\
+Deseja precis\~ao na quantifica\c{c}\~ao de fen\^omenos & \\
+Sabe exatamente o que precisa medir & \\
+Possui interesse em cobrir informa\c{c}\~oes sobre um grupo extenso de indiv\'iduos & \\
+\midrule
+Deseja obter informa\c{c}\~oes com mais profundidade & Qualitativa \\
+Possui interesse em compreender as narrativas sobre um fen\^omeno & \\
+N\~ao necessita quantificar os resultados & \\
+Ainda n\~ao possui certeza sobre o que \'e capaz de medir & \\
+\bottomrule
+\end{tabular}
+\figmeta{Adaptado de \citet{morra2009road}.}{}{}
+\end{table}
+
+Definida a abordagem, o passo seguinte \'e o instrumento. Esta se\c{c}\~ao trata da elabora\c{c}\~ao das ferramentas de coleta, presenciais e remotas, com aten\c{c}\~ao aos pontos cr\'iticos de validade, confiabilidade e adequa\c{c}\~ao ao contexto de aplica\c{c}\~ao.
+
+\section{Metodologias de coleta quantitativa}
+
+Dados quantitativos s\~ao informa\c{c}\~oes num\'ericas que permitem mensurar fen\^omenos objetivamente e aplicar t\'ecnicas estat\'isticas de an\'alise, compara\c{c}\~ao e generaliza\c{c}\~ao \citep{kabir2016methods,taherdoost2021data}. Sua coleta exige estrutura\c{c}\~ao pr\'evia, normalmente a partir de amostras aleat\'orias.
+
+Comparados a m\'etodos qualitativos, m\'etodos quantitativos costumam ser mais vi\'aveis em custo e tempo, e os resultados se prestam a padroniza\c{c}\~ao, compara\c{c}\~ao e sumariza\c{c}\~ao. Em troca, perdem em profundidade contextual e podem encontrar dificuldades operacionais durante a implementa\c{c}\~ao \citep{taherdoost2021data}.
+
+A natureza dos dados quantitativos depende das \textbf{escalas de mensura\c{c}\~ao}, que definem como cada vari\'avel pode ser interpretada e tratada estatisticamente:
+
+\begin{itemize}
+\item \textbf{Nominal:} Categoriza dados sem uma ordem hier\'arquica (ex.: g\^enero, pa\'is de origem).
+\item \textbf{Ordinal:} Categoriza dados com uma ordem ou classifica\c{c}\~ao, mas sem dist\^ancia definida entre os pontos (ex.: escala de satisfa\c{c}\~ao: ``insatisfeito'', ``neutro'', ``satisfeito'').
+\item \textbf{Intervalar:} Estabelece uma ordem com dist\^ancias iguais entre os pontos, mas sem um zero absoluto (ex.: temperatura em Celsius).
+\item \textbf{Raz\~ao:} Possui todas as caracter\'isticas da escala intervalar, incluindo um zero absoluto que indica aus\^encia do fen\^omeno (ex.: altura, peso, renda).
+\end{itemize}
+
+Al\'em disso, os instrumentos de coleta frequentemente utilizam escalas de mensura\c{c}\~ao, como as \textbf{escalas de avalia\c{c}\~ao} (\textit{Rating Scales}), que atribuem um valor num\'erico a categorias (ex.: ``de 1 a 5, onde 1 \'e `discordo totalmente' ''), e as \textbf{escalas de atitude}, mais complexas, que avaliam a predisposi\c{c}\~ao de indiv\'iduos perante um objeto ou ideia (ex.: escala Likert).
+
+A principal ferramenta para coleta de dados quantitativos prim\'arios \'e o \textbf{\textit{survey} estruturado} --- um question\'ario padronizado com perguntas e ordem fixas, aplicado a uma amostra de pessoas respondentes. A padroniza\c{c}\~ao garante que todas as pessoas participantes recebam o mesmo est\'imulo, o que sustenta a confiabilidade e a comparabilidade das an\'alises estat\'isticas \citep{bryman2012social}.
+
+A l\'ogica b\'asica do \textit{survey} \'e a mesma em todas as suas vers\~oes, mas o canal de aplica\c{c}\~ao --- presencial, telef\^onico ou online --- altera o que se ganha e o que se perde em qualidade, custo e cobertura. As tr\^es modalidades coexistem na pr\'atica e atendem a perfis diferentes de pesquisa.
+
+\subsubsection*{1) \textit{Surveys} presenciais (face a face)}
+
+Aplicado por entrevistadora ou entrevistador treinado, em intera\c{c}\~ao direta com a pessoa respondente, o \textit{survey} presencial \'e o formato mais tradicional da coleta em pesquisa social. Hoje o registro \'e feito majoritariamente em \textit{tablets} ou \textit{smartphones}, em \textit{softwares} de coleta assistida por computador (CAPI --- \textit{Computer-Assisted Personal Interviewing}), que reduzem erros de digita\c{c}\~ao e permitem checagens autom\'aticas de consist\^encia.
+
+\'E o m\'etodo dominante nos levantamentos de grande escala. No Brasil, o IBGE usa entrevistas presenciais na PNAD Cont\'inua e no Censo Demogr\'afico. No plano internacional, o \textit{Living Standards Measurement Study} (LSMS) do Banco Mundial \'e o caso paradigm\'atico em pa\'ises de baixa e m\'edia renda. Pesquisas eleitorais conduzidas por institutos privados tamb\'em recorrem a entrevistas presenciais em domic\'ilio ou em pontos de fluxo, em busca de representatividade do eleitorado.
+
+A vantagem central est\'a nas altas taxas de resposta: a intera\c{c}\~ao pessoal reduz a probabilidade de recusa. O formato tamb\'em comporta question\'arios longos e complexos, com uso de cart\~oes de apoio, escalas visuais e roteiros detalhados, e permite \`a entrevistadora esclarecer d\'uvidas em tempo real --- o que aumenta a qualidade dos dados e diminui erros de compreens\~ao.
+
+O custo, em troca, \'e alto. A coleta exige log\'istica robusta (transporte, deslocamentos, remunera\c{c}\~ao por tempo em campo) e treinamento intensivo das equipes em t\'ecnicas de abordagem e protocolos \'eticos. H\'a ainda o risco de vi\'es da pessoa entrevistadora: presen\c{c}a f\'isica, tom de voz e julgamentos impl\'icitos podem influenciar respostas de forma sistem\'atica \citep{neuman2012designing,bryman2012social}.
+
+A implementa\c{c}\~ao envolve etapas encadeadas. O question\'ario precisa ser programado em plataforma compat\'ivel com dispositivos m\'oveis, com l\'ogica de saltos (perguntas condicionadas a respostas pr\'evias), filtros e checagens. A equipe deve ser treinada nos conte\'udos e em t\'ecnicas de entrevista. O planejamento log\'istico inclui mapeamento das \'areas de coleta, rotas de visita e listas de domic\'ilios. Durante o campo, recomenda-se supervis\~ao constante --- presencial ou via monitoramento remoto dos dispositivos. Por fim, os dados precisam ser sincronizados diariamente com servidor central, onde passam por verifica\c{c}\~oes autom\'aticas que permitem identificar e corrigir problemas ainda durante a coleta.
+
+\subsubsection*{2) \textit{Surveys} por telefone (CATI)}
+
+Os \textit{surveys} telef\^onicos ocupam um meio-termo de custo entre o presencial e o online. Ganharam tra\c{c}\~ao nos anos 1980 e 1990, com a difus\~ao do telefone fixo, e hoje s\~ao operados majoritariamente por sistemas CATI (\textit{Computer-Assisted Telephone Interviewing}), que automatizam a aplica\c{c}\~ao, reduzem erros de registro e facilitam supervis\~ao e armazenagem.
+
+S\~ao r\'apidos e cobrem grandes \'areas geogr\'aficas sem deslocamento f\'isico. O anonimato relativo da voz tende a estimular respostas mais sinceras em quest\~oes delicadas (renda, comportamento sexual, opini\~ao pol\'itica). E a supervis\~ao \'e operacionalmente simples: como as entrevistadoras trabalham em centrais de atendimento, supervisoras podem acompanhar entrevistas em tempo real e intervir quando preciso. \'E o m\'etodo dominante em pesquisas eleitorais, em inqu\'eritos de sa\'ude conduzidos por minist\'erios e secretarias (monitoramento de sintomas em epidemias, por exemplo) e em pesquisas de satisfa\c{c}\~ao de bancos, telefonia e empresas de servi\c{c}os.
+
+As limita\c{c}\~oes s\~ao tr\^es. \textit{Cobertura}: o m\'etodo exclui quem n\~ao tem telefone ou cujo n\'umero n\~ao consta dos cadastros usados na amostragem --- no Brasil, o uso de telefones fixos caiu fortemente nas duas \'ultimas d\'ecadas, agravando o problema. \textit{Dura\c{c}\~ao}: sem apoio visual, o question\'ario precisa ser curto e direto, o que limita a profundidade. \textit{Recusa}: desligar o telefone \'e muito mais f\'acil do que recusar algu\'em frente a frente, e as taxas refletem isso. H\'a ainda um vi\'es ligado ao hor\'ario da liga\c{c}\~ao: chamadas diurnas alcan\c{c}am desproporcionalmente aposentados, desempregados e quem trabalha de casa; chamadas noturnas, ao contr\'ario, encontram mais trabalhadores ativos, mas tendem a ser percebidas como intrusivas.
+
+A implementa\c{c}\~ao come\c{c}a pela base de n\'umeros: \'e preciso constru\'i-la ou adquiri-la com representatividade da popula\c{c}\~ao-alvo, muitas vezes em parceria com operadoras ou via discagem aleat\'oria (\textit{Random Digit Dialing} --- RDD). O question\'ario precisa ser adaptado ao formato telef\^onico --- perguntas curtas, claras, de f\'acil compreens\~ao oral. O treinamento da equipe foca em comunica\c{c}\~ao por voz, empatia e manejo de obje\c{c}\~oes, j\'a que n\~ao h\'a recursos visuais. Protocolos de liga\c{c}\~ao definem hor\'arios de contato, n\'umero m\'aximo de tentativas e intervalos entre chamadas. Durante a coleta, supervisoras acompanham entrevistas em tempo real e monitoram indicadores de produtividade (tempo m\'edio de entrevista, taxa de sucesso por liga\c{c}\~ao).
+
+\subsubsection*{3) \textit{Surveys} autoadministrados online (web/e-mail)}
+
+No formato autoadministrado online, a pessoa respondente acessa o question\'ario por conta pr\'opria e registra suas respostas --- normalmente via \textit{link} por e-mail, redes sociais, \textit{website} ou aplicativo m\'ovel. \'E o canal de mais r\'apido crescimento, impulsionado pela difus\~ao da internet e dos \textit{smartphones}, que tornam vi\'avel alcan\c{c}ar milhares de pessoas em poucos dias e com custo marginal pr\'oximo de zero.
+
+O custo \'e o atrativo mais imediato, junto com a rapidez. A pessoa respondente tamb\'em ganha em conveni\^encia: completa o question\'ario no seu pr\'oprio ritmo, em hor\'arios que escolhe. As plataformas suportam l\'ogica automatizada --- randomiza\c{c}\~ao de perguntas, saltos condicionais, embaralhamento de alternativas --- que reduzem vieses de ordem e enriquecem a experi\^encia. \'E o formato dominante em pesquisas de satisfa\c{c}\~ao p\'os-compra, avalia\c{c}\~oes de cursos e docentes em universidades, e foi central em situa\c{c}\~oes emergenciais como a pandemia de Covid-19, em que inqu\'eritos r\'apidos sobre sintomas, ades\~ao a medidas de preven\c{c}\~ao e vacina\c{c}\~ao foram operados em larga escala por meios eletr\^onicos.
+
+Em contrapartida, o m\'etodo carrega vi\'es de cobertura severo em pa\'ises marcados por desigualdade digital: popula\c{c}\~oes com acesso limitado \`a internet ou baixa familiaridade digital tendem a ficar de fora, comprometendo a representatividade. A taxa de resposta tamb\'em \'e baixa, em parte pelo excesso de convites que circulam online e pela tend\^encia das pessoas usu\'arias a ignorar e-mails de pesquisa. H\'a ainda pouco controle sobre o ambiente em que a resposta \'e dada --- distra\c{c}\~ao, pressa, preenchimento aleat\'orio --- e, em alguns casos, risco de respostas m\'ultiplas pela mesma pessoa, o que exige autentica\c{c}\~ao ou checagens de consist\^encia.
+
+A implementa\c{c}\~ao come\c{c}a pela plataforma. A escolha precisa contemplar personaliza\c{c}\~ao do question\'ario, acompanhamento das respostas em tempo real e exporta\c{c}\~ao eficiente dos dados. O \textit{design} deve ser otimizado para celular, j\'a que esse \'e o dispositivo dominante de acesso. Os pr\'e-testes precisam simular percursos l\'ogicos, verificar randomiza\c{c}\~oes e validar todos os formatos de resposta antes do lan\c{c}amento. O recrutamento combina convites por e-mail, campanhas em redes sociais, divulga\c{c}\~ao em \textit{websites} e parcerias institucionais. Lembretes autom\'aticos e monitoramento cont\'inuo do engajamento ajudam a reduzir a n\~ao resposta e a ajustar a estrat\'egia de divulga\c{c}\~ao durante o campo.
+
+A Tabela~\ref{tab:comparacao_surveys} resume vantagens, desvantagens e passos essenciais de cada modalidade.
+
+\begin{table}[H]
+\centering
+\caption{Compara\c{c}\~ao entre os m\'etodos de \textit{survey}}
+\label{tab:comparacao_surveys}
+\small
+\begin{tabular}{p{0.13\linewidth} p{0.27\linewidth} p{0.25\linewidth} p{0.27\linewidth}}
+\toprule
+\textbf{M\'etodo} & \textbf{Vantagens} & \textbf{Desvantagens} & \textbf{Passos essenciais} \\
+\midrule
+\textbf{Presencial} &
+Altas taxas de resposta; permite question\'arios longos e complexos; possibilidade de esclarecer d\'uvidas; maior qualidade e riqueza dos dados. &
+Alto custo log\'istico e de pessoal; processo mais demorado; risco de vi\'es do entrevistador. &
+Programar question\'ario em dispositivos m\'oveis; treinar intensivamente entrevistadores; planejar rotas e domic\'ilios; garantir supervis\~ao no campo; sincronizar e verificar dados diariamente. \\
+\midrule
+\textbf{CATI} &
+Custo moderado; rapidez e amplo alcance geogr\'afico; maior anonimato em temas sens\'iveis; f\'acil supervis\~ao da equipe. &
+Exclui popula\c{c}\~oes sem telefone; question\'arios devem ser curtos e objetivos; taxas de recusa mais elevadas. &
+Construir base representativa de n\'umeros; adaptar question\'ario para formato telef\^onico; treinar equipe em comunica\c{c}\~ao por voz; definir protocolos de liga\c{c}\~ao; monitorar entrevistas em tempo real. \\
+\midrule
+\textbf{Online} &
+Custo muito baixo; rapidez e alcance global; conveni\^encia para a pessoa respondente; permite l\'ogica automatizada (\textit{skips}, randomiza\c{c}\~ao). &
+Vi\'es de cobertura (exclus\~ao digital); baixas taxas de resposta; pouco controle sobre quem responde. &
+Selecionar plataforma online adequada; otimizar \textit{design} para diferentes dispositivos; realizar pr\'e-testes completos; implementar estrat\'egias de divulga\c{c}\~ao e recrutamento; enviar lembretes e monitorar respostas. \\
+\bottomrule
+\end{tabular}
+\figmeta{Elabora\c{c}\~ao pr\'opria.}{}{}
+\end{table}
+
+A escolha do m\'etodo quantitativo envolve, em qualquer cen\'ario, um equil\'ibrio entre rigor cient\'ifico, viabilidade operacional e \'etica. Pr\'e-teste dos instrumentos, treinamento das equipes e monitoramento da qualidade s\~ao denominadores comuns: valem para qualquer modalidade \citep{morra2009road,kopper2021survey}.
+
+\section{Metodologias de coleta qualitativa}
+
+Nas avalia\c{c}\~oes de pol\'iticas p\'ublicas, dados qualitativos d\~ao conta de coisas que dados num\'ericos t\^ipicamente n\~ao d\~ao: examinar intera\c{c}\~oes entre atores estatais e n\~ao estatais, identificar padr\~oes de tomada de decis\~ao, analisar a tens\~ao entre regras formais e normas socioculturais. S\~ao eles que revelam o \textit{como} e o \textit{porqu\^e} dos fen\^omenos --- a din\^amica de implementa\c{c}\~ao, as barreiras pr\'aticas que os n\'umeros n\~ao captam, a experi\^encia concreta de quem participa ou implementa. Permitem ainda detectar efeitos n\~ao previstos, distinguir falhas de teoria de falhas de implementa\c{c}\~ao e capturar mudan\c{c}as estruturais que indicadores convencionais dificilmente mensuram \citep{fgvclear2025mea}.
+
+As entrevistas s\~ao o instrumento qualitativo mais usado. Permitem captar nuances do processo de implementa\c{c}\~ao, identificar desafios e analisar como as diretrizes institucionais se traduzem nas din\^amicas cotidianas \citep{lotta2020categorizando}. Em contraste com os \textit{surveys}, t\^em estrutura\c{c}\~ao menor e abrem espa\c{c}o \`a espontaneidade das respostas, o que favorece a emerg\^encia de temas e interpreta\c{c}\~oes n\~ao antecipados no desenho da pesquisa \citep{lima2016entrevistas}.
+
+A entrevista \'e uma intera\c{c}\~ao comunicativa: a pessoa pesquisadora conduz o di\'alogo a partir de um roteiro (mais ou menos estruturado, conforme os objetivos do estudo) e a pessoa entrevistada contribui com relatos, percep\c{c}\~oes e interpreta\c{c}\~oes sobre sua experi\^encia. \'E a comunica\c{c}\~ao direta que viabiliza explorar as formas de agir, pensar e significar dos sujeitos em contextos sociais e institucionais espec\'ificos \citep{leitao2024entrevista}.
+
+Na coleta de dados qualitativos, a escolha do grau de estrutura\c{c}\~ao das entrevistas depende de fatores como o n\'ivel de conhecimento pr\'evio sobre o tema investigado, o n\'umero e o perfil das pessoas participantes, bem como a articula\c{c}\~ao entre a fundamenta\c{c}\~ao te\'orica e a produ\c{c}\~ao de evid\^encias emp\'iricas. Quanto maior o conhecimento acumulado e a necessidade de comparabilidade entre respostas, mais estruturada tende a ser a ferramenta. Por outro lado, quando se busca explorar percep\c{c}\~oes, significados ou fen\^omenos pouco conhecidos, privilegia-se maior flexibilidade nos instrumentos.
+
+Uma modalidade particularmente relevante nesse sentido \'e a entrevista com informantes-chave (KII, do ingl\^es \textit{Key Informant Interview}), na qual as pessoas interlocutoras s\~ao selecionadas intencionalmente por deterem conhecimento especializado, posi\c{c}\~ao privilegiada ou experi\^encia direta sobre o fen\^omeno investigado. Nesse tipo de entrevista, a pessoa entrevistada \'e tratada como especialista, e o di\'alogo visa acessar n\~ao apenas experi\^encias individuais, mas tamb\'em perspectivas institucionais, din\^amicas organizacionais e fatores contextuais que dificilmente seriam captados por instrumentos quantitativos \citep{bryman2012social,neuman2014social}.
+
+As t\'ecnicas de entrevista podem ser presenciais ou virtuais. As presenciais favorecem v\'inculo e confian\c{c}a, al\'em de dar aten\c{c}\~ao aos aspectos n\~ao verbais da comunica\c{c}\~ao. As virtuais ampliam o alcance da pesquisa --- viabilizam participa\c{c}\~ao geograficamente dispersa, reduzem custos e tempo de deslocamento --- mas trazem suas pr\'oprias limita\c{c}\~oes: instabilidades de conex\~ao, privacidade do ambiente da pessoa entrevistada, menor capta\c{c}\~ao de express\~oes n\~ao verbais.
+
+\subsection{Entrevistas estruturadas}
+
+Na entrevista estruturada, a pessoa pesquisadora segue um roteiro previamente definido, com perguntas fixas e enunciado padronizado, apresentadas a todas as entrevistadas na mesma ordem. O formato \'e r\'igido por desenho: \citet{silva2019aplicacao} observam que a padroniza\c{c}\~ao limita a flexibilidade da pesquisadora durante a intera\c{c}\~ao.
+
+O objetivo \'e reduzir a influ\^encia subjetiva da entrevistadora, aumentar a comparabilidade entre participantes e tornar a coleta replic\'avel --- pontos especialmente relevantes em pesquisas de maior escala ou conduzidas por equipes amplas. O custo dessa padroniza\c{c}\~ao \'e a profundidade explorat\'oria: as respostas seguem op\c{c}\~oes preestabelecidas ou um script fixo, aproximando a t\'ecnica de um question\'ario aplicado oralmente.
+
+As preocupa\c{c}\~oes metodol\'ogicas centrais s\~ao tr\^es: coer\^encia entre roteiro, hip\'oteses e objetivos; defini\c{c}\~ao adequada das perguntas e das op\c{c}\~oes de resposta; e neutralidade da pessoa pesquisadora durante a coleta. Mesmo no formato estruturado h\'a alguma margem para que ela adapte vocabul\'ario e linguagem ao contexto da intera\c{c}\~ao, favorecendo a constru\c{c}\~ao de sentido compartilhado \citep{silva2006entrevista}. Respostas registradas em formato textual costumam ser depois organizadas, categorizadas e submetidas a an\'alise de conte\'udo ou a procedimentos quantitativos, em busca de padr\~oes e recorr\^encias nas falas \citep{fraser2004fala}.
+
+Segundo \citet{patton1990qualitative}, a fun\c{c}\~ao da entrevista estruturada \'e assegurar que todas as participantes recebam est\'imulos id\^enticos --- o que aumenta confiabilidade e comparabilidade, com o trade-off j\'a mencionado.
+
+\paragraph{Vantagens.} A padroniza\c{c}\~ao garante que todas as pessoas entrevistadas recebam as mesmas perguntas na mesma ordem e forma, reduzindo vieses de aplica\c{c}\~ao e gerando alta comparabilidade entre respostas. A uniformidade aumenta a confiabilidade dos dados, viabiliza an\'alises estat\'isticas (sobretudo quando h\'a perguntas fechadas) e torna a coleta mais r\'apida e previs\'ivel, o que pesa em pesquisas de grande escala. A formula\c{c}\~ao uniforme reduz tamb\'em as varia\c{c}\~oes de interpreta\c{c}\~ao entre entrevistadas.
+
+\paragraph{Desvantagens.} O custo da rigidez aparece em v\'arias frentes. A pessoa entrevistadora n\~ao pode adaptar perguntas nem aprofundar respostas relevantes que surjam durante a entrevista, o que limita a capta\c{c}\~ao de nuances e significados subjetivos. Qualquer ambiguidade na reda\c{c}\~ao se reproduz em todas as entrevistas, comprometendo a validade. Perguntas fechadas ou excessivamente direcionadas tendem a induzir respostas padronizadas e pouco informativas; e o formato r\'igido n\~ao favorece a compreens\~ao de fatores situacionais ou explica\c{c}\~oes mais amplas. No conjunto, a t\'ecnica privilegia comparabilidade e mensura\c{c}\~ao em detrimento das dimens\~oes interpretativas e simb\'olicas do fen\^omeno.
+
+\subsection{Entrevistas semiestruturadas}
+
+A entrevista semiestruturada parte de um roteiro pr\'e-elaborado, mas confere \`a pessoa pesquisadora margem para ajustar ordem, formula\c{c}\~ao e profundidade das perguntas conforme o di\'alogo se desenvolve. \'E o ponto de equil\'ibrio entre a padroniza\c{c}\~ao necess\'aria \`a comparabilidade e a abertura que captura a riqueza das narrativas. Da\'i ser uma das t\'ecnicas qualitativas mais usadas em pesquisas que buscam compreender significados, percep\c{c}\~oes, pr\'aticas e experi\^encias.
+
+A elabora\c{c}\~ao do roteiro come\c{c}a pela defini\c{c}\~ao de temas, eixos anal\'iticos ou eventos significativos relacionados ao objeto de estudo. Esses elementos orientam a reconstru\c{c}\~ao de experi\^encias, trajet\'orias e percep\c{c}\~oes das pessoas interlocutoras \citep{alonso2016metodos}. O roteiro se organiza em torno de quest\~oes principais, que funcionam como eixos da intera\c{c}\~ao, mas habilitam a entrevistadora a aprofundar aspectos emergentes ou introduzir novas perguntas conforme a din\^amica avan\c{c}a \citep{lima2016entrevistas}. Essa abertura \'e o que viabiliza captar dimens\~oes n\~ao previstas no planejamento inicial.
+
+A pesquisadora deve garantir que todos os t\'opicos previamente definidos sejam abordados, mas a sequ\^encia, a reda\c{c}\~ao e a \^enfase das perguntas podem se ajustar ao contexto de cada entrevista. Essa maleabilidade \'e o que torna o m\'etodo adequado \`a investiga\c{c}\~ao de significados, motiva\c{c}\~oes e interpreta\c{c}\~oes --- preservando, ao mesmo tempo, a coer\^encia com os objetivos, hip\'oteses e categorias anal\'iticas da pesquisa.
+
+Uma estrat\'egia recorrente \'e conduzir a entrevista de forma progressiva: perguntas mais abertas e explorat\'orias no in\'icio, voltadas \`a livre express\~ao da participante; perguntas mais espec\'ificas ou direcionadas \`a medida que a conversa avan\c{c}a \citep{silva2006entrevista}. O movimento ajuda a estabelecer confian\c{c}a, estimula a narrativa do entrevistado e, simultaneamente, assegura a obten\c{c}\~ao de informa\c{c}\~oes relevantes para os objetivos do estudo.
+
+\paragraph{Vantagens.} A flexibilidade na condu\c{c}\~ao permite \`a entrevistadora adaptar sequ\^encia, aprofundamento e formula\c{c}\~ao das perguntas conforme as respostas, favorecendo intera\c{c}\~ao mais natural. O formato combina comparabilidade m\'inima entre entrevistas com liberdade para explorar temas emergentes, sem perder foco anal\'itico. Permite compreender percep\c{c}\~oes, valores, motiva\c{c}\~oes e experi\^encias com profundidade e contextualiza\c{c}\~ao, e a abertura metodol\'ogica favorece a identifica\c{c}\~ao de aspectos n\~ao previstos no roteiro. \'E adapt\'avel a diferentes contextos e perfis de participantes, do gestor s\^enior \`a benefici\'aria de programa.
+
+\paragraph{Desvantagens.} A flexibilidade dificulta a compara\c{c}\~ao direta entre entrevistas e, sem controle metodol\'ogico cuidadoso, reduz a consist\^encia anal\'itica. A qualidade da entrevista depende fortemente da entrevistadora --- exige preparo t\'ecnico, empatia e dom\'inio do tema para conduzir sem enviesar. A presen\c{c}a da pesquisadora pode influenciar respostas, e a interpreta\c{c}\~ao depende da sua sensibilidade anal\'itica. O car\'ater interativo dificulta a replicabilidade entre contextos. E roteiros mal estruturados geram lacunas tem\'aticas ou dispers\~ao, comprometendo a coer\^encia da coleta.
+
+\subsection{Entrevistas n\~ao estruturadas}
+
+A entrevista n\~ao estruturada \'e flex\'ivel por desenho. N\~ao h\'a roteiro fixo: os temas emergem durante a intera\c{c}\~ao, e a pesquisadora acompanha o fluxo da conversa, aprofundando pontos de interesse \`a medida que aparecem. O objetivo \'e maximizar o car\'ater explorat\'orio da coleta, favorecendo a identifica\c{c}\~ao de significados, percep\c{c}\~oes e dimens\~oes do fen\^omeno que dificilmente seriam antecipados.
+
+Mesmo sem roteiro estruturado, a pesquisadora se orienta por temas ou eixos gerais que devem ser cobertos ao longo da conversa --- eles funcionam como refer\^encia para formular perguntas durante a entrevista. Tanto a entrevistadora quanto a pessoa entrevistada t\^em ampla liberdade, e \'e comum que a participante introduza t\'opicos n\~ao previstos no desenho original \citep{lima2016entrevistas}.
+
+A abordagem cai bem em estudos explorat\'orios, em que h\'a pouco ou nenhum conhecimento acumulado sobre o tema. Nesses casos, a entrevistadora formula perguntas amplas e abertas, que estimulam as participantes a discorrer livremente \citep{silva2019aplicacao}. A postura predominante \'e de ``abertura'', com interfer\^encias pontuais para que a entrevistada aprofunde um tema ou descreva um acontecimento espec\'ifico \citep{fraser2004fala}.
+
+As perguntas emergem do contexto interacional, n\~ao s\~ao predeterminadas \citep{jimenez2012entrevista}. O foco recai sobre a explora\c{c}\~ao detalhada das percep\c{c}\~oes, experi\^encias e significados atribu\'idos pelas participantes. Isso exige escuta atenta, acompanhamento da narrativa e aprofundamento sucessivo --- a entrevistadora clarifica ambiguidades, explora nuances do discurso e procura entender como as interlocutoras constroem sentido sobre o fen\^omeno investigado. O resultado \'e uma an\'alise densa e contextualizada.
+
+\paragraph{Vantagens.} M\'axima flexibilidade metodol\'ogica: a entrevistadora pode adaptar totalmente a condu\c{c}\~ao da conversa, explorando temas que emergem espontaneamente. O formato propicia compreens\~ao profunda e contextualizada das percep\c{c}\~oes, experi\^encias e significados atribu\'idos pelas participantes, e \'e a t\'ecnica que mais favorece a emerg\^encia de dimens\~oes anal\'iticas n\~ao antecipadas. O ambiente aberto encoraja respostas espont\^aneas e reflexivas. \'E especialmente \'util em estudos explorat\'orios sem hip\'oteses consolidadas, e a aus\^encia de roteiro fixo permite ajuste fluido a diferentes perfis de entrevistadas.
+
+\paragraph{Desvantagens.} A aus\^encia de padroniza\c{c}\~ao dificulta a compara\c{c}\~ao sistem\'atica entre entrevistas e a constru\c{c}\~ao de categorias comuns de an\'alise. A condu\c{c}\~ao depende intensamente da experi\^encia da pesquisadora --- manter foco tem\'atico e explorar respostas sem direcion\'a-las exige treino. A natureza aberta e heterog\^enea das respostas exige procedimentos de codifica\c{c}\~ao e interpreta\c{c}\~ao mais complexos e demorados. A singularidade de cada intera\c{c}\~ao torna a replicabilidade praticamente imposs\'ivel. A entrevistadora pode projetar suas pr\'oprias percep\c{c}\~oes sobre o discurso da entrevistada, agravando vieses interpretativos. Por fim, transcri\c{c}\~ao e an\'alise s\~ao trabalhosas, o que costuma limitar o n\'umero de participantes.
+
+\subsection{Entrevistas em grupo e grupos focais}
+
+Entrevistas em grupo e grupos focais s\~ao frequentemente tratados como sin\^onimos, mas n\~ao s\~ao. Embora ambos envolvam coleta com m\'ultiplas participantes simultaneamente, distinguem-se em tr\^es aspectos: especificidade tem\'atica, interesse pela intera\c{c}\~ao em si e papel atribu\'ido \`as participantes na produ\c{c}\~ao de conhecimento \citep{bryman2012social,neuman2014social}.
+
+A entrevista em grupo aplica perguntas a um conjunto de participantes reunidas ao mesmo tempo, em busca de respostas individuais simult\^aneas. O escopo tem\'atico pode ser amplo, e a t\'ecnica costuma ser adotada por economia de tempo e recursos --- a pesquisadora est\'a mais interessada na efici\^encia da coleta do que nas din\^amicas relacionais do grupo \citep{bryman2012social}.
+
+O grupo focal \'e mais especializado. Caracteriza-se pela delimita\c{c}\~ao de um tema espec\'ifico e pelo interesse expl\'icito na intera\c{c}\~ao entre participantes como fonte central de dados. A intera\c{c}\~ao n\~ao \'e efeito colateral da reuni\~ao em grupo --- ela \'e o pr\'oprio objeto de aten\c{c}\~ao anal\'itica: o di\'alogo permite n\~ao apenas a express\~ao de percep\c{c}\~oes individuais, mas tamb\'em a negocia\c{c}\~ao de significados, a manifesta\c{c}\~ao de consensos e a explicita\c{c}\~ao de dissensos. \'E a t\'ecnica adequada para captar din\^amicas sociais, explorar representa\c{c}\~oes compartilhadas e compreender como opini\~oes se constroem e se transformam no contexto da intera\c{c}\~ao grupal.
+
+A discuss\~ao \'e orientada por uma pergunta principal e por perguntas secund\'arias \citep{almeida2016grupos}. As participantes s\~ao incentivadas a argumentar, questionar e desafiar perspectivas umas das outras, o que pode lev\'a-las a revisar suas pr\'oprias opini\~oes ao longo da discuss\~ao. Esse processo de constru\c{c}\~ao coletiva de significado tende a produzir relatos mais realistas do pensamento do grupo do que entrevistas individuais. A pesquisadora atua como mediadora --- planeja o roteiro, define perguntas disparadoras e realiza interven\c{c}\~oes pontuais para manter participa\c{c}\~ao equilibrada, est\'imulo \`a intera\c{c}\~ao e foco na tem\'atica \citep{jimenez2012entrevista,bryman2012social}.
+
+A vantagem distintiva do grupo focal em rela\c{c}\~ao \`as entrevistas individuais est\'a justamente em captar essas din\^amicas \citep{silva2021modera}. Para que a t\'ecnica funcione, os grupos devem ser pequenos --- geralmente entre 6 e 12 participantes ---, o que viabiliza participa\c{c}\~ao ativa de todas, acompanhamento detalhado das intera\c{c}\~oes e monitoramento de assimetrias de poder (l\'ideres de opini\~ao dominando o debate ou inibindo pessoas mais reticentes).
+
+Para al\'em de evitar pessoas com rela\c{c}\~ao hier\'arquica direta entre si, o \textit{status} importa de forma mais ampla: misturar n\'iveis socioecon\^omicos ou posi\c{c}\~oes de autoridade muito distintos pode levar as participantes a expressar apenas vis\~oes culturalmente esperadas ou a se conformar \`a opini\~ao da maioria por press\~ao social. A composi\c{c}\~ao do grupo \'e decis\~ao deliberada: heterogeneidade quando se quer captar variedade de perspectivas, homogeneidade quando se quer explorar um tema espec\'ifico em profundidade dentro de um grupo com experi\^encias semelhantes. Em contrapartida, o formato coletivo pode empoderar participantes --- diminui a dist\^ancia entre pesquisadora e pesquisadas, transfere parte do controle da conversa para o grupo e permite que vozes marginalizadas encontrem suporte m\'utuo.
+
+A an\'alise dos dados de grupos focais n\~ao se reduz a contar respostas. Converg\^encia e diverg\^encia de opini\~oes, \^enfase emocional, linguagem corporal --- todos esses elementos s\~ao informa\c{c}\~ao sobre as percep\c{c}\~oes coletivas e individuais e precisam entrar na interpreta\c{c}\~ao.
+
+\paragraph{Vantagens.} Permite observar intera\c{c}\~oes, negocia\c{c}\~oes de significados, consensos e dissensos --- t\'ipico do que entrevistas individuais n\~ao capturam. Facilita a identifica\c{c}\~ao de percep\c{c}\~oes compartilhadas e o entendimento de como opini\~oes se constroem no contexto grupal. A intera\c{c}\~ao entre participantes encoraja a manifesta\c{c}\~ao de ideias que n\~ao surgiriam num formato individual. A mediadora pode ajustar interven\c{c}\~oes e aprofundar t\'opicos emergentes. Em termos pr\'aticos, m\'ultiplas perspectivas s\~ao obtidas em uma \'unica sess\~ao, com ganho de tempo em rela\c{c}\~ao a entrevistas individuais. E o formato permite observar comportamentos n\~ao verbais --- linguagem corporal, entona\c{c}\~ao, intera\c{c}\~oes --- que enriquecem a interpreta\c{c}\~ao.
+
+\paragraph{Desvantagens.} A influ\^encia social \'e o ponto mais delicado: participantes podem se sentir pressionadas a concordar com opini\~oes dominantes ou a se autocensurar. O sucesso depende fortemente da habilidade da mediadora em equilibrar est\'imulo \`a participa\c{c}\~ao com manuten\c{c}\~ao do foco. Indiv\'iduos mais assertivos tendem a monopolizar a conversa, enquanto outros recuam. O planejamento log\'istico \'e complexo --- coordenar hor\'ario, local, recrutamento e composi\c{c}\~ao do grupo n\~ao \'e trivial. A interpreta\c{c}\~ao precisa lidar simultaneamente com conte\'udo, intera\c{c}\~ao e contexto, o que aumenta a complexidade anal\'itica. E h\'a o problema do tamanho: grupos pequenos reduzem diversidade; grupos grandes dificultam participa\c{c}\~ao ativa e registro detalhado.
+
+\section{Metodologias mistas de coleta}
+
+A metodologia mista n\~ao consiste simplesmente em coletar dados de dois tipos em paralelo. Ela pressup\~oe uma decis\~ao metodol\'ogica deliberada sobre como os componentes se articulam --- qual deles prevalece, em que momento se realiza cada coleta e como os dados s\~ao integrados na an\'alise \citep{creswell2014research}. Quando planejada com rigor, a abordagem mista permite que os resultados quantitativos orientem a sele\c{c}\~ao de casos para o aprofundamento qualitativo, ou que os achados qualitativos sinalizem hip\'oteses a serem testadas em \textit{surveys} de maior escala.
+
+\subsection{Principais arranjos de coleta mista}
+
+Tr\^es arranjos s\~ao particularmente frequentes em avalia\c{c}\~oes de pol\'iticas p\'ublicas:
+
+\paragraph{Sequencial explorat\'orio.} A coleta qualitativa antecede a quantitativa. Entrevistas ou grupos focais explorat\'orios informam a constru\c{c}\~ao do question\'ario --- identificando dimens\~oes relevantes, terminologia adequada ao p\'ublico-alvo e categorias de resposta. \'E especialmente \'util quando o fen\^omeno \'e pouco conhecido ou quando a linguagem dos instrumentos precisa ser ajustada a contextos espec\'ificos.
+
+\paragraph{Sequencial explanat\'orio.} O \textit{survey} \'e realizado primeiro; os achados quantitativos orientam a sele\c{c}\~ao de casos para entrevistas ou grupos focais de aprofundamento. Esse arranjo \'e comum em avalia\c{c}\~oes de impacto que identificam subgrupos com resultados inesperados e buscam compreender as raz\~oes por tr\'as dessas diferen\c{c}as. A vantagem \'e que os dados qualitativos s\~ao coletados com um objetivo preciso --- interpretar o que os n\'umeros n\~ao explicam.
+
+\paragraph{Concomitante (triangula\c{c}\~ao).} \textit{Surveys} e entrevistas s\~ao aplicados simultaneamente, com integra\c{c}\~ao na fase de an\'alise. A triangula\c{c}\~ao permite verificar a converg\^encia entre fontes, identificar contradi\c{c}\~oes e obter uma descri\c{c}\~ao mais completa do fen\^omeno \citep{patton2002qualitative,creswell2014research}. Exige maior coordena\c{c}\~ao de campo e maior esfor\c{c}o anal\'itico, mas \'e o arranjo que mais potencializa a complementaridade entre os m\'etodos.
+
+\subsection{Crit\'erios para a escolha e o sequenciamento dos instrumentos}
+
+A op\c{c}\~ao pela metodologia mista deve ser guiada pelas perguntas de pesquisa e pelos recursos dispon\'iveis --- e n\~ao pela ideia de que ``quanto mais m\'etodos, melhor''. As seguintes quest\~oes pr\'aticas orientam a decis\~ao:
+
+\begin{itemize}
+\item \textbf{Qual \'e a pergunta que o m\'etodo adicional responde?} Cada instrumento deve ter uma fun\c{c}\~ao anal\'itica clara --- explorar, confirmar, aprofundar ou triangular. Instrumentos acrescentados sem fun\c{c}\~ao definida aumentam o custo e a complexidade da coleta sem necessariamente agregar valor aos resultados.
+\item \textbf{Quando e em que ordem coletar?} A sequ\^encia afeta tanto a log\'istica de campo quanto a qualidade das informa\c{c}\~oes. A coleta qualitativa pr\'evia reduz erros de mensura\c{c}\~ao no \textit{survey}; a qualitativa posterior permite explorar resultados inesperados. A coleta simult\^anea exige coordena\c{c}\~ao rigorosa entre as equipes e protocolos comuns de controle de qualidade.
+\item \textbf{Como integrar os dados na an\'alise?} A integra\c{c}\~ao pode ocorrer na interpreta\c{c}\~ao (comparar resultados separadamente), na transforma\c{c}\~ao (converter dados qualitativos em c\'odigos quantific\'aveis) ou na conex\~ao (usar os resultados de um m\'etodo para orientar a an\'alise do outro). Cada estrat\'egia tem implica\c{c}\~oes para o relato dos resultados e deve ser descrita com transpar\^encia metodol\'ogica \citep{creswell2014research,bryman2012social}.
+\end{itemize}
+
+\subsection{Desafios operacionais e boas pr\'aticas}
+
+A combina\c{c}\~ao de instrumentos traz desafios que v\~ao al\'em do desenho metodol\'ogico. Na pr\'atica, equipes com perfis diferentes --- pessoas pesquisadoras quantitativas e entrevistadoras qualitativas --- precisam coordenar protocolos, cronogramas e padr\~oes de registro. Alguns cuidados s\~ao especialmente relevantes:
+
+\begin{itemize}
+\item \textbf{Evitar a sobrecarga de pessoas participantes:} aplicar \textit{survey} e entrevista \`as mesmas pessoas exige cuidado com o tempo demandado e com o intervalo entre as coletas. Quando poss\'ivel, recomenda-se que a coleta qualitativa seja realizada com uma subamostra intencionalmente selecionada, e n\~ao com todas as pessoas participantes do \textit{survey}.
+\item \textbf{Registrar as decis\~oes de integra\c{c}\~ao:} como os dados de diferentes instrumentos foram combinados deve constar no relat\'orio metodol\'ogico. A aus\^encia de transpar\^encia sobre esse ponto \'e uma das cr\'iticas mais comuns \`as pesquisas de m\'etodos mistos \citep{bryman2012social}.
+\item \textbf{Planejar o or\c{c}amento de forma integrada:} coletas mistas t\^em custo significativamente maior do que coletas com instrumento \'unico. O planejamento deve prever os recursos espec\'ificos de cada componente, incluindo transcri\c{c}\~ao e an\'alise dos dados qualitativos, frequentemente subestimados na fase de elabora\c{c}\~ao do projeto \citep{duru2021grant}.
+\end{itemize}
+
+Bem executada, a metodologia mista combina o que cada m\'etodo isolado n\~ao entrega sozinho --- os dados quantitativos respondem ``quanto''; os qualitativos respondem ``por qu\^e''.
+
+% ============================================================
+% 3. AMOSTRA E SELEÇÃO DE PESSOAS PARTICIPANTES
+% ============================================================
+\chapter{Amostra e sele\c{c}\~ao de pessoas participantes}
+
+A sele\c{c}\~ao das participantes determina, de sa\'ida, a qualidade, a validade e a representatividade da pesquisa. Em estudos quantitativos e qualitativos, o desenho da amostra define a credibilidade dos achados e o que se pode generalizar a partir deles \citep{neuman2014social,gertler2018impact}.\footnote{A generaliza\c{c}\~ao em estudos qualitativos \'e tema de debate na literatura. \citet{mattos2011resultados} sistematiza a discuss\~ao.}
+
+Mas a amostragem n\~ao \'e s\'o uma decis\~ao t\'ecnica. \'E tamb\'em \'etica e institucional. O modo como participantes s\~ao inclu\'idas ou exclu\'idas tem implica\c{c}\~oes diretas sobre a equidade e a legitimidade das conclus\~oes --- da\'i o \textit{Guia CLEAR de Avalia\c{c}\~ao de Impacto} \citep{fgvclear2025ai} e o \textit{Guia CLEAR de Monitoramento e Avalia\c{c}\~ao} \citep{fgvclear2025mea} tratarem a amostragem como instrumento de governan\c{c}a, articulando decis\~oes metodol\'ogicas \`as restri\c{c}\~oes operacionais, de tempo e or\c{c}amento.
+
+Em paralelo, tamanho e estrutura da amostra determinam a capacidade do estudo de detectar efeitos reais. Amostras subdimensionadas falham em identificar impactos relevantes; superdimensionadas desperdi\c{c}am recursos. O \textit{An\'alise de Poder Estat\'istico} \citep{fgvclear2025poder} aprofunda esse trade-off --- o planejamento amostral precisa equilibrar precis\~ao estat\'istica, viabilidade operacional e efici\^encia, e essa decis\~ao entra no desenho da pesquisa desde o in\'icio.
+
+\begin{conexaobox}
+Este cap\'itulo dialoga diretamente com o \textit{An\'alise de Poder Estat\'istico}, que detalha o c\'alculo de tamanho amostral m\'inimo, MDE (\textit{Minimum Detectable Effect}) e \textit{design effect}, e com o \textit{Guia CLEAR de Avalia\c{c}\~ao de Impacto}, que discute aleatoriza\c{c}\~ao e desenhos experimentais.
+\end{conexaobox}
+
+A literatura distingue dois grandes grupos de m\'etodos: \textbf{amostragem probabil\'istica}, voltada \`a infer\^encia estat\'istica e generaliza\c{c}\~ao; e \textbf{amostragem n\~ao probabil\'istica}, mais adequada \`a explora\c{c}\~ao qualitativa e compreens\~ao de contextos \citep{bryman2012social,neuman2014social}.
+
+\section{M\'etodos comuns de amostragem probabil\'istica}
+
+Na amostragem probabil\'istica, cada elemento da popula\c{c}\~ao tem probabilidade conhecida e diferente de zero de ser selecionado --- normalmente por meio de um sorteio. Essa propriedade \'e o que viabiliza a infer\^encia estat\'istica: os resultados da amostra podem ser generalizados para a popula\c{c}\~ao, e o erro amostral (diferen\c{c}a esperada entre estimativa amostral e valor real na popula\c{c}\~ao) pode ser quantificado. \'E o padr\~ao-ouro para estudos quantitativos e avalia\c{c}\~oes experimentais \citep{gertler2018impact}.
+
+\subsubsection*{1) Amostragem aleat\'oria simples (\textit{simple random sampling})}
+
+\'E a forma mais b\'asica de amostragem probabil\'istica, onde cada unidade (ex.: indiv\'iduo, domic\'ilio) na lista da popula\c{c}\~ao (\textit{frame}) tem exatamente a mesma chance de ser selecionada. Normalmente, utiliza-se uma tabela de n\'umeros aleat\'orios ou um gerador de n\'umeros aleat\'orios para realizar a sele\c{c}\~ao.
+
+\begin{itemize}
+\item \textbf{Vantagem:} \'e conceitualmente simples e f\'acil de implementar para popula\c{c}\~oes pequenas e homog\^eneas, pois requer apenas uma lista completa de todos os elementos da popula\c{c}\~ao.
+\item \textbf{Desvantagem:} requer lista completa da popula\c{c}\~ao (\textit{sampling frame}), tornando-se logisticamente invi\'avel em contextos amplos. Em popula\c{c}\~oes grandes e dispersas, a necessidade de identificar, listar e acessar todos os elementos tende a aumentar significativamente a complexidade operacional e os custos do processo \citep{bryman2012social,neuman2014social}.
+\item \textbf{Exemplo:} sorteio de domic\'ilios numerados em um \'unico munic\'ipio.
+\end{itemize}
+
+\subsubsection*{2) Amostragem estratificada (\textit{stratified sampling})}
+
+Nesta abordagem, a popula\c{c}\~ao \'e, primeiro, dividida em subgrupos homog\^eneos e mutuamente exclusivos, chamados de estratos (ex.: por regi\~ao geogr\'afica, tamanho da propriedade, faixa et\'aria, g\^enero). Em seguida, uma amostra aleat\'oria simples \'e extra\'ida de cada estrato independentemente.
+
+\begin{itemize}
+\item \textbf{Vantagem:} garante a representatividade de subgrupos-chave na amostra final, o que \'e crucial para an\'alises comparativas. Al\'em disso, frequentemente aumenta a precis\~ao estat\'istica (reduz a vari\^ancia) das estimativas, pois a variabilidade dentro de cada estrato \'e menor do que na popula\c{c}\~ao como um todo \citep{neuman2014social,iarossi2006power,gertler2018impact}.
+\item \textbf{Desvantagem:} exige conhecimento pr\'evio da popula\c{c}\~ao para definir os estratos relevantes e obter informa\c{c}\~oes para classificar cada elemento.
+\item \textbf{Exemplo:} sorteio de escolas separadamente por zona urbana/rural e porte.
+\end{itemize}
+
+\subsubsection*{3) Amostragem por conglomerados (\textit{cluster sampling})}
+
+Aqui, reconhece-se que a popula\c{c}\~ao \'e naturalmente dividida em grupos, ou conglomerados (ex.: vilas, escolas, quarteir\~oes). Com isso em mente, primeiro, uma amostra aleat\'oria desses conglomerados \'e selecionada. Em seguida, todos os elementos dentro dos conglomerados escolhidos s\~ao pesquisados (amostragem em um est\'agio) ou uma amostra aleat\'oria de elementos dentro de cada conglomerado \'e extra\'ida (amostragem em dois est\'agios).
+
+\begin{itemize}
+\item \textbf{Vantagem:} \'e altamente eficiente em termos de custo e log\'istica, especialmente quando a popula\c{c}\~ao est\'a geograficamente dispersa. Visitar alguns vilarejos e entrevistar todas as pessoas residentes tende a ser menos custoso do que visitar domic\'ilios espalhados por uma regi\~ao vasta \citep{iarossi2006power,neuman2014social}.
+\item \textbf{Desvantagem:} para um mesmo tamanho de amostra, tende a ser menos preciso do que a amostragem aleat\'oria simples ou estratificada, pois elementos dentro de um conglomerado tendem a ser similares entre si (homogeneidade intra-conglomerado). Tamb\'em requer ajuste para efeito de desenho (\textit{design effect}) \citep{gertler2018impact}.
+\item \textbf{Exemplo:} sele\c{c}\~ao de munic\'ipios e, dentro de cada um, sorteio de escolas p\'ublicas.
+\end{itemize}
+
+\subsubsection*{4) Amostragem com probabilidade proporcional ao tamanho (PPS)}
+
+Trata-se de uma variante sofisticada da amostragem por conglomerados, usada quando os conglomerados diferem de tamanho. Cada conglomerado tem probabilidade proporcional ao n\'umero de unidades que cont\'em. Nela, conglomerados maiores (ex.: vilas com mais habitantes) t\^em uma probabilidade maior de serem selecionados na primeira etapa do que conglomerados menores. Este m\'etodo \'e combinado com a sele\c{c}\~ao de um n\'umero fixo de elementos dentro de cada conglomerado selecionado.
+
+\begin{itemize}
+\item \textbf{Vantagem:} \'e essencial para garantir que cada indiv\'iduo na popula\c{c}\~ao tenha uma chance igual de ser selecionado, mesmo quando os conglomerados t\^em tamanhos muito diferentes. Sem o PPS, indiv\'iduos em conglomerados grandes teriam uma chance menor de serem selecionados do que aqueles em conglomerados pequenos \citep{iarossi2006power,neuman2014social}.
+\item \textbf{Desvantagem:} essa amostragem \'e mais complexa de implementar, pois requer o conhecimento do tamanho de cada conglomerado na popula\c{c}\~ao para calcular suas probabilidades de sele\c{c}\~ao.
+\item \textbf{Exemplo:} em uma pesquisa nacional, munic\'ipios com mais alunas e alunos t\^em maior probabilidade de inclus\~ao \citep{iarossi2006power,neuman2014social}.
+\end{itemize}
+
+A Tabela~\ref{tab:tipos_amostragem} sintetiza os tipos de amostragem mais comuns, suas aplica\c{c}\~oes, vantagens e limita\c{c}\~oes, servindo como refer\^encia pr\'atica para a etapa de planejamento da coleta.
+
+\begin{table}[H]
+\centering
+\caption{Tipos de amostragem e principais caracter\'isticas}
+\label{tab:tipos_amostragem}
+\small
+\begin{tabular}{p{0.15\linewidth} p{0.20\linewidth} p{0.18\linewidth} p{0.18\linewidth} p{0.20\linewidth}}
+\toprule
+\textbf{Tipo} & \textbf{Descri\c{c}\~ao} & \textbf{Vantagens} & \textbf{Limita\c{c}\~oes} & \textbf{Quando utilizar} \\
+\midrule
+Aleat\'oria simples & Cada unidade tem a mesma probabilidade de ser selecionada. & Simples, transparente e estatisticamente robusta. & Requer lista completa da popula\c{c}\~ao; pouco vi\'avel em popula\c{c}\~oes dispersas. & Popula\c{c}\~oes pequenas e homog\^eneas com cadastro dispon\'ivel. \\
+\midrule
+Estratificada & Popula\c{c}\~ao dividida em estratos homog\^eneos e amostras sorteadas em cada um. & Garante representatividade de subgrupos e reduz vari\^ancia. & Exige conhecimento pr\'evio detalhado da popula\c{c}\~ao. & Quando h\'a interesse em comparar subgrupos. \\
+\midrule
+Por conglomerados & Sele\c{c}\~ao de grupos naturais (vilas, escolas, setores) e posterior sele\c{c}\~ao dentro deles. & Reduz custos e deslocamentos; vi\'avel em grandes \'areas. & Menor precis\~ao; exige ajuste para \textit{design effect}. & Popula\c{c}\~oes amplas e geograficamente dispersas. \\
+\midrule
+PPS & Conglomerados maiores t\^em maior probabilidade de sele\c{c}\~ao. & Garante probabilidade igual de sele\c{c}\~ao individual. & C\'alculos mais complexos e depend\^encia de informa\c{c}\~oes pr\'evias. & Pesquisas nacionais com unidades de tamanhos distintos. \\
+\midrule
+Intencional / Conveni\^encia & Sele\c{c}\~ao deliberada ou baseada em acessibilidade. & Simples, \'util em estudos explorat\'orios. & N\~ao permite generaliza\c{c}\~ao estat\'istica. & Pesquisas qualitativas ou contextos com limita\c{c}\~ao de acesso. \\
+\bottomrule
+\end{tabular}
+\figmeta{Elabora\c{c}\~ao pr\'opria.}{}{}
+\end{table}
+
+\section{Determina\c{c}\~ao do tamanho da amostra (amostragem probabil\'istica)}
+
+Dimensionar a amostra \'e definir quantas pessoas participar\~ao do estudo. \'E decis\~ao de desenho, n\~ao de execu\c{c}\~ao --- e o c\'alculo malfeito gera dois problemas opostos. Amostras subdimensionadas n\~ao conseguem detectar efeitos que existem na popula\c{c}\~ao. Amostras superdimensionadas s\~ao ineficientes: o custo marginal de cada observa\c{c}\~ao extra n\~ao se justifica pelo ganho infinitesimal de precis\~ao, e o estudo tende a identificar diferen\c{c}as ``estatisticamente significantes'' sem relev\^ancia pr\'atica ou pol\'itica.
+
+\citet{duflo2007using} e \citet{gertler2018impact} discutem o equil\'ibrio necess\'ario entre rigor estat\'istico e viabilidade operacional. Em avalia\c{c}\~oes de pol\'iticas p\'ublicas, isso significa conciliar exig\^encias de precis\~ao com restri\c{c}\~oes log\'isticas, or\c{c}ament\'arias e de tempo de campo.
+
+O \textit{An\'alise de Poder Estat\'istico} \citep{fgvclear2025poder} desenvolve o conceito central a\'i envolvido --- o \textbf{poder estat\'istico}, ou a probabilidade de o estudo detectar um efeito verdadeiro quando ele existe. Estudos com poder menor que 80\% s\~ao considerados pouco confi\'aveis para detec\c{c}\~ao de efeitos reais; estudos com poder muito acima disso operam com amostras maiores do que o necess\'ario.
+
+Cinco par\^ametros principais determinam o tamanho da amostra:
+
+\begin{itemize}
+\item \textbf{N\'ivel de confian\c{c}a (geralmente 95\%):} representa o grau de certeza de que o intervalo estimado cont\'em o valor real do par\^ametro populacional. N\'iveis de confian\c{c}a mais altos aumentam a precis\~ao, mas tamb\'em exigem amostras maiores.
+\item \textbf{Margem de erro desejada (por exemplo, $\pm$ 5 p.p.):} define o limite de varia\c{c}\~ao aceit\'avel entre o valor observado na amostra e o valor real na popula\c{c}\~ao. Quanto menor a margem de erro, maior dever\'a ser o tamanho da amostra.
+\item \textbf{Variabilidade esperada da vari\'avel de interesse:} reflete o quanto os dados s\~ao dispersos. Vari\'aveis com alta variabilidade (por exemplo, renda familiar) exigem amostras maiores do que vari\'aveis mais homog\^eneas (por exemplo, idade em uma popula\c{c}\~ao escolar).
+\item \textbf{Efeito de desenho (\textit{design effect}):} ajusta o c\'alculo para o fato de que amostragens complexas (como as por conglomerados) reduzem a precis\~ao estat\'istica em compara\c{c}\~ao \`a amostragem aleat\'oria simples. O efeito de desenho geralmente aumenta o tamanho necess\'ario da amostra em propor\c{c}\~ao \`a homogeneidade intra-conglomerado.
+\item \textbf{Taxa de n\~ao resposta:} representa a propor\c{c}\~ao esperada de indiv\'iduos que, por recusa ou aus\^encia, n\~ao participar\~ao da pesquisa. Para compensar essas perdas, recomenda-se inflar o tamanho calculado da amostra inicial.
+\end{itemize}
+
+Esses fatores interagem de forma n\~ao linear: um aumento em qualquer um deles (por exemplo, maior n\'ivel de confian\c{c}a ou maior variabilidade esperada) eleva substancialmente o tamanho necess\'ario da amostra. Por isso, o dimensionamento deve ser tratado como um processo iterativo, envolvendo simula\c{c}\~oes e revis\~oes sucessivas.
+
+\textit{Softwares} como Stata, R e Python oferecem fun\c{c}\~oes espec\'ificas para estimar o tamanho da amostra e conduzir an\'alises de poder (\textit{power analysis}). Em avalia\c{c}\~oes experimentais, essa etapa \'e indispens\'avel para determinar o \textbf{tamanho m\'inimo de efeito detect\'avel} (\textit{Minimum Detectable Effect} --- MDE) --- ou seja, o menor impacto que o estudo \'e capaz de identificar com probabilidade estat\'istica aceit\'avel.
+
+O \textit{Guia CLEAR de Avalia\c{c}\~ao de Impacto} \citep{fgvclear2025ai} recomenda que o plano de amostragem contenha documenta\c{c}\~ao sobre os par\^ametros adotados e as decis\~oes tomadas durante esse processo. Especificamente, o documento deve apresentar:
+
+\begin{itemize}
+\item Popula\c{c}\~ao e unidade de an\'alise (por exemplo, alunos, escolas, munic\'ipios);
+\item Estrat\'egia de sele\c{c}\~ao (probabil\'istica, estratificada, por \textit{cluster}, etc.);
+\item Crit\'erios de inclus\~ao e exclus\~ao;
+\item Estrutura de estratifica\c{c}\~ao e conglomerados;
+\item Justificativa do tamanho amostral, incluindo resultados da an\'alise de poder;
+\item Procedimentos para substitui\c{c}\~oes, perdas e controle de n\~ao resposta.
+\end{itemize}
+
+Essa documenta\c{c}\~ao formaliza a amostragem como decis\~ao estrat\'egica do desenho avaliativo --- refletindo prioridades de pol\'itica, recursos dispon\'iveis e n\'iveis de precis\~ao aceit\'aveis \citep{fgvclear2025mea,duflo2007using,gertler2018impact}.
+
+\section{Amostragem n\~ao probabil\'istica}
+
+Em estudos qualitativos, a amostragem intencional --- ou n\~ao probabil\'istica --- \'e a estrat\'egia dominante. O objetivo n\~ao \'e representatividade estat\'istica, mas abrang\^encia anal\'itica e profundidade: selecionam-se participantes cujas experi\^encias, posi\c{c}\~oes ou conhecimentos sejam analiticamente significativos em rela\c{c}\~ao ao fen\^omeno investigado \citep{rocha2020teoria}. O que se busca \'e a riqueza e a relev\^ancia da informa\c{c}\~ao produzida. Nas palavras de \citet{bauer2013construcao}, a coleta qualitativa corresponde \`a constru\c{c}\~ao de uma cole\c{c}\~ao finita de materiais textuais e lingu\'isticos que expressam a diversidade das formas de compreens\~ao da realidade social.
+
+A sele\c{c}\~ao intencional envolve etapas sucessivas: identifica\c{c}\~ao e sele\c{c}\~ao das participantes conforme crit\'erios de inclus\~ao e exclus\~ao; convite \`a participa\c{c}\~ao; agendamento das entrevistas \citep{leitao2024entrevista,depaula2014modos}. Em pesquisas de pol\'iticas p\'ublicas, os crit\'erios costumam contemplar diversidade de pap\'eis sociais, trajet\'orias de vida, experi\^encias e posi\c{c}\~oes institucionais. \citet{minayo2017amostragem} sistematiza um conjunto de etapas:
+
+\begin{itemize}
+\item Elaborar instrumentos que permitam a compreens\~ao das homogeneidades e diferencia\c{c}\~oes entre grupos;
+\item Garantir que a escolha dos grupos estudados contemple as caracter\'isticas, experi\^encias e express\~oes que a pesquisa pretende abarcar;
+\item Na constru\c{c}\~ao da amostra, privilegiar sujeitos que detenham os atributos relevantes para o tema de pesquisa;
+\item Definir grupos priorit\'arios para o tema de pesquisa, no caso de investiga\c{c}\~oes com amostras heterog\^eneas e abrangentes;
+\item Examinar n\~ao apenas as experi\^encias dos indiv\'iduos e grupos, mas como esses grupos interagem entre si;
+\item Trabalhar em uma perspectiva de inclus\~ao progressiva das descobertas de pesquisa, confrontando, aos poucos, as evid\^encias coletadas;
+\item Ter aten\c{c}\~ao a informa\c{c}\~oes espec\'ificas e que n\~ao se repetem, visto o potencial explicativo e contribui\c{c}\~ao para o tema de pesquisa;
+\item Considerar um n\'umero suficiente de pessoas interlocutoras, garantindo complementaridade entre os conte\'udos das entrevistas;
+\item Observar se o quadro emp\'irico da pesquisa est\'a plenamente mapeado e bem compreendido;
+\item Implementar triangula\c{c}\~ao das t\'ecnicas e m\'etodos de pesquisa.
+\end{itemize}
+
+Al\'em disso, para a sele\c{c}\~ao dos participantes, a amostragem n\~ao probabil\'istica pode mobilizar as seguintes estrat\'egias, seguindo a sistematiza\c{c}\~ao realizada por \citet{rocha2020teoria} e \citet{campos2022amostragem}:
+
+\begin{itemize}
+\item \textit{Por conveni\^encia}: este tipo de estrat\'egia se baseia na viabilidade da pesquisa, considerando a proximidade ou disponibilidade das pessoas participantes. A sele\c{c}\~ao por conveni\^encia \'e especialmente \'util quando os contatos s\~ao de dif\'icil acesso, ou quando a pesquisa se encontra em est\'agio explorat\'orio.
+\item \textit{Intencional}: na sele\c{c}\~ao intencional de pessoas participantes, a equipe pesquisadora define quais pessoas interlocutoras possuem conhecimento significativo sobre o tema pesquisado, bem como suas experi\^encias est\~ao pr\'oximas do objeto de estudo.
+\item \textit{Bola de neve}: na sele\c{c}\~ao por bola de neve, as pessoas participantes da pesquisa indicam novas pessoas para participar, que seguem com novas indica\c{c}\~oes. Assim, cria-se uma esp\'ecie de rede de participantes, que compartilham uma experi\^encia ou um entendimento sobre um assunto.
+\item \textit{Contatos intersticiais}: nesse \'ultimo caso, as pessoas participantes se encontram em uma mesma situa\c{c}\~ao cotidiana, como em uma fila de espera em um servi\c{c}o de sa\'ude, e assim, podem compartilhar informa\c{c}\~oes a partir do contato da pessoa pesquisadora.
+\item \textit{Cotas}: ao possuir conhecimento pr\'evio sobre as caracter\'isticas de uma popula\c{c}\~ao, a pessoa pesquisadora identifica grupos que devem ser contemplados na sele\c{c}\~ao da amostra. Assim, segmentos populacionais espec\'ificos s\~ao garantidos no desenho da pesquisa.
+\end{itemize}
+
+\'E pouco usual que estudos qualitativos definam \textit{a priori} o tamanho da amostra. Geralmente, para a determina\c{c}\~ao do n\'umero de pessoas participantes a serem entrevistadas, utiliza-se o chamado \textbf{crit\'erio de satura\c{c}\~ao}, tendo em vista o momento no qual as entrevistas deixam de acrescentar fatores relevantes sobre o objeto de pesquisa. Para o denominado ``fechamento'' da amostra (defini\c{c}\~ao das pessoas participantes a serem inclu\'idas na coleta de dados), \citet{fontanella2011amostragem} prop\~oem a agrega\c{c}\~ao dos trechos de entrevista em enunciados mais simples, e para cada entrevista, s\~ao identificados quantos novos enunciados emergem do conte\'udo. A satura\c{c}\~ao seria alcan\c{c}ada quando novos enunciados deixam de surgir das entrevistas.
+
+O crit\'erio de satura\c{c}\~ao te\'orica tem sido objeto de debate na literatura especializada, em raz\~ao de sua complexa operacionaliza\c{c}\~ao, tanto na defini\c{c}\~ao de um ponto de corte quanto na determina\c{c}\~ao do momento em que, de fato, novas informa\c{c}\~oes deixam de acrescentar elementos relevantes \`a compreens\~ao do fen\^omeno investigado. Uma abordagem alternativa e mais pragm\'atica consiste em reconhecer o ponto em que a continuidade da coleta de dados se torna contraproducente, isto \'e, quando as informa\c{c}\~oes adicionais n\~ao ampliam significativamente a densidade anal\'itica nem contribuem de modo substantivo para o entendimento do objeto de estudo \citep{mason2010sample}.
+
+O n\'umero de pessoas participantes e a diversidade de seus perfis variam amplamente em estudos qualitativos. Dependendo do tema e da estrat\'egia de pesquisa, podem ser delineadas amostras homog\^eneas, compostas por pessoas que compartilham caracter\'isticas e experi\^encias semelhantes, ou amostras heterog\^eneas, marcadas pela diversidade de perfis, contextos e perspectivas. Na sele\c{c}\~ao de pessoas participantes, diferentes t\'ecnicas de amostragem intencional podem ser empregadas para a escolha de casos m\'ultiplos, com o prop\'osito de ampliar a compreens\~ao do objeto de estudo. Essas t\'ecnicas orientam-se, em geral, por dois princ\'ipios fundamentais: o da \textit{diversifica\c{c}\~ao}, que busca captar a heterogeneidade dos casos, e o da \textit{satura\c{c}\~ao}, que visa ao alcance de um n\'ivel adequado de aprofundamento anal\'itico. As principais modalidades de amostragem qualitativa s\~ao apresentadas a seguir, com base nas contribui\c{c}\~oes de \citet{pires2014amostragem}:
+
+\begin{description}
+\item[Amostragem por contraste.] A amostragem por contraste tem como objetivo assegurar a inclus\~ao de ao menos uma pessoa participante para cada grupo de interesse, considerado analiticamente relevante para a investiga\c{c}\~ao. Ao selecionar casos que evidenciam diferen\c{c}as significativas entre grupos ou situa\c{c}\~oes, essa abordagem cria uma esp\'ecie de ``mosaico'' de experi\^encias e perspectivas, permitindo ao pesquisador comparar, identificar padr\~oes e compreender varia\c{c}\~oes dentro do fen\^omeno estudado. Trata-se de uma estrat\'egia particularmente \'util em pesquisas qualitativas que buscam explorar contrastes e diversidades contextuais.
+
+\item[Amostragem por homogeneiza\c{c}\~ao.] A amostragem por homogeneiza\c{c}\~ao tem como objetivo concentrar a sele\c{c}\~ao de pessoas participantes em um grupo relativamente homog\^eneo, de modo a explorar em profundidade as semelhan\c{c}as e diferen\c{c}as internas. Assim, s\~ao selecionadas pessoas de um mesmo grupo, analisando-o extensivamente. Ao garantir a diversifica\c{c}\~ao de caracter\'isticas ou experi\^encias dentro desse grupo, a estrat\'egia permite captar a m\'axima variedade de perspectivas intragrupo, oferecendo uma compreens\~ao detalhada e rica do fen\^omeno estudado em contextos semelhantes.
+
+\item[Amostragem por contraste-aprofundamento.] A amostragem por contraste-aprofundamento situa-se entre a abordagem de estudo de caso \'unico e a de m\'ultiplos estudos de caso. Seu objetivo \'e selecionar um pequeno n\'umero de casos espec\'ificos que possam ser analisados em profundidade, permitindo compara\c{c}\~oes e a identifica\c{c}\~ao de paralelos. Dessa forma, a estrat\'egia combina o detalhamento caracter\'istico do estudo de caso \'unico com a possibilidade de identificar padr\~oes e diferen\c{c}as relevantes entre os casos selecionados, enriquecendo a compreens\~ao do fen\^omeno investigado.
+
+\item[Amostragem por contraste-satura\c{c}\~ao.] Esse tipo de amostragem baseia-se na realiza\c{c}\~ao de entrevistas ou na an\'alise de documentos envolvendo m\'ultiplos casos, tratados com menor profundidade que na amostragem por contraste-aprofundamento. O objetivo \'e maximizar a comparabilidade entre os casos, ao mesmo tempo em que se captam diferentes percep\c{c}\~oes e experi\^encias dentro de cada grupo, permitindo identificar padr\~oes, semelhan\c{c}as e varia\c{c}\~oes em uma perspectiva mais ampla.
+\end{description}
+% ============================================================
+% 4. CONSIDERAÇÕES ÉTICAS
+% ============================================================
+\chapter{Considera\c{c}\~oes \'eticas na coleta de dados}
+
+A coleta de dados prim\'arios envolve pessoas, comunidades e institui\c{c}\~oes --- e isso vincula a equipe de pesquisa a um conjunto de obriga\c{c}\~oes \'eticas que atravessam todo o processo. Como sintetiza o \textit{Guia CLEAR de Monitoramento e Avalia\c{c}\~ao de Pol\'iticas P\'ublicas} \citep{fgvclear2025mea}, a \'etica em avalia\c{c}\~ao n\~ao \'e etapa do trabalho --- \'e dimens\~ao transversal que vai da defini\c{c}\~ao dos objetivos \`a divulga\c{c}\~ao dos resultados.
+
+Este cap\'itulo trata da \'etica em tr\^es frentes. A primeira s\~ao os princ\'ipios gerais e o marco normativo, brasileiro e internacional. A segunda s\~ao as decis\~oes \'eticas que envolvem a sele\c{c}\~ao das participantes --- consentimento informado, equidade e prote\c{c}\~ao de grupos vulner\'aveis. A terceira \'e a \'etica da intera\c{c}\~ao durante a coleta e do tratamento dos dados, que retorna em maior detalhe nas se\c{c}\~oes seguintes do Guia.
+
+\section{Princ\'ipios gerais e marco normativo}
+
+A primeira coisa a reconhecer numa coleta \'etica \'e que toda decis\~ao metodol\'ogica tem implica\c{c}\~oes sociais. Quem participa de uma pesquisa o faz por confian\c{c}a --- de que ser\'a tratado com respeito, de que suas informa\c{c}\~oes ser\~ao protegidas, de que a pesquisa tem prop\'osito leg\'itimo. Romper essa confian\c{c}a compromete n\~ao s\'o o estudo em curso, mas a credibilidade futura de toda a comunidade de avalia\c{c}\~ao.
+
+No Brasil, o tratamento de dados pessoais em pesquisa \'e regulado por dois instrumentos principais. A \textit{Lei Geral de Prote\c{c}\~ao de Dados Pessoais} (LGPD --- Lei n\textsuperscript{o} 13.709/2018) estabelece princ\'ipios para o tratamento de informa\c{c}\~oes pessoais --- finalidade, necessidade, transpar\^encia, seguran\c{c}a e respeito aos direitos da pessoa titular. A \textit{Resolu\c{c}\~ao CNS n\textsuperscript{o} 510/2016}, voltada a pesquisas em Ci\^encias Humanas e Sociais, define os procedimentos de aprecia\c{c}\~ao \'etica de projetos pelo Sistema CEP/CONEP (Comit\^es de \'Etica em Pesquisa e Comiss\~ao Nacional de \'Etica em Pesquisa).
+
+No plano internacional, organismos como o \citet{jpal2020practical} e o \citet{worldbank2021data} t\^em consolidado diretrizes espec\'ificas para pesquisa avaliativa, com \^enfase em transpar\^encia, reprodutibilidade e auditabilidade. N\~ao substituem as exig\^encias brasileiras, mas as complementam com boas pr\'aticas internacionais.
+
+Antes do in\'icio da coleta, projetos que envolvam entrevistas, experimentos ou coleta de informa\c{c}\~oes sens\'iveis devem ser submetidos a um \textbf{Comit\^e de \'Etica em Pesquisa (CEP)}. O parecer atesta que o estudo respeita direitos, privacidade e bem-estar das participantes, com conformidade a padr\~oes nacionais e internacionais.
+
+A \'etica na coleta articula tr\^es frentes: \textbf{(i)} como se selecionam e abordam as participantes; \textbf{(ii)} como se conduz a intera\c{c}\~ao durante a coleta; \textbf{(iii)} como se tratam os dados produzidos. As pr\'oximas subse\c{c}\~oes tratam das duas primeiras e remetem ao Cap\'itulo~6, onde o tratamento dos dados \'e detalhado.
+
+\section{\'Etica na sele\c{c}\~ao de pessoas participantes}
+
+Decidir quem entra na pesquisa \'e, ao mesmo tempo, decis\~ao metodol\'ogica e \'etica. Al\'em de atender a crit\'erios estat\'isticos e de cobertura, o processo de sele\c{c}\~ao precisa assegurar tratamento justo, respeito \`a privacidade e inclus\~ao equitativa. Pesquisas avaliativas envolvem pessoas que podem ser direta ou indiretamente afetadas pelos resultados, o que coloca \`a equipe pesquisadora o dever de proteger seus direitos e minimizar danos \citep{fgvclear2025mea}.
+
+O \textit{FGV CLEAR (2025)} recomenda um conjunto de boas pr\'aticas para a etapa de sele\c{c}\~ao: registrar detalhadamente o processo de sele\c{c}\~ao e/ou sorteio de casos, incluindo listas, c\'odigos, estrat\'egias de acesso e crit\'erios; documentar substitui\c{c}\~oes, perdas e desvios de campo com justificativas verific\'aveis; capacitar as equipes de coleta e supervis\~ao para reconhecer e evitar vieses involunt\'arios; assegurar consentimento informado, explicando \`as participantes os objetivos da pesquisa, o uso dos dados e o direito de recusa; garantir confidencialidade e anonimiza\c{c}\~ao, sobretudo em bases sens\'iveis (educa\c{c}\~ao, sa\'ude, renda, g\^enero); e reconhecer as especificidades de grupos vulner\'aveis, evitando que crit\'erios de amostragem reforcem desigualdades preexistentes ou excluam segmentos marginalizados.
+
+Em avalia\c{c}\~oes experimentais, o \citet{jpal2020practical} acrescenta uma camada espec\'ifica: transpar\^encia e auditabilidade em todas as etapas do processo amostral e de randomiza\c{c}\~ao. Sorteios e designa\c{c}\~oes de grupos de tratamento e controle devem ser documentados de forma reproduz\'ivel --- idealmente com c\'odigos de programa\c{c}\~ao e arquivos p\'ublicos.
+
+\section{\'Etica na intera\c{c}\~ao durante a coleta e no tratamento dos dados}
+
+A \'etica n\~ao termina na sele\c{c}\~ao. Permeia tamb\'em a forma como a equipe se relaciona com as participantes em campo, e como os dados produzidos s\~ao armazenados, analisados e descartados ap\'os o uso autorizado.
+
+\textbf{Na intera\c{c}\~ao durante a coleta}, a postura da equipe entrevistadora \'e determinante. Diferen\c{c}as de idade, g\^enero, posi\c{c}\~ao institucional ou \textit{status} social entre quem entrevista e quem participa podem criar barreiras ou induzir respostas voltadas \`a agradabilidade. Mitigar essas assimetrias exige treinamento \'etico e relacional, escuta ativa, postura neutra e sensibilidade ao verbal e ao n\~ao verbal. Esses cuidados aparecem em detalhe na Se\c{c}\~ao~6.4 (Entrevistas), com as tr\^es etapas do processo: prepara\c{c}\~ao, condu\c{c}\~ao e p\'os-entrevista.
+
+\textbf{No tratamento dos dados}, os princ\'ipios da LGPD orientam coleta, armazenamento, uso e descarte de informa\c{c}\~oes pessoais. Os procedimentos pr\'aticos --- declara\c{c}\~ao de consentimento, mecanismos de anonimiza\c{c}\~ao, controle de acesso, tempo de guarda, elimina\c{c}\~ao segura --- est\~ao na Se\c{c}\~ao~6.3 (Prote\c{c}\~ao dos dados), que articula a fundamenta\c{c}\~ao legal com o lado operacional.
+
+% ============================================================
+% 5. ELABORANDO QUESTIONÁRIOS E ROTEIROS
+% ============================================================
+\chapter{Elaborando question\'arios e roteiros de entrevista}
+
+Question\'arios e roteiros materializam a teoria do estudo nas perguntas que efetivamente chegam a quem responde. \'E a\'i que a coleta ganha ou perde qualidade --- a maioria dos vieses de mensura\c{c}\~ao em uma pesquisa nasce da forma como uma pergunta foi formulada, ordenada ou apresentada. Este cap\'itulo trata dos pontos que mais costumam comprometer essa qualidade.
+
+\section{Formula\c{c}\~ao das quest\~oes em question\'arios}
+
+Esta se\c{c}\~ao percorre os principais aspectos do desenho de question\'arios, da formula\c{c}\~ao das quest\~oes \`a revis\~ao final. Boa parte se aplica tamb\'em a entrevistas, embora as especificidades destas sejam tratadas adiante em t\'opico pr\'oprio.
+
+\subsection{Princ\'ipios b\'asicos de um bom question\'ario}
+
+Segundo \citet{iarossi2006power}, um bom question\'ario deve observar alguns princ\'ipios fundamentais no momento da sua elabora\c{c}\~ao. Abaixo, est\~ao listados os principais conceitos e suas defini\c{c}\~oes:
+
+\begin{itemize}
+\item \textbf{Relev\^ancia:} cada pergunta deve ter um prop\'osito claro e estar diretamente ligada aos objetivos da pesquisa. Perguntas ``curiosas'' ou n\~ao essenciais devem ser evitadas, pois aumentam o tempo de resposta sem agregar valor.
+\item \textbf{Precis\~ao:} as perguntas devem ser formuladas de maneira a eliciar informa\c{c}\~oes corretas e espec\'ificas, com defini\c{c}\~oes claras de termos, unidades de medida e prazos de refer\^encia.
+\item \textbf{Disposi\c{c}\~ao do respondente (\textit{willingness}):} o question\'ario deve considerar a disposi\c{c}\~ao da pessoa participante em colaborar, evitando perguntas excessivamente sens\'iveis, invasivas ou cansativas.
+\item \textbf{Clareza:} linguagem simples e acess\'ivel \'e essencial para evitar ambiguidades ou mal-entendidos.
+\item \textbf{Consist\^encia:} quest\~oes semelhantes devem seguir o mesmo formato, garantindo comparabilidade.
+\item \textbf{Viabilidade:} a extens\~ao do question\'ario deve ser compat\'ivel com o tempo dispon\'ivel para a aplica\c{c}\~ao, respeitando os limites de aten\c{c}\~ao do respondente.
+\end{itemize}
+
+\subsection{Escolha do tipo de pergunta}
+
+A escolha do tipo de pergunta \'e uma etapa essencial na elabora\c{c}\~ao de um question\'ario, pois determina tanto a qualidade das informa\c{c}\~oes coletadas quanto a experi\^encia da pessoa respondente. Em linhas gerais, as perguntas podem ser \textbf{abertas ou fechadas}.
+
+\textbf{Perguntas abertas} permitem que a pessoa respondente formule livremente sua resposta, oferecendo maior riqueza de detalhes e nuances. No entanto, elas exigem maior esfor\c{c}o cognitivo e tempo, o que pode gerar desconforto ou mesmo evas\~ao, sobretudo em instrumentos autoadministrados.
+
+J\'a as \textbf{perguntas fechadas} s\~ao mais objetivas e r\'apidas de responder, podendo assumir diferentes formatos: respostas dicot\^omicas (sim/n\~ao, verdadeiro/falso), m\'ultipla escolha, matriz \textit{ranking} ou escalas de avalia\c{c}\~ao (Likert). A escolha do tipo espec\'ifico de pergunta deve ser guiada pelo indicador final que se deseja calcular e pelo m\'etodo de an\'alise. Por exemplo, para calcular uma taxa m\'edia de satisfa\c{c}\~ao, uma escala Likert \'e apropriada; para escolhas \'unicas, \'e mais indicado usar m\'ultipla escolha.
+
+A recomenda\c{c}\~ao mais comum \'e privilegiar perguntas fechadas, pois garantem comparabilidade e reduzem a carga do respondente. Contudo, \'e v\'alido reservar espa\c{c}o para uma ou duas perguntas abertas ao final, ou incluir campos de coment\'ario opcionais. \'E igualmente importante evitar o uso excessivo de diferentes formatos em um mesmo question\'ario, j\'a que isso pode confundir ou desmotivar o participante. Pesquisas sugerem limitar-se a tr\^es tipos de formatos em um mesmo instrumento.
+
+A clareza sobre a finalidade da pergunta ajuda tanto \`a pessoa avaliadora a ser precisa no que deseja medir, quanto \`a pessoa respondente a compreender rapidamente o que se espera dela. Para ajudar nesse processo, \'e interessante agrupar as perguntas em categorias. Segundo \citet{patton2002qualitative}, \'e poss\'ivel definir seis diferentes categorias de quest\~oes:
+
+\begin{itemize}
+\item \textbf{Experi\^encia e comportamento:} buscam captar a\c{c}\~oes concretas, experi\^encias ou rotinas --- o que a pessoa faz ou pretende fazer;
+\item \textbf{Opini\~oes e valores:} voltadas a compreender processos cognitivos e interpretativos;
+\item \textbf{Sentimentos:} buscam rea\c{c}\~oes emocionais a experi\^encias ou situa\c{c}\~oes, normalmente respondidas como ansioso, feliz, com medo, intimidado ou confiante;
+\item \textbf{Conhecimento:} investigam informa\c{c}\~oes sobre os conhecimentos da pessoa entrevistada;
+\item \textbf{Sensoriais:} relacionadas ao que se v\^e, sente ou ouve;
+\item \textbf{Contexto/Demogr\'aficas:} idade, escolaridade, ocupa\c{c}\~ao e outras caracter\'isticas do entrevistado.
+\end{itemize}
+
+Al\'em da tipologia, tamb\'em \'e preciso considerar o \textbf{tipo de informa\c{c}\~ao} a ser mensurada \citep{kopper2020survey}. Quando se trata de \textbf{fatos}, recomenda-se utilizar m\'odulos j\'a validados em pesquisas semelhantes, pensar no n\'ivel de precis\~ao necess\'ario e, sempre que poss\'ivel, trabalhar com categorias ou intervalos em vez de estimativas exatas, que podem ser mais dif\'iceis para o respondente. Quest\~oes factuais tamb\'em devem ser adaptadas ao contexto local, garantindo que listas de op\c{c}\~oes reflitam a realidade da popula\c{c}\~ao --- como no caso de categorias de escolaridade ou tipos de ocupa\c{c}\~ao.
+
+As perguntas \textbf{subjetivas}, por sua vez, destinam-se a medir cren\c{c}as, percep\c{c}\~oes e expectativas, como satisfa\c{c}\~ao com servi\c{c}os ou planos para o futuro. Escalas como Likert --- com respostas variando de ``concordo plenamente'' a ``discordo plenamente'' --- ou percentuais s\~ao instrumentos \'uteis, embora seja comum que respostas se concentrem em n\'umeros arredondados. O uso de recursos visuais (como escadas de n\'iveis ou carinhas de express\~ao) pode facilitar a compreens\~ao, especialmente em popula\c{c}\~oes com menor escolaridade. Ainda assim, \'e preciso considerar que perguntas subjetivas podem demandar mais tempo e esfor\c{c}o do respondente, devendo ser usadas com parcim\^onia.
+
+Quando se abordam \textbf{temas sens\'iveis} --- como renda, pr\'aticas ilegais, sa\'ude sexual ou viol\^encia ---, o risco de vi\'es por desejabilidade social aumenta. Para lidar com isso, \'e fundamental assegurar confidencialidade, escolher estrat\'egias apropriadas de coleta e seguir algumas estrat\'egias focadas nesse tipo de quest\~ao. Entre elas, destacam-se:
+
+\begin{itemize}
+\item Criar um ambiente confort\'avel e assegurar confidencialidade dos dados para que a pessoa respondente sinta que suas informa\c{c}\~oes est\~ao seguras;
+\item Utilizar coleta por question\'arios autoadministrados pode reduzir o medo ou constrangimento do respondente;
+\item Evitar que as perguntas sens\'iveis fiquem no in\'icio ou final do question\'ario, pois isso pode evitar que a pessoa respondente se recuse a responder ou se sinta muito desconfort\'avel.
+\end{itemize}
+
+Outra categoria a ser considerada s\~ao as \textbf{perguntas que exigem estimativas ou lembran\c{c}a ao longo do tempo}, como gastos, consumo ou renda em per\'iodos extensos. Essas quest\~oes est\~ao mais sujeitas a erros de mem\'oria e baixa precis\~ao. Estrat\'egias \'uteis incluem reduzir o per\'iodo de recorda\c{c}\~ao, utilizar di\'arios ou medi\c{c}\~oes frequentes, pedir respostas em unidades mais familiares ao respondente (como tempo de caminhada em vez de dist\^ancia em quil\^ometros) e inserir verifica\c{c}\~oes de consist\^encia dentro do question\'ario.
+
+Por fim, h\'a tamb\'em as \textbf{perguntas observacionais}, nas quais a pessoa entrevistadora registra diretamente informa\c{c}\~oes observadas no ambiente ou no respondente, como a condi\c{c}\~ao da moradia, a presen\c{c}a de determinados bens ou o estado de conserva\c{c}\~ao de equipamentos. Esse tipo de informa\c{c}\~ao \'e menos sujeito a vieses de resposta, mas pode sofrer com o chamado efeito Hawthorne --- quando as pessoas modificam seu comportamento por estarem sendo observadas. Para reduzir esse risco, \'e importante padronizar protocolos, treinar a equipe entrevistadora e, sempre que poss\'ivel, triangular os dados observacionais com outras fontes.
+
+Assim, a escolha do tipo de pergunta deve ser orientada pelo equil\'ibrio entre a utilidade da informa\c{c}\~ao, a carga cognitiva imposta ao respondente e a qualidade esperada dos dados.
+
+\subsection{\textit{Wording} --- como formular perguntas de forma clara}
+
+A reda\c{c}\~ao das perguntas --- o \textit{wording} --- \'e um dos pontos mais delicados na elabora\c{c}\~ao de um question\'ario. Pequenas mudan\c{c}as na formula\c{c}\~ao podem alterar significativamente as respostas obtidas. Por isso, aten\c{c}\~ao especial deve ser dada \`a escolha das palavras, ao tempo verbal empregado, \`a clareza da linguagem e ao formato das alternativas de resposta.
+
+N\~ao existe uma teoria universalmente aceita sobre formula\c{c}\~ao de quest\~oes, mas h\'a consenso quanto a alguns princ\'ipios b\'asicos que diferenciam boas de m\'as perguntas. De modo geral, uma pergunta deve ser \textbf{Breve, Objetiva, Simples e Espec\'ifica (BOSS)}:
+
+\paragraph{Breve (\textit{Brief}).} Perguntas curtas s\~ao mais f\'aceis de compreender e reduzem a probabilidade de erros de leitura ou interpreta\c{c}\~ao, tanto por parte do entrevistador quanto do respondente. Quest\~oes excessivamente longas costumam incluir mais de uma ideia (perguntas ``escondidas'') ou detalhamento desnecess\'ario, o que aumenta a confus\~ao e dificulta a resposta.
+
+Ser breve, por\'em, n\~ao significa simplesmente encurtar a frase: deseja-se encontrar a forma mais simples de transmitir a ideia, sem sacrificar clareza ou precis\~ao. Em alguns casos, especialmente quando o tema exige que a pessoa entrevistada recupere mem\'orias ou aborde t\'opicos sens\'iveis, perguntas um pouco mais longas podem ser necess\'arias para situar o contexto. No geral, por\'em, a regra \'e dividir assuntos complexos em partes mais simples e evitar incluir perguntas impl\'icitas ou ocultas.
+
+\textit{Orienta\c{c}\~oes pr\'aticas:}
+\begin{itemize}
+\item Evite perguntas com mais de 20 palavras \citep{payne1951art};
+\item Pergunte uma coisa de uma vez e evite perguntas ``escondidas'';
+\item Subdivida temas e conceitos complexos em algumas quest\~oes diretas.
+\end{itemize}
+
+\paragraph{Objetivo (\textit{Objective}).} Uma boa pergunta deve ser neutra e n\~ao sugerir respostas. Isso significa evitar palavras carregadas de ju\'izo de valor ou que induzam a pessoa entrevistada a concordar ou discordar de forma autom\'atica. Perguntas que come\c{c}am com ``voc\^e n\~ao acha que...'' ou que trazem apenas parte das alternativas poss\'iveis s\~ao exemplos de formula\c{c}\~oes tendenciosas que distorcem os resultados. At\'e mesmo o conjunto de respostas oferecido em uma quest\~ao fechada pode influenciar as escolhas, caso as op\c{c}\~oes n\~ao representem de maneira equilibrada as possibilidades existentes. Por exemplo, se apenas alternativas positivas, como ``bom'', ``muito bom'' e ``excelente'' forem apresentadas, estamos, na pr\'atica, orientando a resposta.
+
+Al\'em disso, termos carregados emocionalmente ou com conota\c{c}\~ao pol\'itica, como ``justo'' ou ``honesto'', devem ser usados com cautela, pois podem ativar associa\c{c}\~oes indesejadas. O ideal \'e manter um tom neutro e informativo, evitando enviesamentos sutis que prejudiquem a qualidade dos dados.
+
+\textit{Orienta\c{c}\~oes pr\'aticas:}
+\begin{itemize}
+\item Evite perguntas que sugiram respostas (``Voc\^e n\~ao acha que...?'');
+\item N\~ao use termos com carga emocional (``justo'', ``honesto'', ``correto'');
+\item Ofere\c{c}a alternativas equilibradas e completas nas quest\~oes fechadas.
+\end{itemize}
+
+\paragraph{Simples (\textit{Simple}).} Perguntas devem ser formuladas com palavras claras, de uso comum, e sem a presen\c{c}a de jarg\~oes t\'ecnicos, express\~oes regionais ou ambiguidades. O uso de termos t\'ecnicos s\'o deve ser feito quando inevit\'avel e, nesses casos, acompanhado de uma explica\c{c}\~ao breve para garantir que todos os respondentes compartilhem o mesmo entendimento.
+
+Da mesma forma, \'e importante evitar constru\c{c}\~oes gramaticais complexas, como negativas ou duplas negativas, que exigem esfor\c{c}o cognitivo adicional e podem levar a interpreta\c{c}\~oes equivocadas. O objetivo \'e reduzir ao m\'aximo a carga mental necess\'aria para compreender a quest\~ao, sem renunciar \`a precis\~ao. Uma linguagem simples e direta garante que diferentes pessoas, com distintos n\'iveis de escolaridade ou experi\^encia, possam responder de maneira consistente e compar\'avel.
+
+\textit{Orienta\c{c}\~oes pr\'aticas:}
+\begin{itemize}
+\item Use palavras e express\~oes de conhecimento comum entre todos os participantes;
+\item Evite utilizar jarg\~oes t\'ecnicos ou, quando inevit\'avel, explique os conceitos t\'ecnicos;
+\item N\~ao use frases com dupla negativa ou que exijam esfor\c{c}o excessivo de interpreta\c{c}\~ao.
+\end{itemize}
+
+\paragraph{Espec\'ifico (\textit{Specific}).} Perguntas vagas tendem a gerar respostas igualmente vagas, o que compromete a utilidade das informa\c{c}\~oes coletadas. Termos imprecisos como ``frequentemente'', ``geralmente'' ou ``normalmente'' podem ser interpretados de maneiras muito distintas entre os respondentes, resultando em dados pouco confi\'aveis. O mesmo ocorre com perguntas que abordam mais de um tema ao mesmo tempo --- chamadas de ``duplas'' ou \textit{double-barreled} ---, que confundem e dificultam a resposta.
+
+Al\'em disso, em perguntas fechadas, \'e fundamental garantir que as op\c{c}\~oes de resposta sejam mutuamente exclusivas e abrangentes, de modo que o entrevistado consiga se posicionar de forma adequada. Ser espec\'ifico, portanto, \'e uma quest\~ao de clareza e de respeito \`a capacidade da pessoa respondente de oferecer informa\c{c}\~oes precisas e relevantes, ao mesmo tempo em que aumenta a comparabilidade e a consist\^encia dos dados coletados.
+
+\textit{Orienta\c{c}\~oes pr\'aticas:}
+\begin{itemize}
+\item Evite termos como ``frequentemente'', ``geralmente'', ``normalmente'', que podem ter significados diferentes para cada pessoa;
+\item Evite perguntas duplas (\textit{double-barreled}), que abordam mais de um tema ao mesmo tempo;
+\item As alternativas de resposta em quest\~oes fechadas devem ser mutuamente exclusivas e coletivamente exaustivas.
+\end{itemize}
+
+\subsection{Sequenciamento}
+
+A ordem das perguntas em um question\'ario \'e t\~ao importante quanto a formula\c{c}\~ao de cada quest\~ao individual. Um bom sequenciamento deve facilitar a administra\c{c}\~ao da entrevista, estimular a colabora\c{c}\~ao da pessoa respondente e reduzir riscos de confus\~ao ou abandono. A seguir, apresentam-se princ\'ipios para organizar a sequ\^encia das perguntas.
+
+\paragraph{Abertura das perguntas.} As perguntas iniciais t\^em papel crucial na cria\c{c}\~ao de confian\c{c}a e engajamento. No in\'icio da entrevista, \'e comum que as pessoas respondentes se sintam inseguras ou desconfiadas quanto ao estudo. Por isso, recomenda-se iniciar com quest\~oes simples, neutras e relacionadas ao tema da pesquisa, permitindo que a pessoa participante se sinta confort\'avel e capaz de responder. Perguntas irrelevantes ou desconectadas do objetivo do levantamento devem ser evitadas, pois podem gerar estranhamento. Por exemplo, em uma pesquisa empresarial, \'e mais apropriado abrir com ``Voc\^e poderia descrever brevemente a sua empresa?'' do que com perguntas sobre h\'abitos pessoais de lazer.
+
+\paragraph{Fluxo das perguntas.} Ap\'os a abertura, as quest\~oes devem acompanhar o racioc\'inio natural da pessoa respondente. Perguntas relacionadas devem ser agrupadas, e mudan\c{c}as de tema devem ocorrer de forma gradual, com transi\c{c}\~oes expl\'icitas como ``Agora, vamos falar sobre...'' ou ``A seguir, algumas perguntas sobre...''. Esse tipo de transi\c{c}\~ao ajuda a manter a organiza\c{c}\~ao e reduz a sensa\c{c}\~ao de descontinuidade. Tamb\'em \'e recomend\'avel que perguntas mais gerais antecedam as espec\'ificas e que o question\'ario seja organizado em blocos tem\'aticos. Al\'em disso, o sequenciamento pode facilitar a recorda\c{c}\~ao quando as perguntas s\~ao organizadas de forma temporal (por exemplo, do per\'iodo mais recente ao mais antigo).
+
+\paragraph{Uso de filtros.} O uso de perguntas filtro \'e fundamental para garantir a relev\^ancia e a efici\^encia do question\'ario. Elas permitem direcionar apenas determinadas se\c{c}\~oes para as pessoas respondentes que possuem experi\^encia ou informa\c{c}\~ao sobre o tema em quest\~ao. Esse recurso evita constrangimentos e respostas for\c{c}adas, como no caso em que se pergunta diretamente a todos sobre ``a taxa de juros do empr\'estimo'' sem antes verificar se a pessoa entrevistada possui um empr\'estimo. Al\'em disso, os filtros ajudam a diferenciar respostas ``n\~ao se aplica'' de ``n\~ao sei'', aumentando a precis\~ao dos dados.
+
+\paragraph{Localiza\c{c}\~ao das perguntas sens\'iveis.} Quest\~oes relacionadas a renda, sa\'ude, sexualidade, comportamentos ilegais ou opini\~oes pol\'iticas tendem a gerar desconforto. A coloca\c{c}\~ao dessas perguntas no in\'icio do question\'ario deve ser evitada, pois pode comprometer a confian\c{c}a da pessoa respondente e levar ao abandono da entrevista. Tamb\'em n\~ao \'e recomend\'avel concentr\'a-las apenas no final, pois h\'a risco de a pessoa interromper sua participa\c{c}\~ao antes de responder a pontos-chave. A pr\'atica mais indicada \'e inseri-las em um momento intermedi\'ario, ap\'os a constru\c{c}\~ao de confian\c{c}a, e dentro de blocos em que fa\c{c}am sentido no fluxo do question\'ario. Al\'em disso, recomenda-se introduzi-las gradualmente, por meio de perguntas de aquecimento que reduzam a sensa\c{c}\~ao de invas\~ao ou julgamento.
+
+\subsection{\textit{Layout} e formata\c{c}\~ao}
+
+O \textit{layout} do question\'ario desempenha um papel fundamental na qualidade dos dados coletados. Um desenho inadequado pode gerar erros de aplica\c{c}\~ao, dificultar a codifica\c{c}\~ao e reduzir a precis\~ao das respostas. Embora muitas vezes negligenciado em favor da economia de espa\c{c}o ou impress\~ao, o \textit{layout} deve priorizar a clareza e a funcionalidade, assegurando que o instrumento seja de f\'acil uso tanto para pessoas entrevistadoras quanto para respondentes.
+
+\paragraph{Identifica\c{c}\~ao e numera\c{c}\~ao.} Cada question\'ario deve conter um identificador \'unico, atribu\'ido previamente, que permita vincular o formul\'ario \`a respectiva pessoa respondente ou unidade amostral. Al\'em disso, as perguntas devem ser numeradas de forma sequencial e cont\'inua em todo o instrumento, mesmo quando o question\'ario estiver dividido em se\c{c}\~oes. Essa pr\'atica evita confus\~oes, facilita o armazenamento e agiliza o processamento dos dados.
+
+\paragraph{Espa\c{c}amento e organiza\c{c}\~ao visual.} O espa\c{c}amento entre perguntas deve ser suficiente para permitir uma aplica\c{c}\~ao clara, al\'em de oferecer espa\c{c}o para anota\c{c}\~oes de pessoas entrevistadoras, editoras ou codificadoras. Tentativas de economizar espa\c{c}o comprimindo perguntas em uma mesma p\'agina podem comprometer a qualidade das informa\c{c}\~oes obtidas. Sempre que poss\'ivel, recomenda-se imprimir em apenas um lado da folha, alinhar caixas de resposta \`a margem e, em casos de perguntas mais longas, recorrer a tabelas que organizem op\c{c}\~oes de forma clara. Quest\~oes abertas tamb\'em devem dispor de espa\c{c}o adequado para o tamanho esperado da resposta.
+
+\paragraph{Instru\c{c}\~oes.} As instru\c{c}\~oes s\~ao parte essencial do question\'ario e precisam estar visivelmente diferenciadas das perguntas. \'E recomend\'avel utilizar caixa alta, negrito, ou coloc\'a-las em caixas de texto, de modo a evitar confus\~oes durante a aplica\c{c}\~ao. Instru\c{c}\~oes devem aparecer imediatamente acima das quest\~oes \`as quais se referem, em vez de serem concentradas no in\'icio do question\'ario ou em manuais separados. \'E fundamental que indiquem claramente como responder (ex.: ``marque apenas uma op\c{c}\~ao'' ou ``assinale todas as op\c{c}\~oes que se aplicam'').
+
+\paragraph{Fonte, formata\c{c}\~ao e \^enfase.} O uso adequado de fontes e estilos contribui para interpreta\c{c}\~oes consistentes. Palavras ou express\~oes-chave devem ser destacadas em negrito ou sublinhado, especialmente quando marcam mudan\c{c}as de tempo ou escopo da pergunta (por exemplo, ``nos \'ultimos 12 meses''). Em question\'arios bil\'ingues, \'e recomend\'avel utilizar fontes distintas para cada idioma, assegurando clareza na leitura.
+
+\paragraph{S\'imbolos e elementos gr\'aficos.} S\'imbolos como c\'irculos, caixas de sele\c{c}\~ao, setas e cores podem ser usados para guiar pessoas entrevistadoras e respondentes, facilitar a navega\c{c}\~ao e indicar fluxos de salto. A padroniza\c{c}\~ao de s\'imbolos aumenta a clareza. Por exemplo, caixas podem indicar locais para n\'umeros, c\'irculos para marca\c{c}\~oes de op\c{c}\~ao e setas para pulos de pergunta. Em pesquisas com mais de uma parte, pode ser \'util usar pap\'eis de cores diferentes para cada se\c{c}\~ao.
+
+\paragraph{Estrutura geral e apresenta\c{c}\~ao profissional.} Um question\'ario bem apresentado deve incluir t\'itulo, data da vers\~ao, informa\c{c}\~oes de contato e, preferencialmente, uma breve introdu\c{c}\~ao que explique o prop\'osito da pesquisa, mesmo quando houver carta de apresenta\c{c}\~ao separada. Essa introdu\c{c}\~ao deve esclarecer a finalidade do estudo, como os dados ser\~ao usados, garantir a confidencialidade das informa\c{c}\~oes e estimar o tempo de preenchimento. Para question\'arios enviados por correio, recomenda-se incluir envelope de devolu\c{c}\~ao pr\'e-pago ou instru\c{c}\~oes claras de retorno.
+
+Em suma, um \textit{layout} bem planejado deve equilibrar clareza, organiza\c{c}\~ao e est\'etica, sem comprometer a precis\~ao dos dados em nome da economia de espa\c{c}o ou papel. O objetivo central \'e oferecer uma ferramenta pr\'atica e profissional, que facilite o trabalho de pessoas entrevistadoras, a compreens\~ao das pessoas respondentes e o processamento subsequente das informa\c{c}\~oes.
+
+\subsection{Tradu\c{c}\~ao}
+
+O processo de tradu\c{c}\~ao \'e fundamental para garantir a equival\^encia conceitual e a clareza do instrumento em diferentes contextos culturais e lingu\'isticos. N\~ao se trata apenas de transpor palavras de um idioma para outro, mas de assegurar que os conceitos centrais mantenham o mesmo significado entre culturas distintas. Um mesmo termo pode ter interpreta\c{c}\~oes divergentes dependendo do pa\'is ou grupo social, e at\'e mesmo quando o conceito \'e equivalente, os indicadores usados para medi-lo podem variar.
+
+A tradu\c{c}\~ao deve buscar a equival\^encia conceitual, e n\~ao apenas literal. Para alcan\c{c}ar esse objetivo, recomenda-se a t\'ecnica de \textit{back translation} \citep{iarossi2006power}. Esse processo envolve quatro passos:
+
+\begin{enumerate}
+\item Traduzir o question\'ario do idioma original para o idioma de destino.
+\item Traduzir a vers\~ao resultante de volta ao idioma original por um tradutor diferente, ou seja, gerar uma vers\~ao retrotraduzida.
+\item Comparar a vers\~ao original com a retrotraduzida, identificando e ajustando discrep\^ancias.
+\item Repetir o processo at\'e que n\~ao haja inconsist\^encias relevantes.
+\end{enumerate}
+
+\'E essencial que a tradu\c{c}\~ao seja feita por pessoas treinadas, que dominem os dois idiomas e compreendam o conte\'udo tem\'atico do question\'ario. Al\'em disso, recomenda-se utilizar o pr\'e-teste como ferramenta adicional para avaliar a qualidade da tradu\c{c}\~ao, observando se as pessoas respondentes compreendem as quest\~oes conforme o esperado.
+
+Em contextos multil\'ingues, nem sempre \'e poss\'ivel produzir vers\~oes integrais em todas as l\'inguas locais. Nestes casos, parte do instrumento pode ser traduzida em manuais de aplica\c{c}\~ao ou materiais de apoio, devendo-se contar com entrevistadores bil\'ingues ou int\'erpretes capacitados. Em qualquer caso, a linguagem empregada deve ser simples, acess\'ivel e pr\'oxima ao uso cotidiano, evitando registros acad\^emicos ou excessivamente formais.
+
+\section{Boas pr\'aticas na elabora\c{c}\~ao de roteiros de entrevistas}
+
+O objetivo desta se\c{c}\~ao \'e apresentar boas pr\'aticas para a elabora\c{c}\~ao de roteiros de entrevista, considerando tanto o grau de estrutura\c{c}\~ao das perguntas quanto a clareza e adequa\c{c}\~ao da linguagem utilizada. Ser\~ao discutidas, ainda, estrat\'egias para fomentar um ambiente de escuta qualificada, que favore\c{c}a a confian\c{c}a, a abertura e a espontaneidade das pessoas participantes. Embora alguns aspectos relacionados \`a constru\c{c}\~ao de roteiros j\'a tenham sido abordados nos t\'opicos anteriores, especialmente no que se refere \`a elabora\c{c}\~ao de question\'arios, esta se\c{c}\~ao se concentrar\'a em desafios e especificidades pr\'oprias dos estudos qualitativos, oferecendo orienta\c{c}\~oes pr\'aticas para o desenvolvimento de entrevistas.
+
+Os roteiros de entrevista s\~ao instrumentos que orientam a atua\c{c}\~ao das equipes entrevistadoras durante a coleta de dados, contemplando a apresenta\c{c}\~ao da pesquisa e os temas a serem abordados. No processo de elabora\c{c}\~ao desses roteiros, \'e essencial definir de forma clara os objetivos da coleta de dados e explicitar a contribui\c{c}\~ao esperada de cada pergunta para o alcance dos prop\'ositos investigativos. Recomenda-se, ainda, organizar o roteiro em blocos tem\'aticos que re\'unam quest\~oes vinculadas a eixos anal\'iticos comuns do estudo. Essa organiza\c{c}\~ao contribui tanto para sistematizar o trabalho da equipe pesquisadora quanto para favorecer a participa\c{c}\~ao das pessoas entrevistadas, promovendo maior fluidez na transi\c{c}\~ao entre t\'opicos e assegurando a coer\^encia da narrativa produzida.
+
+Na elabora\c{c}\~ao das perguntas, a defini\c{c}\~ao do tipo de entrevista constitui uma etapa fundamental, uma vez que o formato e o grau de detalhamento do roteiro variam de acordo com o n\'ivel de estrutura\c{c}\~ao adotado na coleta de dados \citep{wilson2012research}. Nas entrevistas estruturadas, as perguntas devem ser replicadas a todas as pessoas participantes, a fim de garantir comparabilidade dos resultados. J\'a nas entrevistas semiestruturadas, o roteiro \'e composto por perguntas previamente elaboradas, que servem como guia para assegurar uma base comum de comparabilidade entre as pessoas participantes, preservando, contudo, a flexibilidade necess\'aria para que a pessoa pesquisadora ajuste a ordem, a formula\c{c}\~ao ou o n\'ivel de aprofundamento conforme o curso da intera\c{c}\~ao. Por sua vez, nas entrevistas n\~ao estruturadas, o roteiro tende a restringir-se a t\'opicos amplos ou eixos tem\'aticos gerais, que apenas orientam o di\'alogo, conferindo \`a pessoa entrevistada liberdade para construir e desenvolver suas narrativas, interpreta\c{c}\~oes e significados.
+
+O desenvolvimento de um roteiro de entrevista geralmente inicia-se pela defini\c{c}\~ao do tema de pesquisa, seguida do mapeamento dos t\'opicos e subtemas que dever\~ao ser contemplados. A partir desse levantamento, elaboram-se quest\~oes que explorem aspectos espec\'ificos de cada t\'opico, organizadas de modo progressivo, iniciando por perguntas mais simples e descritivas, que favorecem o engajamento do participante, e avan\c{c}ando gradualmente para quest\~oes mais complexas e anal\'iticas.
+
+Dialogando com as contribui\c{c}\~oes de \citet{eppich2019in}, \'e poss\'ivel listar um conjunto de etapas que podem orientar a constru\c{c}\~ao de roteiros de entrevista:
+
+\begin{itemize}
+\item Definir o arcabou\c{c}o te\'orico ou conceitual que orientar\'a o estudo, servindo de base para a identifica\c{c}\~ao dos temas centrais, categorias anal\'iticas e perguntas relevantes \`a investiga\c{c}\~ao.
+\item Estabelecer um conjunto de procedimentos operacionais que norteiem a intera\c{c}\~ao entre pessoas pesquisadoras e participantes --- incluindo o n\'ivel de formalidade esperado, orienta\c{c}\~oes sobre o uso da linguagem, postura do entrevistador e etapas da intera\c{c}\~ao.
+\item Preparar uma explica\c{c}\~ao breve e acess\'ivel sobre os prop\'ositos da pesquisa, a ser apresentada no in\'icio da entrevista, de modo a garantir transpar\^encia, \'etica e compreens\~ao por parte dos participantes.
+\item Identificar as informa\c{c}\~oes sociodemogr\'aficas das pessoas participantes (como sexo, idade, escolaridade, ocupa\c{c}\~ao, entre outras vari\'aveis pertinentes), as quais devem ser registradas durante o processo de entrevista --- preferencialmente no in\'icio da intera\c{c}\~ao, ap\'os o consentimento do participante.
+\item Iniciar o roteiro com uma pergunta ampla e introdut\'oria, que funcione como ponto de partida para o di\'alogo, favorecendo o engajamento dos participantes e estimulando o compartilhamento espont\^aneo de suas experi\^encias e percep\c{c}\~oes.
+\item Desenvolver perguntas subsequentes alinhadas aos objetivos do estudo e ao perfil das pessoas participantes, organizadas de forma progressiva, de modo a explorar t\'opicos espec\'ificos e incentivar a descri\c{c}\~ao de experi\^encias concretas e exemplos situados, o que contribui para a profundidade e a materialidade da an\'alise.
+\item Encerrar a entrevista com perguntas de fechamento, que convidem as pessoas participantes a destacar aspectos que considerem mais relevantes, acrescentar informa\c{c}\~oes n\~ao abordadas anteriormente e refletir sobre os temas discutidos. Esse momento tamb\'em pode ser utilizado para confirmar interpreta\c{c}\~oes preliminares ou impress\~oes da pessoa pesquisadora, fortalecendo a validade dos dados coletados.
+\end{itemize}
+
+Antes de iniciar a coleta de dados em escala ampliada, recomenda-se a realiza\c{c}\~ao de um teste piloto, que possibilita avaliar a clareza e a pertin\^encia das perguntas, bem como a fluidez, a sequ\^encia e a dura\c{c}\~ao do roteiro de entrevista. Essa etapa \'e fundamental para identificar poss\'iveis ambiguidades, redund\^ancias ou lacunas, al\'em de verificar o n\'ivel de compreens\~ao, envolvimento e conforto dos participantes diante das quest\~oes propostas. Com base nos resultados do piloto, o roteiro pode ser refinado, contribuindo para o aumento da confiabilidade, consist\^encia e qualidade metodol\'ogica da coleta de dados.
+
+\'E recomendado registrar, no roteiro, instru\c{c}\~oes detalhadas \`a equipe entrevistadora, com orienta\c{c}\~oes sobre como apresentar a pesquisa \`as pessoas participantes, aplicar perguntas condicionais e lidar com situa\c{c}\~oes sens\'iveis durante a intera\c{c}\~ao. Essas instru\c{c}\~oes contribuem para assegurar maior consist\^encia e rigor nos dados coletados. Al\'em disso, vimos que, no in\'icio das entrevistas, cabe solicitar que as pessoas participantes falem de forma ampla sobre seu perfil e trajet\'oria, utilizando perguntas simples e acess\'iveis que favore\c{c}am a cria\c{c}\~ao de um clima de confian\c{c}a e proximidade. Esse momento inicial funciona como uma etapa de aquecimento, permitindo que o entrevistado se sinta mais \`a vontade para compartilhar suas percep\c{c}\~oes e experi\^encias. Ap\'os essa introdu\c{c}\~ao, podem ser apresentadas perguntas mais espec\'ificas e complexas, diretamente relacionadas aos objetivos da pesquisa, de modo a aprofundar gradualmente a explora\c{c}\~ao do tema.
+
+Ao longo da entrevista, \'e fundamental empregar uma linguagem clara e adequada ao perfil do p\'ublico de interesse, evitando jarg\~oes t\'ecnicos ou termos amb\'iguos que possam comprometer a compreens\~ao. Recomenda-se, ainda, observar e, quando pertinente, incorporar express\~oes ou formas de comunica\c{c}\~ao pr\'oprias do grupo entrevistado, pois isso contribui para fortalecer a empatia, a proximidade e a fluidez do di\'alogo. Essa aten\c{c}\~ao \`a linguagem amplia a qualidade da intera\c{c}\~ao e favorece que as pessoas participantes compreendam plenamente as perguntas, expressando-se com autenticidade e seguran\c{c}a. Tamb\'em \'e importante incluir no roteiro quest\~oes de fechamento, que ofere\c{c}am \`as pessoas entrevistadas a oportunidade de recapitular os principais pontos abordados e destacar os aspectos que considerem mais relevantes. Esse momento final pode abrir espa\c{c}o para que acrescentem informa\c{c}\~oes que n\~ao tenham sido contempladas anteriormente.
+
+Nos roteiros de entrevista, as perguntas devem privilegiar o ``como'' dos processos, uma vez que esse tipo de formula\c{c}\~ao tende a ser mais produtivo para captar significados, pr\'aticas e racionalidades subjacentes \`as experi\^encias das pessoas participantes, apresentando, assim, maior potencial explicativo e interpretativo para os prop\'ositos da pesquisa qualitativa \citep{albaret2023semistructured}. Al\'em disso, \'e fundamental que as perguntas sejam claras, concisas e focalizadas, evitando a combina\c{c}\~ao de m\'ultiplos temas em uma mesma formula\c{c}\~ao, o que pode gerar ambiguidades ou dispersar o foco da conversa \citep{driscoll2011introduction}.
+
+Por fim, recomenda-se que a equipe pesquisadora formule perguntas que estimulem a reflex\~ao, a descri\c{c}\~ao de experi\^encias concretas e a explicita\c{c}\~ao de significados, refor\c{c}ando a coer\^encia entre o roteiro e os objetivos anal\'iticos da investiga\c{c}\~ao.
+
+Outro conjunto de recomenda\c{c}\~oes se dirige \`as caracter\'isticas das perguntas em um roteiro de entrevista:
+
+\begin{itemize}
+\item \'E fundamental evitar formula\c{c}\~oes que possam ser respondidas apenas com ``sim'' ou ``n\~ao'', pois esse tipo de pergunta tende a restringir o n\'ivel de detalhamento e a riqueza do discurso dos participantes.
+\item De maneira geral, cabe \`a equipe entrevistadora estimular as pessoas entrevistadas a descrever processos, experi\^encias e percep\c{c}\~oes com suas pr\'oprias palavras \citep{roulston2013asking}.
+\item O roteiro deve evitar perguntas indutivas, que sugiram respostas desejadas ou direcionem a narrativa em determinada dire\c{c}\~ao, comprometendo a espontaneidade e a validade das informa\c{c}\~oes coletadas. \'E prefer\'ivel priorizar perguntas abertas, que promovam a reflex\~ao, a descri\c{c}\~ao de experi\^encias e a express\~ao de significados.
+\item O uso de sondagens e quest\~oes de aprofundamento pode auxiliar o entrevistador a incentivar a amplia\c{c}\~ao das respostas, mantendo a neutralidade e evitando interfer\^encias indevidas no conte\'udo.
+\end{itemize}
+
+Em s\'intese, a elabora\c{c}\~ao de roteiros de entrevista constitui uma etapa central no desenho metodol\'ogico da pesquisa qualitativa, pois traduz, em termos operacionais, as escolhas te\'oricas e anal\'iticas do estudo. Al\'em disso um roteiro bem estruturado favorece a constru\c{c}\~ao de um ambiente de escuta qualificada, no qual as pessoas participantes possam expressar livremente suas experi\^encias e significados.
+
+% ============================================================
+% 6. APLICAÇÃO DOS QUESTIONÁRIOS
+% ============================================================
+\chapter{Aplica\c{c}\~ao dos question\'arios}
+
+A forma como os question\'arios s\~ao aplicados tem impacto direto sobre a qualidade e a confiabilidade dos dados. Cada m\'etodo de coleta --- seja presencial, telef\^onico, online ou h\'ibrido --- exige cuidados espec\'ificos com a abordagem dos participantes, a log\'istica de campo, os aspectos \'eticos e o treinamento das equipes envolvidas.
+
+Como destaca o \textit{Guia CLEAR de Monitoramento e Avalia\c{c}\~ao de Pol\'iticas P\'ublicas} \citep{fgvclear2025mea}, o momento da aplica\c{c}\~ao deve ser entendido como uma etapa estrat\'egica do processo avaliativo, que transforma o planejamento metodol\'ogico em pr\'atica concreta.
+
+Neste cap\'itulo, s\~ao apresentados os principais elementos a considerar durante a aplica\c{c}\~ao dos question\'arios, incluindo: \textbf{(i)} a realiza\c{c}\~ao de testes-piloto e o aprimoramento dos instrumentos; \textbf{(ii)} estrat\'egias para aumentar a taxa de resposta; \textbf{(iii)} procedimentos de prote\c{c}\~ao e confidencialidade dos dados; \textbf{(iv)} boas pr\'aticas para a condu\c{c}\~ao de entrevistas; e \textbf{(v)} mecanismos de controle de qualidade durante e ap\'os a coleta.
+
+\section{Piloto}
+
+Os \textbf{testes-piloto} s\~ao uma etapa fundamental entre o desenho do question\'ario e sua aplica\c{c}\~ao definitiva. Segundo o \textit{Guia CLEAR de Avalia\c{c}\~ao de Impacto} \citep{fgvclear2025ai}, essa fase tem como principal objetivo antecipar e corrigir eventuais problemas de compreens\~ao das perguntas, estrutura, fluxo ou dura\c{c}\~ao do instrumento.
+
+O piloto deve reproduzir, o m\'aximo poss\'ivel, as condi\c{c}\~oes reais de campo, mesmo que em escala reduzida. Isso permite avaliar se as perguntas s\~ao claras, se sua sequ\^encia faz sentido e se o tempo total da entrevista \'e adequado. Tamb\'em \'e o momento de testar ferramentas e dispositivos eletr\^onicos (como \textit{tablets}, formul\'arios digitais e \textit{softwares} de coleta) e de ajustar o treinamento da equipe, garantindo que todas as pessoas integrantes compreendam as instru\c{c}\~oes e sigam os mesmos procedimentos.
+
+Ao final, recomenda-se elaborar um relat\'orio de retroalimenta\c{c}\~ao, registrando as dificuldades encontradas, as sugest\~oes da equipe entrevistadora e as percep\c{c}\~oes das pessoas respondentes. Essas informa\c{c}\~oes devem orientar ajustes de linguagem, ordem, formato de resposta e instru\c{c}\~oes de campo \citep{iarossi2006power, oecd2022data, fgvclear2025mea}.
+
+\section{Aumentando a taxa de resposta e evitando n\~ao respostas}
+
+A \textbf{taxa de resposta} \'e um dos principais indicadores da qualidade de uma pesquisa. Quando o n\'umero de pessoas participantes efetivas \'e muito baixo, cresce o risco de \textbf{vi\'es de n\~ao resposta}, o que pode comprometer a representatividade da amostra e distorcer as conclus\~oes \citep{duflo2007using, jpal2020practical}. Esse tipo de vi\'es \'e mais comum em contextos de vulnerabilidade social, em coletas remotas com baixa conectividade ou em pesquisas sobre temas sens\'iveis --- por exemplo, sa\'ude mental, renda ou desempenho escolar.
+
+Altas taxas de n\~ao resposta podem ocorrer por tr\^es caminhos principais: a recusa em participar, o abandono no meio da aplica\c{c}\~ao ou as falhas de registro. Cada um desses caminhos exige estrat\'egias espec\'ificas de preven\c{c}\~ao e mitiga\c{c}\~ao. A boa pr\'atica come\c{c}a por reconhecer que a n\~ao resposta n\~ao \'e apenas um problema operacional, mas um indicador de qualidade do trabalho de campo que deve ser monitorado sistematicamente.
+
+Para minimizar o problema, \'e fundamental adotar estrat\'egias de engajamento adequadas ao perfil do p\'ublico e ao tipo de aplica\c{c}\~ao. Em levantamentos presenciais, o foco deve estar na postura e na comunica\c{c}\~ao da equipe de campo; em coletas online, na clareza da mensagem e na experi\^encia da pessoa usu\'aria. Entre as pr\'aticas mais eficazes, destacam-se:
+
+\begin{itemize}
+\item \textbf{Garantir anonimato e confidencialidade}, explicando claramente como as informa\c{c}\~oes ser\~ao utilizadas e protegidas;
+\item \textbf{Apresentar o prop\'osito da pesquisa de forma transparente}, mostrando que a participa\c{c}\~ao contribui para o aprimoramento de pol\'iticas e programas p\'ublicos;
+\item \textbf{Realizar contato pr\'evio e comunica\c{c}\~ao clara} sobre os objetivos e benef\'icios da pesquisa, preparando as pessoas participantes para a coleta;
+\item \textbf{Enviar lembretes e convites personalizados}, especialmente em coletas eletr\^onicas --- estudos apontam que mensagens curtas e diretas podem elevar a taxa de resposta em at\'e 20\% \citep{oecd2022data};
+\item \textbf{Manter o question\'ario conciso e relevante}, evitando repeti\c{c}\~oes e perguntas irrelevantes que cansam o respondente;
+\item \textbf{Oferecer incentivos simb\'olicos ou financeiros}, quando adequado ao contexto;
+\item \textbf{Treinar a equipe entrevistadora} para conduzir a aplica\c{c}\~ao com empatia, clareza e respeito, criando um ambiente de confian\c{c}a e colabora\c{c}\~ao.
+\end{itemize}
+
+Quando as perdas amostrais ultrapassam limites aceit\'aveis --- a literatura geralmente indica como refer\^encia inicial perdas acima de 10\% --- recomenda-se considerar \textbf{reposi\c{c}\~ao de casos e amostragem complementar}, sempre com \textbf{documenta\c{c}\~ao transparente} dos motivos de evas\~ao e dos crit\'erios usados para substituir observa\c{c}\~oes perdidas.
+
+Segundo a \citet{oecd2022data}, o registro sistem\'atico das taxas de n\~ao resposta constitui um indicador-chave de qualidade de campo em pesquisas, devendo ser incorporado aos relat\'orios t\'ecnicos. Esse registro permite identificar padr\~oes de aus\^encia ou recusa, avaliar potenciais vieses de sele\c{c}\~ao e ajustar estrat\'egias de coleta de dados --- contribuindo para a robustez, confiabilidade e transpar\^encia dos resultados. Essas medidas, combinadas de forma coerente com o desenho metodol\'ogico, ajudam a melhorar a qualidade dos dados e a reduzir custos com recontatos e substitui\c{c}\~oes durante o campo.
+
+O quadro-resumo abaixo apresenta as principais estrat\'egias para elevar a taxa de resposta.
+
+\begin{table}[H]
+\centering
+\caption{Estrat\'egias pr\'aticas para aumentar a taxa de resposta}
+\label{tab:taxa_resposta}
+\begin{tabular}{p{0.30\linewidth} p{0.32\linewidth} p{0.30\linewidth}}
+\toprule
+\textbf{Estrat\'egia} & \textbf{Aplicabilidade} & \textbf{Benef\'icio principal} \\
+\midrule
+Garantia de anonimato & Pesquisas sens\'iveis (ex.: satisfa\c{c}\~ao, sa\'ude) & Reduz receio de exposi\c{c}\~ao \\
+Comunica\c{c}\~ao clara & Coletas com p\'ublico amplo & Aumenta engajamento e legitimidade \\
+Lembretes e \textit{follow-ups} & Coletas online e pain\'eis & Recupera pessoas participantes inativas \\
+Incentivos & Amostras volunt\'arias & Melhora motiva\c{c}\~ao e participa\c{c}\~ao \\
+Treinamento da equipe & Entrevistas presenciais & Melhora qualidade da abordagem \\
+\bottomrule
+\end{tabular}
+\figmeta{Elabora\c{c}\~ao pr\'opria.}{}{}
+\end{table}
+
+\section{Prote\c{c}\~ao dos dados}
+
+A prote\c{c}\~ao e o uso respons\'avel dos dados constituem um pilar \'etico essencial em qualquer processo de coleta para al\'em das exig\^encias legais vigentes. No Brasil, a \textit{Lei Geral de Prote\c{c}\~ao de Dados Pessoais} (LGPD --- Lei n\textsuperscript{o} 13.709/2018) estabelece princ\'ipios fundamentais para o tratamento de informa\c{c}\~oes pessoais, como \textbf{finalidade, necessidade, consentimento e seguran\c{c}a}.
+
+Conforme orientam o \textit{Guia CLEAR de Monitoramento e Avalia\c{c}\~ao de Pol\'iticas P\'ublicas} \citep{fgvclear2025mea} e as diretrizes da \citet{oecd2022data}, toda pesquisa deve garantir que os dados sejam coletados, armazenados e utilizados de forma \textbf{transparente, proporcional e segura}. Isso inclui:
+
+\begin{itemize}
+\item obter consentimento livre e esclarecido de todos os participantes;
+\item limitar a coleta \`as informa\c{c}\~oes estritamente necess\'arias para os objetivos da pesquisa;
+\item aplicar mecanismos de anonimiza\c{c}\~ao e controle de acesso durante o armazenamento;
+\item assegurar a elimina\c{c}\~ao segura dos dados ap\'os o t\'ermino do uso autorizado.
+\end{itemize}
+
+Antes do in\'icio da coleta, \'e recomend\'avel que o projeto seja submetido a um Comit\^e de \'Etica em Pesquisa (CEP) --- especialmente quando envolve entrevistas, experimentos ou coleta de informa\c{c}\~oes sens\'iveis. O parecer de aprova\c{c}\~ao \'etica atesta que o estudo respeita os direitos, a privacidade e o bem-estar das pessoas participantes, al\'em de garantir que os procedimentos de consentimento, armazenamento e uso dos dados estejam em conformidade com padr\~oes nacionais e internacionais. Essa exig\^encia \'e alinhada \`as pr\'aticas da \textit{Resolu\c{c}\~ao CNS n\textsuperscript{o} 510/2016} (voltada a pesquisas em Ci\^encias Humanas e Sociais) e \`as orienta\c{c}\~oes internacionais do \citet{worldbank2021data} e do \citet{jpal2020practical}.
+
+Os question\'arios e formul\'arios devem conter uma \textbf{declara\c{c}\~ao clara de consentimento}, informando:
+
+\begin{itemize}
+\item o objetivo da pesquisa e o uso previsto dos dados;
+\item o per\'iodo de guarda e as medidas de seguran\c{c}a adotadas;
+\item o direito da pessoa participante de recusar ou retirar o consentimento a qualquer momento, sem qualquer preju\'izo.
+\end{itemize}
+
+Esses cuidados --- aliados \`a revis\~ao \'etica e ao cumprimento da LGPD --- refor\c{c}am a credibilidade institucional e a integridade cient\'ifica da pesquisa.
+
+\section{Entrevistas}
+
+As \textbf{entrevistas} exigem cuidados espec\'ificos para garantir a qualidade das informa\c{c}\~oes e a \'etica da intera\c{c}\~ao. De acordo com o \textit{Guia CLEAR de Avalia\c{c}\~ao de Impacto} \citep{fgvclear2025ai} e \citet{creswell2014research}, o papel da equipe entrevistadora vai al\'em da aplica\c{c}\~ao mec\^anica do roteiro: ela atua como mediadora entre o protocolo da pesquisa e a experi\^encia vivida pela pessoa respondente. Sua postura, preparo e sensibilidade influenciam diretamente a profundidade e a fidedignidade das respostas.
+
+Um aspecto central a ser considerado \'e a \textbf{din\^amica de poder na entrevista}. Diferen\c{c}as de idade, g\^enero, posi\c{c}\~ao institucional ou \textit{status} social entre quem entrevista e quem participa podem criar barreiras de comunica\c{c}\~ao ou induzir respostas voltadas \`a agradabilidade --- fen\^omeno relacionado ao vi\'es de desejabilidade social. Para mitigar essas assimetrias, o \textit{Guia CLEAR de Avalia\c{c}\~ao de Impacto} \citep{fgvclear2025ai} e \citet{creswell2014research} recomendam um \textbf{treinamento \'etico e relacional robusto}, com \^enfase em tr\^es dimens\~oes: a import\^ancia da escuta ativa e da postura neutra; o uso de roteiros de apoio e simula\c{c}\~oes de entrevistas durante o treinamento, capacitando a equipe entrevistadora a conduzir as entrevistas de forma adequada ao contexto; e, sempre que poss\'ivel, a designa\c{c}\~ao de entrevistadores que compartilhem caracter\'isticas culturais ou lingu\'isticas com o p\'ublico-alvo.
+
+Como destacam \citet{eppich2019in}, \`a medida que as pessoas participantes descrevem suas experi\^encias, a equipe entrevistadora atenta identifica quest\~oes relevantes que emergem da conversa e as explora em maior detalhe, relacionando-as com as perguntas de pesquisa do estudo. Para assegurar a qualidade desse processo, \'e recomend\'avel estruturar a entrevista em tr\^es etapas principais: a prepara\c{c}\~ao, a condu\c{c}\~ao e o p\'os-entrevista.
+
+\paragraph{Prepara\c{c}\~ao e pr\'e-entrevista.} Antes da sess\~ao, \'e fundamental:
+
+\begin{itemize}
+\item \textbf{Agendar e informar:} combinar data, hor\'ario e local adequados com a pessoa participante, compartilhando antecipadamente informa\c{c}\~oes gerais sobre a pesquisa para garantir um consentimento verdadeiramente informado \citep{guazi2021diretrizes}.
+\item \textbf{Preparar o ambiente:} garantir um local confort\'avel, privativo e livre de interrup\c{c}\~oes, seja presencial ou virtual.
+\item \textbf{Para entrevistas remotas}, testar previamente a conex\~ao e o funcionamento dos equipamentos.
+\end{itemize}
+
+\paragraph{Condu\c{c}\~ao da entrevista.} Durante a intera\c{c}\~ao, a pessoa entrevistadora deve adotar, quando poss\'ivel, as seguintes pr\'aticas, baseadas na sistematiza\c{c}\~ao proposta em \citet{rocha2020teoria}:
+
+\begin{itemize}
+\item \textbf{Iniciar com agradecimento e contextualiza\c{c}\~ao:} agradecer a participa\c{c}\~ao, apresentar-se e relembrar o objetivo da pesquisa de forma generalista para evitar vieses.
+\item \textbf{Confirmar o consentimento:} no caso de grava\c{c}\~ao, informar e solicitar a autoriza\c{c}\~ao expl\'icita do participante.
+\item \textbf{Estabelecer \textit{rapport}:} criar um clima de confian\c{c}a e di\'alogo aberto desde o in\'icio.
+\item \textbf{Guiar a conversa estrategicamente:} seguir uma sequ\^encia que parta de perguntas gerais e simples para as mais espec\'ificas e complexas, utilizando linguagem clara e acess\'ivel.
+\item \textbf{Explorar aprofundamentos:} realizar perguntas de \textit{follow-up} em momentos-chave para elucidar aspectos relevantes que emergem na conversa.
+\item \textbf{Manter uma postura neutra e respeitosa:} ouvir ativamente, evitar julgamentos e observar atentamente as express\~oes n\~ao verbais, que tamb\'em carregam significados importantes.
+\item \textbf{Encerrar de forma aberta:} concluir agradecendo novamente a contribui\c{c}\~ao, perguntar se o participante gostaria de acrescentar algo e explicar brevemente como as informa\c{c}\~oes ser\~ao utilizadas.
+\end{itemize}
+
+\paragraph{P\'os-entrevista.} Ap\'os a coleta, \'e crucial:
+
+\begin{itemize}
+\item \textbf{Transcrever os dados:} realizar a transcri\c{c}\~ao, equilibrando fidedignidade ao discurso original e legibilidade, de acordo com os objetivos do estudo.
+\item \textbf{Armazenar com seguran\c{c}a:} garantir o armazenamento \'etico e seguro dos dados (\'audio, v\'ideo, transcri\c{c}\~oes), em estrita conformidade com os protocolos de confidencialidade e prote\c{c}\~ao de dados estabelecidos.
+\end{itemize}
+
+Esses cuidados constroem uma rela\c{c}\~ao \'etica e respeitosa entre pesquisadora e participante, e da\'i v\^em dados mais confi\'aveis e interpreta\c{c}\~oes mais ricas.
+
+\section{Controle de qualidade dos dados}
+
+O controle de qualidade precisa ser planejado desde o desenho do instrumento, com mecanismos de verifica\c{c}\~ao cont\'inua que peguem erros de coleta, inconsist\^encias e desvios de protocolo enquanto ainda d\'a tempo de corrigir \citep{fgvclear2025mea,gertler2018impact}. Quatro procedimentos complementares fazem a maior parte do trabalho:
+
+\paragraph{1. Reentrevistas (\textit{back-checks}).} Consistem na replica\c{c}\~ao de parte do question\'ario a uma amostra reduzida dos entrevistados originais (geralmente 5\% a 10\% dos casos). Seu objetivo \'e verificar a consist\^encia das respostas e a atua\c{c}\~ao da equipe de campo, detectando poss\'iveis falhas de registro, erros de digita\c{c}\~ao ou desvios de conduta. Esse procedimento tamb\'em serve como mecanismo de supervis\~ao e de retroalimenta\c{c}\~ao imediata, permitindo corrigir problemas ainda durante o trabalho de campo.
+
+\textit{Exemplo:} reaplicar 10\% dos question\'arios ap\'os tr\^es dias, comparando as respostas originais e as reentrevistas para medir a taxa de consist\^encia.
+
+\paragraph{2. Perguntas de consist\^encia interna.} S\~ao quest\~oes redundantes ou cruzadas, inclu\'idas propositalmente no question\'ario para avaliar a coer\^encia entre respostas relacionadas. Elas ajudam a identificar padr\~oes de resposta autom\'atica, lapsos de aten\c{c}\~ao e inconsist\^encias l\'ogicas. Quando diverg\^encias significativas s\~ao detectadas, o instrumento pode ser ajustado para vers\~oes futuras, fortalecendo a confiabilidade geral da base de dados.
+
+\textit{Exemplo:} comparar a renda declarada com a ocupa\c{c}\~ao ou o n\'umero de filhos com a idade relatada.
+
+\paragraph{3. Supervis\~ao de campo.} A supervis\~ao direta \'e um componente essencial do controle de qualidade operacional. Supervisores devem acompanhar periodicamente as entrevistas, observar o comportamento da equipe entrevistadora e garantir o cumprimento dos protocolos \'eticos e t\'ecnicos.
+
+\textit{Exemplo:} \textit{checklists} di\'arios, relat\'orios de visitas e reuni\~oes de \textit{feedback} ajudam a manter a padroniza\c{c}\~ao e o desempenho das equipes. Essa pr\'atica tamb\'em permite identificar gargalos log\'isticos e refor\c{c}ar o treinamento quando necess\'ario.
+
+\paragraph{4. Auditoria eletr\^onica.} Em coletas realizadas com \textit{tablets} ou formul\'arios digitais, \'e poss\'ivel realizar auditorias eletr\^onicas para detectar padr\~oes an\^omalos nas bases. O uso de tecnologias de \textit{Computer Assisted Personal Interviewing} (CAPI) permite monitorar tempos de resposta, coordenadas GPS, datas e hor\'arios de entrevistas, al\'em de respostas duplicadas ou incompletas. Esses indicadores ajudam a identificar entrevistas fict\'icias (\textit{curbstoning}), erros de entrada ou comportamento inadequado da equipe de campo.
+
+O monitoramento cont\'inuo \'e recomendado por institui\c{c}\~oes como o \citet{jpal2020practical} e o \citet{worldbank2021data}, e por uma raz\~ao pr\'atica: pegar falhas durante o campo \'e barato; pegar depois, na limpeza e valida\c{c}\~ao dos dados, sai muito caro.
+
+% ============================================================
+% 7. CONSIDERAÇÕES FINAIS
+% ============================================================
+\chapter{Considera\c{c}\~oes finais}
+
+\section{Limites da generaliza\c{c}\~ao e custos de opera\c{c}\~ao}
+
+Duas dimens\~oes atravessam qualquer coleta prim\'aria: at\'e onde os achados generalizam e quanto a opera\c{c}\~ao custa. Frequentemente s\~ao tratadas como obst\'aculos, mas s\~ao caracter\'isticas estruturais --- e reconhec\^e-las explicitamente fortalece a credibilidade da pesquisa.
+
+\paragraph{Limita\c{c}\~oes \`a generaliza\c{c}\~ao e validade externa.} Nem toda coleta visa a generalizar estatisticamente. Pesquisas qualitativas, estudos de caso e experimentos locais entregam \textit{insights} profundos, mas \textbf{contextualmente delimitados}. A obriga\c{c}\~ao da equipe \'e explicitar essas limita\c{c}\~oes de validade externa --- relatar contexto, amostra, crit\'erios de sele\c{c}\~ao e poss\'iveis vieses de composi\c{c}\~ao ---, n\~ao tentar minimiz\'a-las. Como observam \citet{gertler2018impact} e o \textit{Guia CLEAR de Avalia\c{c}\~ao de Impacto} \citep{fgvclear2025ai}, a \textbf{transpar\^encia metodol\'ogica} \'e a melhor resposta a limites de generaliza\c{c}\~ao: aumenta tanto a confian\c{c}a da pessoa leitora quanto a utilidade pr\'atica dos resultados.
+
+\paragraph{Custos, log\'istica e restri\c{c}\~oes operacionais.} A log\'istica de coletas de grande escala gera atrasos, sobrecustos e lacunas amostrais. A coleta presencial \'e a mais precisa, mas demanda tempo, deslocamentos, equipe treinada e recursos financeiros expressivos. Os m\'etodos remotos --- telefone, formul\'arios online --- esbarram em barreiras tecnol\'ogicas, baixa ades\~ao e maior variabilidade na qualidade das respostas.
+
+Mitiga-se esses riscos com cronogramas realistas (com margem para imprevistos), com tecnologias de coleta assistida (CAPI/CATI e plataformas digitais para entrevistas remotas) quando o or\c{c}amento aperta, com monitoramento sistem\'atico de indicadores de campo (dura\c{c}\~ao das entrevistas, taxas de resposta, tempos de transi\c{c}\~ao) que permitem corre\c{c}\~oes de rota, e com diversifica\c{c}\~ao dos modos de aplica\c{c}\~ao --- combinando canais para n\~ao deixar segmentos relevantes da popula\c{c}\~ao de fora.
+
+O \textit{Guia CLEAR de Monitoramento e Avalia\c{c}\~ao} \citep{fgvclear2025mea} trata o planejamento log\'istico como componente da estrat\'egia metodol\'ogica, n\~ao como detalhe operacional. Cronograma, aloca\c{c}\~ao de recursos, sele\c{c}\~ao de entrevistadores e defini\c{c}\~ao de locais de coleta determinam tanto a efici\^encia quanto os vieses de campo.
+
+A Tabela~\ref{tab:desafios_mitigacao} consolida os principais desafios discutidos ao longo deste Guia e suas estrat\'egias de mitiga\c{c}\~ao.
+
+\begin{table}[H]
+\centering
+\caption{Principais desafios na coleta de dados e estrat\'egias de mitiga\c{c}\~ao}
+\label{tab:desafios_mitigacao}
+\small
+\begin{tabular}{p{0.16\linewidth} p{0.20\linewidth} p{0.20\linewidth} p{0.25\linewidth}}
+\toprule
+\textbf{Desafio} & \textbf{Descri\c{c}\~ao} & \textbf{Efeitos potenciais} & \textbf{Estrat\'egias de mitiga\c{c}\~ao} \\
+\midrule
+Vi\'es de desejabilidade social & Respondentes ajustam respostas para parecer mais ``adequados'' & Compromete validade interna e distorce padr\~oes & Anonimato, perguntas neutras, treinamento \'etico \\
+Formula\c{c}\~ao inadequada & Linguagem t\'ecnica ou amb\'igua dificulta entendimento & Erros de mensura\c{c}\~ao e perda de comparabilidade & Piloto cognitivo, simplifica\c{c}\~ao, consist\^encia de escalas \\
+N\~ao resposta e evas\~ao & Recusa, formul\'arios incompletos, perdas & Vi\'es de sele\c{c}\~ao e redu\c{c}\~ao de representatividade & Comunica\c{c}\~ao pr\'evia, lembretes, reposi\c{c}\~ao, documenta\c{c}\~ao \\
+Assimetrias de poder & Din\^amica interpessoal afeta autenticidade das respostas & Vi\'es de intera\c{c}\~ao e distor\c{c}\~ao qualitativa & Treinamento \'etico e comportamental, escuta ativa, neutralidade \\
+Limita\c{c}\~oes \`a generaliza\c{c}\~ao & Resultados restritos a contextos espec\'ificos & Reduz validade externa e aplicabilidade & Transpar\^encia, triangula\c{c}\~ao, contextualiza\c{c}\~ao \\
+Custos e log\'istica & Restri\c{c}\~oes or\c{c}ament\'arias e operacionais & Atrasos, lacunas amostrais, perda de qualidade & Planejamento antecipado, CAPI/CATI, monitoramento de campo \\
+\bottomrule
+\end{tabular}
+\figmeta{Elabora\c{c}\~ao pr\'opria.}{}{}
+\end{table}
+
+\section{S\'intese}
+
+A coleta prim\'aria acessa o que registros administrativos e bases secund\'arias n\~ao acessam: mecanismos de implementa\c{c}\~ao, desafios enfrentados pelos atores em campo, modos pelos quais o contexto modula os resultados de uma pol\'itica. Esse \'e o seu valor para a gest\~ao p\'ublica baseada em evid\^encias --- e tamb\'em a raz\~ao pela qual exige rigor: dados prim\'arios mal coletados produzem diagn\'osticos errados, e diagn\'osticos errados produzem recomenda\c{c}\~oes piores do que n\~ao recomendar nada.
+
+Este Guia percorreu as decis\~oes que sustentam uma coleta de qualidade --- m\'etodos quantitativos e qualitativos, crit\'erios de amostragem, considera\c{c}\~oes \'eticas, elabora\c{c}\~ao de instrumentos, cuidados operacionais de campo. Cada uma dessas decis\~oes afeta validade, confiabilidade e utilidade do que se produz. E quase nenhuma sai perfeita de primeira: o que distingue uma coleta robusta de uma coleta apenas formalmente correta n\~ao \'e a aus\^encia de problemas, mas o que se faz com eles --- o reconhecimento pr\'evio dos limites, a documenta\c{c}\~ao das decis\~oes, a flexibilidade de ajustar procedimentos durante o campo.
+
+\'E o que se espera ter compartilhado aqui: uma refer\^encia pr\'atica para quem desenha e conduz pesquisas e avalia\c{c}\~oes no Brasil.
+
+% ============================================================
+% REFERÊNCIAS
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem[Albaret e Deas(2023)]{albaret2023semistructured}
+ALBARET, M.; DEAS, J. \textbf{Semistructured interviews}. In: BADACHE, F.; KIMBER, L.; MERTENS, L. (orgs.). \textit{International organizations and research methods: an introduction}. Ann Arbor: University of Michigan Press, 2023. p. 82--89.
+
+\bibitem[Almeida(2016)]{almeida2016grupos}
+ALMEIDA, R. \textbf{Roteiro para o emprego de grupos focais}. In: ABDAL, A. et al. (orgs.). \textit{M\'etodos de pesquisa em Ci\^encias Sociais: Bloco Qualitativo}. S\~ao Paulo: CEBRAP/SESC, 2016. p. 42--59.
+
+\bibitem[Alonso(2016)]{alonso2016metodos}
+ALONSO, A. \textbf{M\'etodos qualitativos de pesquisa: uma introdu\c{c}\~ao}. In: ABDAL, A. et al. (orgs.). \textit{M\'etodos de pesquisa em Ci\^encias Sociais: Bloco Qualitativo}. S\~ao Paulo: CEBRAP/SESC, 2016. p. 8--23.
+
+\bibitem[Bauer e Aarts(2013)]{bauer2013construcao}
+BAUER, M.; AARTS, B. \textbf{A constru\c{c}\~ao do corpus: um princ\'ipio para a coleta de dados qualitativos}. In: BAUER, M.; GASKELL, G. (orgs.). \textit{Pesquisa qualitativa com texto, imagem e som}. Petr\'opolis: Vozes, 2013. p. 39--63.
+
+\bibitem[Brasil(2018)]{brasil2018lgpd}
+BRASIL. \textbf{Lei n\textsuperscript{o} 13.709/2018 --- Lei Geral de Prote\c{c}\~ao de Dados Pessoais (LGPD)}. Bras\'ilia: Presid\^encia da Rep\'ublica, 2018.
+
+\bibitem[Bryman(2012)]{bryman2012social}
+BRYMAN, A. \textbf{Social Research Methods}. 4. ed. Oxford: Oxford University Press, 2012.
+
+\bibitem[Campos e Saidel(2022)]{campos2022amostragem}
+CAMPOS, C.; SAIDEL, M. \textbf{Amostragem em investiga\c{c}\~oes qualitativas: conceitos e aplica\c{c}\~oes ao campo da sa\'ude}. \textit{Revista Pesquisa Qualitativa}, v. 10, n. 25, p. 404--424, 2022.
+
+\bibitem[Creswell(2014)]{creswell2014research}
+CRESWELL, J. W. \textbf{Research Design: Qualitative, Quantitative, and Mixed Methods Approaches}. 4. ed. Thousand Oaks: SAGE, 2014.
+
+\bibitem[De Paula et al.(2014)]{depaula2014modos}
+DE PAULA, C. et al. \textbf{Modos de condu\c{c}\~ao da entrevista em pesquisa fenomenol\'ogica: relato de experi\^encia}. \textit{Revista Brasileira de Enfermagem}, v. 67, n. 3, p. 468--472, 2014.
+
+\bibitem[Driscoll(2011)]{driscoll2011introduction}
+DRISCOLL, D. \textbf{Introduction to primary research: observations, surveys, and interviews}. In: LOWE, C.; ZEMLIANSKY, P. (orgs.). \textit{Writing spaces: readings on writing}, v. 2. South Carolina: Parlor Press, 2011. p. 153--174.
+
+\bibitem[Duflo et al.(2007)]{duflo2007using}
+DUFLO, E.; GLENNERSTER, R.; KREMER, M. \textbf{Using Randomization in Development Economics Research: A Toolkit}. In: \textit{Handbook of Development Economics}, v. 4. Amsterdam: Elsevier, 2007. p. 3895--3962.
+
+\bibitem[Duru et al.(2021)]{duru2021grant}
+DURU, M.; KOPPER, S.; TURITTO, J. \textbf{Grant and budget management}. J-PAL, 2021. Dispon\'ivel em: \url{https://www.povertyactionlab.org/resource/grant-and-budget-management}.
+
+\bibitem[Eppich et al.(2019)]{eppich2019in}
+EPPICH, W.; GORMLEY, G.; TEUNISSEN, P. \textbf{In-depth interviews}. \textit{Healthcare Simulation Research}, 2019. DOI: 10.1007/978-3-030-26837-4\_12.
+
+\bibitem[FGV CLEAR(2025a)]{fgvclear2025mea}
+FGV CLEAR. \textbf{Guia CLEAR de Monitoramento e Avalia\c{c}\~ao de Pol\'iticas P\'ublicas: do diagn\'ostico \`a decis\~ao}. Rio de Janeiro: FGV CLEAR, 2025.
+
+\bibitem[FGV CLEAR(2025b)]{fgvclear2025ai}
+FGV CLEAR. \textbf{Guia CLEAR de Avalia\c{c}\~ao de Impacto}. Rio de Janeiro: FGV CLEAR, 2025.
+
+\bibitem[FGV CLEAR(2025c)]{fgvclear2025poder}
+FGV CLEAR. \textbf{An\'alise de Poder Estat\'istico}. Rio de Janeiro: FGV CLEAR, 2025.
+
+\bibitem[Fontanella et al.(2011)]{fontanella2011amostragem}
+FONTANELLA, B. et al. \textbf{Amostragem em pesquisas qualitativas: proposta de procedimentos para constatar a satura\c{c}\~ao te\'orica}. \textit{Caderno de Sa\'ude P\'ublica}, v. 27, n. 2, p. 389--394, 2011.
+
+\bibitem[Fraser e Gondim(2004)]{fraser2004fala}
+FRASER, M.; GONDIM, S. \textbf{Da fala do outro ao texto negociado: discuss\~oes sobre a entrevista na pesquisa qualitativa}. \textit{Paid\'eia}, v. 14, n. 28, p. 139--152, 2004.
+
+\bibitem[Gertler et al.(2018)]{gertler2018impact}
+GERTLER, P. J. et al. \textbf{Impact Evaluation in Practice}. 2. ed. Washington, DC: World Bank, 2018.
+
+\bibitem[Guazi(2021)]{guazi2021diretrizes}
+GUAZI, T. \textbf{Diretrizes para o uso de entrevistas semiestruturadas em investiga\c{c}\~oes cient\'ificas}. \textit{Revista Educa\c{c}\~ao, Pesquisa e Inclus\~ao}, v. 2, p. 1--20, 2021.
+
+\bibitem[Iarossi(2006)]{iarossi2006power}
+IAROSSI, G. \textbf{The Power of Survey Design}. Washington, DC: World Bank, 2006.
+
+\bibitem[Jim\'enez(2012)]{jimenez2012entrevista}
+JIM\'ENEZ, I. \textbf{La entrevista en la investigaci\'on cualitativa: nuevas tendencias y retos}. \textit{Revista Calidad en la Educaci\'on Superior}, v. 3, n. 1, p. 119--139, 2012.
+
+\bibitem[J-PAL(2020)]{jpal2020practical}
+J-PAL. \textbf{Practical Guide to Field Research and Randomized Evaluations}. Cambridge, MA: MIT, 2020.
+
+\bibitem[Kabir(2016)]{kabir2016methods}
+KABIR, S. M. S. \textbf{Methods of Data Collection}. In: \textit{Basic Guidelines for Research: An Introductory Approach for All Disciplines}. 1. ed. 2016. p. 201--275.
+
+\bibitem[Kopper e Kannan(2020)]{kopper2020survey}
+KOPPER, S.; KANNAN, H. \textbf{Survey Designs}. J-PAL, 2020. Dispon\'ivel em: \url{https://www.povertyactionlab.org/blog/3-20-20/best-practices-conducting-phone-surveys}.
+
+\bibitem[Kopper e Parry(2021)]{kopper2021survey}
+KOPPER, S.; PARRY, K. \textbf{Survey Design}. J-PAL, 2021. Dispon\'ivel em: \url{https://www.povertyactionlab.org/resource/survey-design}.
+
+\bibitem[Leit\~ao(2024)]{leitao2024entrevista}
+LEIT\~AO, C. \textbf{A entrevista como instrumento de pesquisa cient\'ifica: planejamento, execu\c{c}\~ao e an\'alise}. In: PIMENTEL, M.; SANTOS, E. (orgs.). \textit{Metodologia de pesquisa cient\'ifica em inform\'atica na Educa\c{c}\~ao: abordagem qualitativa}. Porto Alegre: SBC, 2024.
+
+\bibitem[Lima(2016)]{lima2016entrevistas}
+LIMA, M. \textbf{O uso de entrevistas na pesquisa emp\'irica}. In: ABDAL, A. et al. (orgs.). \textit{M\'etodos de pesquisa em Ci\^encias Sociais: Bloco Qualitativo}. S\~ao Paulo: CEBRAP/SESC, 2016. p. 24--41.
+
+\bibitem[Lotta e Pires(2020)]{lotta2020categorizando}
+LOTTA, G.; PIRES, R. \textbf{Categorizando usu\'arios ``f\'aceis'' e ``dif\'iceis'': pr\'aticas cotidianas de implementa\c{c}\~ao de pol\'iticas p\'ublicas e a produ\c{c}\~ao de diferen\c{c}as sociais}. \textit{Dados}, v. 63, n. 4, p. 1--40, 2020.
+
+\bibitem[Mason(2010)]{mason2010sample}
+MASON, M. \textbf{Sample size and saturation in PhD studies using qualitative interviews}. \textit{FQS}, v. 11, n. 3, 2010.
+
+\bibitem[Mattos(2011)]{mattos2011resultados}
+MATTOS, P. \textbf{``Os resultados desta pesquisa (qualitativa) n\~ao podem ser generalizados'': pondo os pingos nos is de tal ressalva}. \textit{Cadernos EBAPE.BR}, v. 9, p. 450--468, 2011.
+
+\bibitem[Minayo(2017)]{minayo2017amostragem}
+MINAYO, M. \textbf{Amostragem e satura\c{c}\~ao em pesquisa qualitativa: consensos e controv\'ersias}. \textit{Revista Pesquisa Qualitativa}, v. 5, n. 7, p. 1--12, 2017.
+
+\bibitem[Morra-Imas e Rist(2009)]{morra2009road}
+MORRA-IMAS, L. G.; RIST, R. C. \textbf{The road to results: Designing and conducting effective development evaluations}. Washington, DC: World Bank Publications, 2009.
+
+\bibitem[Neuman(2012)]{neuman2012designing}
+NEUMAN, W. L. \textbf{Designing the face-to-face survey}. In: \textit{Handbook of survey methodology for the social sciences}. New York: Springer, 2012. p. 227--248.
+
+\bibitem[Neuman(2014)]{neuman2014social}
+NEUMAN, W. L. \textbf{Social Research Methods: Qualitative and Quantitative Approaches}. 7. ed. Pearson Education Limited, 2014.
+
+\bibitem[OECD(2022)]{oecd2022data}
+OECD. \textbf{Data Collection and Management for Evaluation and Policy Analysis}. Paris: OECD, 2022.
+
+\bibitem[Patton(1990)]{patton1990qualitative}
+PATTON, M. \textbf{Qualitative evaluation and research methods}. California: Sage, 1990.
+
+\bibitem[Patton(2002)]{patton2002qualitative}
+PATTON, M. \textbf{Qualitative research \& evaluation methods}. 3. ed. Thousand Oaks: Sage, 2002.
+
+\bibitem[Payne(1951)]{payne1951art}
+PAYNE, S. L. \textbf{The Art of Asking Questions}. Princeton: Princeton University Press, 1951.
+
+\bibitem[Pires(2014)]{pires2014amostragem}
+PIRES, \'A. P. \textbf{Amostragem e pesquisa qualitativa: ensaio te\'orico e metodol\'ogico}. In: POUPART, J. et al. \textit{A pesquisa qualitativa: enfoques epistemol\'ogicos e metodol\'ogicos}. Petr\'opolis: Vozes, 2014.
+
+\bibitem[Rocha(2020)]{rocha2020teoria}
+ROCHA, V. \textbf{Da teoria \`a an\'alise: uma introdu\c{c}\~ao ao uso de entrevistas individuais semiestruturadas na ci\^encia pol\'itica}. \textit{Revista Pol\'itica Hoje}, 2020. DOI: 10.51359/1808-8708.2021.247229.
+
+\bibitem[Roulston(2013)]{roulston2013asking}
+ROULSTON, K. \textbf{Asking questions and individual interviews}. Sage Research Methods, 2013.
+
+\bibitem[Silva et al.(2006)]{silva2006entrevista}
+SILVA, G. et al. \textbf{Entrevista como t\'ecnica de pesquisa qualitativa}. \textit{Online Brazilian Journal of Nursing}, v. 5, n. 2, p. 246--257, 2006.
+
+\bibitem[Silva e Fortunato(2021)]{silva2021modera}
+SILVA, P.; FORTUNATO, M. \textbf{Modera, observa, escuta e foca-te na conversa\c{c}\~ao de grupo: uma reflex\~ao cr\'itica}. In: S\'A, P.; COSTA, A.; MOREIRA, A. (orgs.). \textit{Reflex\~oes em torno de metodologias de investiga\c{c}\~ao: recolha de dados}. Aveiro: UA Editora, 2021. p. 37--51.
+
+\bibitem[Silva e Russo(2019)]{silva2019aplicacao}
+SILVA, L.; RUSSO, R. \textbf{Aplica\c{c}\~ao de entrevistas em pesquisas qualitativas}. \textit{Revista de Gest\~ao e Projetos}, v. 10, n. 1, p. 1--6, 2019.
+
+\bibitem[Taherdoost(2021)]{taherdoost2021data}
+TAHERDOOST, H. \textbf{Data collection methods and tools for research: a step-by-step guide to choose data collection technique for academic and business research projects}. \textit{International Journal of Academic Research in Management}, v. 10, n. 1, p. 10--38, 2021.
+
+\bibitem[Vaessen et al.(2020)]{vaessen2020evaluation}
+VAESSEN, J.; LEMIRE, S.; BEFANI, B. \textbf{Evaluation of International Development Interventions: An Overview of Approaches and Methods}. Washington, DC: World Bank, 2020.
+
+\bibitem[Wilson(2012)]{wilson2012research}
+WILSON, V. \textbf{Research methods: interviews}. \textit{Evidence Based Library and Information Practice}, v. 7, p. 96--98, 2012.
+
+\bibitem[World Bank(2021)]{worldbank2021data}
+WORLD BANK. \textbf{Data Collection in Fragile States: Innovations from Africa and Beyond}. Washington, DC: World Bank, 2021.
+
+\bibitem[Lima et~al.(2025)]{Lima2025}
+Lima, L. e colaboradores (2025). \textit{Guia CLEAR de Monitoramento e Avaliação de Políticas Públicas: do diagnóstico à decisão}. São Paulo: FGV CLEAR.
+
+\end{thebibliography}
+
+\end{document}
